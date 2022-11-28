@@ -1,17 +1,17 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { mapCreate, statsaveCreate } from "./redux/actions";
-import { massdkCreate, coordinatesCreate } from "./redux/actions";
-import { massmodeCreate, massfazCreate } from "./redux/actions";
+import { coordinatesCreate } from "./redux/actions";
+//import { massmodeCreate, massfazCreate } from "./redux/actions";
 
 import Grid from "@mui/material/Grid";
 
-import MainMapGS from "./components/MainMapGs";
+import MainMapRgs from "./components/MainMapRgs";
 import AppSocketError from "./AppSocketError";
 
-import { MasskPoint } from "./components/MapServiceFunctions";
+//import { MasskPoint } from "./components/MapServiceFunctions";
 
-import { SendSocketGetPhases } from "./components/MapSocketFunctions";
+//import { SendSocketGetPhases } from "./components/MapSocketFunctions";
 
 import { dataMap } from "./otladkaMaps";
 import { imgFaza } from "./otladkaRoutes";
@@ -58,17 +58,17 @@ export interface Fazer {
 }
 export let massFaz: Fazer[] = [];
 
-let maskFaz: Fazer = {
-  idx: 0,
-  faza: 1,
-  fazaSist: -1,
-  phases: [],
-  idevice: 0,
-  name: "",
-  starRec: false,
-  runRec: false,
-  img: [],
-};
+// let maskFaz: Fazer = {
+//   idx: 0,
+//   faza: 1,
+//   fazaSist: -1,
+//   phases: [],
+//   idevice: 0,
+//   name: "",
+//   starRec: false,
+//   runRec: false,
+//   img: [],
+// };
 
 export interface NameMode {
   name: string;
@@ -87,54 +87,57 @@ let flagInit = false;
 
 const App = () => {
   // //== Piece of Redux ======================================
-  let massdk = useSelector((state: any) => {
-    const { massdkReducer } = state;
-    return massdkReducer.massdk;
-  });
-  let massfaz = useSelector((state: any) => {
-    const { massfazReducer } = state;
-    return massfazReducer.massfaz;
-  });
+  // let massdk = useSelector((state: any) => {
+  //   const { massdkReducer } = state;
+  //   return massdkReducer.massdk;
+  // });
+  // let massfaz = useSelector((state: any) => {
+  //   const { massfazReducer } = state;
+  //   return massfazReducer.massfaz;
+  // });
   //console.log("APPmassfaz", massfaz);
   let coordinates = useSelector((state: any) => {
     const { coordinatesReducer } = state;
     return coordinatesReducer.coordinates;
   });
-  let massmode = useSelector((state: any) => {
-    const { massmodeReducer } = state;
-    return massmodeReducer.massmode;
-  });
+  // let massmode = useSelector((state: any) => {
+  //   const { massmodeReducer } = state;
+  //   return massmodeReducer.massmode;
+  // });
   const dispatch = useDispatch();
   //========================================================
   const Initialisation = () => {
-    let deb = dateStat.debug;
+    //let deb = dateStat.debug;
     console.log("dateMapGl:", dateMapGl);
     for (let i = 0; i < dateMapGl.tflight.length; i++) {
-      let masskPoint = MasskPoint(deb, dateMapGl.tflight[i], imgFaza);
-      massdk.push(masskPoint);
-      coordinates.push(masskPoint.coordinates);
+      //   let masskPoint = MasskPoint(deb, dateMapGl.tflight[i], imgFaza);
+      //   massdk.push(masskPoint);
+      let coord = [];
+      coord[0] = dateMapGl.tflight[i].points.Y;
+      coord[1] = dateMapGl.tflight[i].points.X;
+      coordinates.push(coord);
     }
-    let ch = 1;
-    for (let i = 0; i < dateMapGl.routes.length; i++) {
-      let nameZU = dateMapGl.routes[i].description;
-      if (!nameZU) nameZU = "без имени(" + ch++ + ")";
-      let maskName = {
-        name: nameZU,
-        delRec: false,
-      };
-      massmode.push(maskName);
-    }
-    massfaz.push(maskFaz);
-    dispatch(massdkCreate(massdk));
-    dispatch(massfazCreate(massfaz));
+    // let ch = 1;
+    // for (let i = 0; i < dateMapGl.routes.length; i++) {
+    //   let nameZU = dateMapGl.routes[i].description;
+    //   if (!nameZU) nameZU = "без имени(" + ch++ + ")";
+    //   let maskName = {
+    //     name: nameZU,
+    //     delRec: false,
+    //   };
+    //   massmode.push(maskName);
+    // }
+    // massfaz.push(maskFaz);
+    // dispatch(massdkCreate(massdk));
+    // dispatch(massfazCreate(massfaz));
     dispatch(coordinatesCreate(coordinates));
-    dispatch(massmodeCreate(massmode));
-    // запросы на получение изображения фаз
-    for (let i = 0; i < massdk.length; i++) {
-      let reg = massdk[i].region.toString();
-      let area = massdk[i].area.toString();
-      SendSocketGetPhases(dateStat.debug, WS, reg, area, massdk[i].ID);
-    }
+    // dispatch(massmodeCreate(massmode));
+    // // запросы на получение изображения фаз
+    // for (let i = 0; i < massdk.length; i++) {
+    //   let reg = massdk[i].region.toString();
+    //   let area = massdk[i].area.toString();
+    //   SendSocketGetPhases(dateStat.debug, WS, reg, area, massdk[i].ID);
+    // }
   };
 
   const host =
@@ -154,7 +157,6 @@ const App = () => {
     if (WS.url === "wss://localhost:3000/W") dateStat.debug = true;
     dispatch(statsaveCreate(dateStat));
     flagOpenWS = false;
-    //flagInit = true;
   }
 
   React.useEffect(() => {
@@ -175,35 +177,35 @@ const App = () => {
       let data = allData.data;
       //console.log("пришло:", data.error, allData.type, data);
       switch (allData.type) {
-        case "tflight":
-          console.log("Tflight:", data, data.tflight);
-          for (let j = 0; j < data.tflight.length; j++) {
-            for (let i = 0; i < dateMapGl.tflight.length; i++) {
-              if (data.tflight[j].idevice === dateMapGl.tflight[i].idevice) {
-                dateMapGl.tflight[i].tlsost = data.tflight[j].tlsost;
-              }
-            }
-          }
-          dispatch(mapCreate(dateMapGl));
-          setTrigger(!trigger);
-          break;
-        case "phases":
-          let flagChange = false;
-          for (let i = 0; i < data.phases.length; i++) {
-            for (let j = 0; j < massfaz.length; j++) {
-              if (massfaz[j].idevice === data.phases[i].device) {
-                if (massfaz[j].fazaSist !== data.phases[i].phase) {
-                  massfaz[j].fazaSist = data.phases[i].phase;
-                  flagChange = true;
-                }
-              }
-            }
-          }
-          if (flagChange) {
-            dispatch(massfazCreate(massfaz));
-            setTrigger(!trigger);
-          }
-          break;
+        // case "tflight":
+        //   console.log("Tflight:", data, data.tflight);
+        //   for (let j = 0; j < data.tflight.length; j++) {
+        //     for (let i = 0; i < dateMapGl.tflight.length; i++) {
+        //       if (data.tflight[j].idevice === dateMapGl.tflight[i].idevice) {
+        //         dateMapGl.tflight[i].tlsost = data.tflight[j].tlsost;
+        //       }
+        //     }
+        //   }
+        //   dispatch(mapCreate(dateMapGl));
+        //   setTrigger(!trigger);
+        //   break;
+        //case "phases":
+        // let flagChange = false;
+        // for (let i = 0; i < data.phases.length; i++) {
+        //   for (let j = 0; j < massfaz.length; j++) {
+        //     if (massfaz[j].idevice === data.phases[i].device) {
+        //       if (massfaz[j].fazaSist !== data.phases[i].phase) {
+        //         massfaz[j].fazaSist = data.phases[i].phase;
+        //         flagChange = true;
+        //       }
+        //     }
+        //   }
+        // }
+        // if (flagChange) {
+        //   dispatch(massfazCreate(massfaz));
+        //   setTrigger(!trigger);
+        // }
+        // break;
         case "mapInfo":
           dateMapGl = JSON.parse(JSON.stringify(data));
           dispatch(mapCreate(dateMapGl));
@@ -217,32 +219,32 @@ const App = () => {
           flagInit = true;
           setOpenMapInfo(true);
           break;
-        case "getPhases":
-          for (let i = 0; i < massdk.length; i++) {
-            if (
-              massdk[i].region.toString() === data.pos.region &&
-              massdk[i].area.toString() === data.pos.area &&
-              massdk[i].ID === data.pos.id
-            ) {
-              if (data.images) {
-                if (data.images.length) {
-                  for (let j = 0; j < data.images.length; j++) {
-                    let k = Number(data.images[j].num);
-                    if (k <= massdk[i].phSvg.length)
-                      massdk[i].phSvg[k - 1] = data.images[j].phase;
-                  }
-                  dispatch(massdkCreate(massdk));
-                }
-                break;
-              }
-            }
-          }
-          break;
+        // case "getPhases":
+        //   for (let i = 0; i < massdk.length; i++) {
+        //     if (
+        //       massdk[i].region.toString() === data.pos.region &&
+        //       massdk[i].area.toString() === data.pos.area &&
+        //       massdk[i].ID === data.pos.id
+        //     ) {
+        //       if (data.images) {
+        //         if (data.images.length) {
+        //           for (let j = 0; j < data.images.length; j++) {
+        //             let k = Number(data.images[j].num);
+        //             if (k <= massdk[i].phSvg.length)
+        //               massdk[i].phSvg[k - 1] = data.images[j].phase;
+        //           }
+        //           dispatch(massdkCreate(massdk));
+        //         }
+        //         break;
+        //       }
+        //     }
+        //   }
+        //   break;
         default:
           console.log("data_default:", data);
       }
     };
-  }, [dispatch, massdk, massfaz, trigger]);
+  }, [dispatch]);
 
   if (WS.url === "wss://localhost:3000/W" && flagOpen) {
     console.log("РЕЖИМ ОТЛАДКИ!!!");
@@ -270,7 +272,7 @@ const App = () => {
     <Grid container sx={{ height: "100vh", width: "100%", bgcolor: "#E9F5D8" }}>
       <Grid item xs>
         {openSetErr && <AppSocketError sErr={soob} setOpen={setOpenSetErr} />}
-        {openMapInfo && <MainMapGS trigger={trigger} />}
+        {openMapInfo && <MainMapRgs trigger={trigger} />}
       </Grid>
     </Grid>
   );

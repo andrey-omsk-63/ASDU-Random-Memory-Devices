@@ -5,15 +5,14 @@ export interface Welcome10 {
 
 // export interface Data {
 export interface DateMAP {
-  areaInfo: AreaInfo;
-  areaZone: AreaZone[];
+  areaInfo:       AreaInfo;
+  areaZone:       AreaZone[];
   authorizedFlag: boolean;
-  boxPoint: Box;
-  fragments: null;
-  license: string;
-  regionInfo: RegionInfo;
-  routes: Route[];
-  tflight: Tflight[];
+  boxPoint:       BoxPoint;
+  fragments:      null;
+  license:        string;
+  regionInfo:     RegionInfo;
+  tflight:        Tflight[];
 }
 
 export interface AreaInfo {
@@ -28,9 +27,9 @@ export enum Мосавтодор {
 
 export interface AreaZone {
   region: The1;
-  area: Мосавтодор;
-  zone: Point0[];
-  sub: Sub[];
+  area:   Мосавтодор;
+  zone:   Point0[];
+  sub:    Sub[];
 }
 
 export enum The1 {
@@ -39,7 +38,7 @@ export enum The1 {
 
 export interface Sub {
   subArea: number;
-  zone: Point0[];
+  zone:    Point0[];
 }
 
 export interface Point0 {
@@ -47,7 +46,7 @@ export interface Point0 {
   X: number;
 }
 
-export interface Box {
+export interface BoxPoint {
   point0: Point0;
   point1: Point0;
 }
@@ -56,58 +55,53 @@ export interface RegionInfo {
   "1": The1;
 }
 
-export interface Route {
-  region: string;
-  description: string;
-  box: Box;
-  listTL: ListTL[];
-}
-
-export interface ListTL {
-  num: number;
-  phase: number;
-  description: string;
-  point: Point0;
-  pos: Pos;
-}
-
-export interface Pos {
-  region: string;
-  area: string;
-  id: number;
-}
-
 export interface Tflight {
-  ID: number;
-  region: Region;
-  area: Area;
-  subarea: number;
-  idevice: number;
-  tlsost: Tlsost;
+  ID:          number;
+  region:      Region;
+  area:        Area;
+  subarea:     number;
+  idevice:     number;
+  tlsost:      Tlsost;
   description: string;
-  phases: number[];
-  points: Point0;
-  inputError: boolean;
+  phases:      number[];
+  points:      Point0;
+  inputError:  boolean;
+  input:       Input;
 }
 
 export interface Area {
-  num: string;
+  num:      string;
   nameArea: Мосавтодор;
 }
 
+export interface Input {
+  V1: boolean;
+  V2: boolean;
+  V3: boolean;
+  V4: boolean;
+  V5: boolean;
+  V6: boolean;
+  V7: boolean;
+  V8: boolean;
+  S:  boolean[];
+}
+
 export interface Region {
-  num: string;
+  num:        string;
   nameRegion: The1;
 }
 
 export interface Tlsost {
-  num: number;
+  num:         number;
   description: Description;
-  control: boolean;
+  control:     boolean;
 }
 
 export enum Description {
+  ВыключенУСДКДК = "Выключен УСДК/ДК",
+  ЖелтоеМиганиеИзЗаПерегоранияКонтролируемыхКрасныхЛамп = "Желтое мигание из-за перегорания контролируемых красных ламп",
   КоординированноеУправление = "Координированное управление",
   НетСвязиСУСДКДК = "Нет связи с УСДК/ДК",
-  РУОСОтключениеСветофораЗаданноеНаПерекрестке = "РУ ОС - отключение светофора заданное на перекрестке",
+  ОбрывЛинийСвязи = "Обрыв линий связи",
 }
+

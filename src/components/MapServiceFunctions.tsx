@@ -81,25 +81,18 @@ export const Distance = (coord1: Array<number>, coord2: Array<number>) => {
 //=== Placemark =====================================
 export const GetPointData = (
   index: number,
-  pointAaIndex: number,
-  pointBbIndex: number,
-  massdk: any,
   map: any,
-  massMem: any
+  
 ) => {
-  let cont1 = massdk[index].nameCoordinates + "<br/>";
+  let cont1 = map.tflight[index].description + "<br/>";
   let cont3 = map.tflight[index].tlsost.description + "<br/>";
-  let cont2 = "[" + massdk[index].region + ", " + massdk[index].area;
-  cont2 += ", " + massdk[index].ID + ", " + map.tflight[index].idevice + "]";
-  let textBalloon = "";
-  let nomInRoute = massMem.indexOf(index);
-  if (nomInRoute > 0)
-    textBalloon = "Промежуточная точка маршрута №" + (nomInRoute + 1);
-  if (index === pointBbIndex) textBalloon = "Конец маршрута";
-  if (index === pointAaIndex) textBalloon = "Начало маршрута";
+  let cont2 = "[" + map.tflight[index].region.num + ", ";
+  cont2 += map.tflight[index].area.num;
+  cont2 += ", " + map.tflight[index].ID + ", " + map.tflight[index].idevice + "]";
 
   return {
-    hintContent: cont1 + cont3 + cont2 + "<br/>" + textBalloon,
+    hintContent: cont1 + cont3 + cont2 + "<br/>",
+   
   };
 };
 
