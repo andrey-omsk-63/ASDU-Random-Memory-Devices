@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { mapCreate, massmodeCreate } from "../redux/actions";
+import { mapCreate, coordinatesCreate } from "../redux/actions";
 
 import Grid from "@mui/material/Grid";
 
@@ -9,15 +9,16 @@ import { GeolocationControl, YMapsApi } from "react-yandex-maps";
 import { RulerControl, SearchControl } from "react-yandex-maps";
 import { TrafficControl, TypeSelector, ZoomControl } from "react-yandex-maps";
 
-import GsSelectMD from "./GsComponents/GsSelectMD";
-import GsSetPhase from "./GsComponents/GsSetPhase";
-import GsToDoMode from "./GsComponents/GsToDoMode";
-import GsErrorMessage from "./GsComponents/GsErrorMessage";
-import GsDoPlacemarkDo from "./GsComponents/GsDoPlacemarkDo";
+import GsSelectMD from "./RgsComponents/GsSelectMD";
+import GsSetPhase from "./RgsComponents/GsSetPhase";
+import GsToDoMode from "./RgsComponents/GsToDoMode";
+import GsErrorMessage from "./RgsComponents/GsErrorMessage";
+import GsDoPlacemarkDo from "./RgsComponents/RgsDoPlacemarkDo";
+import RgsCreateObject from "./RgsComponents/RgsCreateObject";
 
-import { getMultiRouteOptions, StrokaHelp } from "./MapServiceFunctions";
+import { getMultiRouteOptions } from "./MapServiceFunctions";
 import { getReferencePoints, CenterCoord } from "./MapServiceFunctions";
-import { ErrorHaveVertex, Distance } from "./MapServiceFunctions";
+import { ErrorHaveVertex } from "./MapServiceFunctions";
 import { StrokaMenuGlob } from "./MapServiceFunctions";
 
 import { SendSocketUpdateRoute } from "./MapSocketFunctions";
@@ -35,7 +36,7 @@ let massMem: Array<number> = [];
 let massCoord: any = [];
 let newMode = -1;
 let soobErr = "";
-let helper = true;
+//let helper = true;
 
 let xsMap = 11.99;
 let xsTab = 0.01;
@@ -43,7 +44,8 @@ let widthMap = "99.9%";
 
 let modeToDo = 0;
 let newCenter: any = [];
-let rightCoord: Array<number> = [0, 0];
+//let rightCoord: Array<number> = [0, 0];
+let leftCoord: Array<number> = [0, 0];
 
 const MainMapRgs = (props: { trigger: boolean }) => {
   //== Piece of Redux =======================================
@@ -56,10 +58,16 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     return massdkReducer.massdk;
   });
   //console.log("massdk", massdk);
-  let massmode = useSelector((state: any) => {
-    const { massmodeReducer } = state;
-    return massmodeReducer.massmode;
+  let bindings = useSelector((state: any) => {
+    const { bindingsReducer } = state;
+    return bindingsReducer.bindings;
   });
+  console.log("bindings", bindings);
+  let addobjects = useSelector((state: any) => {
+    const { addobjectsReducer } = state;
+    return addobjectsReducer.addobjects.data.addObjects;
+  });
+  console.log("addobjects", addobjects);
   let coordinates = useSelector((state: any) => {
     const { coordinatesReducer } = state;
     return coordinatesReducer.coordinates;
@@ -73,6 +81,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const dispatch = useDispatch();
   //===========================================================
   const [flagPusk, setFlagPusk] = React.useState(false);
+  const [createObject, setCreateObject] = React.useState(false);
   const [selectMD, setSelectMD] = React.useState(false);
   const [setPhase, setSetPhase] = React.useState(false);
   const [toDoMode, setToDoMode] = React.useState(false);
@@ -219,38 +228,38 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     );
   };
   //=== обработка instanceRef ==============================
-  const FindNearVertex = (coord: Array<number>) => {
-    let nomInMap = -1;
-    if (coord[0] !== rightCoord[0] || coord[1] !== rightCoord[1]) {
-      rightCoord = coord;
-      let minDist = 999999;
-      nomInMap = -1;
-      for (let i = 0; i < map.tflight.length; i++) {
-        let corFromMap = [map.tflight[i].points.Y, map.tflight[i].points.X];
-        let dister = Distance(coord, corFromMap);
-        if (dister < 100 && minDist > dister) {
-          minDist = dister;
-          nomInMap = i;
-        }
-      }
-      if (nomInMap < 0) {
-        soobErr =
-          "В радиусе 100м от указанной точки управляемые перекрёстки отсутствуют";
-        setOpenSoobErr(true);
-      } else {
-        if (massMem.indexOf(nomInMap) >= 0) {
-          soobErr = "Перекрёсток [" + massdk[nomInMap].region + ", ";
-          soobErr += massdk[nomInMap].area + ", " + massdk[nomInMap].ID + ", ";
-          soobErr += map.tflight[nomInMap].idevice + "] уже используется";
-          setOpenSoobErr(true);
-        } else {
-          massMem.push(nomInMap);
-          massCoord.push(coord);
-          setRisovka(true);
-        }
-      }
-    }
-  };
+  // const FindNearVertex = (coord: Array<number>) => {
+  //   let nomInMap = -1;
+  //   if (coord[0] !== rightCoord[0] || coord[1] !== rightCoord[1]) {
+  //     rightCoord = coord;
+  //     let minDist = 999999;
+  //     nomInMap = -1;
+  //     for (let i = 0; i < map.tflight.length; i++) {
+  //       let corFromMap = [map.tflight[i].points.Y, map.tflight[i].points.X];
+  //       let dister = Distance(coord, corFromMap);
+  //       if (dister < 100 && minDist > dister) {
+  //         minDist = dister;
+  //         nomInMap = i;
+  //       }
+  //     }
+  //     if (nomInMap < 0) {
+  //       soobErr =
+  //         "В радиусе 100м от указанной точки управляемые перекрёстки отсутствуют";
+  //       setOpenSoobErr(true);
+  //     } else {
+  //       if (massMem.indexOf(nomInMap) >= 0) {
+  //         soobErr = "Перекрёсток [" + massdk[nomInMap].region + ", ";
+  //         soobErr += massdk[nomInMap].area + ", " + massdk[nomInMap].ID + ", ";
+  //         soobErr += map.tflight[nomInMap].idevice + "] уже используется";
+  //         setOpenSoobErr(true);
+  //       } else {
+  //         massMem.push(nomInMap);
+  //         massCoord.push(coord);
+  //         setRisovka(true);
+  //       }
+  //     }
+  //   }
+  // };
 
   const Pererisovka = () => {
     if (risovka) {
@@ -259,12 +268,20 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     }
   };
 
+  const InputerObject = (coord: Array<number>) => {
+    if (coord[0] !== leftCoord[0] || coord[1] !== leftCoord[1]) {
+      leftCoord = coord;
+      console.log("Левая кнопка");
+      setCreateObject(true);
+    }
+  };
+
   const InstanceRefDo = (ref: React.Ref<any>) => {
     if (ref) {
       mapp.current = ref;
       mapp.current.events.add("contextmenu", function (e: any) {
         if (mapp.current.hint) {
-          FindNearVertex(e.get("coords")); // нажата правая кнопка мыши
+          InputerObject(e.get("coords"));
         }
       });
       mapp.current.events.add("mousedown", function (e: any) {
@@ -302,15 +319,15 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const SetHelper = (mod: boolean) => {
-    helper = mod;
+    //helper = mod;
     setFlagPusk(!flagPusk);
   };
 
   const PressButton = (mode: number) => {
     switch (mode) {
       case 41: // удалить режим
-        massmode[newMode].delRec = true;
-        dispatch(massmodeCreate(massmode));
+        //massmode[newMode].delRec = true;
+        //dispatch(massmodeCreate(massmode));
         StatusQuo();
         ymaps && addRoute(ymaps, false); // перерисовка связей
         setFlagPusk(!flagPusk);
@@ -321,33 +338,39 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           ymaps && addRoute(ymaps, false); // перерисовка связей
           setFlagPusk(!flagPusk);
         }
-        helper = false;
+        //helper = false;
         setSelectMD(true);
         break;
       case 43: // переход к созданию нового режима
-        helper = true;
+        //helper = true;
         StatusQuo();
         break;
       case 44: // назначить фазы
         setSetPhase(true);
         break;
       case 45: // выполнить режим
-        if (massmode[newMode].delRec) {
-          soobErr = "Данный режим помечен к удалению";
-          setOpenSoobErr(true);
-        } else {
-          xsMap = 7.8;
-          xsTab = 4.2;
-          widthMap = "99.8%";
-          modeToDo = 1;
-          setToDoMode(true);
-          setFlagPusk(!flagPusk);
-        }
+      // if (massmode[newMode].delRec) {
+      //   soobErr = "Данный режим помечен к удалению";
+      //   setOpenSoobErr(true);
+      // } else {
+      //   xsMap = 7.8;
+      //   xsTab = 4.2;
+      //   widthMap = "99.8%";
+      //   modeToDo = 1;
+      //   setToDoMode(true);
+      //   setFlagPusk(!flagPusk);
+      // }
     }
   };
 
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(map.tflight).length) {
+    console.log("@@@@@@", addobjects);
+    for (let i = 0; i < addobjects.length; i++) {
+      coordinates.push(addobjects[i].dgis);
+    }
+    dispatch(coordinatesCreate(coordinates));
+
     pointCenter = CenterCoord(
       map.boxPoint.point0.Y,
       map.boxPoint.point0.X,
@@ -364,11 +387,11 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const MenuGl = (mod: number) => {
-    let soobHelp = "Выберите перекрёстки для создания нового маршрута";
-    let soobHelpFiest = "Добавьте/удалите перекрёстки для создания маршрута [";
-    soobHelpFiest += massMem.length + "✳]";
-    let soobInfo = "Подготовка к выпонению режима";
-    if (modeToDo === 2) soobInfo = "Происходит выполнение режима";
+    //let soobHelp = "Выберите перекрёстки для создания нового маршрута";
+    //let soobHelpFiest = "Добавьте/удалите перекрёстки для создания маршрута [";
+    //soobHelpFiest += massMem.length + "✳]";
+    //let soobInfo = "Подготовка к выпонению режима";
+    //if (modeToDo === 2) soobInfo = "Происходит выполнение режима";
 
     return (
       <>
@@ -439,6 +462,12 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                   {/* служебные компоненты */}
                   {Pererisovka()}
                   <PlacemarkDo />
+                  {createObject && (
+                    <RgsCreateObject
+                      setOpen={setCreateObject}
+                      coord={leftCoord}
+                    />
+                  )}
                   {selectMD && (
                     <GsSelectMD
                       setOpen={setSelectMD}

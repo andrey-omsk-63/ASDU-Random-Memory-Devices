@@ -5,7 +5,7 @@ import { Placemark, YMapsApi } from "react-yandex-maps";
 
 import { GetPointData } from "../MapServiceFunctions";
 
-const GsDoPlacemarkDo = (props: {
+const RgsDoPlacemarkDo = (props: {
   ymaps: YMapsApi | null;
   coordinate: any;
   idx: number;
@@ -17,6 +17,10 @@ const GsDoPlacemarkDo = (props: {
     const { mapReducer } = state;
     return mapReducer.map.dateMap;
   });
+  let addobjects = useSelector((state: any) => {
+    const { addobjectsReducer } = state;
+    return addobjectsReducer.addobjects.data.addObjects;
+  });
   // let massdk = useSelector((state: any) => {
   //   const { massdkReducer } = state;
   //   return massdkReducer.massdk;
@@ -27,9 +31,13 @@ const GsDoPlacemarkDo = (props: {
   });
   const debug = datestat.debug;
   //===========================================================
-  let id = props.idx;
-  let mapp = map.tflight[id].tlsost.num.toString();
-  let mappp = map.tflight[id];
+  let idx = props.idx;
+  let mapp = map.tflight[0].tlsost.num.toString();
+  let mappp = map.tflight[0];
+  if (idx < map.tflight.length) {
+    mapp = map.tflight[idx].tlsost.num.toString();
+    mappp = map.tflight[idx];
+  }
 
   const Hoster = React.useCallback(() => {
     let host = "https://localhost:3000/18.svg";
@@ -120,22 +128,39 @@ const GsDoPlacemarkDo = (props: {
     }
   };
 
+  const getPointOptions1 = React.useCallback(() => {
+    return {
+      iconLayout: createChipsLayout(calculate, mappp.tlsost.num),
+    };
+  },[createChipsLayout, mappp.tlsost.num]);
+
+  const getPointOptions2 = () => {
+    let colorBalloon = "islands#violetCircleIcon";
+    return {
+      preset: colorBalloon,
+    };
+  };
+
   const MemoPlacemarkDo = React.useMemo(
     () => (
       <Placemark
-        key={id}
+        key={idx}
         geometry={props.coordinate}
-        properties={GetPointData(id, map)}
-        options={{
-          iconLayout: createChipsLayout(calculate, mappp.tlsost.num),
-        }}
+        properties={GetPointData(idx, map, addobjects)}
+        // options={{
+        //   iconLayout: createChipsLayout(calculate, mappp.tlsost.num),
+        // }}
+
+        options={
+          idx < map.tflight.length ? getPointOptions1() : getPointOptions2()
+        }
         modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
-        onClick={() => props.OnPlacemarkClickPoint(id)}
+        onClick={() => props.OnPlacemarkClickPoint(idx)}
       />
     ),
-    [createChipsLayout, id, mappp.tlsost.num, map, props]
+    [idx, map, addobjects, getPointOptions1, props]
   );
   return MemoPlacemarkDo;
 };
 
-export default GsDoPlacemarkDo;
+export default RgsDoPlacemarkDo;

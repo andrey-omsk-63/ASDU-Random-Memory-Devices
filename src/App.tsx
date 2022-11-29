@@ -1,7 +1,8 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { mapCreate, statsaveCreate } from "./redux/actions";
-import { coordinatesCreate } from "./redux/actions";
+import { coordinatesCreate, bindingsCreate } from "./redux/actions";
+import { addobjectsCreate } from "./redux/actions";
 //import { massmodeCreate, massfazCreate } from "./redux/actions";
 
 import Grid from "@mui/material/Grid";
@@ -11,14 +12,18 @@ import AppSocketError from "./AppSocketError";
 
 //import { MasskPoint } from "./components/MapServiceFunctions";
 
+import { SendSocketGetBindings } from "./components/MapSocketFunctions";
+import { SendSocketGetAddObjects } from "./components/MapSocketFunctions";
 //import { SendSocketGetPhases } from "./components/MapSocketFunctions";
 
 import { dataMap } from "./otladkaMaps";
 import { imgFaza } from "./otladkaRoutes";
+import { dataBindings } from "./otladkaBindings";
+import { dataAddObjects } from "./otladkaAddObjects";
 
 export let dateMapGl: any;
-export let dateRouteGl: any;
-export let dateRouteProGl: any;
+export let dateBindingsGl: any;
+export let dateAddObjectsGl: any;
 
 export interface Stater {
   ws: any;
@@ -78,12 +83,14 @@ export let massMode: NameMode[] = [];
 
 export let Coordinates: Array<Array<number>> = []; // массив координат
 
-let flagOpen = true;
+let flagOpenDebug = true;
 let flagOpenWS = true;
 let WS: any = null;
 let homeRegion: string = "0";
 let soob = "";
-let flagInit = false;
+let flagMap = false;
+let flagBindings = false;
+let flagAddObjects = false;
 
 const App = () => {
   // //== Piece of Redux ======================================
@@ -109,6 +116,8 @@ const App = () => {
   const Initialisation = () => {
     //let deb = dateStat.debug;
     console.log("dateMapGl:", dateMapGl);
+    console.log("dateBindingsGl:", dateBindingsGl);
+    console.log("dateAddObjectsGl:", dateAddObjectsGl);
     for (let i = 0; i < dateMapGl.tflight.length; i++) {
       //   let masskPoint = MasskPoint(deb, dateMapGl.tflight[i], imgFaza);
       //   massdk.push(masskPoint);
@@ -117,6 +126,9 @@ const App = () => {
       coord[1] = dateMapGl.tflight[i].points.X;
       coordinates.push(coord);
     }
+    dispatch(coordinatesCreate(coordinates));
+    SendSocketGetBindings(dateStat.debug, WS);
+    SendSocketGetAddObjects(dateStat.debug, WS);
     // let ch = 1;
     // for (let i = 0; i < dateMapGl.routes.length; i++) {
     //   let nameZU = dateMapGl.routes[i].description;
@@ -130,7 +142,6 @@ const App = () => {
     // massfaz.push(maskFaz);
     // dispatch(massdkCreate(massdk));
     // dispatch(massfazCreate(massfaz));
-    dispatch(coordinatesCreate(coordinates));
     // dispatch(massmodeCreate(massmode));
     // // запросы на получение изображения фаз
     // for (let i = 0; i < massdk.length; i++) {
@@ -177,18 +188,6 @@ const App = () => {
       let data = allData.data;
       //console.log("пришло:", data.error, allData.type, data);
       switch (allData.type) {
-        // case "tflight":
-        //   console.log("Tflight:", data, data.tflight);
-        //   for (let j = 0; j < data.tflight.length; j++) {
-        //     for (let i = 0; i < dateMapGl.tflight.length; i++) {
-        //       if (data.tflight[j].idevice === dateMapGl.tflight[i].idevice) {
-        //         dateMapGl.tflight[i].tlsost = data.tflight[j].tlsost;
-        //       }
-        //     }
-        //   }
-        //   dispatch(mapCreate(dateMapGl));
-        //   setTrigger(!trigger);
-        //   break;
         //case "phases":
         // let flagChange = false;
         // for (let i = 0; i < data.phases.length; i++) {
@@ -216,8 +215,18 @@ const App = () => {
           homeRegion = massRegion[0].toString();
           dateStat.region = homeRegion;
           dispatch(statsaveCreate(dateStat));
-          flagInit = true;
-          setOpenMapInfo(true);
+          flagMap = true;
+          //setOpenMapInfo(true);
+          break;
+        case "getBindings":
+          dateBindingsGl = JSON.parse(JSON.stringify(data));
+          dispatch(bindingsCreate(dateBindingsGl));
+          flagBindings = true;
+          break;
+        case "getAddObjects":
+          dateAddObjectsGl = JSON.parse(JSON.stringify(data));
+          dispatch(addobjectsCreate(dateAddObjectsGl));
+          flagAddObjects = true;
           break;
         // case "getPhases":
         //   for (let i = 0; i < massdk.length; i++) {
@@ -246,10 +255,17 @@ const App = () => {
     };
   }, [dispatch]);
 
-  if (WS.url === "wss://localhost:3000/W" && flagOpen) {
+  if (WS.url === "wss://localhost:3000/W" && flagOpenDebug) {
     console.log("РЕЖИМ ОТЛАДКИ!!!");
     dateMapGl = JSON.parse(JSON.stringify(dataMap));
     dispatch(mapCreate(dateMapGl));
+
+    dateBindingsGl = JSON.parse(JSON.stringify(dataBindings));
+    dispatch(bindingsCreate(dateBindingsGl));
+
+    dateAddObjectsGl = JSON.parse(JSON.stringify(dataAddObjects));
+    dispatch(addobjectsCreate(dateAddObjectsGl));
+    
     let massRegion = [];
     for (let key in dateMapGl.regionInfo) {
       if (!isNaN(Number(key))) massRegion.push(Number(key));
@@ -258,14 +274,19 @@ const App = () => {
     dateStat.region = homeRegion;
     dateStat.phSvg = imgFaza;
     dispatch(statsaveCreate(dateStat));
-    flagInit = true;
-    flagOpen = false;
-    setOpenMapInfo(true);
+    flagMap = true;
+    flagBindings = true;
+    flagAddObjects = true;
+    flagOpenDebug = false;
+    //setOpenMapInfo(true);
   }
 
-  if (flagInit && !flagOpenWS) {
+  if (flagMap && flagBindings && flagAddObjects && !flagOpenWS) {
     Initialisation();
-    flagInit = false;
+    flagMap = false;
+    flagBindings = false;
+    flagAddObjects = false;
+    setOpenMapInfo(true);
   }
 
   return (

@@ -1,16 +1,20 @@
 //=== GsSetPhase ===================================
-export const SendSocketCreateRoute = (debug: boolean, ws: WebSocket, maskRoutes: any) => {
-  console.log('CreateRoute:', maskRoutes);
+export const SendSocketCreateRoute = (
+  debug: boolean,
+  ws: WebSocket,
+  maskRoutes: any
+) => {
+  console.log("CreateRoute:", maskRoutes);
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: 'createRoute',
+            type: "createRoute",
             region: maskRoutes.region,
             description: maskRoutes.description,
             listTL: maskRoutes.listTL,
-          }),
+          })
         );
       } else {
         setTimeout(() => {
@@ -22,18 +26,22 @@ export const SendSocketCreateRoute = (debug: boolean, ws: WebSocket, maskRoutes:
   handleSendOpen();
 };
 
-export const SendSocketUpdateRoute = (debug: boolean, ws: WebSocket, maskRoutes: any) => {
-  console.log('UpdateRoute:', maskRoutes);
+export const SendSocketUpdateRoute = (
+  debug: boolean,
+  ws: WebSocket,
+  maskRoutes: any
+) => {
+  console.log("UpdateRoute:", maskRoutes);
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: 'updateRoute',
+            type: "updateRoute",
             region: maskRoutes.region,
             description: maskRoutes.description,
             listTL: maskRoutes.listTL,
-          }),
+          })
         );
       } else {
         setTimeout(() => {
@@ -45,17 +53,21 @@ export const SendSocketUpdateRoute = (debug: boolean, ws: WebSocket, maskRoutes:
   handleSendOpen();
 };
 
-export const SendSocketDeleteRoute = (debug: boolean, ws: WebSocket, maskRoutes: any) => {
-  console.log('DeleteRoute:', maskRoutes);
+export const SendSocketDeleteRoute = (
+  debug: boolean,
+  ws: WebSocket,
+  maskRoutes: any
+) => {
+  console.log("DeleteRoute:", maskRoutes);
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: 'deleteRoute',
+            type: "deleteRoute",
             region: maskRoutes.region,
             description: maskRoutes.description,
-          }),
+          })
         );
       } else {
         setTimeout(() => {
@@ -71,18 +83,18 @@ export const SendSocketRoute = (
   debug: boolean,
   ws: WebSocket,
   devicesProps: Array<number>,
-  turnOnProps: boolean,
+  turnOnProps: boolean
 ) => {
-  console.log('Route:', turnOnProps, devicesProps);
+  console.log("Route:", turnOnProps, devicesProps);
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: 'route',
+            type: "route",
             devices: devicesProps,
             turnOn: turnOnProps,
-          }),
+          })
         );
       } else {
         setTimeout(() => {
@@ -99,7 +111,7 @@ export const SendSocketDispatch = (
   ws: WebSocket,
   idevice: number,
   cmdd: number,
-  faza: number,
+  faza: number
 ) => {
   //console.log('Dispatch:', idevice, cmdd, faza);
   const handleSendOpen = () => {
@@ -107,11 +119,11 @@ export const SendSocketDispatch = (
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: 'dispatch',
+            type: "dispatch",
             id: idevice,
             cmd: cmdd,
             param: faza,
-          }),
+          })
         );
       } else {
         setTimeout(() => {
@@ -122,23 +134,16 @@ export const SendSocketDispatch = (
   };
   handleSendOpen();
 };
-//=== SendSocket ===================================
-export const SendSocketGetPhases = (
-  debugging: boolean,
-  ws: WebSocket,
-  region: string,
-  area: string,
-  id: number,
-) => {
-  //console.log("GetPhases:", region, area, id);
+//=== App ==========================================
+export const SendSocketGetBindings = (debug: boolean, ws: WebSocket) => {
+  console.log("GetBindings");
   const handleSendOpen = () => {
-    if (!debugging) {
+    if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: 'getPhases',
-            pos: { region, area, id },
-          }),
+            type: "getBindings",
+          })
         );
       } else {
         setTimeout(() => {
@@ -150,3 +155,49 @@ export const SendSocketGetPhases = (
   handleSendOpen();
 };
 
+export const SendSocketGetAddObjects = (debug: boolean, ws: WebSocket) => {
+  console.log("GetAddObjects");
+  const handleSendOpen = () => {
+    if (!debug) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(
+          JSON.stringify({
+            type: "getAddObjects",
+          })
+        );
+      } else {
+        setTimeout(() => {
+          handleSendOpen();
+        }, 1000);
+      }
+    }
+  };
+  handleSendOpen();
+};
+
+export const SendSocketGetPhases = (
+  debugging: boolean,
+  ws: WebSocket,
+  region: string,
+  area: string,
+  id: number
+) => {
+  //console.log("GetPhases:", region, area, id);
+  const handleSendOpen = () => {
+    if (!debugging) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(
+          JSON.stringify({
+            type: "getPhases",
+            pos: { region, area, id },
+          })
+        );
+      } else {
+        setTimeout(() => {
+          handleSendOpen();
+        }, 1000);
+      }
+    }
+  };
+  handleSendOpen();
+};

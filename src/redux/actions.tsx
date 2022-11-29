@@ -1,17 +1,23 @@
 import {
   MAP_CREATE,
-  MASSDK_CREATE,
-  MASSMODE_CREATE,
+  BINDINGS_CREATE,
+  ADDOBJECTS_CREATE,
   STATSAVE_CREATE,
-  MASSFAZ_CREATE,
   COORDINATES_CREATE,
-} from './types';
+  //===========================================================
+  MASSFAZ_CREATE,
+  MASSMODE_CREATE,
+  MASSDK_CREATE,
+} from "./types";
 
-import { DateMAP } from './../interfaceMAP.d';
-import { Pointer } from './../App';
-import { Fazer } from './../App';
-import { Stater } from './../App';
-import { NameMode } from './../App';
+import { DateMAP } from "./../interfaceMAP.d";
+import { DateBindings } from "./../interfaceBindings.d";
+import { DateAddObjects } from "./../interfaceAddObjects.d";
+import { Stater } from "./../App";
+
+import { Pointer } from "./../App";
+import { Fazer } from "./../App";
+import { NameMode } from "./../App";
 
 export function massdkCreate(massDka: Pointer[] = []) {
   return {
@@ -34,6 +40,21 @@ export function massmodeCreate(massMod: NameMode[] = []) {
     data: massMod,
   };
 }
+//===========================================================
+export function bindingsCreate(dateBindings: DateBindings) {
+  return {
+    type: BINDINGS_CREATE,
+    data: dateBindings,
+  };
+}
+
+export function addobjectsCreate(dateAddObjects: DateAddObjects) {
+  return {
+    type: ADDOBJECTS_CREATE,
+    data: dateAddObjects,
+  };
+}
+
 
 export function mapCreate(dateMap: DateMAP) {
   return {

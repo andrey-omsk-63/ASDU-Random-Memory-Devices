@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 
-import { Fazer } from "./../../App";
+import { Fazer } from "../../App";
 
 import { OutputFazaImg, OutputVertexImg } from "../MapServiceFunctions";
 import { SendSocketRoute, SendSocketDispatch } from "../MapSocketFunctions";

@@ -39,3 +39,39 @@ export const styleSetInf = {
   boxShadow: 24,
   p: 1.5,
 };
+//=== InputObject =====================================================
+export const styleSet = {
+  width: "230px",
+  maxHeight: "4px",
+  minHeight: "4px",
+  bgcolor: "#FAFAFA",
+  boxShadow: 3,
+  textAlign: "center",
+  p: 1.5,
+};
+
+export const styleInpKnop = {
+  fontSize: 13.3,
+  color: "black",
+  maxHeight: "27px",
+  minHeight: "27px",
+  maxWidth: "62px",
+  minWidth: "62px",
+  backgroundColor: "#FFDB4D",
+  textTransform: "unset !important",
+};
+
+export const styleSetAdress = {
+  width: "319px",
+  height: "30px",
+  marginTop: "9vh",
+  marginLeft: "48px",
+};
+
+export const styleBoxForm = {
+  "& > :not(style)": {
+    marginTop: "-9px",
+    marginLeft: "-12px",
+    width: "255px",
+  },
+};
