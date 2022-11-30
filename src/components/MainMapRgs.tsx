@@ -16,7 +16,7 @@ import GsErrorMessage from "./RgsComponents/GsErrorMessage";
 import GsDoPlacemarkDo from "./RgsComponents/RgsDoPlacemarkDo";
 import RgsCreateObject from "./RgsComponents/RgsCreateObject";
 
-import { getMultiRouteOptions } from "./MapServiceFunctions";
+import { getMultiRouteOptions, StrokaHelp } from "./MapServiceFunctions";
 import { getReferencePoints, CenterCoord } from "./MapServiceFunctions";
 import { ErrorHaveVertex } from "./MapServiceFunctions";
 import { StrokaMenuGlob } from "./MapServiceFunctions";
@@ -58,11 +58,11 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     return massdkReducer.massdk;
   });
   //console.log("massdk", massdk);
-  let bindings = useSelector((state: any) => {
-    const { bindingsReducer } = state;
-    return bindingsReducer.bindings;
-  });
-  console.log("bindings", bindings);
+  // let bindings = useSelector((state: any) => {
+  //   const { bindingsReducer } = state;
+  //   return bindingsReducer.bindings;
+  // });
+  //console.log("bindings", bindings);
   let addobjects = useSelector((state: any) => {
     const { addobjectsReducer } = state;
     return addobjectsReducer.addobjects.data.addObjects;
@@ -271,8 +271,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const InputerObject = (coord: Array<number>) => {
     if (coord[0] !== leftCoord[0] || coord[1] !== leftCoord[1]) {
       leftCoord = coord;
-      console.log("Левая кнопка");
       setCreateObject(true);
+      modeToDo = 1;
+      setFlagPusk(!flagPusk);
     }
   };
 
@@ -365,7 +366,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(map.tflight).length) {
-    console.log("@@@@@@", addobjects);
     for (let i = 0; i < addobjects.length; i++) {
       coordinates.push(addobjects[i].dgis);
     }
@@ -390,12 +390,13 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     //let soobHelp = "Выберите перекрёстки для создания нового маршрута";
     //let soobHelpFiest = "Добавьте/удалите перекрёстки для создания маршрута [";
     //soobHelpFiest += massMem.length + "✳]";
-    //let soobInfo = "Подготовка к выпонению режима";
+    let soobInfo = "Введите реквизиты доп.объекта (<Esc> - сброс)";
     //if (modeToDo === 2) soobInfo = "Происходит выполнение режима";
 
     return (
       <>
         {/* {modeToDo > 0 && <>{StrokaHelp(soobInfo)}</>} */}
+        {modeToDo > 0 && <>{StrokaHelp(soobInfo)}</>}
         {modeToDo === 0 && (
           <>
             {StrokaMenuGlob("Режим назначения", PressButton, 51)}
@@ -466,6 +467,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                     <RgsCreateObject
                       setOpen={setCreateObject}
                       coord={leftCoord}
+                      funcMode={ModeToDo}
                     />
                   )}
                   {selectMD && (
