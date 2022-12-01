@@ -1,34 +1,32 @@
-import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addobjectsCreate, coordinatesCreate } from '../../redux/actions';
+import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addobjCreate, coordinatesCreate } from '../../redux/actions';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 
-import GsErrorMessage from "./GsErrorMessage";
+import GsErrorMessage from './GsErrorMessage';
 
-import { NameMode } from "../MapServiceFunctions";
+import { NameMode } from '../MapServiceFunctions';
 
-import { SendSocketСreateAddObj } from "../MapSocketFunctions";
+import { SendSocketСreateAddObj } from '../MapSocketFunctions';
 
-import { styleSetAdress, styleBoxForm, styleInpKnop } from "../MainMapStyle";
-import { styleSet } from "../MainMapStyle";
-import { styleSetAdrArea, styleSetAdrID } from "./../MainMapStyle";
-import { styleSetArea, styleSetID } from "./../MainMapStyle";
-import { styleBoxFormArea, styleBoxFormID } from "./../MainMapStyle";
+import { styleSetAdress, styleBoxForm, styleInpKnop } from '../MainMapStyle';
+import { styleSet } from '../MainMapStyle';
+import { styleSetAdrArea, styleSetAdrID } from './../MainMapStyle';
+import { styleSetArea, styleSetID } from './../MainMapStyle';
+import { styleBoxFormArea, styleBoxFormID } from './../MainMapStyle';
 
 //let chNewCoord = 1;
-let soobErr = "";
+let soobErr = '';
+let valueName = '';
+let valueID = 0;
 
-const RgsCreateObject = (props: {
-  setOpen: Function;
-  coord: any;
-  funcMode: Function;
-}) => {
+const RgsCreateObject = (props: { setOpen: Function; coord: any; funcMode: Function }) => {
   //== Piece of Redux ======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -38,10 +36,12 @@ const RgsCreateObject = (props: {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
-  let addobjects = useSelector((state: any) => {
-    const { addobjectsReducer } = state;
-    return addobjectsReducer.addobjects.data.addObjects;
+  let addobj = useSelector((state: any) => {
+    const { addobjReducer } = state;
+    return addobjReducer.addobj.dateAdd;
+    //return addobjReducer.addobj.addObjects;
   });
+  console.log('RgsCreateObject', addobj);
   let coordinates = useSelector((state: any) => {
     const { coordinatesReducer } = state;
     return coordinatesReducer.coordinates;
@@ -61,8 +61,8 @@ const RgsCreateObject = (props: {
   }
   for (let i = 0; i < massKey.length; i++) {
     let maskCurrencies = {
-      value: "",
-      label: "",
+      value: '',
+      label: '',
     };
     maskCurrencies.value = massKey[i];
     maskCurrencies.label = massDat[i];
@@ -70,33 +70,16 @@ const RgsCreateObject = (props: {
   }
 
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
-  const [valuen1, setValuen1] = React.useState("Объект" + NameMode()); //"Объект 1000" + String(chNewCoord)
   const [currency, setCurrency] = React.useState(massKey[0]);
-  const [valuen3, setValuen3] = React.useState(10001);
   const [openSetErr, setOpenSetErr] = React.useState(false);
 
   const handleKey = (event: any) => {
-    if (event.key === "Enter") event.preventDefault();
-  };
-
-  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value) {
-      setValuen1(event.target.value.trimStart()); // удаление пробелов в начале строки
-      setOpenSetAdress(true);
-    }
+    if (event.key === 'Enter') event.preventDefault();
   };
 
   const handleChangeArea = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrency(event.target.value);
     setOpenSetAdress(true);
-  };
-
-  const handleChangeID = (event: any) => {
-    let valueInp = event.target.value.replace(/^0+/, "");
-    if (Number(valueInp) < 10001) valueInp = 10001;
-    if (valueInp === "") valueInp = 0;
-    valueInp = Math.trunc(Number(valueInp)).toString();
-    setValuen3(valueInp);
   };
 
   const handleCloseSet = () => {
@@ -106,6 +89,15 @@ const RgsCreateObject = (props: {
   };
 
   const InputName = () => {
+    const [value, setValue] = React.useState('Объект' + NameMode()); //"Объект 1000" + String(chNewCoord)
+    const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (event.target.value) {
+        valueName = event.target.value.trimStart();
+        setValue(valueName); // удаление пробелов в начале строки
+        setOpenSetAdress(true);
+      }
+    };
+
     return (
       <Box sx={styleSet}>
         <Box component="form" sx={styleBoxForm}>
@@ -113,7 +105,7 @@ const RgsCreateObject = (props: {
             size="small"
             onKeyPress={handleKey} //отключение Enter
             inputProps={{ style: { fontSize: 13.3 } }}
-            value={valuen1}
+            value={value}
             onChange={handleChangeName}
             variant="standard"
             helperText="Введите наименование объекта"
@@ -137,8 +129,7 @@ const RgsCreateObject = (props: {
             InputProps={{ style: { fontSize: 13.4 } }}
             variant="standard"
             helperText="Введите район"
-            color="secondary"
-          >
+            color="secondary">
             {currencies.map((option: any) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
@@ -151,6 +142,16 @@ const RgsCreateObject = (props: {
   };
 
   const InputID = () => {
+    const [value, setValue] = React.useState(10001);
+    const handleChangeID = (event: any) => {
+      let valueInp = event.target.value.replace(/^0+/, '');
+      if (Number(valueInp) < 10001) valueInp = 10001;
+      if (valueInp === '') valueInp = 0;
+      valueInp = Math.trunc(Number(valueInp)).toString();
+      valueID = valueInp;
+      setValue(valueInp);
+    };
+
     return (
       <Box sx={styleSetID}>
         <Box component="form" sx={styleBoxFormID}>
@@ -159,7 +160,7 @@ const RgsCreateObject = (props: {
             onKeyPress={handleKey} //отключение Enter
             type="number"
             inputProps={{ style: { fontSize: 13.3 } }}
-            value={valuen3}
+            value={value}
             onChange={handleChangeID}
             variant="standard"
             helperText="Введите ID"
@@ -172,38 +173,31 @@ const RgsCreateObject = (props: {
 
   const handleClose = () => {
     let have = false;
-    for (let i = 0; i < addobjects.length; i++) {
+    for (let i = 0; i < addobj.addObjects.length; i++) {
       if (
-        addobjects[i].region === Number(datestat.region) &&
-        addobjects[i].area === Number(currency) &&
-        addobjects[i].id === Number(valuen3)
+        addobj.addObjects[i].region === Number(datestat.region) &&
+        addobj.addObjects[i].area === Number(currency) &&
+        addobj.addObjects[i].id === Number(valueID)
       )
         have = true;
     }
     if (have) {
-      soobErr = "Oбъект с ключом [" + datestat.region + ", " + currency + ", ";
-      soobErr += valuen3 + "] уже существует";
+      soobErr = 'Oбъект с ключом [' + datestat.region + ', ' + currency + ', ';
+      soobErr += valueID + '] уже существует';
       setOpenSetErr(true);
     } else {
       let dater = {
         region: Number(datestat.region),
         area: Number(currency),
-        id: Number(valuen3),
-        description: valuen1,
+        id: Number(valueID),
+        description: valueName,
         dgis: props.coord,
       };
 
-      console.log('1coordinates:',coordinates)
-      console.log('1addobjects:',addobjects)
-      
-      addobjects.push(dater)
-      coordinates.push(props.coord)
+      addobj.addObjects.push(dater);
+      coordinates.push(props.coord);
       dispatch(coordinatesCreate(coordinates));
-      dispatch(addobjectsCreate(addobjects));
-
-      console.log('2coordinates:',coordinates)
-      console.log('2addobjects:',addobjects)
-
+      dispatch(addobjCreate(addobj));
       SendSocketСreateAddObj(debug, ws, dater);
       handleCloseSet();
     }
@@ -222,15 +216,13 @@ const RgsCreateObject = (props: {
           <InputID />
         </Grid>
         <Grid item xs={2.3}>
-          <Box sx={{ border: 1, borderColor: "#FFDB4D" }}>
+          <Box sx={{ border: 1, borderColor: '#FFDB4D' }}>
             <Button sx={styleInpKnop} onClick={handleClose}>
               Ввод
             </Button>
           </Box>
         </Grid>
-        {openSetErr && (
-          <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />
-        )}
+        {openSetErr && <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />}
       </Grid>
     </Modal>
   );
