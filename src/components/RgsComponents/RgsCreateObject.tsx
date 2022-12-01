@@ -1,6 +1,6 @@
 import * as React from "react";
-import { useSelector } from "react-redux";
-//import { massdkCreate, massrouteCreate } from "../../redux/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { addobjectsCreate, coordinatesCreate } from '../../redux/actions';
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -12,6 +12,8 @@ import MenuItem from "@mui/material/MenuItem";
 import GsErrorMessage from "./GsErrorMessage";
 
 import { NameMode } from "../MapServiceFunctions";
+
+import { SendSocketСreateAddObj } from "../MapSocketFunctions";
 
 import { styleSetAdress, styleBoxForm, styleInpKnop } from "../MainMapStyle";
 import { styleSet } from "../MainMapStyle";
@@ -40,16 +42,13 @@ const RgsCreateObject = (props: {
     const { addobjectsReducer } = state;
     return addobjectsReducer.addobjects.data.addObjects;
   });
-
-  // let massdk = useSelector((state: any) => {
-  //   const { massdkReducer } = state;
-  //   return massdkReducer.massdk;
-  // });
-  // let massroute = useSelector((state: any) => {
-  //   const { massrouteReducer } = state;
-  //   return massrouteReducer.massroute;
-  // });
-  // const dispatch = useDispatch();
+  let coordinates = useSelector((state: any) => {
+    const { coordinatesReducer } = state;
+    return coordinatesReducer.coordinates;
+  });
+  const debug = datestat.debug;
+  const ws = datestat.ws;
+  const dispatch = useDispatch();
   //========================================================
   let homeRegion = map.regionInfo[datestat.region];
   let dat = map.areaInfo[homeRegion];
@@ -176,7 +175,7 @@ const RgsCreateObject = (props: {
     for (let i = 0; i < addobjects.length; i++) {
       if (
         addobjects[i].region === Number(datestat.region) &&
-        addobjects[i].region === Number(currency) &&
+        addobjects[i].area === Number(currency) &&
         addobjects[i].id === Number(valuen3)
       )
         have = true;
@@ -186,6 +185,26 @@ const RgsCreateObject = (props: {
       soobErr += valuen3 + "] уже существует";
       setOpenSetErr(true);
     } else {
+      let dater = {
+        region: Number(datestat.region),
+        area: Number(currency),
+        id: Number(valuen3),
+        description: valuen1,
+        dgis: props.coord,
+      };
+
+      console.log('1coordinates:',coordinates)
+      console.log('1addobjects:',addobjects)
+      
+      addobjects.push(dater)
+      coordinates.push(props.coord)
+      dispatch(coordinatesCreate(coordinates));
+      dispatch(addobjectsCreate(addobjects));
+
+      console.log('2coordinates:',coordinates)
+      console.log('2addobjects:',addobjects)
+
+      SendSocketСreateAddObj(debug, ws, dater);
       handleCloseSet();
     }
   };

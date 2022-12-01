@@ -314,8 +314,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const ModeToDo = (mod: number) => {
+    console.log('ModeToDo',mod)
     modeToDo = mod;
     if (!modeToDo) StatusQuo();
+    console.log('ModeToDo2',mod)
     setFlagPusk(!flagPusk);
   };
 

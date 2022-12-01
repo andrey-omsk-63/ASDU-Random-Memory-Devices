@@ -201,3 +201,29 @@ export const SendSocketGetPhases = (
   };
   handleSendOpen();
 };
+//=== RgsCreateObject ==============================
+export const SendSocketСreateAddObj = (
+  debugging: boolean,
+  ws: WebSocket,
+  dat: any
+) => {
+  console.log("createAddObj:", dat);
+  const handleSendOpen = () => {
+    if (!debugging) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(
+          JSON.stringify({
+            type: "createAddObj",
+            data: dat,
+          })
+        );
+      } else {
+        setTimeout(() => {
+          handleSendOpen();
+        }, 1000);
+      }
+    }
+  };
+  handleSendOpen();
+};
+//==================================================

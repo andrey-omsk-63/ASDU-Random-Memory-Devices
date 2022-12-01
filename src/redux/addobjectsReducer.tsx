@@ -7,9 +7,9 @@ const intialState = {
 };
 
 export const addobjectsReducer = (state = intialState, action: any) => {
-  //console.log('addobjectsReducer:', action);
   switch (action.type) {
     case ADDOBJECTS_CREATE:
+      console.log('addobjectsReducer:', action);
       return {
         ...state,
         addobjects: action.data,
