@@ -226,4 +226,29 @@ export const SendSocketСreateAddObj = (
   };
   handleSendOpen();
 };
+
+export const SendSocketDeleteAddObj = (
+  debugging: boolean,
+  ws: WebSocket,
+  dat: any
+) => {
+  console.log("deleteAddObj:", dat);
+  const handleSendOpen = () => {
+    if (!debugging) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(
+          JSON.stringify({
+            type: "deleteAddObj",
+            data: dat,
+          })
+        );
+      } else {
+        setTimeout(() => {
+          handleSendOpen();
+        }, 1000);
+      }
+    }
+  };
+  handleSendOpen();
+};
 //==================================================

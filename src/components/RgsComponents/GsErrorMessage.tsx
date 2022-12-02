@@ -39,6 +39,8 @@ const GsErrorMessage = (props: { sErr: string; setOpen: any }) => {
     setOpenSet(false);
   };
 
+  console.log('openSet',openSet)
+
   return (
     <Modal open={openSet} onClose={handleClose} hideBackdrop>
       <Box sx={styleSetInf}>

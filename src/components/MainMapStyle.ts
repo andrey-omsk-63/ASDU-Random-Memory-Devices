@@ -150,3 +150,36 @@ export const styleBoxFormID = {
     width: "253px",
   },
 };
+//=== ProcessObject ===================================================
+export const styleModalMenu = {
+  fontSize: 17,
+  maxHeight: "21px",
+  minHeight: "21px",
+  backgroundColor: "#E6F5D6",
+  color: "black",
+  marginRight: 1,
+  marginBottom: 2,
+  textTransform: "unset !important",
+  textAlign: "center",
+};
+
+export const styleSetProcess = {
+  outline: "none",
+  position: "relative",
+  marginTop: 8,
+  marginLeft: 8,
+  marginRight: "auto",
+  width: 333,
+  bgcolor: "background.paper",
+  border: "3px solid #000",
+  borderColor: "primary.main",
+  borderRadius: 2,
+  boxShadow: 24,
+  p: 1.5,
+};
+
+export const styleTypography = {
+  textAlign: "center",
+  color: "#5B1080",
+};
+//=====================================================================
