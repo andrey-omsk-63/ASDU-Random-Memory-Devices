@@ -301,11 +301,9 @@ const MainMapRgs = () =>
                 <>
                   {StrokaMenuGlob('Режим назначения', PressButton, 52)}
                   {StrokaHelp('Вы находитесь в режиме управления')}
-                  {/* {beginInTarget && ( */}
                   {massMem.length === 0 && (
                     <>{StrokaHelp('Начала работы - выбор первого перекрёстка')}</>
                   )}
-                  {/* {!beginInTarget && <>{StrokaHelp(soobHelpFiest)}</>} */}
                   {massMem.length > 0 && helper && <>{StrokaHelp(soobHelpFiest)}</>}
                   {massMem.length > 0 && !helper && <>{StrokaHelp(soobHelpFiest)}</>}
                 </>
