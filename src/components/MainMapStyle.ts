@@ -6,9 +6,9 @@ export const searchControl = {
 
 export const styleInfoSoob = {
   fontSize: 14,
-  border: 0,
+  //border: 1,
   marginRight: 0.1,
-  width: 650,
+  width: 400,
   maxHeight: "21px",
   minHeight: "21px",
   backgroundColor: "#E9F5D8",
@@ -46,8 +46,6 @@ export const styleSetAdress = {
   height: "160px",
   marginTop: "9vh",
   marginLeft: "48px",
-  //bgcolor: "#FFFEF7",
-  //opacity: 0.75,
   border: "3px solid #000",
   borderColor: "#FFFEF7",
   borderRadius: 2,
@@ -85,7 +83,7 @@ export const styleBoxForm = {
   "& > :not(style)": {
     marginTop: "-9px",
     marginLeft: "-12px",
-    width: "255px",
+    width: "250px",
   },
 };
 
@@ -94,8 +92,6 @@ export const styleSetAdrAreaID = {
   marginLeft: "48px",
   width: "316px",
   height: "14vh",
-  // bgcolor: "#FAFAFA",
-  // bgcolor: "#DAF0C5",
   bgcolor: "#FFFEF7",
   opacity: 0.8,
 };
@@ -178,8 +174,22 @@ export const styleSetProcess = {
   p: 1.5,
 };
 
-export const styleTypography = {
-  textAlign: "center",
-  color: "#5B1080",
+// export const styleTypography = {
+//   textAlign: "center",
+//   color: "#5B1080",
+// };
+//=== ProcessObject ===================================================
+export const styleEditName = {
+  outline: "none",
+  width: "319px",
+  height: "60px",
+  marginTop: "9vh",
+  marginLeft: "48px",
+  border: "3px solid #000",
+  borderColor: "#FFFEF7",
+  borderRadius: 2,
+  boxShadow: 24,
+  bgcolor: "#FFFEF7",
+  opacity: 0.9,
 };
 //=====================================================================

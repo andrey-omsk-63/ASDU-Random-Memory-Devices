@@ -2,20 +2,15 @@ import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addobjCreate, coordinatesCreate } from "../../redux/actions";
 
-//import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import Typography from "@mui/material/Typography";
-// import TextField from "@mui/material/TextField";
-// import MenuItem from "@mui/material/MenuItem";
 
-//import GsErrorMessage from "./GsErrorMessage";
+import RgsEditName from "./RgsEditName";
 
-//import { SendSocketСreateAddObj } from "../MapSocketFunctions";
 import { SendSocketDeleteAddObj } from "../MapSocketFunctions";
 
-import { styleModalEnd, styleTypography } from "../MainMapStyle";
+import { styleModalEnd } from "../MainMapStyle";
 import { styleModalMenu, styleSetProcess } from "../MainMapStyle";
 
 const RgsProcessObject = (props: { setOpen: Function; idx: number }) => {
@@ -42,13 +37,7 @@ const RgsProcessObject = (props: { setOpen: Function; idx: number }) => {
   const dispatch = useDispatch();
   //========================================================
   const [openSet, setOpenSet] = React.useState(true);
-  // const [openProcess, setOpenProcess] = React.useState(true);
-  // const [openSetErr, setOpenSetErr] = React.useState(false);
-
-  // const handleKey = (event: any) => {
-  //   if (event.key === "Enter") event.preventDefault();
-  // };
-
+  const [openProcess, setOpenProcess] = React.useState(false);
   let idxObj = props.idx - map.tflight.length;
 
   const handleCloseSet = () => {
@@ -64,16 +53,17 @@ const RgsProcessObject = (props: { setOpen: Function; idx: number }) => {
       dispatch(coordinatesCreate(coordinates));
       dispatch(addobjCreate(addobj));
       SendSocketDeleteAddObj(debug, ws, dater);
+      handleCloseSet();
     } else {
-      console.log("Здесь будет редактирование имени")
+      console.log("Здесь будет редактирование имени");
+      setOpenProcess(true);
     }
-    handleCloseSet();
   };
 
   const StrokaBalloon = (soob: string, mode: number) => {
     return (
       <Button sx={styleModalMenu} onClick={() => handleClose(mode)}>
-        <b>{soob}</b>
+        {soob}
       </Button>
     );
   };
@@ -82,16 +72,22 @@ const RgsProcessObject = (props: { setOpen: Function; idx: number }) => {
     <Modal open={openSet} onClose={handleCloseSet} hideBackdrop>
       <Box sx={styleSetProcess}>
         <Button sx={styleModalEnd} onClick={handleCloseSet}>
-          <b>&#10006;</b>
+          &#10006;
         </Button>
-        <Typography variant="h6" sx={styleTypography}>
-          {/* 123456789012345678901234567 */}
-          {addobj.addObjects[idxObj].description.slice(0, 27)}
-        </Typography>
-        <Box sx={{ marginTop: 1, textAlign: "center" }}>
+        <Box sx={{ fontSize: 17, textAlign: "center" }}>
+          <em>
+            {'"'}
+            {addobj.addObjects[idxObj].description.slice(0, 33)}
+            {'"'}
+          </em>
+        </Box>
+        <Box sx={{ marginTop: 1.5, textAlign: "center" }}>
           {StrokaBalloon("Редактирование названия", 0)}
           {StrokaBalloon("Удаление", 1)}
         </Box>
+        {openProcess && (
+          <RgsEditName setOpen={setOpenProcess} idx={props.idx} />
+        )}
       </Box>
     </Modal>
   );
