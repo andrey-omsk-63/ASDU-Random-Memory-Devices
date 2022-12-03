@@ -31,7 +31,7 @@ let pointCenterEt: any = 0;
 
 let massMem: Array<number> = [];
 let massCoord: any = [];
-let newMode = -1;
+//let newMode = -1;
 let soobErr = '';
 //let helper = true;
 
@@ -61,11 +61,11 @@ const MainMapRgs = () =>
     //   return massdkReducer.massdk;
     // });
     //console.log("massdk", massdk);
-    let bindings = useSelector((state: any) => {
-      const { bindingsReducer } = state;
-      return bindingsReducer.bindings.dateBindings;
-    });
-    console.log('bindings', bindings);
+    // let bindings = useSelector((state: any) => {
+    //   const { bindingsReducer } = state;
+    //   return bindingsReducer.bindings.dateBindings;
+    // });
+    //console.log('bindings', bindings);
     let addobj = useSelector((state: any) => {
       const { addobjReducer } = state;
       return addobjReducer.addobj.dateAdd;
@@ -88,7 +88,7 @@ const MainMapRgs = () =>
     const [processObject, setProcessObject] = React.useState(false);
     const [idxObj, setIdxObj] = React.useState(-1);
 
-    const [beginInTarget, setBeginInTarget] = React.useState(true);
+    //const [beginInTarget, setBeginInTarget] = React.useState(true);
     //const [setPhase, setSetPhase] = React.useState(false);
 
     const [flagCenter, setFlagCenter] = React.useState(false);
@@ -127,48 +127,51 @@ const MainMapRgs = () =>
     const StatusQuo = () => {
       massMem = [];
       massCoord = [];
-      newMode = -1;
+      //newMode = -1;
       zoom = zoomStart - 0.01;
       ymaps && addRoute(ymaps, false); // перерисовка связей
       NewPointCenter(pointCenterEt);
     };
 
-    const OnPlacemarkClickPoint = (index: number) => {
+    const ClickPointInTarget = (index: number) => {
+      console.log('реж.назначения:', index, map.tflight.length);
       if (index >= map.tflight.length) {
-        console.log('реж.назначения:', index, map.tflight.length);
-        //idxObj = index
         setIdxObj(index);
         setProcessObject(true);
       } else {
-        let nomInMass = massMem.indexOf(index);
+        console.log('назначения перекрёстков');
+      }
+    };
+
+    const ClickPointNotTarget = (index: number) => {
+      console.log('реж.управления:', index, map.tflight.length);
+      let nomInMass = massMem.indexOf(index);
+
+      if (nomInMass < 0) {
+        massMem.push(index);
+        helper = !helper;
         let masscoord: any = [];
-        //setFlagPusk(!flagPusk);
-        // if (newMode < 0) {
-        // создание нового режима
-        if (nomInMass < 0) {
-          massMem.push(index);
-          helper = !helper;
-          //if (massMem.length === 1) setBeginInTarget(false);
-          console.log('реж.управления', massMem, index, map.tflight.length);
-          masscoord[0] = map.tflight[index].points.Y;
+        if (index < map.tflight.length) {
+          masscoord[0] = map.tflight[index].points.Y; // перекрёсток
           masscoord[1] = map.tflight[index].points.X;
-          massCoord.push(masscoord);
         } else {
-          massMem.splice(nomInMass, 1);
-          massCoord.splice(nomInMass, 1);
+          let idxObj = index - map.tflight.length; // объект
+          masscoord = addobj.addObjects[idxObj].dgis;
         }
+        massCoord.push(masscoord);
+      } else {
+        massMem.splice(nomInMass, 1);
+        massCoord.splice(nomInMass, 1);
+      }
+      ymaps && addRoute(ymaps, false); // перерисовка связей
+      setFlagPusk(!flagPusk);
+    };
 
-        ymaps && addRoute(ymaps, false); // перерисовка связей
-        setFlagPusk(!flagPusk);
-
-        // } else {
-        //   // работа с существующем режимом
-        //   if (nomInMass >= 0 && nomInMass + 1 < massMem.length) {
-        //     masscoord[0] = map.tflight[massMem[nomInMass + 1]].points.Y;
-        //     masscoord[1] = map.tflight[massMem[nomInMass + 1]].points.X;
-        //     NewPointCenter(masscoord);
-        //   }
-        // }
+    const OnPlacemarkClickPoint = (index: number) => {
+      if (inTarget) {
+        ClickPointInTarget(index); //реж.назначения
+      } else {
+        ClickPointNotTarget(index); //реж.управления
       }
     };
     //=== вывод светофоров ===================================
@@ -241,6 +244,7 @@ const MainMapRgs = () =>
 
     const SetHelper = () => {
       inTarget = !inTarget;
+      StatusQuo();
       setFlagPusk(!flagPusk);
     };
 
@@ -278,13 +282,9 @@ const MainMapRgs = () =>
       zoom,
     };
 
-    console.log('!@@@@@@:', massMem.length);
-    //if (massMem.length) setFlagPusk(!flagPusk);
-
     const MenuGl = () => {
       let soobHelpFiest = 'Добавьте/удалите перекрёстки в маршруте [';
       soobHelpFiest += massMem.length + '✳]';
-      console.log('@@@@@@:', !inTarget, massMem.length, soobHelpFiest);
 
       return (
         <>

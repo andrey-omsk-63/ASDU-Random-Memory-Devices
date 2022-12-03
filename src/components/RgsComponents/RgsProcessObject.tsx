@@ -1,17 +1,17 @@
-import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addobjCreate, coordinatesCreate } from "../../redux/actions";
+import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addobjCreate, coordinatesCreate } from '../../redux/actions';
 
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
 
-import RgsEditName from "./RgsEditName";
+import RgsEditName from './RgsEditName';
 
-import { SendSocketDeleteAddObj } from "../MapSocketFunctions";
+import { SendSocketDeleteAddObj } from '../MapSocketFunctions';
 
-import { styleModalEnd } from "../MainMapStyle";
-import { styleModalMenu, styleSetProcess } from "../MainMapStyle";
+import { styleModalEnd } from '../MainMapStyle';
+import { styleModalMenu, styleSetProcess } from '../MainMapStyle';
 
 const RgsProcessObject = (props: { setOpen: Function; idx: number }) => {
   //== Piece of Redux ======================================
@@ -27,7 +27,7 @@ const RgsProcessObject = (props: { setOpen: Function; idx: number }) => {
     const { addobjReducer } = state;
     return addobjReducer.addobj.dateAdd;
   });
-  console.log("RgsProcessObject", addobj);
+  console.log('RgsProcessObject', addobj);
   let coordinates = useSelector((state: any) => {
     const { coordinatesReducer } = state;
     return coordinatesReducer.coordinates;
@@ -55,7 +55,7 @@ const RgsProcessObject = (props: { setOpen: Function; idx: number }) => {
       SendSocketDeleteAddObj(debug, ws, dater);
       handleCloseSet();
     } else {
-      console.log("Здесь будет редактирование имени");
+      //console.log("Здесь будет редактирование имени");
       setOpenProcess(true);
     }
   };
@@ -74,20 +74,18 @@ const RgsProcessObject = (props: { setOpen: Function; idx: number }) => {
         <Button sx={styleModalEnd} onClick={handleCloseSet}>
           &#10006;
         </Button>
-        <Box sx={{ fontSize: 17, textAlign: "center" }}>
+        <Box sx={{ fontSize: 17, textAlign: 'center' }}>
           <em>
             {'"'}
             {addobj.addObjects[idxObj].description.slice(0, 33)}
             {'"'}
           </em>
         </Box>
-        <Box sx={{ marginTop: 1.5, textAlign: "center" }}>
-          {StrokaBalloon("Редактирование названия", 0)}
-          {StrokaBalloon("Удаление", 1)}
+        <Box sx={{ marginTop: 1.5, textAlign: 'center' }}>
+          {StrokaBalloon('Редактирование названия', 0)}
+          {StrokaBalloon('Удаление', 1)}
         </Box>
-        {openProcess && (
-          <RgsEditName setOpen={setOpenProcess} idx={props.idx} />
-        )}
+        {openProcess && <RgsEditName setOpen={setOpenProcess} idx={props.idx} />}
       </Box>
     </Modal>
   );
