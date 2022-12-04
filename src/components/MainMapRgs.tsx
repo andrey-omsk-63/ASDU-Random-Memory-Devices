@@ -13,6 +13,7 @@ import GsErrorMessage from './RgsComponents/GsErrorMessage';
 import GsDoPlacemarkDo from './RgsComponents/RgsDoPlacemarkDo';
 import RgsCreateObject from './RgsComponents/RgsCreateObject';
 import RgsProcessObject from './RgsComponents/RgsProcessObject';
+import RgsAppointVertex from './RgsComponents/RgsAppointVertex';
 
 import { getMultiRouteOptions, StrokaHelp } from './MapServiceFunctions';
 import { getReferencePoints, CenterCoord } from './MapServiceFunctions';
@@ -86,9 +87,9 @@ const MainMapRgs = () =>
     const [flagPusk, setFlagPusk] = React.useState(false);
     const [createObject, setCreateObject] = React.useState(false);
     const [processObject, setProcessObject] = React.useState(false);
+    const [appoint, setAppoint] = React.useState(false);
     const [idxObj, setIdxObj] = React.useState(-1);
 
-    //const [beginInTarget, setBeginInTarget] = React.useState(true);
     //const [setPhase, setSetPhase] = React.useState(false);
 
     const [flagCenter, setFlagCenter] = React.useState(false);
@@ -140,6 +141,7 @@ const MainMapRgs = () =>
         setProcessObject(true);
       } else {
         console.log('назначения перекрёстков');
+        setAppoint(true);
       }
     };
 
@@ -354,6 +356,7 @@ const MainMapRgs = () =>
                       />
                     )}
                     {processObject && <RgsProcessObject setOpen={setProcessObject} idx={idxObj} />}
+                    {appoint && <RgsAppointVertex setOpen={setAppoint} />}
                     {openSoobErr && <GsErrorMessage setOpen={setOpenSoobErr} sErr={soobErr} />}
                   </Map>
                 </YMaps>
