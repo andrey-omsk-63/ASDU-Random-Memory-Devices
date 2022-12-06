@@ -136,8 +136,8 @@ const MainMapRgs = () =>
 
     const ClickPointInTarget = (index: number) => {
       console.log("реж.назначения:", index, map.tflight.length);
+      setIdxObj(index);
       if (index >= map.tflight.length) {
-        setIdxObj(index);
         setProcessObject(true);
       } else {
         console.log("назначения перекрёстков");
@@ -378,7 +378,9 @@ const MainMapRgs = () =>
                         idx={idxObj}
                       />
                     )}
-                    {appoint && <RgsAppointVertex setOpen={setAppoint} />}
+                    {appoint && (
+                      <RgsAppointVertex setOpen={setAppoint} idx={idxObj} />
+                    )}
                     {openSoobErr && (
                       <GsErrorMessage setOpen={setOpenSoobErr} sErr={soobErr} />
                     )}

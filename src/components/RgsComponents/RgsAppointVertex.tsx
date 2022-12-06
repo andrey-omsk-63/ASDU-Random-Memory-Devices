@@ -1,33 +1,46 @@
-import * as React from 'react';
-//import { useDispatch, useSelector } from 'react-redux';
+import * as React from "react";
+import {
+  //useDispatch,
+  useSelector,
+} from "react-redux";
 //import { addobjCreate, coordinatesCreate } from '../../redux/actions';
 
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
-import TextField from '@mui/material/TextField';
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
+import MenuItem from "@mui/material/MenuItem";
 
 //import RgsEditName from './RgsEditName';
 
 //import { SendSocketDeleteAddObj } from '../MapSocketFunctions';
 
-import { styleModalEnd, styleModalMenu } from '../MainMapStyle';
-//import { styleModalMenu } from '../MainMapStyle';
+import { styleModalEnd, styleModalMenu } from "../MainMapStyle";
+import { styleSetAppoint, styleAppSt02 } from "../MainMapStyle";
+import { styleAppSt021, styleAppSt03 } from "../MainMapStyle";
+import { styleSetAV, styleBoxFormAV } from "../MainMapStyle";
 
-const RgsAppointVertex = (props: {
-  setOpen: Function;
-  //idx: number
-}) => {
+let oldIdx = 0;
+let kluchGl = "";
+let massFaz = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
+  console.log("IDX:", props.idx);
   //== Piece of Redux ======================================
-  // const map = useSelector((state: any) => {
-  //   const { mapReducer } = state;
-  //   return mapReducer.map.dateMap;
-  // });
-  // let datestat = useSelector((state: any) => {
-  //   const { statsaveReducer } = state;
-  //   return statsaveReducer.datestat;
-  // });
+  const map = useSelector((state: any) => {
+    const { mapReducer } = state;
+    return mapReducer.map.dateMap;
+  });
+  let datestat = useSelector((state: any) => {
+    const { statsaveReducer } = state;
+    return statsaveReducer.datestat;
+  });
+  let bindings = useSelector((state: any) => {
+    const { bindingsReducer } = state;
+    return bindingsReducer.bindings.dateBindings;
+  });
+  console.log("bindings", bindings);
   // let addobj = useSelector((state: any) => {
   //   const { addobjReducer } = state;
   //   return addobjReducer.addobj.dateAdd;
@@ -42,21 +55,22 @@ const RgsAppointVertex = (props: {
   //const dispatch = useDispatch();
   //========================================================
   const [openSet, setOpenSet] = React.useState(true);
-  const [valueAreaZ, setValueAreaZ] = React.useState(10);
-  const [valueAreaS, setValueAreaS] = React.useState(7);
-  const [valueAreaV, setValueAreaV] = React.useState(1);
-  const [valueAreaU, setValueAreaU] = React.useState(2);
-  const [valueIdZ, setValueIdZ] = React.useState(12);
-  const [valueIdS, setValueIdS] = React.useState(17);
-  const [valueIdV, setValueIdV] = React.useState(43);
-  const [valueIdU, setValueIdU] = React.useState(65);
+  const [valAreaZ, setValAreaZ] = React.useState(0);
+  const [valAreaS, setValAreaS] = React.useState(0);
+  const [valAreaV, setValAreaV] = React.useState(0);
+  const [valAreaU, setValAreaU] = React.useState(0);
+  const [valIdZ, setValIdZ] = React.useState(0);
+  const [valIdS, setValIdS] = React.useState(0);
+  const [valIdV, setValIdV] = React.useState(0);
+  const [valIdU, setValIdU] = React.useState(0);
   //const [openProcess, setOpenProcess] = React.useState(false);
   //let idxObj = props.idx - map.tflight.length;
-  //let heightBlock = window.innerWidth / 3 + 33;
-  let heightBlock = window.innerWidth / 3 + 12;
+  let hBlock = window.innerWidth / 3 + 15;
+  let hB = hBlock / 15;
+  let homeRegion = datestat.region;
 
   const handleKey = (event: any) => {
-    if (event.key === 'Enter') event.preventDefault();
+    if (event.key === "Enter") event.preventDefault();
   };
 
   const handleCloseSet = () => {
@@ -69,124 +83,34 @@ const RgsAppointVertex = (props: {
   };
 
   const ChangeArea = (event: any, func: Function) => {
-    let valueInp = event.target.value.replace(/^0+/, '');
-    if (valueInp === '') valueInp = 1;
+    let valueInp = event.target.value.replace(/^0+/, "");
+    if (valueInp === "") valueInp = 1;
     if (Number(valueInp) < 0) valueInp = 1;
     if (Number(valueInp) < 100) func(valueInp);
   };
 
   const ChangeId = (event: any, func: Function) => {
-    let valueInp = event.target.value.replace(/^0+/, '');
-    if (valueInp === '') valueInp = 1;
+    let valueInp = event.target.value.replace(/^0+/, "");
+    if (valueInp === "") valueInp = 1;
     if (Number(valueInp) < 0) valueInp = 1;
     if (Number(valueInp) < 1000) func(valueInp);
   };
 
-  const styleSetAppoint = {
-    outline: 'none',
-    position: 'relative',
-    marginTop: '12vh',
-    marginLeft: 1,
-    marginRight: 'auto',
-    width: '98.5%',
-    bgcolor: 'background.paper',
-    border: '3px solid #000',
-    borderColor: 'primary.main',
-    borderRadius: 2,
-    boxShadow: 24,
-  };
-
-  const styleAppHeader = {
-    //border: 1,
-    height: heightBlock / 5,
-    paddingTop: 3,
-    textAlign: 'center',
-  };
-
-  const styleAppSt01 = {
-    border: 0,
-    textAlign: 'center',
-    height: heightBlock / 15,
-  };
-
-  const styleAppSt02 = {
-    //border: 1,
-    transform: 'translate(-50%, -50%)',
-    position: 'relative',
-    top: '50%',
-    left: '50%',
-  };
-
-  const styleAppSt03 = {
-    //border: 1,
-    transform: 'translate(-50%, -100%)',
-    position: 'relative',
-    top: '50%',
-    left: '50%',
-  };
-
-  const styleAppSt04 = {
-    paddingLeft: 0.5,
-    height: heightBlock / 15,
-  };
-
-  const styleSet = {
-    width: '20px',
-    maxHeight: '6px',
-    minHeight: '6px',
-    bgcolor: '#FFFBE5',
-    boxShadow: 3,
-    textAlign: 'center',
-    p: 1,
-  };
-
-  const styleBoxForm = {
-    '& > :not(style)': {
-      marginTop: '-9px',
-      marginLeft: '-8px',
-      width: '35px',
-    },
-  };
-
-  // const styleSetId = {
-  //   // width: '36px',
-  //   // maxHeight: '21px',
-  //   // minHeight: '21px',
-  //   width: '24px',
-  //   maxHeight: '6px',
-  //   minHeight: '6px',
-  //   bgcolor: '#FFFBE5',
-  //   boxShadow: 3,
-  //   textAlign: 'center',
-  //   p: 1,
-  // };
-
-  // const styleBoxFormId = {
-  //   '& > :not(style)': {
-  //     // marginTop: '-2px',
-  //     // marginLeft: '-2px',
-  //     // width: '38px',
-  //     marginTop: '-9px',
-  //     marginLeft: '-8px',
-  //     width: '38px',
-  //   },
-  // };
-
   const AppointHeader = () => {
     return (
-      <Grid container sx={{ bgcolor: '#C0E2C3' }}>
+      <Grid container sx={{ bgcolor: "#C0E2C3" }}>
         <Grid item xs={1}></Grid>
-        <Grid item xs={4.75} sx={styleAppHeader}>
+        <Grid item xs={4.75} sx={{ height: hBlock / 10, paddingTop: 3 }}>
           <Box sx={styleAppSt03}>
             <b>Откуда</b>
           </Box>
         </Grid>
-        <Grid item xs={4.75} sx={styleAppHeader}>
+        <Grid item xs={4.75} sx={{ height: hBlock / 10, paddingTop: 3 }}>
           <Box sx={styleAppSt03}>
             <b>Куда</b>
           </Box>
         </Grid>
-        <Grid item xs sx={styleAppHeader}>
+        <Grid item xs sx={{ height: hBlock / 10, paddingTop: 3 }}>
           <Box sx={styleAppSt03}>
             <b>Фаза</b>
           </Box>
@@ -195,10 +119,23 @@ const RgsAppointVertex = (props: {
     );
   };
 
+  const AppointDirect = (rec1: string) => {
+    return (
+      <Grid container>
+        <Grid item xs={12} sx={{ height: hBlock / 15 }}></Grid>
+        <Grid item xs={12} sx={{ textAlign: "center", height: hB }}>
+          <Box sx={styleAppSt021}>
+            <b>{rec1}</b>
+          </Box>
+        </Grid>
+      </Grid>
+    );
+  };
+
   const InputerArea = (value: any, func: any) => {
     return (
-      <Box sx={styleSet}>
-        <Box component="form" sx={styleBoxForm}>
+      <Box sx={styleSetAV}>
+        <Box component="form" sx={styleBoxFormAV}>
           <TextField
             size="small"
             type="number"
@@ -216,14 +153,14 @@ const RgsAppointVertex = (props: {
 
   const InputerId = (value: any, func: any) => {
     return (
-      <Box sx={styleSet}>
-        <Box component="form" sx={styleBoxForm}>
+      <Box sx={styleSetAV}>
+        <Box component="form" sx={styleBoxFormAV}>
           <TextField
             size="small"
             type="number"
             onKeyPress={handleKey} //отключение Enter
             value={value}
-            inputProps={{ style: { fontSize: 13.2 } }}
+            inputProps={{ style: { fontSize: 12.9 } }}
             onChange={(e) => ChangeId(e, func)}
             variant="standard"
             color="secondary"
@@ -233,31 +170,164 @@ const RgsAppointVertex = (props: {
     );
   };
 
+  const styleBoxFormFaza = {
+    "& > :not(style)": {
+      marginTop: "-0px",
+      marginLeft: "-0px",
+      width: "30px",
+    },
+  };
+
+  const InputerFaza = (rec: string, shift: number) => {
+    let mode = 0;
+    if (rec === "С") mode = 3;
+    if (rec === "В") mode = 6;
+    if (rec === "Ю") mode = 9;
+    //let mesto = "43%";
+    // let mesto = '12%';
+    // if (props.newMode < 0) mesto = '0%';
+    const styleSetFaza = {
+      //border: 1,
+      position: "relative",
+      marginTop: "1px",
+      left: "24%",
+      width: "30px",
+      maxHeight: "21px",
+      minHeight: "21px",
+      bgcolor: "#FFFBE5",
+      boxShadow: 3,
+      //paddingLeft: 1.5,
+    };
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      //chFaz++;
+      setCurrency(Number(event.target.value));
+      massFaz[mode + shift] = massDat[Number(event.target.value)];
+      console.log("MASSFAZ:", massFaz);
+    };
+
+    let dat = map.tflight[props.idx].phases;
+    if (!dat.length) dat = [1, 2, 3];
+    let massKey = [];
+    let massDat: any[] = [];
+    const currencies: any = [];
+    for (let key in dat) {
+      massKey.push(key);
+      massDat.push(dat[key]);
+    }
+    for (let i = 0; i < massKey.length; i++) {
+      let maskCurrencies = {
+        value: "",
+        label: "",
+      };
+      maskCurrencies.value = massKey[i];
+      maskCurrencies.label = massDat[i];
+      currencies.push(maskCurrencies);
+    }
+
+    console.log("!!!!!!", dat, map.tflight[props.idx], massFaz[mode + shift]);
+    console.log("######", dat, map.tflight[props.idx], massFaz[mode + shift]);
+
+    const [currency, setCurrency] = React.useState(
+      dat.indexOf(map.tflight[props.idx].phases[massFaz[mode + shift]])
+      //map.tflight[props.idx].phases[massFaz[mode + shift]]
+    );
+
+    return (
+      <Box sx={styleSetFaza}>
+        <Box component="form" sx={styleBoxFormFaza}>
+          <TextField
+            select
+            size="small"
+            onKeyPress={handleKey} //отключение Enter
+            value={currency}
+            onChange={handleChange}
+            InputProps={{ style: { fontSize: 12.9 } }}
+            variant="standard"
+            color="secondary"
+          >
+            {currencies.map((option: any) => (
+              <MenuItem
+                key={option.value}
+                value={option.value}
+                sx={{ fontSize: 14 }}
+              >
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+      </Box>
+    );
+  };
+
+  const OutputKey = (klush: string) => {
+    return (
+      <Grid container>
+        <Grid item xs={12} sx={{ textAlign: "center", height: hBlock / 15 }}>
+          <Box sx={styleAppSt02}>{klush}</Box>
+        </Grid>
+      </Grid>
+    );
+  };
+
   const AppointStroka = (
     rec1: string,
     valueAr: any,
     funcAr: Function,
     valueId: any,
-    funcId: Function,
+    funcId: Function
   ) => {
+    let klushFrom = "";
+    if (valueAr && valueId)
+      klushFrom = homeRegion + "-" + valueAr + "-" + valueId;
+    let klushTo1 = "";
+    let klushTo2 = "";
+    let klushTo3 = "";
+
+    switch (rec1) {
+      case "З":
+        if (valAreaU && valIdU)
+          klushTo1 = homeRegion + "-" + valAreaU + "-" + valIdU;
+        if (valAreaV && valIdV)
+          klushTo2 = homeRegion + "-" + valAreaV + "-" + valIdV;
+        if (valAreaS && valIdS)
+          klushTo3 = homeRegion + "-" + valAreaS + "-" + valIdS;
+        break;
+      case "С":
+        if (valAreaZ && valIdZ)
+          klushTo1 = homeRegion + "-" + valAreaZ + "-" + valIdZ;
+        if (valAreaU && valIdU)
+          klushTo2 = homeRegion + "-" + valAreaU + "-" + valIdU;
+        if (valAreaV && valIdV)
+          klushTo3 = homeRegion + "-" + valAreaV + "-" + valIdV;
+        break;
+      case "В":
+        if (valAreaS && valIdS)
+          klushTo1 = homeRegion + "-" + valAreaS + "-" + valIdS;
+        if (valAreaZ && valIdZ)
+          klushTo2 = homeRegion + "-" + valAreaZ + "-" + valIdZ;
+        if (valAreaU && valIdU)
+          klushTo3 = homeRegion + "-" + valAreaU + "-" + valIdU;
+        break;
+      case "Ю":
+        if (valAreaV && valIdV)
+          klushTo1 = homeRegion + "-" + valAreaV + "-" + valIdV;
+        if (valAreaS && valIdS)
+          klushTo2 = homeRegion + "-" + valAreaS + "-" + valIdS;
+        if (valAreaZ && valIdZ)
+          klushTo3 = homeRegion + "-" + valAreaZ + "-" + valIdZ;
+    }
     return (
       <Grid container sx={{ borderBottom: 1 }}>
         {/* === Направление === */}
-        <Grid item xs={1} sx={{ height: heightBlock / 5 }}>
-          <Grid container>
-            <Grid item xs={12} sx={{ height: heightBlock / 15 }}></Grid>
-            <Grid item xs={12} sx={styleAppSt01}>
-              <Box sx={styleAppSt02}>
-                <b>{rec1}</b>
-              </Box>
-            </Grid>
-          </Grid>
+        <Grid item xs={1} sx={{ height: hBlock / 5 }}>
+          {AppointDirect(rec1)}
         </Grid>
-
         {/* === Откуда === */}
-        <Grid item xs={4.75} sx={{ fontSize: 14, height: heightBlock / 5 }}>
+        <Grid item xs={4.75} sx={{ fontSize: 14, height: hBlock / 5 }}>
           <Grid container>
-            <Grid item xs={8.6} sx={styleAppSt04}>
+            <Grid item xs={8.6} sx={{ paddingLeft: 0.5, height: hB }}>
               <Box sx={styleAppSt02}>Ведите район</Box>
             </Grid>
             <Grid item xs sx={{ border: 0 }}>
@@ -265,52 +335,47 @@ const RgsAppointVertex = (props: {
             </Grid>
           </Grid>
           <Grid container>
-            <Grid item xs={8.6} sx={styleAppSt04}>
+            <Grid item xs={8.6} sx={{ paddingLeft: 0.5, height: hB }}>
               <Box sx={styleAppSt02}>Ведите ID</Box>
             </Grid>
             <Grid item xs sx={{ border: 0 }}>
               <Box sx={styleAppSt02}>{InputerId(valueId, funcId)}</Box>
             </Grid>
           </Grid>
-          <Grid container>
-            <Grid item xs={12} sx={styleAppSt01}>
-              <Box sx={styleAppSt02}>1-1-6</Box>
-            </Grid>
-          </Grid>
+          <b>{OutputKey(klushFrom)}</b>
         </Grid>
-
         {/* === Куда === */}
-        <Grid item xs={4.75} sx={{ fontSize: 14, height: heightBlock / 5 }}>
-          <Grid container>
-            <Grid item xs={12} sx={styleAppSt01}>
-              <Box sx={styleAppSt02}>1-1-8</Box>
-            </Grid>
-            <Grid item xs={12} sx={styleAppSt01}>
-              <Box sx={styleAppSt02}>1-1-10</Box>
-            </Grid>
-            <Grid item xs={12} sx={styleAppSt01}>
-              <Box sx={styleAppSt02}>1-1-12</Box>
-            </Grid>
-          </Grid>
+        <Grid item xs={4.75} sx={{ fontSize: 14, height: hB }}>
+          <b>{OutputKey(klushTo1)}</b>
+          <b>{OutputKey(klushTo2)}</b>
+          <b>{OutputKey(klushTo3)}</b>
         </Grid>
-
         {/* === Фаза === */}
-        <Grid item xs sx={{ fontSize: 14, height: heightBlock / 5 }}>
+        <Grid item xs sx={{ fontSize: 14, height: hBlock / 5 }}>
           <Grid container>
-            <Grid item xs={12} sx={styleAppSt01}>
-              <Box sx={styleAppSt02}>2</Box>
+            <Grid item xs={12} sx={{ textAlign: "center", height: hB }}>
+              <Box sx={styleAppSt02}>{InputerFaza(rec1, 0)}</Box>
             </Grid>
-            <Grid item xs={12} sx={styleAppSt01}>
-              <Box sx={styleAppSt02}>1</Box>
+            <Grid item xs={12} sx={{ textAlign: "center", height: hB }}>
+              <Box sx={styleAppSt02}>{InputerFaza(rec1, 1)}</Box>
             </Grid>
-            <Grid item xs={12} sx={styleAppSt01}>
-              <Box sx={styleAppSt02}>3</Box>
+            <Grid item xs={12} sx={{ textAlign: "center", height: hB }}>
+              <Box sx={styleAppSt02}>{InputerFaza(rec1, 2)}</Box>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
     );
   };
+  //=== инициализация ======================================
+  if (oldIdx !== props.idx) {
+    kluchGl = homeRegion + "-" + map.tflight[props.idx].area.num + "-";
+    kluchGl += map.tflight[props.idx].ID;
+    for (let i = 0; i < 12; i++) {
+      massFaz[i] = map.tflight[props.idx].phases[0];
+    }
+    oldIdx = props.idx;
+  }
 
   return (
     <Modal open={openSet} onClose={handleCloseSet} hideBackdrop>
@@ -318,23 +383,23 @@ const RgsAppointVertex = (props: {
         <Button sx={styleModalEnd} onClick={handleCloseSet}>
           &#10006;
         </Button>
-        <Box sx={{ fontSize: 17, textAlign: 'center' }}>
-          <b>Массив связности перекрёстка</b>
+        <Box sx={{ fontSize: 17, marginTop: 0.5, textAlign: "center" }}>
+          <b>Массив связности перекрёстка {kluchGl} </b>
         </Box>
-        <Grid container sx={{ marginTop: 0.5, paddingBottom: 1 }}>
-          <Grid item xs={4} sx={{ border: 0, height: heightBlock }}></Grid>
+        <Grid container sx={{ marginTop: 1, paddingBottom: 1 }}>
+          <Grid item xs={4} sx={{ border: 1 }}></Grid>
 
           <Grid item xs={4} sx={{ border: 0 }}>
             {AppointHeader()}
-            {AppointStroka('З', valueAreaZ, setValueAreaZ, valueIdZ, setValueIdZ)}
-            {AppointStroka('С', valueAreaS, setValueAreaS, valueIdS, setValueIdS)}
-            {AppointStroka('В', valueAreaV, setValueAreaV, valueIdV, setValueIdV)}
-            {AppointStroka('Ю', valueAreaU, setValueAreaU, valueIdU, setValueIdU)}
+            {AppointStroka("З", valAreaZ, setValAreaZ, valIdZ, setValIdZ)}
+            {AppointStroka("С", valAreaS, setValAreaS, valIdS, setValIdS)}
+            {AppointStroka("В", valAreaV, setValAreaV, valIdV, setValIdV)}
+            {AppointStroka("Ю", valAreaU, setValAreaU, valIdU, setValIdU)}
           </Grid>
 
-          <Grid item xs={4} sx={{ border: 0 }}></Grid>
+          <Grid item xs={4} sx={{ border: 1 }}></Grid>
         </Grid>
-        <Box sx={{ marginTop: 1, textAlign: 'center' }}>
+        <Box sx={{ marginTop: 1, textAlign: "center" }}>
           <Button sx={styleModalMenu} onClick={() => handleClose()}>
             Сохранить изменения
           </Button>

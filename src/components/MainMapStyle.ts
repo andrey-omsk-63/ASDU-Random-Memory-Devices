@@ -192,4 +192,60 @@ export const styleEditName = {
   bgcolor: "#FFFEF7",
   opacity: 0.9,
 };
+//=== AppointVertex ===================================================
+export const styleSetAppoint = {
+  outline: "none",
+  position: "relative",
+  marginTop: "12vh",
+  marginLeft: 1,
+  marginRight: "auto",
+  width: "98.5%",
+  bgcolor: "background.paper",
+  border: "3px solid #000",
+  borderColor: "primary.main",
+  borderRadius: 2,
+  boxShadow: 24,
+};
+
+export const styleAppSt02 = {
+  transform: "translate(-50%, -50%)",
+  position: "relative",
+  top: "50%",
+  left: "50%",
+};
+
+export const styleAppSt021 = {
+  fontSize: 19,
+  transform: "translate(-50%, -50%)",
+  position: "relative",
+  top: "50%",
+  left: "50%",
+};
+
+export const styleAppSt03 = {
+  textAlign: "center",
+  transform: "translate(-50%, -100%)",
+  position: "relative",
+  top: "50%",
+  left: "50%",
+};
+
+export const styleSetAV = {
+  width: "18px",
+  maxHeight: "6px",
+  minHeight: "6px",
+  marginTop: "2.5px",
+  bgcolor: "#FFFBE5",
+  boxShadow: 3,
+  textAlign: "center",
+  p: 1,
+};
+
+export const styleBoxFormAV = {
+  "& > :not(style)": {
+    marginTop: "-9px",
+    marginLeft: "-8px",
+    width: "33px",
+  },
+};
 //=====================================================================
