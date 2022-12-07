@@ -186,6 +186,38 @@ export const OutputVertexImg = (host: string) => {
     <CardMedia component="img" sx={{ textAlign: 'center', height: 40, width: 30 }} image={host} />
   );
 };
+//=== AppointVertex ================================
+export const CheckKey = (kluch: string, map: any, addobj: any) => {
+  const TakeAreaId = (kluch: string) => {
+    let aa = kluch.indexOf("-");
+    let aaa = kluch.indexOf("-", aa + 1);
+    let bb = kluch.slice(aa + 1, aaa);
+    let bbb = kluch.slice(aaa + 1);
+    return [Number(bb), Number(bbb)];
+  };
+
+  let klArea = TakeAreaId(kluch)[0];
+  let klId = TakeAreaId(kluch)[1];
+  let have = false;
+  if (klId < 10000) {
+    for (let i = 0; i < map.tflight.length; i++) {
+      if (
+        klArea === Number(map.tflight[i].area.num) &&
+        klId === map.tflight[i].ID
+      )
+        have = true;
+    }
+  } else {
+    for (let i = 0; i < addobj.addObjects.length; i++) {
+      if (
+        klArea === addobj.addObjects[i].area &&
+        klId === addobj.addObjects[i].id
+      )
+        have = true;
+    }
+  }
+  return have;
+};
 //=== Разное =======================================
 export const StrokaMenuGlob = (soob: string, func: any, mode: number) => {
   let dlSoob = (soob.length + 4) * 8;

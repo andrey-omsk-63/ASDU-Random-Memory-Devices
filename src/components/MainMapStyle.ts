@@ -231,21 +231,42 @@ export const styleAppSt03 = {
 };
 
 export const styleSetAV = {
-  width: "18px",
-  maxHeight: "6px",
-  minHeight: "6px",
-  marginTop: "2.5px",
+  width: "48px",
+  maxHeight: "19px",
+  minHeight: "19px",
+  marginTop: "2px",
   bgcolor: "#FFFBE5",
   boxShadow: 3,
-  textAlign: "center",
-  p: 1,
+  //textAlign: "center",
+  //p: 1,
 };
 
 export const styleBoxFormAV = {
   "& > :not(style)": {
-    marginTop: "-9px",
-    marginLeft: "-8px",
-    width: "33px",
+    marginTop: "-0px",
+    marginLeft: "-2px",
+    //height: "15px",
+    width: "50px",
+  },
+};
+
+export const styleSetFaza = {
+  //border: 1,
+  position: "relative",
+  marginTop: "1px",
+  left: "27%",
+  width: "30px",
+  maxHeight: "19px",
+  minHeight: "19px",
+  bgcolor: "#FFFBE5",
+  boxShadow: 3,
+};
+
+export const styleBoxFormFaza = {
+  "& > :not(style)": {
+    marginTop: "-2px",
+    marginLeft: "-1px",
+    width: "32px",
   },
 };
 //=====================================================================
