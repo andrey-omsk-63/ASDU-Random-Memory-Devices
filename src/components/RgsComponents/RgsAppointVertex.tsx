@@ -23,6 +23,8 @@ import { styleAppSt021, styleAppSt03 } from "../MainMapStyle";
 import { styleSetAV, styleBoxFormAV } from "../MainMapStyle";
 import { styleSetFaza, styleBoxFormFaza } from "../MainMapStyle";
 
+import { Tflink, WayPointsArray } from "../../interfaceBindings.d";
+
 let oldIdx = 0;
 let kluchGl = "";
 let massFaz = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -84,8 +86,80 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   };
 
   const handleClose = () => {
-    console.log("Ключи:", klushTo1, klushTo2, klushTo3);
-    handleCloseSet();
+    let ch = 0;
+    if (valIdZ) ch++;
+    if (valIdS) ch++;
+    if (valIdV) ch++;
+    if (valIdU) ch++;
+    console.log("Ключи:", ch);
+    if (ch < 2) {
+      soobErr = "Должно быть введено хотя бы два направления";
+      setOpenSetErr(true);
+    } else {
+      // let kluch = "";
+      let maskPoint: WayPointsArray = {
+        id: "",
+        phase: "",
+      };
+
+      let maskTflink: Tflink = {
+        add1: { id: "", wayPointsArray: [] },
+        add2: { id: "", wayPointsArray: [] },
+        east: { id: "", wayPointsArray: [] },
+        north: { id: "", wayPointsArray: [] },
+        south: { id: "", wayPointsArray: [] },
+        west: { id: "", wayPointsArray: [] },
+      };
+      // запад
+      if (valAreaZ && valIdZ) {
+        maskTflink.west.id = homeRegion + "-" + valAreaZ + "-" + valIdZ;
+        if (valAreaU && valIdU) {
+          maskPoint.id = homeRegion + "-" + valAreaU + "-" + valIdU;
+          maskPoint.phase = massFaz[0].toString();
+          maskTflink.west.wayPointsArray.push(maskPoint);
+        }
+        if (valAreaV && valIdV) {
+          maskPoint.id = homeRegion + "-" + valAreaV + "-" + valIdV;
+          maskPoint.phase = massFaz[1].toString();
+          maskTflink.west.wayPointsArray.push(maskPoint);
+        }
+        if (valAreaS && valIdS) {
+          maskPoint.id = homeRegion + "-" + valAreaS + "-" + valIdS;
+          maskPoint.phase = massFaz[2].toString();
+          maskTflink.west.wayPointsArray.push(maskPoint);
+        }
+      }
+      // север
+      if (valAreaS && valIdS) {
+        maskTflink.north.id = homeRegion + "-" + valAreaS + "-" + valIdS;
+        if (valAreaZ && valIdZ) {
+          maskPoint.id = homeRegion + "-" + valAreaZ + "-" + valIdZ;
+          maskPoint.phase = massFaz[3].toString();
+          maskTflink.north.wayPointsArray.push(maskPoint);
+        }
+        if (valAreaU && valIdU) {
+          maskPoint.id = homeRegion + "-" + valAreaU + "-" + valIdU;
+          maskPoint.phase = massFaz[4].toString();
+          maskTflink.north.wayPointsArray.push(maskPoint);
+        }
+        if (valAreaV && valIdV) {
+          maskPoint.id = homeRegion + "-" + valAreaV + "-" + valIdV;
+          maskPoint.phase = massFaz[5].toString();
+          maskTflink.north.wayPointsArray.push(maskPoint);
+        }
+      }
+      // восток
+      if (valAreaV && valIdV) {
+        maskTflink.east.id = homeRegion + "-" + valAreaV + "-" + valIdV;
+      }
+      // юг
+      if (valAreaU && valIdU) {
+        maskTflink.south.id = homeRegion + "-" + valAreaU + "-" + valIdU;
+      }
+
+      console.log("MASK:", maskTflink);
+      handleCloseSet();
+    }
   };
 
   const ChangeArea = (event: any, func: Function) => {

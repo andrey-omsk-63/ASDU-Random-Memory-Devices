@@ -1,36 +1,32 @@
 export interface Welcome21 {
-  type: string;
-  data: Data;
+    type: string;
+    data: Data;
 }
 
-//export interface Data {
 export interface DateBindings {
-  points: any[];
-  vertexes: Vertex[];
-  ways: Way[];
+    tfLinks: TfLink[];
 }
 
-export interface Vertex {
-  region: number;
-  area: number;
-  id: number;
-  dgis: string;
-  scale: number;
-  lin: number[];
-  lout: number[];
-  name: string;
+export interface TfLink {
+    id:     string;
+    tflink: Tflink;
 }
 
-export interface Way {
-  region: number;
-  sourceArea: number;
-  sourceID: number;
-  targetArea: number;
-  targetID: number;
-  lsource: number;
-  ltarget: number;
-  starts: string;
-  stops: string;
-  lenght: number;
-  time: number;
+export interface Tflink {
+    west:  Add1;
+    north: Add1;
+    east:  Add1;
+    south: Add1;
+    add1:  Add1;
+    add2:  Add1;
+}
+
+export interface Add1 {
+    id:             string;
+    wayPointsArray: WayPointsArray[];
+}
+
+export interface WayPointsArray {
+    id:    string;
+    phase: string;
 }
