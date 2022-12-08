@@ -1,35 +1,35 @@
-import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { bindingsCreate } from "../../redux/actions";
+import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { bindingsCreate } from '../../redux/actions';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 
-import GsErrorMessage from "./RgsErrorMessage";
+import GsErrorMessage from './RgsErrorMessage';
 
-import { SendSocketСreateBindings } from "../RgsSocketFunctions";
-import { TakeAreaId, CheckKey, MakeTflink } from "../RgsServiceFunctions";
+import { SendSocketСreateBindings } from '../RgsSocketFunctions';
+import { TakeAreaId, CheckKey, MakeTflink } from '../RgsServiceFunctions';
 
-import { styleModalEnd, styleModalMenu } from "../MainMapStyle";
-import { styleSetAppoint, styleAppSt02 } from "../MainMapStyle";
-import { styleAppSt021, styleAppSt03 } from "../MainMapStyle";
-import { styleSetAV, styleBoxFormAV } from "../MainMapStyle";
-import { styleSetFaza, styleBoxFormFaza } from "../MainMapStyle";
+import { styleModalEnd, styleModalMenu } from '../MainMapStyle';
+import { styleSetAppoint, styleAppSt02 } from '../MainMapStyle';
+import { styleAppSt021, styleAppSt03 } from '../MainMapStyle';
+import { styleSetAV, styleBoxFormAV } from '../MainMapStyle';
+import { styleSetFaza, styleBoxFormFaza } from '../MainMapStyle';
 
 //import { Tflink, WayPointsArray } from "../../interfaceBindings.d";
-import { TfLink } from "../../interfaceBindings.d";
+import { TfLink } from '../../interfaceBindings.d';
 
-let oldIdx = 0;
-let kluchGl = "";
+let oldIdx = -1;
+let kluchGl = '';
 let massFaz = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-let klushTo1 = "";
-let klushTo2 = "";
-let klushTo3 = "";
-let soobErr = "";
+let klushTo1 = '';
+let klushTo2 = '';
+let klushTo3 = '';
+let soobErr = '';
 
 let bindIdx = -1;
 
@@ -71,14 +71,14 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   const [valIdS, setValIdS] = React.useState(0);
   const [valIdV, setValIdV] = React.useState(0);
   const [valIdU, setValIdU] = React.useState(0);
-  const [trigger,setTrigger] = React.useState(false);
+  //const [trigger, setTrigger] = React.useState(false);
 
   let hBlock = window.innerWidth / 3 + 15;
   let hB = hBlock / 15;
   let homeRegion = datestat.region;
 
   const handleKey = (event: any) => {
-    if (event.key === "Enter") event.preventDefault();
+    if (event.key === 'Enter') event.preventDefault();
   };
 
   const handleCloseSet = () => {
@@ -93,55 +93,47 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     if (valIdV) ch++;
     if (valIdU) ch++;
     if (ch < 2) {
-      soobErr = "Должно быть введено хотя бы два направления";
+      soobErr = 'Должно быть введено хотя бы два направления';
       setOpenSetErr(true);
     } else {
-      let massAreaId = [
-        valAreaZ,
-        valIdZ,
-        valAreaS,
-        valIdS,
-        valAreaV,
-        valIdV,
-        valAreaU,
-        valIdU,
-      ];
+      let massAreaId = [valAreaZ, valIdZ, valAreaS, valIdS, valAreaV, valIdV, valAreaU, valIdU];
       let maskTfLinks: TfLink = {
         id: kluchGl,
         tflink: MakeTflink(homeRegion, massAreaId, massFaz),
       };
       bindings.tfLinks.push(maskTfLinks);
-      console.log("bindings2", bindings);
+      console.log('bindings2', bindings);
       dispatch(bindingsCreate(bindings));
       SendSocketСreateBindings(debug, ws, maskTfLinks);
-      //handleCloseSet();
+      oldIdx = -1;
+      handleCloseSet();
     }
   };
 
   const ChangeArea = (event: any, func: Function) => {
-    let valueInp = event.target.value.replace(/^0+/, "");
-    if (valueInp === "") valueInp = 1;
+    let valueInp = event.target.value.replace(/^0+/, '');
+    if (valueInp === '') valueInp = 1;
     if (Number(valueInp) < 0) valueInp = 1;
     if (Number(valueInp) < 100) func(valueInp);
   };
 
   const ChangeId = (event: any, func: any) => {
-    let valueInp = event.target.value.replace(/^0+/, "");
-    if (valueInp === "") valueInp = 1;
+    let valueInp = event.target.value.replace(/^0+/, '');
+    if (valueInp === '') valueInp = 1;
     if (Number(valueInp) < 0) valueInp = 1;
     if (Number(valueInp) < 100000) func(valueInp);
   };
 
   const BlurId = (event: any, area: any, id: any) => {
-    let kluch = homeRegion + "-" + area + "-" + id;
+    let kluch = homeRegion + '-' + area + '-' + id;
     if (kluch === kluchGl) {
-      soobErr = "Вы пытаетесь связать перекрёсток с самим собой";
+      soobErr = 'Вы пытаетесь связать перекрёсток с самим собой';
       setOpenSetErr(true);
     } else {
       if (!CheckKey(kluch, map, addobj)) {
-        soobErr = "Перекрёсток ";
-        if (id > 10000) soobErr = "Объект ";
-        soobErr += kluch + " не существует";
+        soobErr = 'Перекрёсток ';
+        if (id > 10000) soobErr = 'Объект ';
+        soobErr += kluch + ' не существует';
         setOpenSetErr(true);
       }
     }
@@ -149,7 +141,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
 
   const AppointHeader = () => {
     return (
-      <Grid container sx={{ bgcolor: "#C0E2C3" }}>
+      <Grid container sx={{ bgcolor: '#C0E2C3' }}>
         <Grid item xs={1}></Grid>
         <Grid item xs={5.5} sx={{ height: hBlock / 10, paddingTop: 3 }}>
           <Box sx={styleAppSt03}>
@@ -174,7 +166,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     return (
       <Grid container>
         <Grid item xs={12} sx={{ height: hBlock / 15 }}></Grid>
-        <Grid item xs={12} sx={{ textAlign: "center", height: hB }}>
+        <Grid item xs={12} sx={{ textAlign: 'center', height: hB }}>
           <Box sx={styleAppSt021}>
             <b>{rec1}</b>
           </Box>
@@ -236,36 +228,26 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     let massKey = [];
     let massDat: any[] = [];
     const currencies: any = [];
+    if (rec === 'С') mode = 3;
+    if (rec === 'В') mode = 6;
+    if (rec === 'Ю') mode = 9;
     if (kluch) {
-      if (rec === "С") mode = 3;
-      if (rec === "В") mode = 6;
-      if (rec === "Ю") mode = 9;
-
       for (let key in dat) {
         massKey.push(key);
         massDat.push(dat[key]);
       }
       for (let i = 0; i < massKey.length; i++) {
         let maskCurrencies = {
-          value: "",
-          label: "",
+          value: '',
+          label: '',
         };
         maskCurrencies.value = massKey[i];
         maskCurrencies.label = massDat[i];
         currencies.push(maskCurrencies);
       }
-      console.log("massFaz1:",mode,shift, massFaz);
     }
-    
-    const [currency, setCurrency] = React.useState(
-      dat.indexOf(massFaz[mode + shift])
-    );
 
-    if (kluch) {
-      console.log("massFaz2:",dat.indexOf(massFaz[mode + shift]),currency);
-      //setCurrency(dat.indexOf(massFaz[mode + shift]));
-    }
-     
+    const [currency, setCurrency] = React.useState(dat.indexOf(massFaz[mode + shift]));
 
     return (
       <Box sx={styleSetFaza}>
@@ -279,14 +261,9 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               onChange={handleChange}
               InputProps={{ style: { fontSize: 12.1 } }}
               variant="standard"
-              color="secondary"
-            >
+              color="secondary">
               {currencies.map((option: any) => (
-                <MenuItem
-                  key={option.value}
-                  value={option.value}
-                  sx={{ fontSize: 14 }}
-                >
+                <MenuItem key={option.value} value={option.value} sx={{ fontSize: 14 }}>
                   {option.label}
                 </MenuItem>
               ))}
@@ -300,7 +277,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   const OutputKey = (klush: string) => {
     return (
       <Grid container>
-        <Grid item xs={12} sx={{ textAlign: "center", height: hBlock / 15 }}>
+        <Grid item xs={12} sx={{ textAlign: 'center', height: hBlock / 15 }}>
           <Box sx={styleAppSt02}>{klush}</Box>
         </Grid>
       </Grid>
@@ -312,42 +289,41 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     valueAr: any,
     funcAr: Function,
     valueId: any,
-    funcId: Function
+    funcId: Function,
   ) => {
     const MakingKey = (valueAr: any, valueId: any) => {
-      let klushFrom = "";
-      if (valueAr && valueId)
-        klushFrom = homeRegion + "-" + valueAr + "-" + valueId;
+      let klushFrom = '';
+      if (valueAr && valueId) klushFrom = homeRegion + '-' + valueAr + '-' + valueId;
       return klushFrom;
     };
 
-    klushTo1 = "";
-    klushTo2 = "";
-    klushTo3 = "";
+    klushTo1 = '';
+    klushTo2 = '';
+    klushTo3 = '';
     let klushFrom = MakingKey(valueAr, valueId);
     switch (rec1) {
-      case "З":
+      case 'З':
         if (valAreaZ && valIdZ) {
           klushTo1 = MakingKey(valAreaU, valIdU);
           klushTo2 = MakingKey(valAreaV, valIdV);
           klushTo3 = MakingKey(valAreaS, valIdS);
         }
         break;
-      case "С":
+      case 'С':
         if (valAreaS && valIdS) {
           klushTo1 = MakingKey(valAreaZ, valIdZ);
           klushTo2 = MakingKey(valAreaU, valIdU);
           klushTo3 = MakingKey(valAreaV, valIdV);
         }
         break;
-      case "В":
+      case 'В':
         if (valAreaV && valIdV) {
           klushTo1 = MakingKey(valAreaS, valIdS);
           klushTo2 = MakingKey(valAreaZ, valIdZ);
           klushTo3 = MakingKey(valAreaU, valIdU);
         }
         break;
-      case "Ю":
+      case 'Ю':
         if (valAreaU && valIdV) {
           klushTo1 = MakingKey(valAreaV, valIdV);
           klushTo2 = MakingKey(valAreaS, valIdS);
@@ -390,13 +366,13 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         {/* === Фаза === */}
         <Grid item xs sx={{ fontSize: 14, height: hBlock / 5 }}>
           <Grid container>
-            <Grid item xs={12} sx={{ textAlign: "center", height: hB }}>
+            <Grid item xs={12} sx={{ textAlign: 'center', height: hB }}>
               <Box sx={styleAppSt02}>{InputerFaza(rec1, 0, klushTo1)}</Box>
             </Grid>
-            <Grid item xs={12} sx={{ textAlign: "center", height: hB }}>
+            <Grid item xs={12} sx={{ textAlign: 'center', height: hB }}>
               <Box sx={styleAppSt02}>{InputerFaza(rec1, 1, klushTo2)}</Box>
             </Grid>
-            <Grid item xs={12} sx={{ textAlign: "center", height: hB }}>
+            <Grid item xs={12} sx={{ textAlign: 'center', height: hB }}>
               <Box sx={styleAppSt02}>{InputerFaza(rec1, 2, klushTo3)}</Box>
             </Grid>
           </Grid>
@@ -406,8 +382,9 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   };
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
-    kluchGl = homeRegion + "-" + map.tflight[props.idx].area.num + "-";
+    kluchGl = homeRegion + '-' + map.tflight[props.idx].area.num + '-';
     kluchGl += map.tflight[props.idx].ID;
+    let maxFaza = map.tflight[props.idx].phases.length;
     for (let i = 0; i < 12; i++) {
       massFaz[i] = map.tflight[props.idx].phases[0];
     }
@@ -421,43 +398,50 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     }
 
     if (bindIdx >= 0) {
-      console.log("bindings0", bindIdx, bindings.tfLinks[bindIdx]);
+      console.log('bindings0', bindIdx, bindings.tfLinks[bindIdx]);
       let kluchZ = bindings.tfLinks[bindIdx].tflink.west.id;
       let kluchS = bindings.tfLinks[bindIdx].tflink.north.id;
       let kluchV = bindings.tfLinks[bindIdx].tflink.east.id;
       let kluchU = bindings.tfLinks[bindIdx].tflink.south.id;
+      let mass = bindings.tfLinks[bindIdx].tflink;
+      const GetFaza = (mas: any, kluch: string) => {
+        let faza = 0;
+        for (let i = 0; i < mas.length; i++) {
+          if (mas[i].id === kluch) faza = Number(mas[i].phase);
+        }
+        if (faza > maxFaza || !faza) faza = 1;
+        return faza;
+      };
+
       if (kluchZ) {
+        let mas = mass.west.wayPointsArray;
+        massFaz[0] = GetFaza(mas, kluchU);
+        massFaz[1] = GetFaza(mas, kluchV);
+        massFaz[2] = GetFaza(mas, kluchS);
         setValAreaZ(TakeAreaId(kluchZ)[0]);
         setValIdZ(TakeAreaId(kluchZ)[1]);
       }
       if (kluchS) {
-        let mas = bindings.tfLinks[bindIdx].tflink.north.wayPointsArray;
-        let faza = -1;
-        for (let i = 0; i < mas.length; i++) {
-          if (mas[i].id === kluchZ) faza = mas[i].phase;
-        }
-        console.log("C", faza);
+        let mas = mass.north.wayPointsArray;
+        massFaz[3] = GetFaza(mas, kluchZ);
+        massFaz[4] = GetFaza(mas, kluchU);
+        massFaz[5] = GetFaza(mas, kluchV);
         setValAreaS(TakeAreaId(kluchS)[0]);
         setValIdS(TakeAreaId(kluchS)[1]);
       }
       if (kluchV) {
-        let mas = bindings.tfLinks[bindIdx].tflink.east.wayPointsArray;
-        let faza = 0;
-        for (let i = 0; i < mas.length; i++) {
-          if (mas[i].id === kluchZ) faza = mas[i].phase;
-        }
-        console.log("В", faza);
-        if (faza) massFaz[7] = 2;
+        let mas = mass.east.wayPointsArray;
+        massFaz[6] = GetFaza(mas, kluchS);
+        massFaz[7] = GetFaza(mas, kluchZ);
+        massFaz[8] = GetFaza(mas, kluchU);
         setValAreaV(TakeAreaId(kluchV)[0]);
         setValIdV(TakeAreaId(kluchV)[1]);
       }
       if (kluchU) {
-        let mas = bindings.tfLinks[bindIdx].tflink.south.wayPointsArray;
-        let faza = -1;
-        for (let i = 0; i < mas.length; i++) {
-          if (mas[i].id === kluchZ) faza = mas[i].phase;
-        }
-        console.log("Ю", faza);
+        let mas = mass.south.wayPointsArray;
+        massFaz[9] = GetFaza(mas, kluchV);
+        massFaz[10] = GetFaza(mas, kluchS);
+        massFaz[11] = GetFaza(mas, kluchZ);
         setValAreaU(TakeAreaId(kluchU)[0]);
         setValIdU(TakeAreaId(kluchU)[1]);
       }
@@ -471,7 +455,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         <Button sx={styleModalEnd} onClick={handleCloseSet}>
           &#10006;
         </Button>
-        <Box sx={{ fontSize: 17, marginTop: 1, textAlign: "center" }}>
+        <Box sx={{ fontSize: 17, marginTop: 1, textAlign: 'center' }}>
           <b>Массив связности перекрёстка {kluchGl} </b>
         </Box>
         <Grid container sx={{ marginTop: 1.5, paddingBottom: 1 }}>
@@ -479,22 +463,20 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
 
           <Grid item xs={4} sx={{ border: 0 }}>
             {AppointHeader()}
-            {AppointStroka("З", valAreaZ, setValAreaZ, valIdZ, setValIdZ)}
-            {AppointStroka("С", valAreaS, setValAreaS, valIdS, setValIdS)}
-            {AppointStroka("В", valAreaV, setValAreaV, valIdV, setValIdV)}
-            {AppointStroka("Ю", valAreaU, setValAreaU, valIdU, setValIdU)}
+            {AppointStroka('З', valAreaZ, setValAreaZ, valIdZ, setValIdZ)}
+            {AppointStroka('С', valAreaS, setValAreaS, valIdS, setValIdS)}
+            {AppointStroka('В', valAreaV, setValAreaV, valIdV, setValIdV)}
+            {AppointStroka('Ю', valAreaU, setValAreaU, valIdU, setValIdU)}
           </Grid>
 
           <Grid item xs={4} sx={{ border: 1 }}></Grid>
         </Grid>
-        <Box sx={{ marginTop: 1, textAlign: "center" }}>
+        <Box sx={{ marginTop: 1, textAlign: 'center' }}>
           <Button sx={styleModalMenu} onClick={() => handleClose()}>
             Сохранить изменения
           </Button>
         </Box>
-        {openSetErr && (
-          <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />
-        )}
+        {openSetErr && <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />}
       </Box>
     </Modal>
   );
