@@ -8,8 +8,8 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 
-import { SendSocketСreateAddObj } from "../MapSocketFunctions";
-import { SendSocketDeleteAddObj } from "../MapSocketFunctions";
+import { SendSocketСreateAddObj } from "../RgsSocketFunctions";
+import { SendSocketDeleteAddObj } from "../RgsSocketFunctions";
 
 import { styleBoxForm, styleInpKnop } from "../MainMapStyle";
 import { styleSet, styleEditName } from "../MainMapStyle";

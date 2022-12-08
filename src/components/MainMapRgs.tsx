@@ -9,15 +9,15 @@ import { GeolocationControl, YMapsApi } from "react-yandex-maps";
 import { RulerControl, SearchControl } from "react-yandex-maps";
 import { TrafficControl, TypeSelector, ZoomControl } from "react-yandex-maps";
 
-import GsErrorMessage from "./RgsComponents/GsErrorMessage";
+import GsErrorMessage from "./RgsComponents/RgsErrorMessage";
 import GsDoPlacemarkDo from "./RgsComponents/RgsDoPlacemarkDo";
 import RgsCreateObject from "./RgsComponents/RgsCreateObject";
 import RgsProcessObject from "./RgsComponents/RgsProcessObject";
 import RgsAppointVertex from "./RgsComponents/RgsAppointVertex";
 
-import { getMultiRouteOptions, StrokaHelp } from "./MapServiceFunctions";
-import { getReferencePoints, CenterCoord } from "./MapServiceFunctions";
-import { StrokaMenuGlob } from "./MapServiceFunctions";
+import { getMultiRouteOptions, StrokaHelp } from "./RgsServiceFunctions";
+import { getReferencePoints, CenterCoord } from "./RgsServiceFunctions";
+import { StrokaMenuGlob } from "./RgsServiceFunctions";
 
 //mport { SendSocketUpdateRoute } from "./MapSocketFunctions";
 

@@ -12,8 +12,8 @@ import AppSocketError from "./AppSocketError";
 
 //import { MasskPoint } from "./components/MapServiceFunctions";
 
-import { SendSocketGetBindings } from "./components/MapSocketFunctions";
-import { SendSocketGetAddObjects } from "./components/MapSocketFunctions";
+import { SendSocketGetBindings } from "./components/RgsSocketFunctions";
+import { SendSocketGetAddObjects } from "./components/RgsSocketFunctions";
 //import { SendSocketGetPhases } from "./components/MapSocketFunctions";
 
 import { dataMap } from "./otladkaMaps";

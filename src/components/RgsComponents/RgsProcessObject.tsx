@@ -8,7 +8,7 @@ import Modal from '@mui/material/Modal';
 
 import RgsEditName from './RgsEditName';
 
-import { SendSocketDeleteAddObj } from '../MapSocketFunctions';
+import { SendSocketDeleteAddObj } from '../RgsSocketFunctions';
 
 import { styleModalEnd } from '../MainMapStyle';
 import { styleModalMenu, styleSetProcess } from '../MainMapStyle';

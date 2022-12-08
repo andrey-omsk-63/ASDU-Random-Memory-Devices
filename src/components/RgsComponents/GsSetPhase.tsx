@@ -10,9 +10,9 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 
-import { OutputFazaImg, NameMode } from '../MapServiceFunctions';
-import { SendSocketCreateRoute } from '../MapSocketFunctions';
-import { SendSocketUpdateRoute } from '../MapSocketFunctions';
+import { OutputFazaImg, NameMode } from '../RgsServiceFunctions';
+import { SendSocketCreateRoute } from '../RgsSocketFunctions';
+import { SendSocketUpdateRoute } from '../RgsSocketFunctions';
 
 import { styleModalEnd } from '../MainMapStyle';
 import { styleSetInf, styleModalMenu } from './GsComponentsStyle';

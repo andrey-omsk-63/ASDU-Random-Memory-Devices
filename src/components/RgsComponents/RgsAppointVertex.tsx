@@ -1,9 +1,6 @@
 import * as React from "react";
-import {
-  //useDispatch,
-  useSelector,
-} from "react-redux";
-//import { addobjCreate, coordinatesCreate } from '../../redux/actions';
+import { useDispatch, useSelector } from "react-redux";
+import { bindingsCreate } from "../../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -12,10 +9,10 @@ import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
-import GsErrorMessage from "./GsErrorMessage";
+import GsErrorMessage from "./RgsErrorMessage";
 
-//import { SendSocketDeleteAddObj } from '../MapSocketFunctions';
-import { CheckKey } from "../MapServiceFunctions";
+import { SendSocketСreateBindings } from "../RgsSocketFunctions";
+import { TakeAreaId, CheckKey, MakeTflink } from "../RgsServiceFunctions";
 
 import { styleModalEnd, styleModalMenu } from "../MainMapStyle";
 import { styleSetAppoint, styleAppSt02 } from "../MainMapStyle";
@@ -23,7 +20,8 @@ import { styleAppSt021, styleAppSt03 } from "../MainMapStyle";
 import { styleSetAV, styleBoxFormAV } from "../MainMapStyle";
 import { styleSetFaza, styleBoxFormFaza } from "../MainMapStyle";
 
-import { Tflink, WayPointsArray } from "../../interfaceBindings.d";
+//import { Tflink, WayPointsArray } from "../../interfaceBindings.d";
+import { TfLink } from "../../interfaceBindings.d";
 
 let oldIdx = 0;
 let kluchGl = "";
@@ -32,6 +30,8 @@ let klushTo1 = "";
 let klushTo2 = "";
 let klushTo3 = "";
 let soobErr = "";
+
+let bindIdx = -1;
 
 const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   //== Piece of Redux ======================================
@@ -47,7 +47,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     const { bindingsReducer } = state;
     return bindingsReducer.bindings.dateBindings;
   });
-  console.log("bindings", bindings);
+  // console.log("bindings", bindings);
   let addobj = useSelector((state: any) => {
     const { addobjReducer } = state;
     return addobjReducer.addobj.dateAdd;
@@ -57,9 +57,9 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   //   return coordinatesReducer.coordinates;
   // });
   //console.log("RgsAppointVertex", addobj);
-  //const debug = datestat.debug;
-  //const ws = datestat.ws;
-  //const dispatch = useDispatch();
+  const debug = datestat.debug;
+  const ws = datestat.ws;
+  const dispatch = useDispatch();
   //========================================================
   const [openSet, setOpenSet] = React.useState(true);
   const [openSetErr, setOpenSetErr] = React.useState(false);
@@ -71,6 +71,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   const [valIdS, setValIdS] = React.useState(0);
   const [valIdV, setValIdV] = React.useState(0);
   const [valIdU, setValIdU] = React.useState(0);
+  const [trigger,setTrigger] = React.useState(false);
 
   let hBlock = window.innerWidth / 3 + 15;
   let hB = hBlock / 15;
@@ -91,74 +92,29 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     if (valIdS) ch++;
     if (valIdV) ch++;
     if (valIdU) ch++;
-    console.log("Ключи:", ch);
     if (ch < 2) {
       soobErr = "Должно быть введено хотя бы два направления";
       setOpenSetErr(true);
     } else {
-      // let kluch = "";
-      let maskPoint: WayPointsArray = {
-        id: "",
-        phase: "",
+      let massAreaId = [
+        valAreaZ,
+        valIdZ,
+        valAreaS,
+        valIdS,
+        valAreaV,
+        valIdV,
+        valAreaU,
+        valIdU,
+      ];
+      let maskTfLinks: TfLink = {
+        id: kluchGl,
+        tflink: MakeTflink(homeRegion, massAreaId, massFaz),
       };
-
-      let maskTflink: Tflink = {
-        add1: { id: "", wayPointsArray: [] },
-        add2: { id: "", wayPointsArray: [] },
-        east: { id: "", wayPointsArray: [] },
-        north: { id: "", wayPointsArray: [] },
-        south: { id: "", wayPointsArray: [] },
-        west: { id: "", wayPointsArray: [] },
-      };
-      // запад
-      if (valAreaZ && valIdZ) {
-        maskTflink.west.id = homeRegion + "-" + valAreaZ + "-" + valIdZ;
-        if (valAreaU && valIdU) {
-          maskPoint.id = homeRegion + "-" + valAreaU + "-" + valIdU;
-          maskPoint.phase = massFaz[0].toString();
-          maskTflink.west.wayPointsArray.push(maskPoint);
-        }
-        if (valAreaV && valIdV) {
-          maskPoint.id = homeRegion + "-" + valAreaV + "-" + valIdV;
-          maskPoint.phase = massFaz[1].toString();
-          maskTflink.west.wayPointsArray.push(maskPoint);
-        }
-        if (valAreaS && valIdS) {
-          maskPoint.id = homeRegion + "-" + valAreaS + "-" + valIdS;
-          maskPoint.phase = massFaz[2].toString();
-          maskTflink.west.wayPointsArray.push(maskPoint);
-        }
-      }
-      // север
-      if (valAreaS && valIdS) {
-        maskTflink.north.id = homeRegion + "-" + valAreaS + "-" + valIdS;
-        if (valAreaZ && valIdZ) {
-          maskPoint.id = homeRegion + "-" + valAreaZ + "-" + valIdZ;
-          maskPoint.phase = massFaz[3].toString();
-          maskTflink.north.wayPointsArray.push(maskPoint);
-        }
-        if (valAreaU && valIdU) {
-          maskPoint.id = homeRegion + "-" + valAreaU + "-" + valIdU;
-          maskPoint.phase = massFaz[4].toString();
-          maskTflink.north.wayPointsArray.push(maskPoint);
-        }
-        if (valAreaV && valIdV) {
-          maskPoint.id = homeRegion + "-" + valAreaV + "-" + valIdV;
-          maskPoint.phase = massFaz[5].toString();
-          maskTflink.north.wayPointsArray.push(maskPoint);
-        }
-      }
-      // восток
-      if (valAreaV && valIdV) {
-        maskTflink.east.id = homeRegion + "-" + valAreaV + "-" + valIdV;
-      }
-      // юг
-      if (valAreaU && valIdU) {
-        maskTflink.south.id = homeRegion + "-" + valAreaU + "-" + valIdU;
-      }
-
-      console.log("MASK:", maskTflink);
-      handleCloseSet();
+      bindings.tfLinks.push(maskTfLinks);
+      console.log("bindings2", bindings);
+      dispatch(bindingsCreate(bindings));
+      SendSocketСreateBindings(debug, ws, maskTfLinks);
+      //handleCloseSet();
     }
   };
 
@@ -298,11 +254,18 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         maskCurrencies.label = massDat[i];
         currencies.push(maskCurrencies);
       }
+      console.log("massFaz1:",mode,shift, massFaz);
     }
-
+    
     const [currency, setCurrency] = React.useState(
       dat.indexOf(massFaz[mode + shift])
     );
+
+    if (kluch) {
+      console.log("massFaz2:",dat.indexOf(massFaz[mode + shift]),currency);
+      //setCurrency(dat.indexOf(massFaz[mode + shift]));
+    }
+     
 
     return (
       <Box sx={styleSetFaza}>
@@ -351,46 +314,47 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     valueId: any,
     funcId: Function
   ) => {
-    let klushFrom = "";
-    if (valueAr && valueId)
-      klushFrom = homeRegion + "-" + valueAr + "-" + valueId;
+    const MakingKey = (valueAr: any, valueId: any) => {
+      let klushFrom = "";
+      if (valueAr && valueId)
+        klushFrom = homeRegion + "-" + valueAr + "-" + valueId;
+      return klushFrom;
+    };
+
     klushTo1 = "";
     klushTo2 = "";
     klushTo3 = "";
-
+    let klushFrom = MakingKey(valueAr, valueId);
     switch (rec1) {
       case "З":
-        if (valAreaU && valIdU)
-          klushTo1 = homeRegion + "-" + valAreaU + "-" + valIdU;
-        if (valAreaV && valIdV)
-          klushTo2 = homeRegion + "-" + valAreaV + "-" + valIdV;
-        if (valAreaS && valIdS)
-          klushTo3 = homeRegion + "-" + valAreaS + "-" + valIdS;
+        if (valAreaZ && valIdZ) {
+          klushTo1 = MakingKey(valAreaU, valIdU);
+          klushTo2 = MakingKey(valAreaV, valIdV);
+          klushTo3 = MakingKey(valAreaS, valIdS);
+        }
         break;
       case "С":
-        if (valAreaZ && valIdZ)
-          klushTo1 = homeRegion + "-" + valAreaZ + "-" + valIdZ;
-        if (valAreaU && valIdU)
-          klushTo2 = homeRegion + "-" + valAreaU + "-" + valIdU;
-        if (valAreaV && valIdV)
-          klushTo3 = homeRegion + "-" + valAreaV + "-" + valIdV;
+        if (valAreaS && valIdS) {
+          klushTo1 = MakingKey(valAreaZ, valIdZ);
+          klushTo2 = MakingKey(valAreaU, valIdU);
+          klushTo3 = MakingKey(valAreaV, valIdV);
+        }
         break;
       case "В":
-        if (valAreaS && valIdS)
-          klushTo1 = homeRegion + "-" + valAreaS + "-" + valIdS;
-        if (valAreaZ && valIdZ)
-          klushTo2 = homeRegion + "-" + valAreaZ + "-" + valIdZ;
-        if (valAreaU && valIdU)
-          klushTo3 = homeRegion + "-" + valAreaU + "-" + valIdU;
+        if (valAreaV && valIdV) {
+          klushTo1 = MakingKey(valAreaS, valIdS);
+          klushTo2 = MakingKey(valAreaZ, valIdZ);
+          klushTo3 = MakingKey(valAreaU, valIdU);
+        }
         break;
       case "Ю":
-        if (valAreaV && valIdV)
-          klushTo1 = homeRegion + "-" + valAreaV + "-" + valIdV;
-        if (valAreaS && valIdS)
-          klushTo2 = homeRegion + "-" + valAreaS + "-" + valIdS;
-        if (valAreaZ && valIdZ)
-          klushTo3 = homeRegion + "-" + valAreaZ + "-" + valIdZ;
+        if (valAreaU && valIdV) {
+          klushTo1 = MakingKey(valAreaV, valIdV);
+          klushTo2 = MakingKey(valAreaS, valIdS);
+          klushTo3 = MakingKey(valAreaZ, valIdZ);
+        }
     }
+
     return (
       <Grid container sx={{ borderBottom: 1 }}>
         {/* === Направление === */}
@@ -447,6 +411,57 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     for (let i = 0; i < 12; i++) {
       massFaz[i] = map.tflight[props.idx].phases[0];
     }
+
+    bindIdx = -1;
+    for (let i = 0; i < bindings.tfLinks.length; i++) {
+      if (bindings.tfLinks[i].id === kluchGl) {
+        bindIdx = i;
+        break;
+      }
+    }
+
+    if (bindIdx >= 0) {
+      console.log("bindings0", bindIdx, bindings.tfLinks[bindIdx]);
+      let kluchZ = bindings.tfLinks[bindIdx].tflink.west.id;
+      let kluchS = bindings.tfLinks[bindIdx].tflink.north.id;
+      let kluchV = bindings.tfLinks[bindIdx].tflink.east.id;
+      let kluchU = bindings.tfLinks[bindIdx].tflink.south.id;
+      if (kluchZ) {
+        setValAreaZ(TakeAreaId(kluchZ)[0]);
+        setValIdZ(TakeAreaId(kluchZ)[1]);
+      }
+      if (kluchS) {
+        let mas = bindings.tfLinks[bindIdx].tflink.north.wayPointsArray;
+        let faza = -1;
+        for (let i = 0; i < mas.length; i++) {
+          if (mas[i].id === kluchZ) faza = mas[i].phase;
+        }
+        console.log("C", faza);
+        setValAreaS(TakeAreaId(kluchS)[0]);
+        setValIdS(TakeAreaId(kluchS)[1]);
+      }
+      if (kluchV) {
+        let mas = bindings.tfLinks[bindIdx].tflink.east.wayPointsArray;
+        let faza = 0;
+        for (let i = 0; i < mas.length; i++) {
+          if (mas[i].id === kluchZ) faza = mas[i].phase;
+        }
+        console.log("В", faza);
+        if (faza) massFaz[7] = 2;
+        setValAreaV(TakeAreaId(kluchV)[0]);
+        setValIdV(TakeAreaId(kluchV)[1]);
+      }
+      if (kluchU) {
+        let mas = bindings.tfLinks[bindIdx].tflink.south.wayPointsArray;
+        let faza = -1;
+        for (let i = 0; i < mas.length; i++) {
+          if (mas[i].id === kluchZ) faza = mas[i].phase;
+        }
+        console.log("Ю", faza);
+        setValAreaU(TakeAreaId(kluchU)[0]);
+        setValIdU(TakeAreaId(kluchU)[1]);
+      }
+    }
     oldIdx = props.idx;
   }
 
@@ -456,10 +471,10 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         <Button sx={styleModalEnd} onClick={handleCloseSet}>
           &#10006;
         </Button>
-        <Box sx={{ fontSize: 17, marginTop: 0.5, textAlign: "center" }}>
+        <Box sx={{ fontSize: 17, marginTop: 1, textAlign: "center" }}>
           <b>Массив связности перекрёстка {kluchGl} </b>
         </Box>
-        <Grid container sx={{ marginTop: 1, paddingBottom: 1 }}>
+        <Grid container sx={{ marginTop: 1.5, paddingBottom: 1 }}>
           <Grid item xs={4} sx={{ border: 1 }}></Grid>
 
           <Grid item xs={4} sx={{ border: 0 }}>

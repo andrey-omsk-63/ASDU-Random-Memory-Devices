@@ -9,11 +9,11 @@ import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 
-import GsErrorMessage from "./GsErrorMessage";
+import GsErrorMessage from "./RgsErrorMessage";
 
-import { NameMode } from "../MapServiceFunctions";
+import { NameMode } from "../RgsServiceFunctions";
 
-import { SendSocketСreateAddObj } from "../MapSocketFunctions";
+import { SendSocketСreateAddObj } from "../RgsSocketFunctions";
 
 import { styleSetAdress, styleBoxForm, styleInpKnop } from "../MainMapStyle";
 import { styleSet } from "../MainMapStyle";

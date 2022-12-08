@@ -8,10 +8,10 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 
-import { SendSocketDeleteRoute } from "../MapSocketFunctions";
+import { SendSocketDeleteRoute } from "../RgsSocketFunctions";
 
 import { styleModalEnd } from "../MainMapStyle";
-import GsErrorMessage from "./GsErrorMessage";
+import GsErrorMessage from "./RgsErrorMessage";
 
 let knop2 = "удалить";
 let soobErr = "";

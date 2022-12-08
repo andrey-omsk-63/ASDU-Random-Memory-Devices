@@ -8,8 +8,8 @@ import Button from "@mui/material/Button";
 
 import { Fazer } from "../../App";
 
-import { OutputFazaImg, OutputVertexImg } from "../MapServiceFunctions";
-import { SendSocketRoute, SendSocketDispatch } from "../MapSocketFunctions";
+import { OutputFazaImg, OutputVertexImg } from "../RgsServiceFunctions";
+import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 
 import { styleModalEnd } from "../MainMapStyle";
 import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
