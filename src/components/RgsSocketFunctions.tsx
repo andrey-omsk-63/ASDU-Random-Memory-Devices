@@ -301,4 +301,30 @@ export const SendSocketUpdateBindings = (
   };
   handleSendOpen();
 };
+
+export const SendSocketGetSvg = (
+  debug: boolean,
+  ws: WebSocket,
+  region: string,
+  area: string,
+  id: string
+) => {
+  const handleSendOpen = () => {
+    if (!debug) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(
+          JSON.stringify({
+            type: "getSvg",
+            pos: { region, area, id },
+          })
+        );
+      } else {
+        setTimeout(() => {
+          handleSendOpen();
+        }, 1000);
+      }
+    }
+  };
+  handleSendOpen();
+};
 //==================================================

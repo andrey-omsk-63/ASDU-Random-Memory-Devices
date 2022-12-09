@@ -214,13 +214,13 @@ export const styleAppSt02 = {
   left: "50%",
 };
 
-export const styleAppSt021 = {
-  fontSize: 19,
-  transform: "translate(-50%, -50%)",
-  position: "relative",
-  top: "50%",
-  left: "50%",
-};
+// export const styleAppSt021 = {
+//   fontSize: 19,
+//   transform: "translate(-50%, -50%)",
+//   position: "relative",
+//   top: "50%",
+//   left: "50%",
+// };
 
 export const styleAppSt03 = {
   textAlign: "center",
@@ -237,8 +237,6 @@ export const styleSetAV = {
   marginTop: "2px",
   bgcolor: "#FFFBE5",
   boxShadow: 3,
-  //textAlign: "center",
-  //p: 1,
 };
 
 export const styleBoxFormAV = {
@@ -250,8 +248,18 @@ export const styleBoxFormAV = {
   },
 };
 
+export const styleSetFazaNull = {
+  position: "relative",
+  marginTop: "1px",
+  left: "27%",
+  width: "30px",
+  maxHeight: "19px",
+  minHeight: "19px",
+  bgcolor: "background.paper",
+};
+
+
 export const styleSetFaza = {
-  //border: 1,
   position: "relative",
   marginTop: "1px",
   left: "27%",

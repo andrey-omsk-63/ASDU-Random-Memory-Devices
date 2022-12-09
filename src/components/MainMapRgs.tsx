@@ -80,6 +80,7 @@ const MainMapRgs = () =>
     //   const { statsaveReducer } = state;
     //   return statsaveReducer.datestat;
     // });
+    // console.log("datestat", datestat);
     //const debug = datestat.debug;
     //const ws = datestat.ws;
     const dispatch = useDispatch();

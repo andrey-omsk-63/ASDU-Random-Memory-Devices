@@ -7,6 +7,8 @@ import { addobjCreate } from "./redux/actions";
 
 import Grid from "@mui/material/Grid";
 
+import axios from "axios";
+
 import MainMapRgs from "./components/MainMapRgs";
 import AppSocketError from "./AppSocketError";
 
@@ -17,10 +19,10 @@ import { SendSocketGetAddObjects } from "./components/RgsSocketFunctions";
 //import { SendSocketGetPhases } from "./components/MapSocketFunctions";
 
 import { dataMap } from "./otladkaMaps";
-import { imgFaza } from "./otladkaRoutes";
+//import { imgFaza } from "./otladkaPicFaza";
 import { dataBindings } from "./otladkaBindings";
 import { dataAddObjects } from "./otladkaAddObjects";
-
+//otladkaRoutes
 export let dateMapGl: any;
 export let dateBindingsGl: any;
 export let dateAddObjectsGl: any;
@@ -30,6 +32,7 @@ export interface Stater {
   debug: boolean;
   region: string;
   phSvg: string | null;
+  pictSvg: string | null;
 }
 
 export let dateStat: Stater = {
@@ -37,6 +40,7 @@ export let dateStat: Stater = {
   debug: false,
   region: "0",
   phSvg: null,
+  pictSvg: null,
 };
 
 export interface Pointer {
@@ -250,8 +254,13 @@ const App = () => {
     }
     homeRegion = massRegion[0].toString();
     dateStat.region = homeRegion;
-    dateStat.phSvg = imgFaza;
+    //dateStat.phSvg = imgFaza;
     dispatch(statsaveCreate(dateStat));
+    const ipAdress: string = "https://localhost:3000/cross.svg";
+    axios.get(ipAdress).then(({ data }) => {
+      dateStat.pictSvg = data;
+      dispatch(statsaveCreate(dateStat));
+    });
     flagMap = true;
     flagBindings = true;
     flagAddObjects = true;

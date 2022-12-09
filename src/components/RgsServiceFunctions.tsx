@@ -1,4 +1,7 @@
 import * as React from "react";
+
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CardMedia from "@mui/material/CardMedia";
 
@@ -6,7 +9,9 @@ import { Pointer } from "../App";
 //import { DateMAP } from "./../interfaceMAP.d";
 import { Tflink, WayPointsArray } from "../interfaceBindings";
 
-//import { styleInfoSoob } from './MainMapStyle';
+import { styleAppSt02, styleAppSt03, 
+  //styleAppSt021
+ } from "./MainMapStyle";
 
 export const MasskPoint = (debug: boolean, rec: any, imgFaza: string) => {
   let masskPoint: Pointer = {
@@ -203,6 +208,54 @@ export const OutputVertexImg = (host: string) => {
   );
 };
 //=== AppointVertex ================================
+export const AppointHeader = (hBlock: number) => {
+  return (
+    <Grid container sx={{ bgcolor: "#C0E2C3" }}>
+      <Grid item xs={1}></Grid>
+      <Grid item xs={5.5} sx={{ height: hBlock / 10, paddingTop: 3 }}>
+        <Box sx={styleAppSt03}>
+          <b>Откуда</b>
+        </Box>
+      </Grid>
+      <Grid item xs={4} sx={{ height: hBlock / 10, paddingTop: 3 }}>
+        <Box sx={styleAppSt03}>
+          <b>Куда</b>
+        </Box>
+      </Grid>
+      <Grid item xs sx={{ height: hBlock / 10, paddingTop: 3 }}>
+        <Box sx={styleAppSt03}>
+          <b>Фаза</b>
+        </Box>
+      </Grid>
+    </Grid>
+  );
+};
+
+export const AppointDirect = (rec1: string, hBlock: number) => {
+  let hB = hBlock / 15;
+  return (
+    <Grid container>
+      <Grid item xs={12} sx={{ height: hBlock / 15 }}></Grid>
+      <Grid item xs={12} sx={{ textAlign: "center", height: hB }}>
+        {/* <Box sx={styleAppSt021}> */}
+        <Box sx={styleAppSt02}> 
+          <b>{rec1}</b>
+        </Box>
+      </Grid>
+    </Grid>
+  );
+};
+
+export const OutputKey = (klush: string, hBlock: number) => {
+  return (
+    <Grid container>
+      <Grid item xs={12} sx={{ textAlign: "center", height: hBlock / 15 }}>
+        <Box sx={styleAppSt02}>{klush}</Box>
+      </Grid>
+    </Grid>
+  );
+};
+
 export const TakeAreaId = (kluch: string) => {
   let aa = kluch.indexOf("-");
   let aaa = kluch.indexOf("-", aa + 1);
@@ -211,15 +264,14 @@ export const TakeAreaId = (kluch: string) => {
   return [Number(bb), Number(bbb)];
 };
 
-export const CheckKey = (kluch: string, map: any, addobj: any) => {
-  // const TakeAreaId = (kluch: string) => {
-  //   let aa = kluch.indexOf("-");
-  //   let aaa = kluch.indexOf("-", aa + 1);
-  //   let bb = kluch.slice(aa + 1, aaa);
-  //   let bbb = kluch.slice(aaa + 1);
-  //   return [Number(bb), Number(bbb)];
-  // };
+export const MakingKey = (homeRegion: any, valueAr: any, valueId: any) => {
+  let klushFrom = "";
+  if (valueAr && valueId)
+    klushFrom = homeRegion + "-" + valueAr + "-" + valueId;
+  return klushFrom;
+};
 
+export const CheckKey = (kluch: string, map: any, addobj: any) => {
   let klArea = TakeAreaId(kluch)[0];
   let klId = TakeAreaId(kluch)[0];
   let have = false;
@@ -357,6 +409,55 @@ export const MakeTflink = (
     }
   }
   return maskTflink;
+};
+
+export const MakingKluch = (
+  rec1: string,
+  homeRegion: any,
+  massAreaId: Array<number>
+) => {
+  let klushTo1 = "";
+  let klushTo2 = "";
+  let klushTo3 = "";
+  let valAreaZ = massAreaId[0];
+  let valIdZ = massAreaId[1];
+  let valAreaS = massAreaId[2];
+  let valIdS = massAreaId[3];
+  let valAreaV = massAreaId[4];
+  let valIdV = massAreaId[5];
+  let valAreaU = massAreaId[6];
+  let valIdU = massAreaId[7];
+
+  switch (rec1) {
+    case "З":
+      if (valAreaZ && valIdZ) {
+        klushTo1 = MakingKey(homeRegion, valAreaU, valIdU);
+        klushTo2 = MakingKey(homeRegion, valAreaV, valIdV);
+        klushTo3 = MakingKey(homeRegion, valAreaS, valIdS);
+      }
+      break;
+    case "С":
+      if (valAreaS && valIdS) {
+        klushTo1 = MakingKey(homeRegion, valAreaZ, valIdZ);
+        klushTo2 = MakingKey(homeRegion, valAreaU, valIdU);
+        klushTo3 = MakingKey(homeRegion, valAreaV, valIdV);
+      }
+      break;
+    case "В":
+      if (valAreaV && valIdV) {
+        klushTo1 = MakingKey(homeRegion, valAreaS, valIdS);
+        klushTo2 = MakingKey(homeRegion, valAreaZ, valIdZ);
+        klushTo3 = MakingKey(homeRegion, valAreaU, valIdU);
+      }
+      break;
+    case "Ю":
+      if (valAreaU && valIdV) {
+        klushTo1 = MakingKey(homeRegion, valAreaV, valIdV);
+        klushTo2 = MakingKey(homeRegion, valAreaS, valIdS);
+        klushTo3 = MakingKey(homeRegion, valAreaZ, valIdZ);
+      }
+  }
+  return [klushTo1, klushTo2, klushTo3];
 };
 //=== Разное =======================================
 export const StrokaMenuGlob = (soob: string, func: any, mode: number) => {
