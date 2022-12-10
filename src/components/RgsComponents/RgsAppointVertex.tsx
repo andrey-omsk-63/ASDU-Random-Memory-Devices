@@ -1,39 +1,39 @@
-import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { bindingsCreate } from "../../redux/actions";
+import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { bindingsCreate } from '../../redux/actions';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 
-import GsErrorMessage from "./RgsErrorMessage";
+import GsErrorMessage from './RgsErrorMessage';
 
-import { SendSocketСreateBindings } from "../RgsSocketFunctions";
-import { SendSocketUpdateBindings } from "../RgsSocketFunctions";
+import { SendSocketСreateBindings } from '../RgsSocketFunctions';
+import { SendSocketUpdateBindings } from '../RgsSocketFunctions';
 
-import { TakeAreaId, CheckKey, MakeTflink } from "../RgsServiceFunctions";
-import { MakingKey, OutputKey, MakingKluch } from "../RgsServiceFunctions";
-import { AppointDirect, AppointHeader } from "../RgsServiceFunctions";
-import { OutputNumFaza } from "../RgsServiceFunctions";
+import { TakeAreaId, CheckKey, MakeTflink } from '../RgsServiceFunctions';
+import { MakingKey, OutputKey, MakingKluch } from '../RgsServiceFunctions';
+import { AppointDirect, AppointHeader } from '../RgsServiceFunctions';
+import { OutputNumFaza } from '../RgsServiceFunctions';
 
-import { styleModalEnd, styleModalMenu } from "../MainMapStyle";
-import { styleSetAppoint, styleAppSt02 } from "../MainMapStyle";
-import { styleSetAV, styleBoxFormAV } from "../MainMapStyle";
-import { styleSetFaza, styleBoxFormFaza } from "../MainMapStyle";
-import { styleSetFazaNull } from "../MainMapStyle";
+import { styleModalEnd, styleModalMenu } from '../MainMapStyle';
+import { styleSetAppoint, styleAppSt02 } from '../MainMapStyle';
+import { styleSetAV, styleBoxFormAV } from '../MainMapStyle';
+import { styleSetFaza, styleBoxFormFaza } from '../MainMapStyle';
+import { styleSetFazaNull } from '../MainMapStyle';
 
-import { TfLink } from "../../interfaceBindings.d";
+import { TfLink } from '../../interfaceBindings.d';
 
 let oldIdx = -1;
-let kluchGl = "";
+let kluchGl = '';
 let massFaz = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-let klushTo1 = "";
-let klushTo2 = "";
-let klushTo3 = "";
-let soobErr = "";
+let klushTo1 = '';
+let klushTo2 = '';
+let klushTo3 = '';
+let soobErr = '';
 
 let bindIdx = -1;
 let maxFaza = 0;
@@ -72,22 +72,13 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   const [valIdS, setValIdS] = React.useState(0);
   const [valIdV, setValIdV] = React.useState(0);
   const [valIdU, setValIdU] = React.useState(0);
-  let massAreaId = [
-    valAreaZ,
-    valIdZ,
-    valAreaS,
-    valIdS,
-    valAreaV,
-    valIdV,
-    valAreaU,
-    valIdU,
-  ];
+  let massAreaId = [valAreaZ, valIdZ, valAreaS, valIdS, valAreaV, valIdV, valAreaU, valIdU];
   let hBlock = window.innerWidth / 3 + 15;
   let hB = hBlock / 15;
   let homeRegion = datestat.region;
 
   const handleKey = (event: any) => {
-    if (event.key === "Enter") event.preventDefault();
+    if (event.key === 'Enter') event.preventDefault();
   };
 
   const handleCloseSet = () => {
@@ -102,7 +93,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     if (valIdV) ch++;
     if (valIdU) ch++;
     if (ch < 2) {
-      soobErr = "Должно быть введено хотя бы два направления";
+      soobErr = 'Должно быть введено хотя бы два направления';
       setOpenSetErr(true);
     } else {
       let maskTfLinks: TfLink = {
@@ -117,7 +108,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         SendSocketСreateBindings(debug, ws, maskTfLinks);
       }
 
-      console.log("bindings2", bindings);
+      console.log('bindings2', bindings);
       dispatch(bindingsCreate(bindings));
       oldIdx = -1;
       handleCloseSet();
@@ -125,29 +116,29 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   };
 
   const ChangeArea = (event: any, func: Function) => {
-    let valueInp = event.target.value.replace(/^0+/, "");
-    if (valueInp === "") valueInp = 1;
+    let valueInp = event.target.value.replace(/^0+/, '');
+    if (valueInp === '') valueInp = 1;
     if (Number(valueInp) < 0) valueInp = 1;
     if (Number(valueInp) < 100) func(valueInp);
   };
 
   const ChangeId = (event: any, func: any) => {
-    let valueInp = event.target.value.replace(/^0+/, "");
-    if (valueInp === "") valueInp = 1;
+    let valueInp = event.target.value.replace(/^0+/, '');
+    if (valueInp === '') valueInp = 1;
     if (Number(valueInp) < 0) valueInp = 1;
     if (Number(valueInp) < 100000) func(valueInp);
   };
 
   const BlurId = (event: any, area: any, id: any) => {
-    let kluch = homeRegion + "-" + area + "-" + id;
+    let kluch = homeRegion + '-' + area + '-' + id;
     if (kluch === kluchGl) {
-      soobErr = "Вы пытаетесь связать перекрёсток с самим собой";
+      soobErr = 'Вы пытаетесь связать перекрёсток с самим собой';
       setOpenSetErr(true);
     } else {
       if (!CheckKey(kluch, map, addobj)) {
-        soobErr = "Перекрёсток ";
-        if (id > 10000) soobErr = "Объект ";
-        soobErr += kluch + " не существует";
+        soobErr = 'Перекрёсток ';
+        if (id > 10000) soobErr = 'Объект ';
+        soobErr += kluch + ' не существует';
         setOpenSetErr(true);
       }
     }
@@ -206,9 +197,9 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     let massKey = [];
     let massDat: any[] = [];
     const currencies: any = [];
-    if (rec === "С") mode = 3;
-    if (rec === "В") mode = 6;
-    if (rec === "Ю") mode = 9;
+    if (rec === 'С') mode = 3;
+    if (rec === 'В') mode = 6;
+    if (rec === 'Ю') mode = 9;
     if (kluch) {
       for (let key in dat) {
         massKey.push(key);
@@ -216,8 +207,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       }
       for (let i = 0; i < massKey.length; i++) {
         let maskCurrencies = {
-          value: "",
-          label: "",
+          value: '',
+          label: '',
         };
         maskCurrencies.value = massKey[i];
         maskCurrencies.label = massDat[i];
@@ -225,9 +216,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       }
     }
 
-    const [currency, setCurrency] = React.useState(
-      dat.indexOf(massFaz[mode + shift])
-    );
+    const [currency, setCurrency] = React.useState(dat.indexOf(massFaz[mode + shift]));
 
     return (
       <Box sx={kluch ? styleSetFaza : styleSetFazaNull}>
@@ -241,14 +230,9 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               onChange={handleChange}
               InputProps={{ style: { fontSize: 12.1 } }}
               variant="standard"
-              color="secondary"
-            >
+              color="secondary">
               {currencies.map((option: any) => (
-                <MenuItem
-                  key={option.value}
-                  value={option.value}
-                  sx={{ fontSize: 14 }}
-                >
+                <MenuItem key={option.value} value={option.value} sx={{ fontSize: 14 }}>
                   {option.label}
                 </MenuItem>
               ))}
@@ -264,7 +248,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     valueAr: any,
     funcAr: Function,
     valueId: any,
-    funcId: Function
+    funcId: Function,
   ) => {
     let klushFrom = MakingKey(homeRegion, valueAr, valueId);
     klushTo1 = MakingKluch(rec1, homeRegion, massAreaId)[0];
@@ -306,13 +290,13 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         {/* === Фаза === */}
         <Grid item xs sx={{ fontSize: 14, height: hBlock / 5 }}>
           <Grid container>
-            <Grid item xs={12} sx={{ textAlign: "center", height: hB }}>
+            <Grid item xs={12} sx={{ textAlign: 'center', height: hB }}>
               <Box sx={styleAppSt02}>{InputerFaza(rec1, 0, klushTo1)}</Box>
             </Grid>
-            <Grid item xs={12} sx={{ textAlign: "center", height: hB }}>
+            <Grid item xs={12} sx={{ textAlign: 'center', height: hB }}>
               <Box sx={styleAppSt02}>{InputerFaza(rec1, 1, klushTo2)}</Box>
             </Grid>
-            <Grid item xs={12} sx={{ textAlign: "center", height: hB }}>
+            <Grid item xs={12} sx={{ textAlign: 'center', height: hB }}>
               <Box sx={styleAppSt02}>{InputerFaza(rec1, 2, klushTo3)}</Box>
             </Grid>
           </Grid>
@@ -324,18 +308,16 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   const OutputPict = () => {
     return (
       <Box sx={{ border: 0, marginLeft: 1 }}>
-        <div
-          dangerouslySetInnerHTML={{ __html: ReplaceInSvg(datestat.pictSvg) }}
-        />
+        <div dangerouslySetInnerHTML={{ __html: ReplaceInSvg(datestat.pictSvg) }} />
       </Box>
     );
   };
   const ReplaceInSvg = (svgPict: any) => {
     let heightImg = window.innerWidth / 3.333 + 14;
     let widthHeight = heightImg.toString();
-    let ch = "";
+    let ch = '';
     let svgPipa = svgPict;
-    let vxod = svgPict.indexOf("width=");
+    let vxod = svgPict.indexOf('width=');
     for (let i = 0; i < 100; i++) {
       if (isNaN(Number(svgPipa[vxod + 7 + i]))) break;
       ch = ch + svgPipa[vxod + 7 + i];
@@ -348,7 +330,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
 
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
-    kluchGl = homeRegion + "-" + map.tflight[props.idx].area.num + "-";
+    kluchGl = homeRegion + '-' + map.tflight[props.idx].area.num + '-';
     kluchGl += map.tflight[props.idx].ID;
     maxFaza = map.tflight[props.idx].phases.length;
     for (let i = 0; i < 12; i++) {
@@ -418,7 +400,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         <Button sx={styleModalEnd} onClick={handleCloseSet}>
           &#10006;
         </Button>
-        <Box sx={{ fontSize: 17, marginTop: 1, textAlign: "center" }}>
+        <Box sx={{ fontSize: 17, marginTop: 1, textAlign: 'center' }}>
           <b>Массив связности перекрёстка {kluchGl} </b>
         </Box>
         <Grid container sx={{ marginTop: 1.5, paddingBottom: 1 }}>
@@ -428,38 +410,35 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
 
           <Grid item xs={4} sx={{ border: 0 }}>
             {AppointHeader(hBlock)}
-            {AppointStroka("З", valAreaZ, setValAreaZ, valIdZ, setValIdZ)}
-            {AppointStroka("С", valAreaS, setValAreaS, valIdS, setValIdS)}
-            {AppointStroka("В", valAreaV, setValAreaV, valIdV, setValIdV)}
-            {AppointStroka("Ю", valAreaU, setValAreaU, valIdU, setValIdU)}
+            {AppointStroka('З', valAreaZ, setValAreaZ, valIdZ, setValIdZ)}
+            {AppointStroka('С', valAreaS, setValAreaS, valIdS, setValIdS)}
+            {AppointStroka('В', valAreaV, setValAreaV, valIdV, setValIdV)}
+            {AppointStroka('Ю', valAreaU, setValAreaU, valIdU, setValIdU)}
           </Grid>
 
           <Grid item xs={4}>
             <Grid container>
-              {OutputNumFaza(1, imgFaza, maxFaza, hBlock)}
-              {OutputNumFaza(2, imgFaza, maxFaza, hBlock)}
-              {OutputNumFaza(3, imgFaza, maxFaza, hBlock)}
+              {OutputNumFaza(1, imgFaza[0], maxFaza, hBlock)}
+              {OutputNumFaza(2, imgFaza[1], maxFaza, hBlock)}
+              {OutputNumFaza(3, imgFaza[2], maxFaza, hBlock)}
             </Grid>
             <Grid container>
-              {OutputNumFaza(4, null, maxFaza, hBlock)}
-              {OutputNumFaza(5, imgFaza, maxFaza, hBlock)}
-              {OutputNumFaza(6, imgFaza, maxFaza, hBlock)}
+              {OutputNumFaza(4, imgFaza[3], maxFaza, hBlock)}
+              {OutputNumFaza(5, imgFaza[4], maxFaza, hBlock)}
+              {OutputNumFaza(6, imgFaza[5], maxFaza, hBlock)}
             </Grid>
             <Grid container>
-              {OutputNumFaza(7, imgFaza, maxFaza, hBlock)}
-              {OutputNumFaza(8, imgFaza, maxFaza, hBlock)}
-              {OutputNumFaza(9, null, maxFaza, hBlock)}
+              {OutputNumFaza(7, imgFaza[6], maxFaza, hBlock)}
+              {OutputNumFaza(8, imgFaza[7], maxFaza, hBlock)}
             </Grid>
           </Grid>
         </Grid>
-        <Box sx={{ marginTop: 1, textAlign: "center" }}>
+        <Box sx={{ marginTop: 1, textAlign: 'center' }}>
           <Button sx={styleModalMenu} onClick={() => handleClose()}>
             Сохранить изменения
           </Button>
         </Box>
-        {openSetErr && (
-          <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />
-        )}
+        {openSetErr && <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />}
       </Box>
     </Modal>
   );

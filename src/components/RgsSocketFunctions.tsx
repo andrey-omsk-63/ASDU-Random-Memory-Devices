@@ -1,20 +1,16 @@
 //=== GsSetPhase ===================================
-export const SendSocketCreateRoute = (
-  debug: boolean,
-  ws: WebSocket,
-  maskRoutes: any
-) => {
-  console.log("CreateRoute:", maskRoutes);
+export const SendSocketCreateRoute = (debug: boolean, ws: WebSocket, maskRoutes: any) => {
+  console.log('CreateRoute:', maskRoutes);
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "createRoute",
+            type: 'createRoute',
             region: maskRoutes.region,
             description: maskRoutes.description,
             listTL: maskRoutes.listTL,
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -26,22 +22,18 @@ export const SendSocketCreateRoute = (
   handleSendOpen();
 };
 
-export const SendSocketUpdateRoute = (
-  debug: boolean,
-  ws: WebSocket,
-  maskRoutes: any
-) => {
-  console.log("UpdateRoute:", maskRoutes);
+export const SendSocketUpdateRoute = (debug: boolean, ws: WebSocket, maskRoutes: any) => {
+  console.log('UpdateRoute:', maskRoutes);
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "updateRoute",
+            type: 'updateRoute',
             region: maskRoutes.region,
             description: maskRoutes.description,
             listTL: maskRoutes.listTL,
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -53,21 +45,17 @@ export const SendSocketUpdateRoute = (
   handleSendOpen();
 };
 
-export const SendSocketDeleteRoute = (
-  debug: boolean,
-  ws: WebSocket,
-  maskRoutes: any
-) => {
-  console.log("DeleteRoute:", maskRoutes);
+export const SendSocketDeleteRoute = (debug: boolean, ws: WebSocket, maskRoutes: any) => {
+  console.log('DeleteRoute:', maskRoutes);
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "deleteRoute",
+            type: 'deleteRoute',
             region: maskRoutes.region,
             description: maskRoutes.description,
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -83,18 +71,18 @@ export const SendSocketRoute = (
   debug: boolean,
   ws: WebSocket,
   devicesProps: Array<number>,
-  turnOnProps: boolean
+  turnOnProps: boolean,
 ) => {
-  console.log("Route:", turnOnProps, devicesProps);
+  console.log('Route:', turnOnProps, devicesProps);
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "route",
+            type: 'route',
             devices: devicesProps,
             turnOn: turnOnProps,
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -111,7 +99,7 @@ export const SendSocketDispatch = (
   ws: WebSocket,
   idevice: number,
   cmdd: number,
-  faza: number
+  faza: number,
 ) => {
   //console.log('Dispatch:', idevice, cmdd, faza);
   const handleSendOpen = () => {
@@ -119,11 +107,11 @@ export const SendSocketDispatch = (
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "dispatch",
+            type: 'dispatch',
             id: idevice,
             cmd: cmdd,
             param: faza,
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -136,14 +124,14 @@ export const SendSocketDispatch = (
 };
 //=== App ==========================================
 export const SendSocketGetBindings = (debug: boolean, ws: WebSocket) => {
-  console.log("GetBindings");
+  console.log('GetBindings');
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "getBindings",
-          })
+            type: 'getBindings',
+          }),
         );
       } else {
         setTimeout(() => {
@@ -156,14 +144,14 @@ export const SendSocketGetBindings = (debug: boolean, ws: WebSocket) => {
 };
 
 export const SendSocketGetAddObjects = (debug: boolean, ws: WebSocket) => {
-  console.log("GetAddObjects");
+  console.log('GetAddObjects');
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "getAddObjects",
-          })
+            type: 'getAddObjects',
+          }),
         );
       } else {
         setTimeout(() => {
@@ -180,17 +168,17 @@ export const SendSocketGetPhases = (
   ws: WebSocket,
   region: string,
   area: string,
-  id: number
+  id: number,
 ) => {
-  //console.log("GetPhases:", region, area, id);
+  console.log('GetPhases:', region, area, id);
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "getPhases",
+            type: 'getPhases',
             pos: { region, area, id },
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -202,20 +190,16 @@ export const SendSocketGetPhases = (
   handleSendOpen();
 };
 //=== RgsCreateObject ==============================
-export const SendSocketСreateAddObj = (
-  debugging: boolean,
-  ws: WebSocket,
-  dat: any
-) => {
-  console.log("createAddObj:", dat);
+export const SendSocketСreateAddObj = (debugging: boolean, ws: WebSocket, dat: any) => {
+  console.log('createAddObj:', dat);
   const handleSendOpen = () => {
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "createAddObj",
+            type: 'createAddObj',
             data: dat,
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -227,20 +211,16 @@ export const SendSocketСreateAddObj = (
   handleSendOpen();
 };
 
-export const SendSocketDeleteAddObj = (
-  debugging: boolean,
-  ws: WebSocket,
-  dat: any
-) => {
-  console.log("deleteAddObj:", dat);
+export const SendSocketDeleteAddObj = (debugging: boolean, ws: WebSocket, dat: any) => {
+  console.log('deleteAddObj:', dat);
   const handleSendOpen = () => {
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "deleteAddObj",
+            type: 'deleteAddObj',
             data: dat,
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -252,20 +232,16 @@ export const SendSocketDeleteAddObj = (
   handleSendOpen();
 };
 //=== RgsAppointVertex ==============================
-export const SendSocketСreateBindings = (
-  debugging: boolean,
-  ws: WebSocket,
-  dat: any
-) => {
-  console.log("createBindings:", dat);
+export const SendSocketСreateBindings = (debugging: boolean, ws: WebSocket, dat: any) => {
+  console.log('createBindings:', dat);
   const handleSendOpen = () => {
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "createBindings",
+            type: 'createBindings',
             data: dat,
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -277,20 +253,16 @@ export const SendSocketСreateBindings = (
   handleSendOpen();
 };
 
-export const SendSocketUpdateBindings = (
-  debugging: boolean,
-  ws: WebSocket,
-  dat: any
-) => {
-  console.log("updateBindings:", dat);
+export const SendSocketUpdateBindings = (debugging: boolean, ws: WebSocket, dat: any) => {
+  console.log('updateBindings:', dat);
   const handleSendOpen = () => {
     if (!debugging) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "updateBindings",
+            type: 'updateBindings',
             data: dat,
-          })
+          }),
         );
       } else {
         setTimeout(() => {
@@ -307,16 +279,17 @@ export const SendSocketGetSvg = (
   ws: WebSocket,
   region: string,
   area: string,
-  id: string
+  id: string,
 ) => {
+  console.log('getSvg:', region, area, id);
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({
-            type: "getSvg",
+            type: 'getSvg',
             pos: { region, area, id },
-          })
+          }),
         );
       } else {
         setTimeout(() => {
