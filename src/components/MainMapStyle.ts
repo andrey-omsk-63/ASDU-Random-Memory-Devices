@@ -173,11 +173,6 @@ export const styleSetProcess = {
   boxShadow: 24,
   p: 1.5,
 };
-
-// export const styleTypography = {
-//   textAlign: "center",
-//   color: "#5B1080",
-// };
 //=== ProcessObject ===================================================
 export const styleEditName = {
   outline: "none",
@@ -213,14 +208,6 @@ export const styleAppSt02 = {
   top: "50%",
   left: "50%",
 };
-
-// export const styleAppSt021 = {
-//   fontSize: 19,
-//   transform: "translate(-50%, -50%)",
-//   position: "relative",
-//   top: "50%",
-//   left: "50%",
-// };
 
 export const styleAppSt03 = {
   textAlign: "center",

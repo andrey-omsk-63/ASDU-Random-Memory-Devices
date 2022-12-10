@@ -174,9 +174,9 @@ export const SendSocketGetAddObjects = (debug: boolean, ws: WebSocket) => {
   };
   handleSendOpen();
 };
-
+//=== MainMapRgs ====-----==========================
 export const SendSocketGetPhases = (
-  debugging: boolean,
+  debug: boolean,
   ws: WebSocket,
   region: string,
   area: string,
@@ -184,7 +184,7 @@ export const SendSocketGetPhases = (
 ) => {
   //console.log("GetPhases:", region, area, id);
   const handleSendOpen = () => {
-    if (!debugging) {
+    if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
         ws.send(
           JSON.stringify({

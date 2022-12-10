@@ -19,10 +19,10 @@ import { SendSocketGetAddObjects } from "./components/RgsSocketFunctions";
 //import { SendSocketGetPhases } from "./components/MapSocketFunctions";
 
 import { dataMap } from "./otladkaMaps";
-//import { imgFaza } from "./otladkaPicFaza";
+import { imgFaza } from "./otladkaPicFaza";
 import { dataBindings } from "./otladkaBindings";
 import { dataAddObjects } from "./otladkaAddObjects";
-//otladkaRoutes
+
 export let dateMapGl: any;
 export let dateBindingsGl: any;
 export let dateAddObjectsGl: any;
@@ -254,7 +254,7 @@ const App = () => {
     }
     homeRegion = massRegion[0].toString();
     dateStat.region = homeRegion;
-    //dateStat.phSvg = imgFaza;
+    dateStat.phSvg = imgFaza;
     dispatch(statsaveCreate(dateStat));
     const ipAdress: string = "https://localhost:3000/cross.svg";
     axios.get(ipAdress).then(({ data }) => {

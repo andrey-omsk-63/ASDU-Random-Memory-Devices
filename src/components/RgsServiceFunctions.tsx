@@ -9,9 +9,11 @@ import { Pointer } from "../App";
 //import { DateMAP } from "./../interfaceMAP.d";
 import { Tflink, WayPointsArray } from "../interfaceBindings";
 
-import { styleAppSt02, styleAppSt03, 
+import {
+  styleAppSt02,
+  styleAppSt03,
   //styleAppSt021
- } from "./MainMapStyle";
+} from "./MainMapStyle";
 
 export const MasskPoint = (debug: boolean, rec: any, imgFaza: string) => {
   let masskPoint: Pointer = {
@@ -236,9 +238,8 @@ export const AppointDirect = (rec1: string, hBlock: number) => {
   return (
     <Grid container>
       <Grid item xs={12} sx={{ height: hBlock / 15 }}></Grid>
-      <Grid item xs={12} sx={{ textAlign: "center", height: hB }}>
-        {/* <Box sx={styleAppSt021}> */}
-        <Box sx={styleAppSt02}> 
+      <Grid item xs={12} sx={{ fontSize: 21, textAlign: "center", height: hB }}>
+        <Box sx={styleAppSt02}>
           <b>{rec1}</b>
         </Box>
       </Grid>
@@ -459,6 +460,51 @@ export const MakingKluch = (
   }
   return [klushTo1, klushTo2, klushTo3];
 };
+
+export const OutputNumFaza = (
+  num: number,
+  imgFaza: any,
+  maxFaza: number,
+  hBlock: number
+) => {
+  const OutputFaza = (img: any) => {
+    let widthHeight = hBlock / 3;
+    if (!img) widthHeight = hBlock / 6;
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        xmlnsXlink="http://www.w3.org/1999/xlink"
+        style={{ width: widthHeight, height: widthHeight }}
+      >
+        <image
+          width={"95%"}
+          height={"100%"}
+          xlinkHref={"data:image/png;base64," + img}
+        />
+      </svg>
+    );
+  };
+
+  return (
+    <>
+      {num <= maxFaza && (
+        <>
+          <Grid
+            item
+            xs={0.4}
+            sx={{ fontSize: 12, textAlign: "right", height: hBlock / 3 }}
+          >
+            <Box sx={styleAppSt02}>{num}</Box>
+          </Grid>
+          <Grid item xs={3.6} sx={{ textAlign: "center" }}>
+            <Box sx={styleAppSt02}>{OutputFaza(imgFaza)}</Box>
+          </Grid>
+        </>
+      )}
+    </>
+  );
+};
+
 //=== Разное =======================================
 export const StrokaMenuGlob = (soob: string, func: any, mode: number) => {
   let dlSoob = (soob.length + 4) * 8;
@@ -485,9 +531,7 @@ export const StrokaHelp = (soobInfo: string) => {
   let dlSoob = (soobInfo.length + 2) * 8;
   const styleInfoSoob = {
     fontSize: 14,
-    //border: 1,
     marginRight: 0.1,
-    //width: 360,
     width: dlSoob,
     maxHeight: "21px",
     minHeight: "21px",

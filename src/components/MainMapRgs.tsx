@@ -19,7 +19,7 @@ import { getMultiRouteOptions, StrokaHelp } from "./RgsServiceFunctions";
 import { getReferencePoints, CenterCoord } from "./RgsServiceFunctions";
 import { StrokaMenuGlob } from "./RgsServiceFunctions";
 
-//mport { SendSocketUpdateRoute } from "./MapSocketFunctions";
+import { SendSocketGetPhases } from "./RgsSocketFunctions";
 
 import { searchControl } from "./MainMapStyle";
 
@@ -76,13 +76,14 @@ const MainMapRgs = () =>
       const { coordinatesReducer } = state;
       return coordinatesReducer.coordinates;
     });
-    // let datestat = useSelector((state: any) => {
-    //   const { statsaveReducer } = state;
-    //   return statsaveReducer.datestat;
-    // });
+    let datestat = useSelector((state: any) => {
+      const { statsaveReducer } = state;
+      return statsaveReducer.datestat;
+    });
     // console.log("datestat", datestat);
-    //const debug = datestat.debug;
-    //const ws = datestat.ws;
+    const debug = datestat.debug;
+    const ws = datestat.ws;
+    let homeRegion = datestat.region;
     const dispatch = useDispatch();
     //===========================================================
     const [flagPusk, setFlagPusk] = React.useState(false);
@@ -142,6 +143,7 @@ const MainMapRgs = () =>
         setProcessObject(true);
       } else {
         console.log("назначения перекрёстков");
+        //SendSocketGetPhases(debug, ws, homeRegion)
         setAppoint(true);
       }
     };
