@@ -130,7 +130,6 @@ const MainMapRgs = () =>
     const StatusQuo = () => {
       massMem = [];
       massCoord = [];
-      //newMode = -1;
       zoom = zoomStart - 0.01;
       ymaps && addRoute(ymaps, false); // перерисовка связей
       NewPointCenter(pointCenterEt);
@@ -142,13 +141,9 @@ const MainMapRgs = () =>
       if (index >= map.tflight.length) {
         setProcessObject(true);
       } else {
-        console.log('назначения перекрёстков');
-        datestat.area = map.tflight[index].area.num;
-        datestat.id = map.tflight[index].ID;
-        if (!debug) {
-          datestat.phSvg = [null, null, null, null, null, null, null, null];
-        }
-        SendSocketGetPhases(debug, ws, homeRegion, datestat.area, datestat.id);
+        let area = map.tflight[index].area.num;
+        let id = map.tflight[index].ID;
+        SendSocketGetPhases(debug, ws, homeRegion, area, id);
         setAppoint(true);
       }
     };

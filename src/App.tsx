@@ -210,27 +210,37 @@ const App = () => {
           dispatch(addobjCreate(dateAddObjectsGl));
           flagAddObjects = true;
           break;
-        // case "getPhases":
-        //   for (let i = 0; i < massdk.length; i++) {
-        //     if (
-        //       massdk[i].region.toString() === data.pos.region &&
-        //       massdk[i].area.toString() === data.pos.area &&
-        //       massdk[i].ID === data.pos.id
-        //     ) {
-        //       if (data.images) {
-        //         if (data.images.length) {
-        //           for (let j = 0; j < data.images.length; j++) {
-        //             let k = Number(data.images[j].num);
-        //             if (k <= massdk[i].phSvg.length)
-        //               massdk[i].phSvg[k - 1] = data.images[j].phase;
-        //           }
-        //           dispatch(massdkCreate(massdk));
-        //         }
-        //         break;
-        //       }
-        //     }
-        //   }
-        //   break;
+        case 'getPhases':
+          dateStat.area = data.pos.area;
+          dateStat.id = data.pos.id.toString();
+          dateStat.phSvg = Array(8).fill(null);
+          if (data.images) {
+            for (let i = 0; i < data.images.length; i++) {
+              //=== Проверить!!! =====================================
+              dateStat.phSvg[i] = data.images[i].phase;
+            }
+          }
+          dispatch(statsaveCreate(dateStat));
+          //   for (let i = 0; i < massdk.length; i++) {
+          //     if (
+          //       massdk[i].region.toString() === data.pos.region &&
+          //       massdk[i].area.toString() === data.pos.area &&
+          //       massdk[i].ID === data.pos.id
+          //     ) {
+          //       if (data.images) {
+          //         if (data.images.length) {
+          //           for (let j = 0; j < data.images.length; j++) {
+          //             let k = Number(data.images[j].num);
+          //             if (k <= massdk[i].phSvg.length)
+          //               massdk[i].phSvg[k - 1] = data.images[j].phase;
+          //           }
+          //           dispatch(massdkCreate(massdk));
+          //         }
+          //         break;
+          //       }
+          //     }
+          //   }
+          break;
         default:
           console.log('data_default:', data);
       }
