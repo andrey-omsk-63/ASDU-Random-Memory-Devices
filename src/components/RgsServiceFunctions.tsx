@@ -432,7 +432,7 @@ export const MakingKluch = (rec1: string, homeRegion: any, massAreaId: Array<num
 export const OutputNumFaza = (num: number, imgFaza: any, maxFaza: number, hBlock: number) => {
   const OutputFaza = (img: any) => {
     let widthHeight = hBlock / 3;
-    if (!img) widthHeight = hBlock / 6;
+    if (!img) widthHeight = hBlock / 12;
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -459,6 +459,23 @@ export const OutputNumFaza = (num: number, imgFaza: any, maxFaza: number, hBlock
   );
 };
 
+export const ReplaceInSvg = (svgPict: any) => {
+  let svgPipa = svgPict;
+  if (svgPict) {
+    let heightImg = window.innerWidth / 3.333 + 14;
+    let widthHeight = heightImg.toString();
+    let ch = '';
+    let vxod = svgPict.indexOf('width=');
+    for (let i = 0; i < 100; i++) {
+      if (isNaN(Number(svgPipa[vxod + 7 + i]))) break;
+      ch = ch + svgPipa[vxod + 7 + i];
+    }
+    for (let i = 0; i < 6; i++) {
+      svgPipa = svgPipa.replace(ch, widthHeight);
+    }
+  }
+  return svgPipa;
+};
 //=== Разное =======================================
 export const StrokaMenuGlob = (soob: string, func: any, mode: number) => {
   let dlSoob = (soob.length + 4) * 8;

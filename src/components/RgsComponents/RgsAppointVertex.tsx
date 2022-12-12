@@ -17,7 +17,7 @@ import { SendSocketUpdateBindings } from '../RgsSocketFunctions';
 import { TakeAreaId, CheckKey, MakeTflink } from '../RgsServiceFunctions';
 import { MakingKey, OutputKey, MakingKluch } from '../RgsServiceFunctions';
 import { AppointDirect, AppointHeader } from '../RgsServiceFunctions';
-import { OutputNumFaza } from '../RgsServiceFunctions';
+import { OutputNumFaza, ReplaceInSvg } from '../RgsServiceFunctions';
 
 import { styleModalEnd, styleModalMenu } from '../MainMapStyle';
 import { styleSetAppoint, styleAppSt02 } from '../MainMapStyle';
@@ -312,22 +312,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       </Box>
     );
   };
-  const ReplaceInSvg = (svgPict: any) => {
-    let heightImg = window.innerWidth / 3.333 + 14;
-    let widthHeight = heightImg.toString();
-    let ch = '';
-    let svgPipa = svgPict;
-    let vxod = svgPict.indexOf('width=');
-    for (let i = 0; i < 100; i++) {
-      if (isNaN(Number(svgPipa[vxod + 7 + i]))) break;
-      ch = ch + svgPipa[vxod + 7 + i];
-    }
-    for (let i = 0; i < 6; i++) {
-      svgPipa = svgPipa.replace(ch, widthHeight);
-    }
-    return svgPipa;
-  };
-
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
     kluchGl = homeRegion + '-' + map.tflight[props.idx].area.num + '-';

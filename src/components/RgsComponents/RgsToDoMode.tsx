@@ -21,14 +21,14 @@ let timerId: any[] = [];
 
 let massInt: any[][] = [];
 
-const GsToDoMode = (props: {
-  newMode: number;
+const RgsToDoMode = (props: {
+  //newMode: number;
   massMem: Array<number>;
   funcMode: any;
   funcSize: any;
   funcCenter: any;
   funcHelper: any;
-  trigger: boolean;
+  //trigger: boolean;
 }) => {
   //console.log("2TRIGGER:", props.trigger);
   //== Piece of Redux ======================================
@@ -36,15 +36,15 @@ const GsToDoMode = (props: {
     const { mapReducer } = state;
     return mapReducer.map.dateMap;
   });
-  let massdk = useSelector((state: any) => {
-    const { massdkReducer } = state;
-    return massdkReducer.massdk;
-  });
+  // let massdk = useSelector((state: any) => {
+  //   const { massdkReducer } = state;
+  //   return massdkReducer.massdk;
+  // });
   let massfaz = useSelector((state: any) => {
     const { massfazReducer } = state;
     return massfazReducer.massfaz;
   });
-  //console.log("TODOmassfaz", massfaz);
+  console.log("TODOmassfaz", massfaz);
   let datestat = useSelector((state: any) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
@@ -55,14 +55,13 @@ const GsToDoMode = (props: {
   //========================================================
   const [trigger, setTrigger] = React.useState(true);
   //const timer = React.useRef<any>(null);
-  let newMode = props.newMode;
+  //let newMode = props.newMode;
 
   //=== инициализация ======================================
   const MakeMaskFaz = (i: number) => {
-    //let im: Array<string | null> = [];
     let maskFaz: Fazer = {
       idx: 0,
-      faza: 1,
+      faza: 0,
       fazaSist: -1,
       phases: [],
       idevice: 0,
@@ -72,14 +71,15 @@ const GsToDoMode = (props: {
       img: [],
     };
     maskFaz.idx = props.massMem[i];
-    maskFaz.name = massdk[maskFaz.idx].nameCoordinates;
-    maskFaz.phases = massdk[maskFaz.idx].phases;
+    maskFaz.name = map.tflight[maskFaz.idx].description;
+    maskFaz.phases = map.tflight[maskFaz.idx].phases;
+    //======
     maskFaz.idevice = map.tflight[maskFaz.idx].idevice;
-    maskFaz.faza = map.routes[newMode].listTL[i].phase;
+    //maskFaz.faza = map.routes[newMode].listTL[i].phase;
     if (!maskFaz.phases.length) {
       maskFaz.img = [null, null, null];
     } else {
-      maskFaz.img = massdk[maskFaz.idx].phSvg;
+      maskFaz.img = datestat.phSvg;
     }
     return maskFaz;
   };
@@ -151,10 +151,10 @@ const GsToDoMode = (props: {
 
   const StrokaTabl = () => {
     const ClickKnop = (mode: number) => {
-      let coor = map.routes[newMode].listTL[mode].point;
-      let coord = [coor.Y, coor.X];
+      // let coor = map.routes[newMode].listTL[mode].point;
+      // let coord = [coor.Y, coor.X];
       massfaz[mode].starRec = !massfaz[mode].starRec;
-      props.funcCenter(coord);
+      //props.funcCenter(coord);
       setTrigger(!trigger);
     };
 
@@ -285,7 +285,8 @@ const GsToDoMode = (props: {
 
         <Grid container sx={{ marginTop: 0 }}>
           <Grid item xs sx={{ fontSize: 18, textAlign: "center" }}>
-            Режим: <b>{map.routes[newMode].description}</b>
+            {/* Режим: <b>{map.routes[newMode].description}</b> */}
+            Режим: <b>отладка</b>
           </Grid>
         </Grid>
 
@@ -301,7 +302,7 @@ const GsToDoMode = (props: {
 
           {!toDoMode && (
             <Box sx={{ marginTop: 1.5, textAlign: "center" }}>
-              <Button sx={styleModalMenu} onClick={() => ToDoMode(2)}>
+              <Button sx={styleModalMenu} onClick={() => ToDoMode(3)}>
                 Начать исполнение
               </Button>
             </Box>
@@ -320,19 +321,4 @@ const GsToDoMode = (props: {
   );
 };
 
-export default GsToDoMode;
-
-// React.useEffect(() => {
-//   if (toDoMode) {
-//     const timer = setInterval(() => {
-//       for (let i = 0; i < massfaz.length; i++) {
-//         if (massfaz[i].runRec) {
-//           let faz = massfaz[i];
-//           SendSocketDispatch(debug, ws, faz.idevice, 9, faz.faza);
-//         }
-//       }
-//       console.log("Отправка");
-//     }, 1000);
-//     return () => clearInterval(timer);
-//   }
-// });
+export default RgsToDoMode;
