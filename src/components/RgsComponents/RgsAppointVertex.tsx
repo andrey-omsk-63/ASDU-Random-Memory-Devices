@@ -242,7 +242,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       </Box>
     );
   };
-
+  
   const AppointStroka = (
     rec1: string,
     valueAr: any,

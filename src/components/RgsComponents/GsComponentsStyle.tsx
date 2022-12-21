@@ -51,6 +51,7 @@ export const styleToDoMode = {
   position: "relative",
   marginTop: 0.1,
   marginLeft: "auto",
+  marginRight: 1,
   width: "96%",
   bgcolor: "background.paper",
   border: "3px solid #000",

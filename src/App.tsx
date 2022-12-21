@@ -207,11 +207,13 @@ const App = () => {
         case "getBindings":
           dateBindingsGl = JSON.parse(JSON.stringify(data));
           dispatch(bindingsCreate(dateBindingsGl));
+          console.log("dateBindingsGl:", dateBindingsGl);
           flagBindings = true;
           break;
         case "getAddObjects":
           dateAddObjectsGl = JSON.parse(JSON.stringify(data));
           dispatch(addobjCreate(dateAddObjectsGl));
+          console.log("dateAddObjectsGl:", dateAddObjectsGl);
           flagAddObjects = true;
           break;
         case "getPhases":
@@ -266,11 +268,13 @@ const App = () => {
     dateMapGl = JSON.parse(JSON.stringify(dataMap));
     dispatch(mapCreate(dateMapGl));
 
-    dateBindingsGl = JSON.parse(JSON.stringify(dataBindings.data));
-    dispatch(bindingsCreate(dateBindingsGl));
-
     dateAddObjectsGl = JSON.parse(JSON.stringify(dataAddObjects.data));
     dispatch(addobjCreate(dateAddObjectsGl));
+    console.log("dateAddObjectsGl:", dateAddObjectsGl);
+
+    dateBindingsGl = JSON.parse(JSON.stringify(dataBindings.data));
+    dispatch(bindingsCreate(dateBindingsGl));
+    console.log("dateBindingsGl:", dateBindingsGl);
 
     let massRegion = [];
     for (let key in dateMapGl.regionInfo) {

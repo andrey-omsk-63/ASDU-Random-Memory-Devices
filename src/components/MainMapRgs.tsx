@@ -18,7 +18,7 @@ import RgsToDoMode from "./RgsComponents/RgsToDoMode";
 
 import { getMultiRouteOptions, StrokaHelp } from "./RgsServiceFunctions";
 import { getReferencePoints, CenterCoord } from "./RgsServiceFunctions";
-import { StrokaMenuGlob, Distance } from "./RgsServiceFunctions";
+import { StrokaMenuGlob, Distance, MakingKey } from "./RgsServiceFunctions";
 
 import { SendSocketGetPhases } from "./RgsSocketFunctions";
 import { SendSocketGetSvg } from "./RgsSocketFunctions";
@@ -34,6 +34,8 @@ let pointCenterEt: any = 0;
 
 let massMem: Array<number> = [];
 let massCoord: any = [];
+let massKlu: Array<string> = [];
+let massNomBind: Array<number> = [];
 //let newMode = -1;
 let soobErr = "";
 //let helper = true;
@@ -52,6 +54,9 @@ let rightCoord: Array<number> = [0, 0];
 //let beginInTarget = true;
 let helper = true;
 
+let funcContex: any = null;
+let funcBound: any = null;
+
 const MainMapRgs = () =>
   //props: { trigger: boolean }
   {
@@ -65,10 +70,10 @@ const MainMapRgs = () =>
     //   return massdkReducer.massdk;
     // });
     //console.log("massdk", massdk);
-    // let bindings = useSelector((state: any) => {
-    //   const { bindingsReducer } = state;
-    //   return bindingsReducer.bindings.dateBindings;
-    // });
+    let bindings = useSelector((state: any) => {
+      const { bindingsReducer } = state;
+      return bindingsReducer.bindings.dateBindings;
+    });
     //console.log('bindings', bindings);
     let addobj = useSelector((state: any) => {
       const { addobjReducer } = state;
@@ -160,28 +165,86 @@ const MainMapRgs = () =>
       }
     };
 
-    const ClickPointNotTarget = (index: number) => {
-      console.log("реж.управления:", index, map.tflight.length);
-      let nomInMass = massMem.indexOf(index);
-
-      if (nomInMass < 0) {
-        massMem.push(index);
-        helper = !helper;
-        let masscoord: any = [];
-        if (index < map.tflight.length) {
-          masscoord[0] = map.tflight[index].points.Y; // перекрёсток
-          masscoord[1] = map.tflight[index].points.X;
-        } else {
-          let idxObj = index - map.tflight.length; // объект
-          masscoord = addobj.addObjects[idxObj].dgis;
-        }
-        massCoord.push(masscoord);
+    const Added = (klu: string, index: number, nom: number) => {
+      massMem.push(index);
+      helper = !helper;
+      let masscoord: any = [];
+      if (index < map.tflight.length) {
+        masscoord[0] = map.tflight[index].points.Y; // перекрёсток
+        masscoord[1] = map.tflight[index].points.X;
       } else {
-        massMem.splice(nomInMass, 1);
-        massCoord.splice(nomInMass, 1);
+        let idxObj = index - map.tflight.length; // объект
+        masscoord = addobj.addObjects[idxObj].dgis;
       }
+      massCoord.push(masscoord);
+      massKlu.push(klu);
+      massNomBind.push(nom);
       ymaps && addRoute(ymaps, false); // перерисовка связей
       setFlagPusk(!flagPusk);
+    };
+
+    const AddVertex = (klu: string, index: number, nom: number) => {
+      let nomInMass = massMem.indexOf(index);
+      if (nomInMass >= 0) {
+        alert("Этот перекрёсток уже используется");
+      } else {
+        if (!massMem.length) {
+          Added(klu, index, nom); // первая точка
+        } else {
+          let lastMem = massMem.length - 1;
+          console.log("1###:", lastMem, nom, massKlu, massNomBind);
+          console.log("2###:", massKlu[lastMem],bindings.tfLinks[nom].tflink);
+          let mass = bindings.tfLinks[nom].tflink
+          switch (massKlu[lastMem]) {
+            case mass.west.id:
+              console.log("mass.west:")
+              break;
+            case mass.north.id:
+              console.log("mass.north:")
+              break;
+            case mass.east.id:
+              console.log("mass.east:")
+              break;
+            case mass.south.id:
+              console.log("mass.south:")
+              break;
+            
+            default:
+              console.log("data_default:");
+          }
+        }
+      }
+    };
+
+    const ClickPointNotTarget = (index: number) => {
+      let klu = ''
+      if (index >= map.tflight.length) {
+        // объект
+        
+        let mass = addobj.addObjects[index-map.tflight.length ];
+        console.log('&&&',mass)
+        klu = MakingKey(homeRegion, mass.area, mass.id);
+      } else {
+        let mass = map.tflight[index];
+       klu = MakingKey(homeRegion, mass.area.num, mass.ID);
+      }
+      
+      console.log("реж.управления:", index, klu, massMem.length);
+
+      if (!massMem.length) {
+        AddVertex(klu, index, -1);
+      } else {
+        let have = -1;
+        for (let i = 0; i < bindings.tfLinks.length; i++) {
+          if (bindings.tfLinks[i].id === klu) have = i;
+        }
+        console.log("$$$:", have, massMem);
+        if (have < 0) {
+          alert("Нет массива связности перекрёстка " + klu);
+        } else {
+          AddVertex(klu, index, have);
+        }
+      }
     };
 
     const OnPlacemarkClickPoint = (index: number) => {
@@ -264,19 +327,31 @@ const MainMapRgs = () =>
     const InstanceRefDo = (ref: React.Ref<any>) => {
       if (ref) {
         mapp.current = ref;
-        mapp.current.events.add("contextmenu", function (e: any) {
+        // mapp.current.events.add("contextmenu", function (e: any) {
+        //   if (mapp.current.hint) {
+        //     if (inTarget) InputerObject(e.get("coords"));// нажата правая кнопка мыши
+        //     if (!inTarget) FindNearVertex(e.get("coords"));
+        //   }
+        // });
+        mapp.current.events.remove("contextmenu", funcContex);
+        funcContex = function (e: any) {
           if (mapp.current.hint) {
-            if (inTarget) InputerObject(e.get("coords"));
+            if (inTarget) InputerObject(e.get("coords")); // нажата правая кнопка мыши
             if (!inTarget) FindNearVertex(e.get("coords"));
           }
-        });
-        mapp.current.events.add("mousedown", function (e: any) {
-          pointCenter = mapp.current.getCenter(); // нажата левая/правая кнопка мыши 0, 1 или 2 в зависимости от того, какая кнопка мыши нажата (В IE значение может быть от 0 до 7).
-        });
-        mapp.current.events.add(["boundschange"], function () {
+        };
+        mapp.current.events.add("contextmenu", funcContex);
+
+        // mapp.current.events.add("mousedown", function (e: any) {
+        //   pointCenter = mapp.current.getCenter(); // нажата левая/правая кнопка мыши 0, 1 или 2 в зависимости от того, какая кнопка мыши нажата (В IE значение может быть от 0 до 7).
+        // });
+        mapp.current.events.remove("boundschange", funcBound);
+        funcBound = function () {
           pointCenter = mapp.current.getCenter();
           zoom = mapp.current.getZoom(); // покрутили колёсико мыши
-        });
+        };
+
+        mapp.current.events.add("boundschange", funcBound);
         if (flagCenter) {
           pointCenter = newCenter;
           setFlagCenter(false);
@@ -311,8 +386,8 @@ const MainMapRgs = () =>
           SetHelper();
           break;
         case 53: // выполнить режим
-          xsMap = 7.8;
-          xsTab = 4.2;
+          xsMap = 7.7;
+          xsTab = 4.3;
           widthMap = "99.8%";
           modeToDo = 2;
           console.log("4modeToDo", modeToDo);
@@ -367,9 +442,7 @@ const MainMapRgs = () =>
           {modeToDo === 2 && (
             <>{StrokaHelp("Проверьте правильность ввода маршрута")}</>
           )}
-          {modeToDo === 3 && (
-            <>{StrokaHelp("Происходит выполнение режима")}</>
-          )}
+          {modeToDo === 3 && <>{StrokaHelp("Происходит выполнение режима")}</>}
           {modeToDo === 0 && (
             <>
               {inTarget && (
