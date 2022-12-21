@@ -139,13 +139,15 @@ const MainMapRgs = () =>
     const StatusQuo = () => {
       massMem = [];
       massCoord = [];
+      massKlu = [];
+      massNomBind = [];
       zoom = zoomStart - 0.01;
       ymaps && addRoute(ymaps, false); // перерисовка связей
       NewPointCenter(pointCenterEt);
     };
 
     const ClickPointInTarget = (index: number) => {
-      console.log("реж.назначения:", index, map.tflight.length);
+      console.log("реж.назначения:", index, bindings);
       setIdxObj(index);
       if (index >= map.tflight.length) {
         setProcessObject(true);
@@ -166,7 +168,6 @@ const MainMapRgs = () =>
     };
 
     const Added = (klu: string, index: number, nom: number) => {
-      massMem.push(index);
       helper = !helper;
       let masscoord: any = [];
       if (index < map.tflight.length) {
@@ -176,59 +177,72 @@ const MainMapRgs = () =>
         let idxObj = index - map.tflight.length; // объект
         masscoord = addobj.addObjects[idxObj].dgis;
       }
+      massMem.push(index);
       massCoord.push(masscoord);
       massKlu.push(klu);
       massNomBind.push(nom);
+      console.log("!!!!!!:", massMem, massKlu, massNomBind);
       ymaps && addRoute(ymaps, false); // перерисовка связей
       setFlagPusk(!flagPusk);
+      if (massMem.length === 3) PressButton(53);
     };
 
     const AddVertex = (klu: string, index: number, nom: number) => {
       let nomInMass = massMem.indexOf(index);
       if (nomInMass >= 0) {
-        alert("Этот перекрёсток уже используется");
+        soobErr = "Этот перекрёсток уже используется";
+        setOpenSoobErr(true);
+        //alert("Этот перекрёсток уже используется");
       } else {
         if (!massMem.length) {
           Added(klu, index, nom); // первая точка
         } else {
           let lastMem = massMem.length - 1;
           console.log("1###:", lastMem, nom, massKlu, massNomBind);
-          console.log("2###:", massKlu[lastMem],bindings.tfLinks[nom].tflink);
-          let mass = bindings.tfLinks[nom].tflink
+          console.log("2###:", massKlu[lastMem], bindings.tfLinks[nom].tflink);
+          let mass = bindings.tfLinks[nom].tflink;
+          let fazer = "";
           switch (massKlu[lastMem]) {
             case mass.west.id:
-              console.log("mass.west:")
+              fazer = "З";
+              console.log("mass.west:");
               break;
             case mass.north.id:
-              console.log("mass.north:")
+              console.log("mass.north:");
+              fazer = "С";
               break;
             case mass.east.id:
-              console.log("mass.east:")
+              fazer = "В";
+              console.log("mass.east:");
               break;
             case mass.south.id:
-              console.log("mass.south:")
+              fazer = "Ю";
+              console.log("mass.south:");
               break;
-            
             default:
               console.log("data_default:");
+          }
+          if (!fazer) {
+            soobErr = "Перекрёсток " + klu + " не связан с перекрёстком ";
+            soobErr += massKlu[lastMem];
+            setOpenSoobErr(true);
+          } else {
+            Added(klu, index, nom); // вторая точка и далее
           }
         }
       }
     };
 
     const ClickPointNotTarget = (index: number) => {
-      let klu = ''
+      let klu = "";
       if (index >= map.tflight.length) {
-        // объект
-        
-        let mass = addobj.addObjects[index-map.tflight.length ];
-        console.log('&&&',mass)
+        let mass = addobj.addObjects[index - map.tflight.length]; // объект
         klu = MakingKey(homeRegion, mass.area, mass.id);
       } else {
-        let mass = map.tflight[index];
-       klu = MakingKey(homeRegion, mass.area.num, mass.ID);
+        let mass = map.tflight[index]; // перекрёсток
+        klu = MakingKey(homeRegion, mass.area.num, mass.ID);
       }
-      
+
       console.log("реж.управления:", index, klu, massMem.length);
 
       if (!massMem.length) {
@@ -240,7 +254,8 @@ const MainMapRgs = () =>
         }
         console.log("$$$:", have, massMem);
         if (have < 0) {
-          alert("Нет массива связности перекрёстка " + klu);
+          soobErr = "Нет массива связности перекрёстка " + klu;
+          setOpenSoobErr(true);
         } else {
           AddVertex(klu, index, have);
         }
@@ -327,12 +342,6 @@ const MainMapRgs = () =>
     const InstanceRefDo = (ref: React.Ref<any>) => {
       if (ref) {
         mapp.current = ref;
-        // mapp.current.events.add("contextmenu", function (e: any) {
-        //   if (mapp.current.hint) {
-        //     if (inTarget) InputerObject(e.get("coords"));// нажата правая кнопка мыши
-        //     if (!inTarget) FindNearVertex(e.get("coords"));
-        //   }
-        // });
         mapp.current.events.remove("contextmenu", funcContex);
         funcContex = function (e: any) {
           if (mapp.current.hint) {
@@ -341,7 +350,6 @@ const MainMapRgs = () =>
           }
         };
         mapp.current.events.add("contextmenu", funcContex);
-
         // mapp.current.events.add("mousedown", function (e: any) {
         //   pointCenter = mapp.current.getCenter(); // нажата левая/правая кнопка мыши 0, 1 или 2 в зависимости от того, какая кнопка мыши нажата (В IE значение может быть от 0 до 7).
         // });
@@ -388,7 +396,7 @@ const MainMapRgs = () =>
         case 53: // выполнить режим
           xsMap = 7.7;
           xsTab = 4.3;
-          widthMap = "99.8%";
+          widthMap = "99.9%";
           modeToDo = 2;
           console.log("4modeToDo", modeToDo);
           setToDoMode(true);
@@ -429,10 +437,8 @@ const MainMapRgs = () =>
     };
 
     const MenuGl = () => {
-      let soobHelpFiest = "Добавьте/удалите перекрёстки в маршруте [";
-      soobHelpFiest += massMem.length + "✳]";
-
-      console.log("1modeToDo", modeToDo, zoom);
+      let soobHelpFiest = "Добавьте перекрёстки в маршруте [";
+      soobHelpFiest += massMem.length + "🔆]";
 
       return (
         <>
