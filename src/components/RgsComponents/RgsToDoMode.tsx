@@ -17,6 +17,7 @@ import { styleToDoMode, styleStrokaTabl } from "./GsComponentsStyle";
 
 let toDoMode = false;
 let init = true;
+let lengthMassMem = 0;
 let timerId: any[] = [];
 
 let massInt: any[][] = [];
@@ -30,11 +31,15 @@ const RgsToDoMode = (props: {
   funcHelper: any;
   //trigger: boolean;
 }) => {
-  //console.log("2TRIGGER:", props.trigger);
+  console.log("massMem:", props.massMem);
   //== Piece of Redux ======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
     return mapReducer.map.dateMap;
+  });
+  let addobj = useSelector((state: any) => {
+    const { addobjReducer } = state;
+    return addobjReducer.addobj.dateAdd;
   });
   // let massdk = useSelector((state: any) => {
   //   const { massdkReducer } = state;
@@ -71,10 +76,14 @@ const RgsToDoMode = (props: {
       img: [],
     };
     maskFaz.idx = props.massMem[i];
-    maskFaz.name = map.tflight[maskFaz.idx].description;
-    maskFaz.phases = map.tflight[maskFaz.idx].phases;
-    //======
-    maskFaz.idevice = map.tflight[maskFaz.idx].idevice;
+    if (maskFaz.idx >= map.tflight.length) {
+      maskFaz.name =
+        addobj.addObjects[maskFaz.idx - map.tflight.length].description; // объект
+    } else {
+      maskFaz.name = map.tflight[maskFaz.idx].description; // перекрёсток
+      maskFaz.idevice = map.tflight[maskFaz.idx].idevice;
+    }
+    //maskFaz.phases = map.tflight[maskFaz.idx].phases;
     //maskFaz.faza = map.routes[newMode].listTL[i].phase;
     if (!maskFaz.phases.length) {
       maskFaz.img = [null, null, null];
@@ -95,12 +104,24 @@ const RgsToDoMode = (props: {
     }
     init = false;
     dispatch(massfazCreate(massfaz));
+    lengthMassMem = props.massMem.length;
+    console.log("1InitMassfaz", massfaz);
+  } else {
+    if (lengthMassMem !== props.massMem.length) {
+      massfaz.push(MakeMaskFaz(props.massMem.length - 1));
+      timerId.push(null);
+      massInt.push(JSON.parse(JSON.stringify(timerId)));
+      dispatch(massfazCreate(massfaz));
+      lengthMassMem = props.massMem.length;
+      console.log("2InitMassfaz", massfaz);
+    }
   }
   //========================================================
   const handleCloseSetEnd = () => {
     props.funcSize(11.99);
     toDoMode = false;
     init = true;
+    lengthMassMem = 0;
   };
 
   const ToDoMode = (mode: number) => {
@@ -275,7 +296,6 @@ const RgsToDoMode = (props: {
 
   return (
     <>
-      {/* {toDoMode && <>{TimerId()}</>} */}
       <Box sx={styleToDoMode}>
         {!toDoMode && (
           <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>

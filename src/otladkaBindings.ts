@@ -472,6 +472,62 @@ export const dataBindings = {
           },
         },
       },
+      {
+        id: "1-1-38",
+        tflink: {
+          add1: {
+            id: "",
+            wayPointsArray: [],
+          },
+          add2: {
+            id: "",
+            wayPointsArray: [],
+          },
+          east: {
+            id: "",
+            wayPointsArray: [],
+          },
+          north: {
+            id: "1-1-37",
+            wayPointsArray: [
+              {
+                id: "1-1-42",
+                phase: "3",
+              },
+              {
+                id: "1-1-7",
+                phase: "1",
+              },
+            ],
+          },
+          south: {
+            id: "1-1-7",
+            wayPointsArray: [
+              {
+                id: "1-1-37",
+                phase: "1",
+              },
+              {
+                id: "1-1-42",
+                phase: "1",
+              },
+            ],
+          },
+          west: {
+            id: "1-1-42",
+            wayPointsArray: [
+              {
+                id: "1-1-7",
+                phase: "1",
+              },
+              {
+                id: "1-1-37",
+                phase: "2",
+              },
+            ],
+          },
+        },
+      },
     ],
   },
 };
