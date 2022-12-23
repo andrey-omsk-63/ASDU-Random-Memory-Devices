@@ -62,7 +62,6 @@ const MainMapRgs = () => {
     const { bindingsReducer } = state;
     return bindingsReducer.bindings.dateBindings;
   });
-  //console.log('bindings', bindings);
   let addobj = useSelector((state: any) => {
     const { addobjReducer } = state;
     return addobjReducer.addobj.dateAdd;
@@ -75,7 +74,6 @@ const MainMapRgs = () => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
-  // console.log("datestat", datestat);
   const debug = datestat.debug;
   const ws = datestat.ws;
   let homeRegion = datestat.region;
@@ -178,18 +176,13 @@ const MainMapRgs = () => {
   const AddVertex = (klu: string, index: number, nom: number) => {
     let nomInMass = massMem.indexOf(index);
     if (nomInMass >= 0) {
-      // soobErr = "Перекрёсток";
-      // if (klu.length > 8) soobErr = "Объект";
-      // soobErr += " уже используется";
-      soobErr = MakeSoobErr(2, klu, '');
+      soobErr = MakeSoobErr(2, klu, "");
       setOpenSoobErr(true);
     } else {
       if (!massMem.length) {
         Added(klu, index, nom); // первая точка
       } else {
         let lastMem = massMem.length - 1;
-        // console.log("1###:", lastMem, nom, massKlu, massNomBind);
-        // console.log("2###:", massKlu[lastMem], bindings.tfLinks[nom].tflink);
         let mass = bindings.tfLinks[nom].tflink;
         let fazer = "";
         switch (massKlu[lastMem]) {
@@ -206,12 +199,6 @@ const MainMapRgs = () => {
             fazer = "Ю";
         }
         if (!fazer) {
-          // soobErr = "Перекрёсток [";
-          // if (klu.length > 8) soobErr = "Объект [";
-          // let vert = "перекрёстком [";
-          // if (massKlu[lastMem].length > 8) vert = "объектом [";
-          // soobErr += klu + "] не связан с " + vert;
-          // soobErr += massKlu[lastMem] + "]";
           soobErr = MakeSoobErr(1, klu, massKlu[lastMem]);
           setOpenSoobErr(true);
         } else {
@@ -220,8 +207,6 @@ const MainMapRgs = () => {
       }
     }
   };
-
-  
 
   const ClickPointNotTarget = (index: number) => {
     let klu = "";
@@ -243,12 +228,8 @@ const MainMapRgs = () => {
         for (let i = 0; i < bindings.tfLinks.length; i++) {
           if (bindings.tfLinks[i].id === klu) have = i;
         }
-        // console.log("$$$:", have, massMem);
         if (have < 0) {
-          // let vert = "перекрёстка [";
-          // if (klu.length > 8) vert = "объекта [";
-          // soobErr = "Нет массива связности " + vert + klu + "]";
-          soobErr = MakeSoobErr(3, klu, '');
+          soobErr = MakeSoobErr(3, klu, "");
           setOpenSoobErr(true);
         } else {
           AddVertex(klu, index, have);
@@ -305,18 +286,14 @@ const MainMapRgs = () => {
         }
       }
       if (nomInMap < 0) {
-        soobErr = MakeSoobErr(4, "", "")
-          //"В радиусе 100м от указанной точки управляемые перекрёстки отсутствуют";
+        soobErr = MakeSoobErr(4, "", "");
+        //"В радиусе 100м от указанной точки управляемые перекрёстки отсутствуют";
         setOpenSoobErr(true);
       } else {
         if (massMem.indexOf(nomInMap) >= 0) {
           let mass = map.tflight[nomInMap]; // перекрёсток
           let klu = MakingKey(homeRegion, mass.area.num, mass.ID);
           soobErr = "Перекрёсток [" + klu + "] уже используется";
-          // soobErr = "Перекрёсток [" + map.tflight[nomInMap].region.num + ", ";
-          // soobErr += map.tflight[nomInMap].area.num + ", ";
-          // soobErr += map.tflight[nomInMap][nomInMap].ID + ", ";
-          // soobErr += map.tflight[nomInMap].idevice + "] уже используется";
           setOpenSoobErr(true);
         } else {
           massMem.push(nomInMap);
@@ -536,13 +513,11 @@ const MainMapRgs = () => {
           <Grid item xs={xsTab} sx={{ height: "97.0vh" }}>
             {toDoMode && (
               <RgsToDoMode
-                //newMode={newMode}
                 massMem={massMem}
                 funcMode={ModeToDo}
                 funcSize={OldSizeWind}
                 funcCenter={NewPointCenter}
                 funcHelper={SetHelper}
-                //trigger={props.trigger}
               />
             )}
           </Grid>

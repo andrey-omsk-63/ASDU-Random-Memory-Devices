@@ -293,7 +293,9 @@ export const MakingKey = (homeRegion: any, valueAr: any, valueId: any) => {
 
 export const CheckKey = (kluch: string, map: any, addobj: any) => {
   let klArea = TakeAreaId(kluch)[0];
-  let klId = TakeAreaId(kluch)[0];
+  // ====
+  let klId = TakeAreaId(kluch)[1];
+  // ====
   let have = false;
   if (klId < 10000) {
     for (let i = 0; i < map.tflight.length; i++) {
@@ -471,7 +473,7 @@ export const MakingKluch = (
       }
       break;
     case "Ю":
-      if (valAreaU && valIdV) {
+      if (valAreaU && valIdU) {
         klushTo1 = MakingKey(homeRegion, valAreaV, valIdV);
         klushTo2 = MakingKey(homeRegion, valAreaS, valIdS);
         klushTo3 = MakingKey(homeRegion, valAreaZ, valIdZ);
