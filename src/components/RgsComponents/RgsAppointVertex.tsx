@@ -59,6 +59,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   });
   const debug = datestat.debug;
   const ws = datestat.ws;
+  const homeRegion = datestat.region;
   let imgFaza = datestat.phSvg;
   const dispatch = useDispatch();
   //========================================================
@@ -84,7 +85,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   ];
   let hBlock = window.innerWidth / 3 + 15;
   let hB = hBlock / 15;
-  let homeRegion = datestat.region;
+  
 
   const handleKey = (event: any) => {
     if (event.key === "Enter") event.preventDefault();

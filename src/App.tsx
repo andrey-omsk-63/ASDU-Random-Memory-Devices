@@ -60,6 +60,8 @@ export let massDk: Pointer[] = [];
 
 export interface Fazer {
   idx: number;
+  area: number;
+  id: number;
   faza: number;
   fazaSist: number;
   phases: Array<number>;
