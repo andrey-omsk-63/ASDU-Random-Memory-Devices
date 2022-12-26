@@ -19,7 +19,7 @@ import RgsToDoMode from "./RgsComponents/RgsToDoMode";
 import { getMultiRouteOptions, StrokaHelp } from "./RgsServiceFunctions";
 import { getReferencePoints, CenterCoord } from "./RgsServiceFunctions";
 import { StrokaMenuGlob, Distance, MakingKey } from "./RgsServiceFunctions";
-import { MakeSoobErr } from "./RgsServiceFunctions";
+import { MakeSoobErr, TakeAreaId } from "./RgsServiceFunctions";
 
 import { SendSocketGetPhases } from "./RgsSocketFunctions";
 import { SendSocketGetSvg } from "./RgsSocketFunctions";
@@ -47,6 +47,7 @@ let inTarget = false;
 let newCenter: any = [];
 let leftCoord: Array<number> = [0, 0];
 let rightCoord: Array<number> = [0, 0];
+let massRoute: any = [];
 
 let helper = true;
 let funcContex: any = null;
@@ -116,6 +117,27 @@ const MainMapRgs = () => {
         );
       }
       mapp.current.geoObjects.add(multiRoute);
+
+      const getMassMultiRouteOptions = () => {
+        return {
+          balloonCloseButton: false,
+          routeStrokeStyle: 'dot',
+          strokeColor: '#1A9165',
+          routeActiveStrokeWidth: 2,
+          routeStrokeWidth: 0,
+          //wayPointVisible: false,
+        };
+      };
+
+      let massMultiRoute: any = []; // исходящие связи
+      for (let i = 0; i < massRoute.length; i++) {
+        massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
+          getReferencePoints(massCoord[massCoord.length-1], massRoute[i]),
+          getMassMultiRouteOptions()
+        );
+        console.log('!!!!!!',massCoord[massCoord.length-1], massRoute[i],massMultiRoute)
+        mapp.current.geoObjects.add(massMultiRoute[i]);
+      }
     }
   };
 
@@ -164,7 +186,35 @@ const MainMapRgs = () => {
     massCoord.push(masscoord);
     massKlu.push(klu);
     massNomBind.push(nom);
-    console.log("!!!!!!:", massMem, massKlu, massNomBind);
+
+    if (massNomBind.length > 1) {
+      let mass = bindings.tfLinks[nom].tflink;
+      let massKlu = [];
+      if (mass.west.id) massKlu.push(mass.west.id);
+      if (mass.north.id) massKlu.push(mass.north.id);
+      if (mass.east.id) massKlu.push(mass.east.id);
+      if (mass.south.id) massKlu.push(mass.south.id);
+      massRoute = [];
+      for (let j = 0; j < massKlu.length; j++) {
+        let area = TakeAreaId(massKlu[j])[0];
+        let id = TakeAreaId(massKlu[j])[1];
+        for (let i = 0; i < map.tflight.length; i++) {
+          if (
+            Number(map.tflight[i].area.num) === area &&
+            map.tflight[i].ID === id
+          ) {
+            let ms = [0,0]
+            ms[0] = map.tflight[i].points.Y;
+            ms[1] = map.tflight[i].points.X;
+            console.log("!!!:", ms);
+            massRoute.push(ms)
+            break;
+          }
+        }
+      }
+      console.log("коорд:", massRoute);
+    }
+
     ymaps && addRoute(ymaps, false); // перерисовка связей
     if (massMem.length === 3) {
       PressButton(53);
@@ -218,7 +268,12 @@ const MainMapRgs = () => {
       klu = MakingKey(homeRegion, mass.area.num, mass.ID);
     }
     if (!massMem.length) {
-      AddVertex(klu, index, -1);
+      if (index < map.tflight.length) {
+        soobErr = "Входящая точка маршрута должна быть объектом";
+        setOpenSoobErr(true);
+      } else {
+        AddVertex(klu, index, -1);
+      }
     } else {
       if (massMem.length === 1 && klu.length > 8) {
         soobErr = "Объекты могут задаваться только в начале и конце маршрута";
@@ -229,10 +284,30 @@ const MainMapRgs = () => {
           if (bindings.tfLinks[i].id === klu) have = i;
         }
         if (have < 0) {
-          soobErr = MakeSoobErr(3, klu, "");
+          soobErr = MakeSoobErr(3, klu, ""); // нет массива связности
           setOpenSoobErr(true);
         } else {
-          AddVertex(klu, index, have);
+          if (massMem.length > 1) {
+            let kluLast = massKlu[massKlu.length - 1];
+            let hv = -1;
+            for (let i = 0; i < bindings.tfLinks.length; i++) {
+              if (bindings.tfLinks[i].id === kluLast) hv = i;
+            }
+            let mass: any = bindings.tfLinks[hv].tflink;
+            let haveLink = false;
+            if (mass.west.id === klu) haveLink = true;
+            if (mass.north.id === klu) haveLink = true;
+            if (mass.east.id === klu) haveLink = true;
+            if (mass.south.id === klu) haveLink = true;
+            if (!haveLink) {
+              soobErr = MakeSoobErr(5, klu, kluLast); // нет связи
+              setOpenSoobErr(true);
+            } else {
+              AddVertex(klu, index, have);
+            }
+          } else {
+            AddVertex(klu, index, have);
+          }
         }
       }
     }
@@ -345,7 +420,6 @@ const MainMapRgs = () => {
 
   const ModeToDo = (mod: number) => {
     modeToDo = mod;
-    console.log("3modeToDo", modeToDo);
     if (!modeToDo) StatusQuo();
     setFlagPusk(!flagPusk);
   };
@@ -369,7 +443,6 @@ const MainMapRgs = () => {
         xsTab = 4.3;
         widthMap = "99.9%";
         modeToDo = 2;
-        console.log("4modeToDo", modeToDo);
         setToDoMode(true);
         setFlagPusk(!flagPusk);
     }
@@ -380,7 +453,6 @@ const MainMapRgs = () => {
     xsTab = 0.01;
     widthMap = "99.9%";
     modeToDo = 0;
-    console.log("2modeToDo", modeToDo);
     setToDoMode(false);
     setFlagPusk(!flagPusk);
   };

@@ -9,11 +9,14 @@ import Button from "@mui/material/Button";
 import { Fazer } from "../../App";
 
 import { OutputFazaImg, OutputVertexImg } from "../RgsServiceFunctions";
+import { CircleObj } from "../RgsServiceFunctions";
+
 import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 
 import { styleModalEnd } from "../MainMapStyle";
 import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
 import { styleToDoMode, styleStrokaTabl } from "./GsComponentsStyle";
+import { styleStrokaTakt } from "./GsComponentsStyle";
 
 let toDoMode = false;
 let init = true;
@@ -23,15 +26,12 @@ let timerId: any[] = [];
 let massInt: any[][] = [];
 
 const RgsToDoMode = (props: {
-  //newMode: number;
   massMem: Array<number>;
   funcMode: any;
   funcSize: any;
   funcCenter: any;
   funcHelper: any;
-  //trigger: boolean;
 }) => {
-  console.log("massMem:", props.massMem);
   //== Piece of Redux ======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -90,13 +90,7 @@ const RgsToDoMode = (props: {
       maskFaz.id = map.tflight[maskFaz.idx].ID;
       maskFaz.idevice = map.tflight[maskFaz.idx].idevice;
     }
-    //maskFaz.phases = map.tflight[maskFaz.idx].phases;
-    //maskFaz.faza = map.routes[newMode].listTL[i].phase;
-    if (!maskFaz.phases.length) {
-      maskFaz.img = [null, null, null];
-    } else {
-      maskFaz.img = datestat.phSvg;
-    }
+    maskFaz.img = datestat.phSvg[0]; // для отладки
     return maskFaz;
   };
 
@@ -107,14 +101,6 @@ const RgsToDoMode = (props: {
     let klu = homeRegion + "-" + faz.area + "-" + faz.id;
     let kluIn = homeRegion + "-" + fazIn.area + "-" + fazIn.id;
     let kluOn = homeRegion + "-" + fazOn.area + "-" + fazOn.id;
-    console.log(
-      "Ищем фазу для ",
-      props.massMem.length - 1,
-      "-го ",
-      klu,
-      kluIn,
-      kluOn
-    );
     let numRec = -1;
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       if (bindings.tfLinks[i].id === klu) {
@@ -122,22 +108,16 @@ const RgsToDoMode = (props: {
         break;
       }
     }
-    console.log("@@@@@@", numRec, bindings.tfLinks[numRec]);
     let mass = bindings.tfLinks[numRec].tflink;
     let inFaz = [];
     if (mass.west.id === kluIn) inFaz = mass.west.wayPointsArray;
     if (mass.north.id === kluIn) inFaz = mass.north.wayPointsArray;
     if (mass.east.id === kluIn) inFaz = mass.east.wayPointsArray;
     if (mass.south.id === kluIn) inFaz = mass.south.wayPointsArray;
-    let aa = 0;
     for (let i = 0; i < inFaz.length; i++) {
-      if (inFaz[i].id === kluOn) {
-        aa = Number(inFaz[i].phase);
-        faz.faza = Number(inFaz[i].phase);
-      }
+      if (inFaz[i].id === kluOn) faz.faza = Number(inFaz[i].phase);
     }
-
-    console.log("######",aa, kluIn, kluOn, inFaz);
+    dispatch(massfazCreate(massfaz));
   };
 
   if (init) {
@@ -153,10 +133,6 @@ const RgsToDoMode = (props: {
     init = false;
     lengthMassMem = props.massMem.length;
     FindFaza();
-
-    dispatch(massfazCreate(massfaz));
-
-    console.log("1InitMassfaz", massfaz);
   } else {
     if (lengthMassMem !== props.massMem.length) {
       massfaz.push(MakeMaskFaz(props.massMem.length - 1));
@@ -164,10 +140,6 @@ const RgsToDoMode = (props: {
       massInt.push(JSON.parse(JSON.stringify(timerId)));
       lengthMassMem = props.massMem.length;
       FindFaza();
-
-      dispatch(massfazCreate(massfaz));
-
-      console.log("2InitMassfaz", massfaz);
     }
   }
   //========================================================
@@ -181,7 +153,7 @@ const RgsToDoMode = (props: {
   const ToDoMode = (mode: number) => {
     let massIdevice: Array<number> = [];
     if (mode) {
-      for (let i = 0; i < massfaz.length; i++) {
+      for (let i = 1; i < massfaz.length - 1; i++) {
         massIdevice.push(massfaz[i].idevice);
       }
       SendSocketRoute(debug, ws, massIdevice, true);
@@ -272,11 +244,12 @@ const RgsToDoMode = (props: {
       let takt = massfaz[i].faza;
       if (!massfaz[i].faza) takt = "";
       let fazaImg: null | string = null;
-      massfaz[i].img.length > massfaz[i].faza &&
-        (fazaImg = massfaz[i].img[massfaz[i].faza - 1]);
-      debug && (fazaImg = datestat.phSvg); // для отладки
-      let fImg: any = "";
-      if (massfaz[i].faza) fImg = OutputFazaImg(fazaImg);
+      // massfaz[i].img.length > massfaz[i].faza &&
+      //   (fazaImg = massfaz[i].img[massfaz[i].faza - 1]);
+      debug && (fazaImg = datestat.phSvg[0]); // для отладки
+      let pictImg: any = "";
+      if (massfaz[i].faza) pictImg = OutputFazaImg(fazaImg);
+      if (massfaz[i].id > 10000) pictImg = CircleObj();
 
       resStr.push(
         <Grid key={i} container sx={{ marginTop: 1 }}>
@@ -305,19 +278,15 @@ const RgsToDoMode = (props: {
               </Button>
             )}
           </Grid>
-          <Grid item xs={0.4} sx={{ border: 0, fontSize: 30, marginLeft: 1 }}>
+          <Grid item xs={0.4} sx={{ fontSize: 30, marginLeft: 1 }}>
             {bull}
           </Grid>
 
-          <Grid
-            item
-            xs={1.1}
-            sx={{ fontSize: 12, paddingTop: 1.7, textAlign: "right" }}
-          >
+          <Grid item xs={1.1} sx={styleStrokaTakt}>
             {takt}
           </Grid>
           <Grid item xs={2} sx={{ textAlign: "center" }}>
-            {fImg}
+            {pictImg}
           </Grid>
 
           <Grid item xs sx={{ fontSize: 14 }}>

@@ -170,6 +170,10 @@ export const MakeSoobErr = (mode: number, klu: string, klu2: string) => {
     case 4:
       soobErr =
         "В радиусе 100м от указанной точки управляемые перекрёстки отсутствуют";
+      break;
+    case 5:
+      soobErr = "Нет связи с [" + klu + "] в массиве сязности перекрёстка [";
+      soobErr += klu2 + "]";
   }
   return soobErr;
 };
@@ -204,6 +208,7 @@ export const NameMode = () => {
 export const OutputFazaImg = (img: any) => {
   let widthHeight = 60;
   if (!img) widthHeight = 30;
+  
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -213,7 +218,7 @@ export const OutputFazaImg = (img: any) => {
       <image
         width={"100%"}
         height={"100%"}
-        xlinkHref={"data:image/png;base64," + img}
+        xlinkHref={'data:image/png;base64,' + img}
       />
     </svg>
   );
@@ -542,6 +547,19 @@ export const ReplaceInSvg = (svgPict: any) => {
     }
   }
   return svgPipa;
+};
+//=== ToDoMode =====================================
+export const CircleObj = () => {
+  const circle = {
+    width: 18,
+    height: 18,
+    border: 3,
+    marginTop: 1.2,
+    marginLeft: 1.5,
+    borderRadius: 9,
+    borderColor: "#9B5BDD",
+  };
+  return <Box sx={circle}></Box>;
 };
 //=== Разное =======================================
 export const StrokaMenuGlob = (soob: string, func: any, mode: number) => {
