@@ -277,32 +277,6 @@ export const dataBindings = {
       {
         id: "1-1-7",
         tflink: {
-          west: {
-            id: "1-1-10002",
-            wayPointsArray: [
-              {
-                id: "1-1-6",
-                phase: "1",
-              },
-            ],
-          },
-          north: {
-            id: "",
-            wayPointsArray: [],
-          },
-          east: {
-            id: "1-1-6",
-            wayPointsArray: [
-              {
-                id: "1-1-10002",
-                phase: "8",
-              },
-            ],
-          },
-          south: {
-            id: "",
-            wayPointsArray: [],
-          },
           add1: {
             id: "",
             wayPointsArray: [],
@@ -310,6 +284,49 @@ export const dataBindings = {
           add2: {
             id: "",
             wayPointsArray: [],
+          },
+          east: {
+            id: "1-1-6",
+            wayPointsArray: [
+              {
+                id: "1-1-38",
+                phase: "1",
+              },
+              {
+                id: "1-1-10002",
+                phase: "1",
+              },
+            ],
+          },
+          north: {
+            id: "1-1-38",
+            wayPointsArray: [
+              {
+                id: "1-1-10002",
+                phase: "1",
+              },
+              {
+                id: "1-1-6",
+                phase: "1",
+              },
+            ],
+          },
+          south: {
+            id: "",
+            wayPointsArray: [],
+          },
+          west: {
+            id: "1-1-10002",
+            wayPointsArray: [
+              {
+                id: "1-1-6",
+                phase: "1",
+              },
+              {
+                id: "1-1-38",
+                phase: "2",
+              },
+            ],
           },
         },
       },
@@ -451,6 +468,10 @@ export const dataBindings = {
                 id: "1-1-37",
                 phase: "1",
               },
+              {
+                id: "1-1-10003",
+                phase: "3",
+              },
             ],
           },
           north: {
@@ -458,12 +479,25 @@ export const dataBindings = {
             wayPointsArray: [],
           },
           south: {
-            id: "",
-            wayPointsArray: [],
+            id: "1-1-10003",
+            wayPointsArray: [
+              {
+                id: "1-1-35",
+                phase: "1",
+              },
+              {
+                id: "1-1-37",
+                phase: "1",
+              },
+            ],
           },
           west: {
             id: "1-1-37",
             wayPointsArray: [
+              {
+                id: "1-1-10003",
+                phase: "1",
+              },
               {
                 id: "1-1-35",
                 phase: "1",
@@ -484,8 +518,21 @@ export const dataBindings = {
             wayPointsArray: [],
           },
           east: {
-            id: "",
-            wayPointsArray: [],
+            id: "1-1-10003",
+            wayPointsArray: [
+              {
+                id: "1-1-37",
+                phase: "1",
+              },
+              {
+                id: "1-1-42",
+                phase: "1",
+              },
+              {
+                id: "1-1-7",
+                phase: "1",
+              },
+            ],
           },
           north: {
             id: "1-1-37",
@@ -498,11 +545,19 @@ export const dataBindings = {
                 id: "1-1-7",
                 phase: "1",
               },
+              {
+                id: "1-1-10003",
+                phase: "1",
+              },
             ],
           },
           south: {
             id: "1-1-7",
             wayPointsArray: [
+              {
+                id: "1-1-10003",
+                phase: "1",
+              },
               {
                 id: "1-1-37",
                 phase: "1",
@@ -519,6 +574,10 @@ export const dataBindings = {
               {
                 id: "1-1-7",
                 phase: "1",
+              },
+              {
+                id: "1-1-10003",
+                phase: "3",
               },
               {
                 id: "1-1-37",

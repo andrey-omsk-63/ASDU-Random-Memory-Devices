@@ -86,6 +86,79 @@ export const Distance = (coord1: Array<number>, coord2: Array<number>) => {
   }
 };
 
+export const CheckHaveLink = (klu: string, kluLast: string, bindings: any) => {
+  let hv = -1;
+  for (let i = 0; i < bindings.tfLinks.length; i++) {
+    if (bindings.tfLinks[i].id === kluLast) hv = i;
+  }
+  let mass: any = bindings.tfLinks[hv].tflink;
+  let haveLink = false;
+  if (mass.west.id === klu) haveLink = true;
+  if (mass.north.id === klu) haveLink = true;
+  if (mass.east.id === klu) haveLink = true;
+  if (mass.south.id === klu) haveLink = true;
+  return haveLink;
+};
+
+export const MakeMassRoute = (bindings: any, nom: number, map: any, addobj: any) => {
+  let massRoute = [];
+  let mass = bindings.tfLinks[nom].tflink;
+  let massKlu = [];
+  if (mass.west.id) massKlu.push(mass.west.id);
+  if (mass.north.id) massKlu.push(mass.north.id);
+  if (mass.east.id) massKlu.push(mass.east.id);
+  if (mass.south.id) massKlu.push(mass.south.id);
+
+  for (let j = 0; j < massKlu.length; j++) {
+    let area = TakeAreaId(massKlu[j])[0];
+    let id = TakeAreaId(massKlu[j])[1];
+    if (massKlu[j].length < 9) {
+      for (let i = 0; i < map.tflight.length; i++) {
+        if (
+          Number(map.tflight[i].area.num) === area &&
+          map.tflight[i].ID === id
+        ) {
+          massRoute.push([
+            [map.tflight[i].points.Y],
+            [map.tflight[i].points.X],
+          ]);
+          break;
+        }
+      }
+    } else {
+      for (let i = 0; i < addobj.addObjects.length; i++) {
+        if (
+          addobj.addObjects[i].area === area &&
+          addobj.addObjects[i].id === id
+        ) {
+          massRoute.push(addobj.addObjects[i].dgis);
+          break;
+        }
+      }
+    }
+  }
+  return massRoute;
+};
+
+export const MakeFazer = (klu: string, bind: any) => {
+  let mass = bind.tflink;
+  let fazer = "";
+  switch (klu) {
+    case mass.west.id:
+      fazer = "З";
+      break;
+    case mass.north.id:
+      fazer = "С";
+      break;
+    case mass.east.id:
+      fazer = "В";
+      break;
+    case mass.south.id:
+      fazer = "Ю";
+  }
+  return fazer;
+}
+
 //=== Placemark =====================================
 export const GetPointData = (index: number, map: any, addobjects: any) => {
   let cont1 = "";
@@ -185,10 +258,28 @@ export const getReferencePoints = (pointA: any, pointB: any) => {
   };
 };
 
+export const getReferenceLine = (massCoord: any, between: any) => {
+  return {
+    referencePoints: massCoord,
+    params: { viaIndexes: between },
+  };
+};
+
 export const getMultiRouteOptions = () => {
   return {
     routeActiveStrokeWidth: 4,
     //routeActiveStrokeColor: "#224E1F",
+    routeStrokeWidth: 0,
+    wayPointVisible: false,
+  };
+};
+
+export const getMassMultiRouteOptions = () => {
+  return {
+    balloonCloseButton: false,
+    routeStrokeStyle: 'dot',
+    strokeColor: '#1A9165',
+    routeActiveStrokeWidth: 2,
     routeStrokeWidth: 0,
     wayPointVisible: false,
   };
@@ -584,7 +675,7 @@ export const StrokaMenuGlob = (soob: string, func: any, mode: number) => {
 };
 
 export const StrokaHelp = (soobInfo: string) => {
-  let dlSoob = (soobInfo.length + 2) * 8;
+  let dlSoob = (soobInfo.length + 4) * 8;
   const styleInfoSoob = {
     fontSize: 14,
     marginRight: 0.1,

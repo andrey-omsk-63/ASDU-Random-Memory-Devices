@@ -30,6 +30,7 @@ export let dateAddObjectsGl: any;
 export interface Stater {
   ws: any;
   debug: boolean;
+  finish: boolean;
   region: string;
   area: string;
   id: string;
@@ -40,6 +41,7 @@ export interface Stater {
 export let dateStat: Stater = {
   ws: null,
   debug: false,
+  finish: false,
   region: "0",
   area: "0",
   id: "0",

@@ -17,9 +17,12 @@ import RgsAppointVertex from "./RgsComponents/RgsAppointVertex";
 import RgsToDoMode from "./RgsComponents/RgsToDoMode";
 
 import { getMultiRouteOptions, StrokaHelp } from "./RgsServiceFunctions";
+import { getMassMultiRouteOptions } from "./RgsServiceFunctions";
 import { getReferencePoints, CenterCoord } from "./RgsServiceFunctions";
+import { getReferenceLine } from "./RgsServiceFunctions";
 import { StrokaMenuGlob, Distance, MakingKey } from "./RgsServiceFunctions";
-import { MakeSoobErr, TakeAreaId } from "./RgsServiceFunctions";
+import { MakeSoobErr, MakeMassRoute } from "./RgsServiceFunctions";
+import { CheckHaveLink, MakeFazer } from "./RgsServiceFunctions";
 
 import { SendSocketGetPhases } from "./RgsSocketFunctions";
 import { SendSocketGetSvg } from "./RgsSocketFunctions";
@@ -27,6 +30,7 @@ import { SendSocketGetSvg } from "./RgsSocketFunctions";
 import { searchControl } from "./MainMapStyle";
 
 let flagOpen = false;
+let needRend = false;
 
 const zoomStart = 10;
 let zoom = zoomStart;
@@ -109,33 +113,22 @@ const MainMapRgs = () => {
           between.push(i);
         }
         multiRoute = new ymaps.multiRouter.MultiRoute(
-          {
-            referencePoints: massCoord,
-            params: { viaIndexes: between },
-          },
+          // {
+          //   referencePoints: massCoord,
+          //   params: { viaIndexes: between },
+          // },
+          getReferenceLine(massCoord, between),
           { boundsAutoApply: bound, wayPointVisible: false }
         );
       }
       mapp.current.geoObjects.add(multiRoute);
 
-      const getMassMultiRouteOptions = () => {
-        return {
-          balloonCloseButton: false,
-          routeStrokeStyle: 'dot',
-          strokeColor: '#1A9165',
-          routeActiveStrokeWidth: 2,
-          routeStrokeWidth: 0,
-          //wayPointVisible: false,
-        };
-      };
-
       let massMultiRoute: any = []; // исходящие связи
       for (let i = 0; i < massRoute.length; i++) {
         massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
-          getReferencePoints(massCoord[massCoord.length-1], massRoute[i]),
+          getReferencePoints(massCoord[massCoord.length - 1], massRoute[i]),
           getMassMultiRouteOptions()
         );
-        console.log('!!!!!!',massCoord[massCoord.length-1], massRoute[i],massMultiRoute)
         mapp.current.geoObjects.add(massMultiRoute[i]);
       }
     }
@@ -186,36 +179,12 @@ const MainMapRgs = () => {
     massCoord.push(masscoord);
     massKlu.push(klu);
     massNomBind.push(nom);
+    massRoute = [];
 
-    if (massNomBind.length > 1) {
-      let mass = bindings.tfLinks[nom].tflink;
-      let massKlu = [];
-      if (mass.west.id) massKlu.push(mass.west.id);
-      if (mass.north.id) massKlu.push(mass.north.id);
-      if (mass.east.id) massKlu.push(mass.east.id);
-      if (mass.south.id) massKlu.push(mass.south.id);
-      massRoute = [];
-      for (let j = 0; j < massKlu.length; j++) {
-        let area = TakeAreaId(massKlu[j])[0];
-        let id = TakeAreaId(massKlu[j])[1];
-        for (let i = 0; i < map.tflight.length; i++) {
-          if (
-            Number(map.tflight[i].area.num) === area &&
-            map.tflight[i].ID === id
-          ) {
-            let ms = [0,0]
-            ms[0] = map.tflight[i].points.Y;
-            ms[1] = map.tflight[i].points.X;
-            console.log("!!!:", ms);
-            massRoute.push(ms)
-            break;
-          }
-        }
-      }
-      console.log("коорд:", massRoute);
-    }
-
+    if (massNomBind.length > 1 && klu.length < 9)
+      massRoute = MakeMassRoute(bindings, nom, map, addobj);
     ymaps && addRoute(ymaps, false); // перерисовка связей
+
     if (massMem.length === 3) {
       PressButton(53);
     } else {
@@ -232,81 +201,68 @@ const MainMapRgs = () => {
       if (!massMem.length) {
         Added(klu, index, nom); // первая точка
       } else {
-        let lastMem = massMem.length - 1;
-        let mass = bindings.tfLinks[nom].tflink;
-        let fazer = "";
-        switch (massKlu[lastMem]) {
-          case mass.west.id:
-            fazer = "З";
-            break;
-          case mass.north.id:
-            fazer = "С";
-            break;
-          case mass.east.id:
-            fazer = "В";
-            break;
-          case mass.south.id:
-            fazer = "Ю";
-        }
-        if (!fazer) {
-          soobErr = MakeSoobErr(1, klu, massKlu[lastMem]);
-          setOpenSoobErr(true);
+        if (nom < 0) {
+          Added(klu, index, nom); // последняя точка
+          datestat.finish = true;
+          dispatch(statsaveCreate(datestat));
+          needRend = true;
+          setFlagPusk(!flagPusk);
         } else {
-          Added(klu, index, nom); // вторая точка и далее
+          if (!MakeFazer(massKlu[massMem.length - 1], bindings.tfLinks[nom])) {
+            soobErr = MakeSoobErr(1, klu, massKlu[massMem.length - 1]);
+            setOpenSoobErr(true);
+          } else {
+            Added(klu, index, nom); // вторая точка и далее
+          }
         }
       }
     }
   };
 
   const ClickPointNotTarget = (index: number) => {
-    let klu = "";
-    if (index >= map.tflight.length) {
-      let mass = addobj.addObjects[index - map.tflight.length]; // объект
-      klu = MakingKey(homeRegion, mass.area, mass.id);
+    if (datestat.finish) {
+      soobErr = "Маршрут уже полностью сформирован";
+      setOpenSoobErr(true);
     } else {
-      let mass = map.tflight[index]; // перекрёсток
-      klu = MakingKey(homeRegion, mass.area.num, mass.ID);
-    }
-    if (!massMem.length) {
-      if (index < map.tflight.length) {
-        soobErr = "Входящая точка маршрута должна быть объектом";
-        setOpenSoobErr(true);
+      let klu = "";
+      if (index >= map.tflight.length) {
+        let mass = addobj.addObjects[index - map.tflight.length]; // объект
+        klu = MakingKey(homeRegion, mass.area, mass.id);
       } else {
-        AddVertex(klu, index, -1);
+        let mass = map.tflight[index]; // перекрёсток
+        klu = MakingKey(homeRegion, mass.area.num, mass.ID);
       }
-    } else {
-      if (massMem.length === 1 && klu.length > 8) {
-        soobErr = "Объекты могут задаваться только в начале и конце маршрута";
-        setOpenSoobErr(true);
-      } else {
-        let have = -1;
-        for (let i = 0; i < bindings.tfLinks.length; i++) {
-          if (bindings.tfLinks[i].id === klu) have = i;
-        }
-        if (have < 0) {
-          soobErr = MakeSoobErr(3, klu, ""); // нет массива связности
+      if (!massMem.length) {
+        if (index < map.tflight.length) {
+          soobErr = "Входящая точка маршрута должна быть объектом";
           setOpenSoobErr(true);
         } else {
-          if (massMem.length > 1) {
-            let kluLast = massKlu[massKlu.length - 1];
-            let hv = -1;
-            for (let i = 0; i < bindings.tfLinks.length; i++) {
-              if (bindings.tfLinks[i].id === kluLast) hv = i;
-            }
-            let mass: any = bindings.tfLinks[hv].tflink;
-            let haveLink = false;
-            if (mass.west.id === klu) haveLink = true;
-            if (mass.north.id === klu) haveLink = true;
-            if (mass.east.id === klu) haveLink = true;
-            if (mass.south.id === klu) haveLink = true;
-            if (!haveLink) {
-              soobErr = MakeSoobErr(5, klu, kluLast); // нет связи
-              setOpenSoobErr(true);
+          AddVertex(klu, index, -1);
+        }
+      } else {
+        if (massMem.length === 1 && klu.length > 8) {
+          soobErr = "Объекты могут задаваться только в начале и конце маршрута";
+          setOpenSoobErr(true);
+        } else {
+          let have = -1;
+          for (let i = 0; i < bindings.tfLinks.length; i++) {
+            if (bindings.tfLinks[i].id === klu) have = i;
+          }
+          if (have < 0 && klu.length < 9) {
+            soobErr = MakeSoobErr(3, klu, ""); // нет массива связности
+            setOpenSoobErr(true);
+          } else {
+            if (massMem.length > 1) {
+              let kluLast = massKlu[massKlu.length - 1];
+              if (!CheckHaveLink(klu, kluLast, bindings)) {
+                soobErr = MakeSoobErr(5, klu, kluLast); // нет связи
+                setOpenSoobErr(true);
+              } else {
+                AddVertex(klu, index, have);
+              }
             } else {
               AddVertex(klu, index, have);
             }
-          } else {
-            AddVertex(klu, index, have);
           }
         }
       }
@@ -383,7 +339,6 @@ const MainMapRgs = () => {
     if (coord[0] !== leftCoord[0] || coord[1] !== leftCoord[1]) {
       leftCoord = coord;
       modeToDo = 1;
-      console.log("5modeToDo", modeToDo);
       setFlagPusk(!flagPusk);
       setCreateObject(true);
     }
@@ -433,16 +388,20 @@ const MainMapRgs = () => {
   const PressButton = (mode: number) => {
     switch (mode) {
       case 51: // режим управления
+        datestat.finish = false;
+        dispatch(statsaveCreate(datestat));
         SetHelper();
         break;
       case 52: // режим назначения
+        datestat.finish = false;
+        dispatch(statsaveCreate(datestat));
+        setToDoMode(false);
         SetHelper();
         break;
       case 53: // выполнить режим
         xsMap = 7.7;
         xsTab = 4.3;
         widthMap = "99.9%";
-        modeToDo = 2;
         setToDoMode(true);
         setFlagPusk(!flagPusk);
     }
@@ -480,16 +439,16 @@ const MainMapRgs = () => {
   };
 
   const MenuGl = () => {
-    let soobHelpFiest = "Добавьте перекрёстки в маршруте [";
-    soobHelpFiest += massMem.length + "🔆]";
+    let soobHelpFiest = "Маршрут сформирован";
+    if (!datestat.finish) {
+      soobHelpFiest = "Добавьте перекрёстки в маршруте [";
+      soobHelpFiest += massMem.length + "🔆]";
+    }
 
     return (
       <>
         {modeToDo === 1 && (
           <>{StrokaHelp("Введите реквизиты доп.объекта (<Esc> - сброс)")}</>
-        )}
-        {modeToDo === 2 && (
-          <>{StrokaHelp("Проверьте правильность ввода маршрута")}</>
         )}
         {modeToDo === 3 && <>{StrokaHelp("Происходит выполнение режима")}</>}
         {modeToDo === 0 && (
@@ -503,9 +462,6 @@ const MainMapRgs = () => {
             {!inTarget && (
               <>
                 {StrokaMenuGlob("Режим назначения", PressButton, 52)}
-                {massMem.length > 2 && (
-                  <>{StrokaMenuGlob("Выполнить режим", PressButton, 53)}</>
-                )}
                 {StrokaHelp("Вы находитесь в режиме управления")}
                 {massMem.length === 0 && (
                   <>{StrokaHelp("Начала работы - выбор первого перекрёстка")}</>
@@ -523,6 +479,11 @@ const MainMapRgs = () => {
       </>
     );
   };
+
+  if (needRend) {
+    needRend = false;
+    setFlagPusk(!flagPusk);
+  }
 
   return (
     <Grid container sx={{ border: 0, height: "99.9vh" }}>

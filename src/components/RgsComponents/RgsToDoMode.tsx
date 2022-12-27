@@ -32,6 +32,7 @@ const RgsToDoMode = (props: {
   funcCenter: any;
   funcHelper: any;
 }) => {
+  console.log("RgsToDoMode",props.massMem)
   //== Piece of Redux ======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -49,7 +50,7 @@ const RgsToDoMode = (props: {
     const { massfazReducer } = state;
     return massfazReducer.massfaz;
   });
-  console.log("TODOmassfaz", massfaz);
+  //console.log("TODOmassfaz", massfaz);
   let datestat = useSelector((state: any) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
@@ -339,13 +340,13 @@ const RgsToDoMode = (props: {
 
           <Box sx={{ overflowX: "auto", height: "81vh" }}>{StrokaTabl()}</Box>
 
-          {!toDoMode && (
+          {/* {!toDoMode && (
             <Box sx={{ marginTop: 1.5, textAlign: "center" }}>
               <Button sx={styleModalMenu} onClick={() => ToDoMode(3)}>
                 Начать исполнение
               </Button>
             </Box>
-          )}
+          )} */}
 
           {toDoMode && (
             <Box sx={{ marginTop: 1.5, textAlign: "center" }}>
