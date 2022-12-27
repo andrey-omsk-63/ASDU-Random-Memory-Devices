@@ -73,18 +73,6 @@ export interface Fazer {
 }
 export let massFaz: Fazer[] = [];
 
-// let maskFaz: Fazer = {
-//   idx: 0,
-//   faza: 1,
-//   fazaSist: -1,
-//   phases: [],
-//   idevice: 0,
-//   name: "",
-//   starRec: false,
-//   runRec: false,
-//   img: [],
-// };
-
 export interface NameMode {
   name: string;
   delRec: boolean;
