@@ -2,8 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { mapCreate, statsaveCreate } from "./redux/actions";
 import { coordinatesCreate, bindingsCreate } from "./redux/actions";
-import { addobjCreate } from "./redux/actions";
-//import { massmodeCreate, massfazCreate } from "./redux/actions";
+import { addobjCreate, massfazCreate } from "./redux/actions";
 
 import Grid from "@mui/material/Grid";
 
@@ -70,7 +69,7 @@ export interface Fazer {
   idevice: number;
   name: string;
   starRec: boolean;
-  runRec: boolean;
+  runRec: number;
   img: Array<string | null>;
 }
 export let massFaz: Fazer[] = [];
@@ -98,10 +97,10 @@ const App = () => {
   //   const { massdkReducer } = state;
   //   return massdkReducer.massdk;
   // });
-  // let massfaz = useSelector((state: any) => {
-  //   const { massfazReducer } = state;
-  //   return massfazReducer.massfaz;
-  // });
+  let massfaz = useSelector((state: any) => {
+    const { massfazReducer } = state;
+    return massfazReducer.massfaz;
+  });
   //console.log("APPmassfaz", massfaz);
   let coordinates = useSelector((state: any) => {
     const { coordinatesReducer } = state;
@@ -125,8 +124,8 @@ const App = () => {
       coordinates.push(coord);
     }
     dispatch(coordinatesCreate(coordinates));
-    SendSocketGetBindings(dateStat.debug, WS);
-    SendSocketGetAddObjects(dateStat.debug, WS);
+    // SendSocketGetBindings(dateStat.debug, WS);
+    // SendSocketGetAddObjects(dateStat.debug, WS);
   };
 
   const host =
@@ -138,7 +137,7 @@ const App = () => {
 
   const [openSetErr, setOpenSetErr] = React.useState(false);
   const [openMapInfo, setOpenMapInfo] = React.useState(false);
-  //const [trigger, setTrigger] = React.useState(false);
+  const [trigger, setTrigger] = React.useState(false);
   //=== инициализация ======================================
   if (flagOpenWS) {
     WS = new WebSocket(host);
@@ -146,6 +145,8 @@ const App = () => {
     if (WS.url === "wss://localhost:3000/W") dateStat.debug = true;
     dispatch(statsaveCreate(dateStat));
     flagOpenWS = false;
+    SendSocketGetBindings(dateStat.debug, WS);
+    SendSocketGetAddObjects(dateStat.debug, WS);
   }
 
   React.useEffect(() => {
@@ -166,23 +167,23 @@ const App = () => {
       let data = allData.data;
       //console.log("пришло:", data.error, allData.type, data);
       switch (allData.type) {
-        //case "phases":
-        // let flagChange = false;
-        // for (let i = 0; i < data.phases.length; i++) {
-        //   for (let j = 0; j < massfaz.length; j++) {
-        //     if (massfaz[j].idevice === data.phases[i].device) {
-        //       if (massfaz[j].fazaSist !== data.phases[i].phase) {
-        //         massfaz[j].fazaSist = data.phases[i].phase;
-        //         flagChange = true;
-        //       }
-        //     }
-        //   }
-        // }
-        // if (flagChange) {
-        //   dispatch(massfazCreate(massfaz));
-        //   setTrigger(!trigger);
-        // }
-        // break;
+        case "phases":
+          let flagChange = false;
+          for (let i = 0; i < data.phases.length; i++) {
+            for (let j = 0; j < massfaz.length; j++) {
+              if (massfaz[j].idevice === data.phases[i].device) {
+                if (massfaz[j].fazaSist !== data.phases[i].phase) {
+                  massfaz[j].fazaSist = data.phases[i].phase;
+                  flagChange = true;
+                }
+              }
+            }
+          }
+          if (flagChange) {
+            dispatch(massfazCreate(massfaz));
+            setTrigger(!trigger);
+          }
+          break;
         case "mapInfo":
           dateMapGl = JSON.parse(JSON.stringify(data));
           dispatch(mapCreate(dateMapGl));
@@ -194,19 +195,23 @@ const App = () => {
           dateStat.region = homeRegion;
           dispatch(statsaveCreate(dateStat));
           flagMap = true;
-          //setOpenMapInfo(true);
+          setTrigger(!trigger)
+          // SendSocketGetBindings(dateStat.debug, WS);
+          // SendSocketGetAddObjects(dateStat.debug, WS);
           break;
         case "getBindings":
           dateBindingsGl = JSON.parse(JSON.stringify(data));
           dispatch(bindingsCreate(dateBindingsGl));
           console.log("dateBindingsGl:", dateBindingsGl);
           flagBindings = true;
+          setTrigger(!trigger)
           break;
         case "getAddObjects":
           dateAddObjectsGl = JSON.parse(JSON.stringify(data));
           dispatch(addobjCreate(dateAddObjectsGl));
           console.log("dateAddObjectsGl:", dateAddObjectsGl);
           flagAddObjects = true;
+          setTrigger(!trigger)
           break;
         case "getPhases":
           dateStat.area = data.pos.area;
@@ -253,7 +258,7 @@ const App = () => {
           console.log("data_default:", data);
       }
     };
-  }, [dispatch]);
+  }, [dispatch, massfaz, trigger]);
 
   if (WS.url === "wss://localhost:3000/W" && flagOpenDebug) {
     console.log("РЕЖИМ ОТЛАДКИ!!!");
@@ -291,7 +296,7 @@ const App = () => {
     flagOpenDebug = false;
     //setOpenMapInfo(true);
   }
-
+  console.log("GGGGGG:", flagMap, flagBindings, flagAddObjects,flagOpenWS);
   if (flagMap && flagBindings && flagAddObjects && !flagOpenWS) {
     Initialisation();
     flagMap = false;
@@ -300,15 +305,13 @@ const App = () => {
     setOpenMapInfo(true);
   }
 
+  console.log("openMapInfo:", openMapInfo);
+
   return (
     <Grid container sx={{ height: "100vh", width: "100%", bgcolor: "#E9F5D8" }}>
       <Grid item xs>
         {openSetErr && <AppSocketError sErr={soob} setOpen={setOpenSetErr} />}
-        {openMapInfo && (
-          <MainMapRgs
-          //trigger={trigger}
-          />
-        )}
+        {openMapInfo && <MainMapRgs trigger={trigger} />}
       </Grid>
     </Grid>
   );

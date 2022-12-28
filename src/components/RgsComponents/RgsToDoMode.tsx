@@ -27,12 +27,15 @@ let massInt: any[][] = [];
 
 const RgsToDoMode = (props: {
   massMem: Array<number>;
+  massCoord: any;
   funcMode: any;
   funcSize: any;
   funcCenter: any;
   funcHelper: any;
+  trigger: boolean;
+  changeFaz: boolean;
 }) => {
-  console.log("RgsToDoMode",props.massMem)
+  //console.log("RgsToDoMode", props.massMem);
   //== Piece of Redux ======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -76,7 +79,7 @@ const RgsToDoMode = (props: {
       idevice: 0,
       name: "",
       starRec: false,
-      runRec: false,
+      runRec: 0,
       img: [],
     };
     maskFaz.idx = props.massMem[i];
@@ -118,6 +121,13 @@ const RgsToDoMode = (props: {
     for (let i = 0; i < inFaz.length; i++) {
       if (inFaz[i].id === kluOn) faz.faza = Number(inFaz[i].phase);
     }
+    console.log("Запуск", lengthMassMem - 1, "- го");
+    faz.runRec = 2;
+    let mode = lengthMassMem - 2;
+    console.log(mode + 1 + "-й светофор пошёл", timerId[mode]);
+    SendSocketDispatch(debug, ws, faz.idevice, 9, faz.faza);
+    timerId[mode] = setInterval(() => DoTimerId(mode), 60000);
+    massInt[mode].push(timerId[mode]);
     dispatch(massfazCreate(massfaz));
   };
 
@@ -176,9 +186,9 @@ const RgsToDoMode = (props: {
       }
       console.log("Финиш", timerId, massInt);
       for (let i = 0; i < massfaz.length; i++) {
-        if (massfaz[i].runRec) {
+        if (massfaz[i].runRec === 2) {
           SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
-          massfaz[mode].runRec = !massfaz[mode].runRec;
+          massfaz[mode].runRec = 1;
         }
       }
       dispatch(massfazCreate(massfaz));
@@ -201,30 +211,34 @@ const RgsToDoMode = (props: {
     const ClickKnop = (mode: number) => {
       // let coor = map.routes[newMode].listTL[mode].point;
       // let coord = [coor.Y, coor.X];
-      massfaz[mode].starRec = !massfaz[mode].starRec;
-      //props.funcCenter(coord);
+      //massfaz[mode].starRec = !massfaz[mode].starRec;
+      console.log("@@@@@@:", mode, props.massCoord);
+      props.funcCenter(props.massCoord[mode]);
       setTrigger(!trigger);
     };
 
     const ClickVertex = (mode: number) => {
       let fazer = massfaz[mode];
-      if (!fazer.runRec) {
+      if (fazer.runRec === 1) {
         console.log(mode + 1 + "-й светофор пошёл", timerId[mode]);
         SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
         timerId[mode] = setInterval(() => DoTimerId(mode), 60000);
         massInt[mode].push(timerId[mode]);
+        massfaz[mode].runRec = 2;
       } else {
-        console.log(mode + 1 + "-й светофор закрыт", timerId[mode]);
-        SendSocketDispatch(debug, ws, fazer.idevice, 9, 9);
-        for (let i = 0; i < massInt[mode].length; i++) {
-          if (massInt[mode][i]) {
-            clearInterval(massInt[mode][i]);
-            massInt[mode][i] = null;
+        if (fazer.runRec === 2) {
+          console.log(mode + 1 + "-й светофор закрыт", timerId[mode]);
+          SendSocketDispatch(debug, ws, fazer.idevice, 9, 9);
+          for (let i = 0; i < massInt[mode].length; i++) {
+            if (massInt[mode][i]) {
+              clearInterval(massInt[mode][i]);
+              massInt[mode][i] = null;
+            }
           }
+          timerId[mode] = null;
+          massfaz[mode].runRec = 1;
         }
-        timerId[mode] = null;
       }
-      massfaz[mode].runRec = !massfaz[mode].runRec;
       dispatch(massfazCreate(massfaz));
       setTrigger(!trigger);
     };
@@ -233,9 +247,10 @@ const RgsToDoMode = (props: {
 
     for (let i = 0; i < massfaz.length; i++) {
       let bull = " ";
-      if (massfaz[i].runRec) bull = " •";
+      if (massfaz[i].runRec === 2) bull = " •";
       let host = "https://localhost:3000/18.svg";
-      if (!debug) {
+      //console.log('!!!!!!:',massfaz[i].idx,map.tflight[massfaz[i].idx])
+      if (!debug && massfaz[i].id <= 10000) {
         let num = map.tflight[massfaz[i].idx].tlsost.num.toString();
         host =
           window.location.origin + "/free/img/trafficLights/" + num + ".svg";
@@ -268,8 +283,10 @@ const RgsToDoMode = (props: {
             {star}
           </Grid>
           <Grid item xs={1.0} sx={{}}>
-            {!toDoMode && <>{OutputVertexImg(host)}</>}
-            {toDoMode && (
+            {/* {massfaz[i].runRec === 0 && massfaz[i].id <= 10000 && (
+              <>{OutputVertexImg(host)}</>
+            )} */}
+            {massfaz[i].runRec > 0 && massfaz[i].id <= 10000 && (
               <Button
                 variant="contained"
                 sx={styleStrokaTablImg}
@@ -326,7 +343,10 @@ const RgsToDoMode = (props: {
         <Grid container sx={{ marginTop: 0 }}>
           <Grid item xs sx={{ fontSize: 18, textAlign: "center" }}>
             {/* Режим: <b>{map.routes[newMode].description}</b> */}
-            Режим: <b>отладка</b>
+            Режим:{" "}
+            <b>
+              произвольная {'"'}зелёная улица{'"'}
+            </b>
           </Grid>
         </Grid>
 
@@ -348,13 +368,13 @@ const RgsToDoMode = (props: {
             </Box>
           )} */}
 
-          {toDoMode && (
-            <Box sx={{ marginTop: 1.5, textAlign: "center" }}>
-              <Button sx={styleModalMenu} onClick={() => ToDoMode(0)}>
-                Закончить исполнение
-              </Button>
-            </Box>
-          )}
+          {/* {toDoMode && ( */}
+          <Box sx={{ marginTop: 1.5, textAlign: "center" }}>
+            <Button sx={styleModalMenu} onClick={() => ToDoMode(0)}>
+              Закончить исполнение
+            </Button>
+          </Box>
+          {/* )} */}
         </Box>
       </Box>
     </>

@@ -263,15 +263,16 @@ export const getMultiRouteOptions = () => {
 };
 
 export const getMassMultiRouteOptions = (i: number) => {
-  let massColor = ['#E91427', '#E6762D', '#547A25', '#0078D7'];
+  let massColor = ['#E91427', '#E6762D', '#0078D7', '#000000'];
   return {
     balloonCloseButton: false,
     routeStrokeStyle: 'dot',
     //strokeColor: '#1A9165',
     //routeActiveStrokeColor: '#E91427', // красный
     //routeActiveStrokeColor: '#E6762D', // оранж
-    //routeActiveStrokeColor: '#547A25', // зелёный
     //routeActiveStrokeColor: '#0078D7', // синий
+    //routeActiveStrokeColor: '#547A25', // зелёный
+    //routeActiveStrokeColor: '#000000', // чёрный
     routeActiveStrokeColor: massColor[i],
     routeActiveStrokeWidth: 4,
     routeStrokeWidth: 0,
@@ -596,7 +597,7 @@ export const CircleObj = () => {
     height: 18,
     border: 3,
     marginTop: 1.2,
-    marginLeft: 1.5,
+    marginLeft: 2.5,
     borderRadius: 9,
     borderColor: '#9B5BDD',
   };
