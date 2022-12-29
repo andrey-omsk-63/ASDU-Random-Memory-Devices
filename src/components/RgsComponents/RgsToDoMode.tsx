@@ -129,6 +129,11 @@ const RgsToDoMode = (props: {
     timerId[mode] = setInterval(() => DoTimerId(mode), 60000);
     massInt[mode].push(timerId[mode]);
     dispatch(massfazCreate(massfaz));
+    let massIdevice: Array<number> = [];
+    for (let i = 1; i < massfaz.length - 1; i++) {
+      massIdevice.push(massfaz[i].idevice);
+    }
+    SendSocketRoute(debug, ws, massIdevice, true);
   };
 
   if (init) {
@@ -209,10 +214,6 @@ const RgsToDoMode = (props: {
 
   const StrokaTabl = () => {
     const ClickKnop = (mode: number) => {
-      // let coor = map.routes[newMode].listTL[mode].point;
-      // let coord = [coor.Y, coor.X];
-      //massfaz[mode].starRec = !massfaz[mode].starRec;
-      console.log("@@@@@@:", mode, props.massCoord);
       props.funcCenter(props.massCoord[mode]);
       setTrigger(!trigger);
     };
@@ -249,7 +250,6 @@ const RgsToDoMode = (props: {
       let bull = " ";
       if (massfaz[i].runRec === 2) bull = " •";
       let host = "https://localhost:3000/18.svg";
-      //console.log('!!!!!!:',massfaz[i].idx,map.tflight[massfaz[i].idx])
       if (!debug && massfaz[i].id <= 10000) {
         let num = map.tflight[massfaz[i].idx].tlsost.num.toString();
         host =
@@ -283,9 +283,6 @@ const RgsToDoMode = (props: {
             {star}
           </Grid>
           <Grid item xs={1.0} sx={{}}>
-            {/* {massfaz[i].runRec === 0 && massfaz[i].id <= 10000 && (
-              <>{OutputVertexImg(host)}</>
-            )} */}
             {massfaz[i].runRec > 0 && massfaz[i].id <= 10000 && (
               <Button
                 variant="contained"
@@ -335,7 +332,7 @@ const RgsToDoMode = (props: {
     <>
       <Box sx={styleToDoMode}>
         {!toDoMode && (
-          <Button sx={styleModalEnd} onClick={handleCloseSetEnd}>
+          <Button sx={styleModalEnd} onClick={() => ToDoMode(0)}>
             <b>&#10006;</b>
           </Button>
         )}

@@ -30,6 +30,8 @@ export interface Stater {
   ws: any;
   debug: boolean;
   finish: boolean;
+  readyPict: boolean;
+  readyFaza: boolean;
   region: string;
   area: string;
   id: string;
@@ -41,6 +43,8 @@ export let dateStat: Stater = {
   ws: null,
   debug: false,
   finish: false,
+  readyPict: true,
+  readyFaza: true,
   region: "0",
   area: "0",
   id: "0",
@@ -195,7 +199,7 @@ const App = () => {
           dateStat.region = homeRegion;
           dispatch(statsaveCreate(dateStat));
           flagMap = true;
-          setTrigger(!trigger)
+          setTrigger(!trigger);
           // SendSocketGetBindings(dateStat.debug, WS);
           // SendSocketGetAddObjects(dateStat.debug, WS);
           break;
@@ -204,55 +208,35 @@ const App = () => {
           dispatch(bindingsCreate(dateBindingsGl));
           console.log("dateBindingsGl:", dateBindingsGl);
           flagBindings = true;
-          setTrigger(!trigger)
+          setTrigger(!trigger);
           break;
         case "getAddObjects":
           dateAddObjectsGl = JSON.parse(JSON.stringify(data));
           dispatch(addobjCreate(dateAddObjectsGl));
           console.log("dateAddObjectsGl:", dateAddObjectsGl);
           flagAddObjects = true;
-          setTrigger(!trigger)
+          setTrigger(!trigger);
           break;
         case "getPhases":
+          console.log("getPhases:", data);
           dateStat.area = data.pos.area;
           dateStat.id = data.pos.id.toString();
           dateStat.phSvg = Array(8).fill(null);
-          if (data.images) {
-            for (let i = 0; i < data.images.length; i++) {
-              //=== Проверить!!! =====================================
-              dateStat.phSvg[i] = data.images[i].phase;
+          if (data.phases) {
+            for (let i = 0; i < data.phases.length; i++) {
+              dateStat.phSvg[i] = data.phases[i].phase;
             }
           }
+          dateStat.readyFaza = true;
           dispatch(statsaveCreate(dateStat));
-          //   for (let i = 0; i < massdk.length; i++) {
-          //     if (
-          //       massdk[i].region.toString() === data.pos.region &&
-          //       massdk[i].area.toString() === data.pos.area &&
-          //       massdk[i].ID === data.pos.id
-          //     ) {
-          //       if (data.images) {
-          //         if (data.images.length) {
-          //           for (let j = 0; j < data.images.length; j++) {
-          //             let k = Number(data.images[j].num);
-          //             if (k <= massdk[i].phSvg.length)
-          //               massdk[i].phSvg[k - 1] = data.images[j].phase;
-          //           }
-          //           dispatch(massdkCreate(massdk));
-          //         }
-          //         break;
-          //       }
-          //     }
-          //   }
+          setTrigger(!trigger);
           break;
         case "getSvg":
-          if (!data.status) {
-            soob = "Ошибка при получении изображений перекрёстков";
-            setOpenSetErr(true);
-            //dateStat.pictSvg = null;
-          } else {
-            dateStat.pictSvg = data.svg;
-            dispatch(statsaveCreate(dateStat));
-          }
+          //console.log("getSvg:", data.status, data.svg, data);
+          dateStat.pictSvg = data.svg;
+          dateStat.readyPict = true;
+          dispatch(statsaveCreate(dateStat));
+          setTrigger(!trigger);
           break;
         default:
           console.log("data_default:", data);
@@ -284,19 +268,19 @@ const App = () => {
     dateStat.phSvg[2] = imgFaza;
     dateStat.phSvg[3] = null;
     dateStat.phSvg[4] = imgFaza;
-    dispatch(statsaveCreate(dateStat));
     const ipAdress: string = "https://localhost:3000/cross.svg";
     axios.get(ipAdress).then(({ data }) => {
       dateStat.pictSvg = data;
-      dispatch(statsaveCreate(dateStat));
     });
+    //dateStat.pictSvg = null;
+    dispatch(statsaveCreate(dateStat));
     flagMap = true;
     flagBindings = true;
     flagAddObjects = true;
     flagOpenDebug = false;
     //setOpenMapInfo(true);
   }
-  console.log("GGGGGG:", flagMap, flagBindings, flagAddObjects,flagOpenWS);
+
   if (flagMap && flagBindings && flagAddObjects && !flagOpenWS) {
     Initialisation();
     flagMap = false;
@@ -304,8 +288,6 @@ const App = () => {
     flagAddObjects = false;
     setOpenMapInfo(true);
   }
-
-  console.log("openMapInfo:", openMapInfo);
 
   return (
     <Grid container sx={{ height: "100vh", width: "100%", bgcolor: "#E9F5D8" }}>

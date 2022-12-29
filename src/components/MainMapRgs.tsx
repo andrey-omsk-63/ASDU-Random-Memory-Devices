@@ -156,6 +156,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       if (!debug) {
         datestat.phSvg = Array(8).fill(null);
         datestat.pictSvg = null;
+        datestat.readyPict = false;
+        datestat.readyFaza = false;
       }
       SendSocketGetPhases(debug, ws, homeRegion, area, id);
       SendSocketGetSvg(debug, ws, homeRegion, area, id);
@@ -516,7 +518,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                   {processObject && (
                     <RgsProcessObject setOpen={setProcessObject} idx={idxObj} />
                   )}
-                  {appoint && (
+                  {appoint && datestat.readyPict && datestat.readyFaza && (
                     <RgsAppointVertex setOpen={setAppoint} idx={idxObj} />
                   )}
                   {openSoobErr && (

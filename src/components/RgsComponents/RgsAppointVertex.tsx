@@ -11,7 +11,7 @@ import MenuItem from "@mui/material/MenuItem";
 
 import GsErrorMessage from "./RgsErrorMessage";
 
-import { SendSocketСreateBindings } from "../RgsSocketFunctions";
+//import { SendSocketСreateBindings } from "../RgsSocketFunctions";
 import { SendSocketUpdateBindings } from "../RgsSocketFunctions";
 
 import { TakeAreaId, CheckKey, MakeTflink } from "../RgsServiceFunctions";
@@ -48,6 +48,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
+  //console.log("datestat", datestat);
   let bindings = useSelector((state: any) => {
     const { bindingsReducer } = state;
     return bindingsReducer.bindings.dateBindings;
@@ -61,6 +62,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   const ws = datestat.ws;
   const homeRegion = datestat.region;
   let imgFaza = datestat.phSvg;
+  let otlOrKosyk = false;
+  if (!datestat.pictSvg) otlOrKosyk = true;
   const dispatch = useDispatch();
   //========================================================
   const [openSet, setOpenSet] = React.useState(true);
@@ -85,13 +88,13 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   ];
   let hBlock = window.innerWidth / 3 + 15;
   let hB = hBlock / 15;
-  
 
   const handleKey = (event: any) => {
     if (event.key === "Enter") event.preventDefault();
   };
 
   const handleCloseSet = () => {
+    oldIdx = -1;
     props.setOpen(false);
     setOpenSet(false);
   };
@@ -112,15 +115,12 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       };
       if (bindIdx >= 0) {
         bindings.tfLinks[bindIdx] = maskTfLinks; // редактирование
-        SendSocketUpdateBindings(debug, ws, maskTfLinks);
       } else {
         bindings.tfLinks.push(maskTfLinks); // добавление новой записи
-        SendSocketСreateBindings(debug, ws, maskTfLinks);
       }
-
+      SendSocketUpdateBindings(debug, ws, maskTfLinks);
       console.log("bindings2", bindings);
       dispatch(bindingsCreate(bindings));
-      oldIdx = -1;
       handleCloseSet();
     }
   };
@@ -167,7 +167,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         }
       }
     }
-    console.log("massAreaId:",massAreaId)
   };
 
   const InputerArea = (value: number, func: any) => {
@@ -278,10 +277,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
 
   const AppointStroka = (
     rec1: string,
-    // valueAr: any,
     valueAr: number,
     funcAr: Function,
-    // valueId: any,
     valueId: number,
     funcId: Function
   ) => {
@@ -349,6 +346,28 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       </Box>
     );
   };
+
+  function AppIconAsdu() {
+    let heightImg = window.innerWidth / 3.333;
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width={heightImg - 10}
+        height={heightImg - 10}
+        version="1"
+        viewBox="0 0 91 54"
+      >
+        <path
+          d="M425 513C81 440-106 190 91 68 266-41 640 15 819 176c154 139 110 292-98 341-73 17-208 15-296-4zm270-14c208-38 257-178 108-308C676 79 413 8 240 40 29 78-30 199 100 329c131 131 396 207 595 170z"
+          transform="matrix(.1 0 0 -.1 0 54)"
+        ></path>
+        <path
+          d="M425 451c-11-18-5-20 74-30 108-14 157-56 154-133-2-52-41-120-73-129-44-12-110-10-110 4 1 6 7 62 14 122 7 61 12 113 10 117-4 6-150 1-191-8-45-9-61-40-74-150-10-90-14-104-30-104-12 0-19-7-19-20 0-11 7-20 15-20s15-7 15-15c0-11 11-15 35-15 22 0 38 6 41 15 4 9 19 15 35 15 22 0 29 5 29 20s-7 20-25 20c-29 0-31 10-14 127 12 82 31 113 71 113 18 0 20-5 15-42-4-24-9-74-12-113-3-38-8-87-11-107l-6-38h46c34 0 46 4 46 15s12 15 48 15c97 0 195 47 227 110 59 115-44 225-223 237-56 4-81 2-87-6z"
+          transform="matrix(.1 0 0 -.1 0 54)"
+        ></path>
+      </svg>
+    );
+  }
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
     kluchGl = homeRegion + "-" + map.tflight[props.idx].area.num + "-";
@@ -426,7 +445,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         </Box>
         <Grid container sx={{ marginTop: 1.5, paddingBottom: 1 }}>
           <Grid item xs={4}>
-            {OutputPict()}
+            {otlOrKosyk && <>{AppIconAsdu()}</>}
+            {!otlOrKosyk && <>{OutputPict()}</>}
           </Grid>
 
           <Grid item xs={4} sx={{ border: 0 }}>

@@ -278,30 +278,30 @@ export const SendSocketDeleteAddObj = (
   handleSendOpen();
 };
 //=== RgsAppointVertex ==============================
-export const SendSocketСreateBindings = (
-  debugging: boolean,
-  ws: WebSocket,
-  dat: any
-) => {
-  console.log("createBindings:", dat);
-  const handleSendOpen = () => {
-    if (!debugging) {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(
-          JSON.stringify({
-            type: "createBindings",
-            data: dat,
-          })
-        );
-      } else {
-        setTimeout(() => {
-          handleSendOpen();
-        }, 1000);
-      }
-    }
-  };
-  handleSendOpen();
-};
+// export const SendSocketСreateBindings = (
+//   debugging: boolean,
+//   ws: WebSocket,
+//   dat: any
+// ) => {
+//   console.log("createBindings:", dat);
+//   const handleSendOpen = () => {
+//     if (!debugging) {
+//       if (ws.readyState === WebSocket.OPEN) {
+//         ws.send(
+//           JSON.stringify({
+//             type: "createBindings",
+//             data: dat,
+//           })
+//         );
+//       } else {
+//         setTimeout(() => {
+//           handleSendOpen();
+//         }, 1000);
+//       }
+//     }
+//   };
+//   handleSendOpen();
+// };
 
 export const SendSocketUpdateBindings = (
   debugging: boolean,

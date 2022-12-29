@@ -58,7 +58,8 @@ const RgsDoPlacemarkDo = (props: {
     let idv = mappp.idevice;
     for (let i = 0; i < massfaz.length; i++) {
       if (idv === massfaz[i].idevice)
-        if (massfaz[i].fazaSist > 0) {
+        if (massfaz[i].fazaSist > 0 && massfaz[i].img) {
+          console.log('%%%%%%',i,massfaz)
           if (massfaz[i].fazaSist <= massfaz[i].img.length)
             fazaImg = massfaz[i].img[massfaz[i].fazaSist - 1];
         }
