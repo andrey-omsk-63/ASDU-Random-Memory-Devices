@@ -128,8 +128,6 @@ const App = () => {
       coordinates.push(coord);
     }
     dispatch(coordinatesCreate(coordinates));
-    // SendSocketGetBindings(dateStat.debug, WS);
-    // SendSocketGetAddObjects(dateStat.debug, WS);
   };
 
   const host =
@@ -200,8 +198,6 @@ const App = () => {
           dispatch(statsaveCreate(dateStat));
           flagMap = true;
           setTrigger(!trigger);
-          // SendSocketGetBindings(dateStat.debug, WS);
-          // SendSocketGetAddObjects(dateStat.debug, WS);
           break;
         case "getBindings":
           dateBindingsGl = JSON.parse(JSON.stringify(data));
@@ -218,7 +214,7 @@ const App = () => {
           setTrigger(!trigger);
           break;
         case "getPhases":
-          console.log("getPhases:", data);
+          //console.log("getPhases:", data);
           dateStat.area = data.pos.area;
           dateStat.id = data.pos.id.toString();
           dateStat.phSvg = Array(8).fill(null);
@@ -272,13 +268,11 @@ const App = () => {
     axios.get(ipAdress).then(({ data }) => {
       dateStat.pictSvg = data;
     });
-    //dateStat.pictSvg = null;
     dispatch(statsaveCreate(dateStat));
     flagMap = true;
     flagBindings = true;
     flagAddObjects = true;
     flagOpenDebug = false;
-    //setOpenMapInfo(true);
   }
 
   if (flagMap && flagBindings && flagAddObjects && !flagOpenWS) {

@@ -98,7 +98,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const [flagCenter, setFlagCenter] = React.useState(false);
   const [openSoobErr, setOpenSoobErr] = React.useState(false);
   const [risovka, setRisovka] = React.useState(false);
-  const [changeFaz, setChangeFaz] = React.useState(false);
+  const [changeFaz, setChangeFaz] = React.useState(0);
 
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const mapp = React.useRef<any>(null);
@@ -312,8 +312,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     if (nomInMass >= 0) {
       massfaz[nomInMass].runRec = 1;
       dispatch(massfazCreate(massfaz));
-      setChangeFaz(!changeFaz);
-      setRisovka(true);
+      setChangeFaz(nomInMass);
+      //setRisovka(true);
     }
   };
 
@@ -355,15 +355,15 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     setFlagCenter(true);
   };
 
-  const ModeToDo = (mod: number) => {
-    modeToDo = mod;
-    if (!modeToDo) StatusQuo();
-    setFlagPusk(!flagPusk);
-  };
-
   const SetHelper = () => {
     inTarget = !inTarget;
     StatusQuo();
+    setFlagPusk(!flagPusk);
+  };
+
+  const ModeToDo = (mod: number) => {
+    modeToDo = mod;
+    if (modeToDo) SetHelper();
     setFlagPusk(!flagPusk);
   };
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { massfazCreate } from "../../redux/actions";
+import { massfazCreate, statsaveCreate } from "../../redux/actions";
 
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -24,6 +24,7 @@ let lengthMassMem = 0;
 let timerId: any[] = [];
 
 let massInt: any[][] = [];
+let oldFaz = -1;
 
 const RgsToDoMode = (props: {
   massMem: Array<number>;
@@ -33,9 +34,9 @@ const RgsToDoMode = (props: {
   funcCenter: any;
   funcHelper: any;
   trigger: boolean;
-  changeFaz: boolean;
+  changeFaz: number;
 }) => {
-  //console.log("RgsToDoMode", props.massMem);
+  console.log("RgsToDoMode", props.changeFaz);
   //== Piece of Redux ======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -157,12 +158,30 @@ const RgsToDoMode = (props: {
       lengthMassMem = props.massMem.length;
       FindFaza();
     }
+    if (props.changeFaz !== oldFaz) {
+      let mode = props.changeFaz;
+      //console.log("changeFaz:", props.changeFaz, oldFaz);
+      console.log(mode + 1 + "-й светофор закрыт", timerId[mode]);
+      SendSocketDispatch(debug, ws, massfaz[mode].idevice, 9, 9);
+      for (let i = 0; i < massInt[mode].length; i++) {
+        if (massInt[mode][i]) {
+          clearInterval(massInt[mode][i]);
+          massInt[mode][i] = null;
+        }
+      }
+      timerId[mode] = null;
+      //massfaz[mode].runRec = 1;
+      oldFaz = props.changeFaz;
+    }
   }
   //========================================================
   const handleCloseSetEnd = () => {
+    datestat.finish = false;
+    dispatch(statsaveCreate(datestat));
     props.funcSize(11.99);
     toDoMode = false;
     init = true;
+    oldFaz = -1;
     lengthMassMem = 0;
   };
 
@@ -198,7 +217,7 @@ const RgsToDoMode = (props: {
       }
       dispatch(massfazCreate(massfaz));
       SendSocketRoute(debug, ws, massIdevice, false);
-      props.funcMode(mode); // закончить исполнение
+      props.funcMode(1); // закончить исполнение
       props.funcHelper(true);
       handleCloseSetEnd();
     }
@@ -283,7 +302,10 @@ const RgsToDoMode = (props: {
             {star}
           </Grid>
           <Grid item xs={1.0} sx={{}}>
-            {massfaz[i].runRec > 0 && massfaz[i].id <= 10000 && (
+            {massfaz[i].runRec === 1 && massfaz[i].id <= 10000 && (
+              <>{OutputVertexImg(host)}</>
+            )}
+            {massfaz[i].runRec === 2 && massfaz[i].id <= 10000 && (
               <Button
                 variant="contained"
                 sx={styleStrokaTablImg}
@@ -331,16 +353,16 @@ const RgsToDoMode = (props: {
   return (
     <>
       <Box sx={styleToDoMode}>
-        {!toDoMode && (
+        {/* {!toDoMode && (
           <Button sx={styleModalEnd} onClick={() => ToDoMode(0)}>
             <b>&#10006;</b>
           </Button>
-        )}
+        )} */}
 
         <Grid container sx={{ marginTop: 0 }}>
           <Grid item xs sx={{ fontSize: 18, textAlign: "center" }}>
             {/* Режим: <b>{map.routes[newMode].description}</b> */}
-            Режим:{" "}
+            Режим:{' '}
             <b>
               произвольная {'"'}зелёная улица{'"'}
             </b>
