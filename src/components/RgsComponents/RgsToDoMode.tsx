@@ -13,12 +13,11 @@ import { CircleObj } from "../RgsServiceFunctions";
 
 import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 
-import { styleModalEnd } from "../MainMapStyle";
+//import { styleModalEnd } from "../MainMapStyle";
 import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
 import { styleToDoMode, styleStrokaTabl } from "./GsComponentsStyle";
 import { styleStrokaTakt } from "./GsComponentsStyle";
 
-let toDoMode = false;
 let init = true;
 let lengthMassMem = 0;
 let timerId: any[] = [];
@@ -36,7 +35,6 @@ const RgsToDoMode = (props: {
   trigger: boolean;
   changeFaz: number;
 }) => {
-  console.log("RgsToDoMode", props.changeFaz);
   //== Piece of Redux ======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -65,10 +63,18 @@ const RgsToDoMode = (props: {
   const dispatch = useDispatch();
   //========================================================
   const [trigger, setTrigger] = React.useState(true);
-  //const timer = React.useRef<any>(null);
-  //let newMode = props.newMode;
 
-  //=== инициализация ======================================
+  const handleCloseSetEnd = () => {
+    datestat.finish = false; // закончить исполнение
+    dispatch(statsaveCreate(datestat));
+    props.funcSize(11.99);
+    props.funcMode(0);
+    props.funcHelper(true);
+    init = true;
+    oldFaz = -1;
+    lengthMassMem = 0;
+  };
+
   const MakeMaskFaz = (i: number) => {
     let maskFaz: Fazer = {
       idx: 0,
@@ -122,7 +128,6 @@ const RgsToDoMode = (props: {
     for (let i = 0; i < inFaz.length; i++) {
       if (inFaz[i].id === kluOn) faz.faza = Number(inFaz[i].phase);
     }
-    console.log("Запуск", lengthMassMem - 1, "- го");
     faz.runRec = 2;
     let mode = lengthMassMem - 2;
     console.log(mode + 1 + "-й светофор пошёл", timerId[mode]);
@@ -137,9 +142,21 @@ const RgsToDoMode = (props: {
     SendSocketRoute(debug, ws, massIdevice, true);
   };
 
+  const FindEnd = () => {
+    let ch = 0;
+    for (let i = 0; i < massfaz.length; i++) {
+      if (massfaz[i].runRec === 2) ch++;
+    }
+    if (!ch) {
+      console.log("Финиш", timerId, massInt);
+      handleCloseSetEnd();
+    }
+  };
+  //=== инициализация ======================================
   if (init) {
     massfaz = [];
     timerId = [];
+    massInt = [];
     for (let i = 0; i < props.massMem.length; i++) {
       massfaz.push(MakeMaskFaz(i));
       timerId.push(null);
@@ -150,6 +167,7 @@ const RgsToDoMode = (props: {
     init = false;
     lengthMassMem = props.massMem.length;
     FindFaza();
+    oldFaz = props.changeFaz;
   } else {
     if (lengthMassMem !== props.massMem.length) {
       massfaz.push(MakeMaskFaz(props.massMem.length - 1));
@@ -160,7 +178,6 @@ const RgsToDoMode = (props: {
     }
     if (props.changeFaz !== oldFaz) {
       let mode = props.changeFaz;
-      //console.log("changeFaz:", props.changeFaz, oldFaz);
       console.log(mode + 1 + "-й светофор закрыт", timerId[mode]);
       SendSocketDispatch(debug, ws, massfaz[mode].idevice, 9, 9);
       for (let i = 0; i < massInt[mode].length; i++) {
@@ -170,29 +187,18 @@ const RgsToDoMode = (props: {
         }
       }
       timerId[mode] = null;
-      //massfaz[mode].runRec = 1;
       oldFaz = props.changeFaz;
+      FindEnd();
     }
   }
   //========================================================
-  const handleCloseSetEnd = () => {
-    datestat.finish = false;
-    dispatch(statsaveCreate(datestat));
-    props.funcSize(11.99);
-    toDoMode = false;
-    init = true;
-    oldFaz = -1;
-    lengthMassMem = 0;
-  };
-
   const ToDoMode = (mode: number) => {
     let massIdevice: Array<number> = [];
     if (mode) {
       for (let i = 1; i < massfaz.length - 1; i++) {
         massIdevice.push(massfaz[i].idevice);
       }
-      SendSocketRoute(debug, ws, massIdevice, true);
-      toDoMode = true; // выполнение режима
+      SendSocketRoute(debug, ws, massIdevice, true); // выполнение режима
       props.funcMode(mode);
       setTrigger(!trigger);
     } else {
@@ -217,8 +223,6 @@ const RgsToDoMode = (props: {
       }
       dispatch(massfazCreate(massfaz));
       SendSocketRoute(debug, ws, massIdevice, false);
-      props.funcMode(1); // закончить исполнение
-      props.funcHelper(true);
       handleCloseSetEnd();
     }
   };
@@ -260,6 +264,7 @@ const RgsToDoMode = (props: {
         }
       }
       dispatch(massfazCreate(massfaz));
+      FindEnd();
       setTrigger(!trigger);
     };
 
@@ -362,7 +367,7 @@ const RgsToDoMode = (props: {
         <Grid container sx={{ marginTop: 0 }}>
           <Grid item xs sx={{ fontSize: 18, textAlign: "center" }}>
             {/* Режим: <b>{map.routes[newMode].description}</b> */}
-            Режим:{' '}
+            Режим:{" "}
             <b>
               произвольная {'"'}зелёная улица{'"'}
             </b>

@@ -43,6 +43,7 @@ const RgsDoPlacemarkDo = (props: {
   // let pA = -1;
   // let pB = -1;
   let pC = -1;
+  let nomSvg = -1;
   if (idx < map.tflight.length) {
     mapp = map.tflight[idx].tlsost.num.toString();
     mappp = map.tflight[idx];
@@ -55,14 +56,24 @@ const RgsDoPlacemarkDo = (props: {
   }
   let fazaImg: null | string = null;
   if (!debug && pC >= 0) {
-    let idv = mappp.idevice;
     for (let i = 0; i < massfaz.length; i++) {
-      if (idv === massfaz[i].idevice)
-      if (massfaz[i].fazaSist > 0) console.log('%%%%%%',i,massfaz)
-        if (massfaz[i].fazaSist > 0 && massfaz[i].img) {
-          if (massfaz[i].fazaSist <= massfaz[i].img.length)
-            fazaImg = massfaz[i].img[massfaz[i].fazaSist - 1];
+      if (mappp.idevice === massfaz[i].idevice) {
+        //if (massfaz[i].fazaSist > 0) console.log("%%%%%%", i, massfaz);
+        if (massfaz[i].fazaSist === 11 || massfaz[i].fazaSist === 15) {
+          nomSvg = 12; // ОС
+          pC = -1;
+        } else {
+          if (massfaz[i].fazaSist === 10 || massfaz[i].fazaSist === 14) {
+            nomSvg = 7; // ЖМ
+            pC = -1;
+          } else {
+            if (massfaz[i].fazaSist > 0 && massfaz[i].img) {
+              if (massfaz[i].fazaSist <= massfaz[i].img.length)
+                fazaImg = massfaz[i].img[massfaz[i].fazaSist - 1];
+            }
+          }
         }
+      }
     }
   }
   debug && (fazaImg = datestat.phSvg[0]); // для отладки
@@ -70,11 +81,12 @@ const RgsDoPlacemarkDo = (props: {
   const Hoster = React.useCallback(() => {
     let host = "https://localhost:3000/18.svg";
     if (!debug) {
-      host =
-        window.location.origin + "/free/img/trafficLights/" + mapp + ".svg";
+      let mpp = mapp;
+      if (nomSvg > 0) mpp = nomSvg.toString();
+      host = window.location.origin + "/free/img/trafficLights/" + mpp + ".svg";
     }
     return host;
-  }, [mapp, debug]);
+  }, [mapp, nomSvg, debug]);
 
   const createChipsLayout = React.useCallback(
     (calcFunc: Function, currnum: number, rotateDeg?: number) => {
@@ -186,7 +198,7 @@ const RgsDoPlacemarkDo = (props: {
           iconLayout: createChipsLayout(calculate, mappp.tlsost.num),
         }
       : GetPointOptions0(fazaImg);
-  }, [createChipsLayout, mappp.tlsost.num,fazaImg,pC]);
+  }, [createChipsLayout, mappp.tlsost.num, fazaImg, pC]);
 
   const getPointOptions2 = () => {
     let colorBalloon = "islands#violetCircleIcon";

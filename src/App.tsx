@@ -202,19 +202,16 @@ const App = () => {
         case "getBindings":
           dateBindingsGl = JSON.parse(JSON.stringify(data));
           dispatch(bindingsCreate(dateBindingsGl));
-          console.log("dateBindingsGl:", dateBindingsGl);
           flagBindings = true;
           setTrigger(!trigger);
           break;
         case "getAddObjects":
           dateAddObjectsGl = JSON.parse(JSON.stringify(data));
           dispatch(addobjCreate(dateAddObjectsGl));
-          console.log("dateAddObjectsGl:", dateAddObjectsGl);
           flagAddObjects = true;
           setTrigger(!trigger);
           break;
         case "getPhases":
-          //console.log("getPhases:", data);
           dateStat.area = data.pos.area;
           dateStat.id = data.pos.id.toString();
           dateStat.phSvg = Array(8).fill(null);
@@ -244,15 +241,10 @@ const App = () => {
     console.log("РЕЖИМ ОТЛАДКИ!!!");
     dateMapGl = JSON.parse(JSON.stringify(dataMap));
     dispatch(mapCreate(dateMapGl));
-
     dateAddObjectsGl = JSON.parse(JSON.stringify(dataAddObjects.data));
     dispatch(addobjCreate(dateAddObjectsGl));
-    console.log("dateAddObjectsGl:", dateAddObjectsGl);
-
     dateBindingsGl = JSON.parse(JSON.stringify(dataBindings.data));
     dispatch(bindingsCreate(dateBindingsGl));
-    console.log("dateBindingsGl:", dateBindingsGl);
-
     let massRegion = [];
     for (let key in dateMapGl.regionInfo) {
       if (!isNaN(Number(key))) massRegion.push(Number(key));

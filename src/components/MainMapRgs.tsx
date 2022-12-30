@@ -363,8 +363,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   const ModeToDo = (mod: number) => {
     modeToDo = mod;
-    if (modeToDo) SetHelper();
-    setFlagPusk(!flagPusk);
+    if (!modeToDo) setChangeFaz(0);
+    SetHelper();
   };
 
   const PressButton = (mode: number) => {
