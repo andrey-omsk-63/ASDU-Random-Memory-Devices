@@ -96,20 +96,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     if (valIdS && valAreaS) ch++;
     if (valIdV && valAreaV) ch++;
     if (valIdU && valAreaU) ch++;
-    console.log(
-      '******:',
-      valIdZ,
-      valAreaZ,
-      '!',
-      valIdS,
-      valAreaS,
-      '!',
-      valIdV,
-      valAreaV,
-      '!',
-      valIdU,
-      valAreaU,
-    );
     if (ch < 2) {
       soobErr = 'Должно быть введено хотя бы два направления';
       setOpenSetErr(true);
@@ -124,7 +110,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         bindings.tfLinks.push(maskTfLinks); // добавление новой записи
       }
       SendSocketUpdateBindings(debug, ws, maskTfLinks);
-      console.log('bindings2', bindings);
+      //console.log('bindings2', bindings);
       dispatch(bindingsCreate(bindings));
       handleCloseSet();
     }
