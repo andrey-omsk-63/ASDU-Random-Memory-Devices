@@ -1,9 +1,9 @@
-import * as React from "react";
-import { useSelector } from "react-redux";
+import * as React from 'react';
+import { useSelector } from 'react-redux';
 
-import { Placemark, YMapsApi } from "react-yandex-maps";
+import { Placemark, YMapsApi } from 'react-yandex-maps';
 
-import { GetPointData } from "../RgsServiceFunctions";
+import { GetPointData } from '../RgsServiceFunctions';
 
 const RgsDoPlacemarkDo = (props: {
   ymaps: YMapsApi | null;
@@ -58,7 +58,6 @@ const RgsDoPlacemarkDo = (props: {
   if (!debug && pC >= 0) {
     for (let i = 0; i < massfaz.length; i++) {
       if (mappp.idevice === massfaz[i].idevice) {
-        //if (massfaz[i].fazaSist > 0) console.log("%%%%%%", i, massfaz);
         if (massfaz[i].fazaSist === 11 || massfaz[i].fazaSist === 15) {
           nomSvg = 12; // ОС
           pC = -1;
@@ -79,11 +78,11 @@ const RgsDoPlacemarkDo = (props: {
   debug && (fazaImg = datestat.phSvg[0]); // для отладки
 
   const Hoster = React.useCallback(() => {
-    let host = "https://localhost:3000/18.svg";
+    let host = 'https://localhost:3000/18.svg';
     if (!debug) {
       let mpp = mapp;
       if (nomSvg > 0) mpp = nomSvg.toString();
-      host = window.location.origin + "/free/img/trafficLights/" + mpp + ".svg";
+      host = window.location.origin + '/free/img/trafficLights/' + mpp + '.svg';
     }
     return host;
   }, [mapp, nomSvg, debug]);
@@ -93,9 +92,7 @@ const RgsDoPlacemarkDo = (props: {
       const Chips = props.ymaps?.templateLayoutFactory.createClass(
         '<div class="placemark"  ' +
           `style="background-image:url(${Hoster()}); ` +
-          `background-size: 100%; transform: rotate(${
-            rotateDeg ?? 0
-          }deg);\n"></div>`,
+          `background-size: 100%; transform: rotate(${rotateDeg ?? 0}deg);\n"></div>`,
         {
           build: function () {
             Chips.superclass.build.call(this);
@@ -106,7 +103,7 @@ const RgsDoPlacemarkDo = (props: {
               let zoom = map.getZoom();
               // Подпишемся на событие изменения области просмотра карты.
               map.events.add(
-                "boundschange",
+                'boundschange',
                 function () {
                   // Запустим перестраивание макета при изменении уровня зума.
                   const currentZoom = map.getZoom();
@@ -116,37 +113,36 @@ const RgsDoPlacemarkDo = (props: {
                     this.rebuild();
                   }
                 },
-                this
+                this,
               );
             }
             const options = this.getData().options,
               // Получим размер метки в зависимости от уровня зума.
               size = calcFunc(map.getZoom()) + 6,
-              element =
-                this.getParentElement().getElementsByClassName("placemark")[0],
+              element = this.getParentElement().getElementsByClassName('placemark')[0],
               // По умолчанию при задании своего HTML макета фигура активной области не задается,
               // и её нужно задать самостоятельно.
               // Создадим фигуру активной области "Круг".
               circleShape = {
-                type: "Circle",
+                type: 'Circle',
                 coordinates: [0, 0],
                 radius: size / 2,
               };
             // Зададим высоту и ширину метки.
-            element.style.width = element.style.height = size + "px";
+            element.style.width = element.style.height = size + 'px';
             // Зададим смещение.
             //element.style.marginLeft = element.style.marginTop =
             //-size / 2 + "px";
-            element.style.marginLeft = -size / 2.0 + "px";
-            element.style.marginTop = -size / 1.97 + "px";
+            element.style.marginLeft = -size / 2.0 + 'px';
+            element.style.marginTop = -size / 1.97 + 'px';
             // Зададим фигуру активной области.
-            options.set("shape", circleShape);
+            options.set('shape', circleShape);
           },
-        }
+        },
       );
       return Chips;
     },
-    [Hoster, props.ymaps?.templateLayoutFactory]
+    [Hoster, props.ymaps?.templateLayoutFactory],
   );
 
   const calculate = function (zoom: number): number {
@@ -175,12 +171,12 @@ const RgsDoPlacemarkDo = (props: {
   // }, [createChipsLayout, mappp.tlsost.num]);
 
   const GetPointOptions0 = (Hoster: any) => {
-    let imger = window.location.origin + "/free/img/notImage.png";
-    if (Hoster) imger = "data:image/png;base64," + Hoster;
+    let imger = window.location.origin + '/free/img/notImage.png';
+    if (Hoster) imger = 'data:image/png;base64,' + Hoster;
 
     return {
       // данный тип макета
-      iconLayout: "default#image",
+      iconLayout: 'default#image',
       // изображение иконки метки
       //iconImageHref: '/faza.png',
       // iconImageHref: 'data:image/png;base64,' + Hoster,
@@ -201,7 +197,7 @@ const RgsDoPlacemarkDo = (props: {
   }, [createChipsLayout, mappp.tlsost.num, fazaImg, pC]);
 
   const getPointOptions2 = () => {
-    let colorBalloon = "islands#violetCircleIcon";
+    let colorBalloon = 'islands#violetCircleIcon';
     return {
       preset: colorBalloon,
     };
@@ -217,14 +213,12 @@ const RgsDoPlacemarkDo = (props: {
         //   iconLayout: createChipsLayout(calculate, mappp.tlsost.num),
         // }}
 
-        options={
-          idx < map.tflight.length ? getPointOptions1() : getPointOptions2()
-        }
-        modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
+        options={idx < map.tflight.length ? getPointOptions1() : getPointOptions2()}
+        modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
         onClick={() => props.OnPlacemarkClickPoint(idx)}
       />
     ),
-    [idx, map, addobj, getPointOptions1, props]
+    [idx, map, addobj, getPointOptions1, props],
   );
   return MemoPlacemarkDo;
 };
