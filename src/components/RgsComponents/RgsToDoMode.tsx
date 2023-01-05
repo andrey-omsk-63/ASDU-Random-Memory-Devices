@@ -1,22 +1,22 @@
-import * as React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { massfazCreate, statsaveCreate } from "../../redux/actions";
+import * as React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { massfazCreate, statsaveCreate } from '../../redux/actions';
 
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 
-import { Fazer } from "../../App";
+import { Fazer } from '../../App';
 
-import { OutputFazaImg, OutputVertexImg } from "../RgsServiceFunctions";
-import { CircleObj } from "../RgsServiceFunctions";
+import { OutputFazaImg, OutputVertexImg } from '../RgsServiceFunctions';
+import { CircleObj } from '../RgsServiceFunctions';
 
-import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
+import { SendSocketRoute, SendSocketDispatch } from '../RgsSocketFunctions';
 
 //import { styleModalEnd } from "../MainMapStyle";
-import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
-import { styleToDoMode, styleStrokaTabl } from "./GsComponentsStyle";
-import { styleStrokaTakt } from "./GsComponentsStyle";
+import { styleModalMenu, styleStrokaTablImg } from './GsComponentsStyle';
+import { styleToDoMode, styleStrokaTabl } from './GsComponentsStyle';
+import { styleStrokaTakt } from './GsComponentsStyle';
 
 let init = true;
 let lengthMassMem = 0;
@@ -84,15 +84,14 @@ const RgsToDoMode = (props: {
       fazaSist: -1,
       phases: [],
       idevice: 0,
-      name: "",
+      name: '',
       starRec: false,
       runRec: 0,
       img: [],
     };
     maskFaz.idx = props.massMem[i];
     if (maskFaz.idx >= map.tflight.length) {
-      maskFaz.name =
-        addobj.addObjects[maskFaz.idx - map.tflight.length].description; // объект
+      maskFaz.name = addobj.addObjects[maskFaz.idx - map.tflight.length].description; // объект
       maskFaz.area = addobj.addObjects[maskFaz.idx - map.tflight.length].area;
       maskFaz.id = addobj.addObjects[maskFaz.idx - map.tflight.length].id;
     } else {
@@ -109,9 +108,9 @@ const RgsToDoMode = (props: {
     let faz = massfaz[lengthMassMem - 2];
     let fazIn = massfaz[lengthMassMem - 3];
     let fazOn = massfaz[lengthMassMem - 1];
-    let klu = homeRegion + "-" + faz.area + "-" + faz.id;
-    let kluIn = homeRegion + "-" + fazIn.area + "-" + fazIn.id;
-    let kluOn = homeRegion + "-" + fazOn.area + "-" + fazOn.id;
+    let klu = homeRegion + '-' + faz.area + '-' + faz.id;
+    let kluIn = homeRegion + '-' + fazIn.area + '-' + fazIn.id;
+    let kluOn = homeRegion + '-' + fazOn.area + '-' + fazOn.id;
     let numRec = -1;
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       if (bindings.tfLinks[i].id === klu) {
@@ -130,7 +129,7 @@ const RgsToDoMode = (props: {
     }
     faz.runRec = 2;
     let mode = lengthMassMem - 2;
-    console.log(mode + 1 + "-й светофор пошёл", timerId[mode]);
+    console.log(mode + 1 + '-й светофор пошёл', timerId[mode]);
     SendSocketDispatch(debug, ws, faz.idevice, 9, faz.faza);
     timerId[mode] = setInterval(() => DoTimerId(mode), 60000);
     massInt[mode].push(timerId[mode]);
@@ -148,7 +147,7 @@ const RgsToDoMode = (props: {
       if (massfaz[i].runRec === 2) ch++;
     }
     if (!ch) {
-      console.log("Финиш", timerId, massInt);
+      console.log('Финиш');
       handleCloseSetEnd();
     }
   };
@@ -178,7 +177,7 @@ const RgsToDoMode = (props: {
     }
     if (props.changeFaz !== oldFaz) {
       let mode = props.changeFaz;
-      console.log(mode + 1 + "-й светофор закрыт", timerId[mode]);
+      console.log(mode + 1 + '-й светофор закрыт', timerId[mode]);
       SendSocketDispatch(debug, ws, massfaz[mode].idevice, 9, 9);
       for (let i = 0; i < massInt[mode].length; i++) {
         if (massInt[mode][i]) {
@@ -214,7 +213,7 @@ const RgsToDoMode = (props: {
           timerId[i] = null;
         }
       }
-      console.log("Финиш", timerId, massInt);
+      console.log('Финиш', timerId, massInt);
       for (let i = 0; i < massfaz.length; i++) {
         if (massfaz[i].runRec === 2) {
           SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
@@ -229,7 +228,7 @@ const RgsToDoMode = (props: {
 
   const StrokaHeader = (xss: number, soob: string) => {
     return (
-      <Grid item xs={xss} sx={{ fontSize: 14, textAlign: "center" }}>
+      <Grid item xs={xss} sx={{ fontSize: 14, textAlign: 'center' }}>
         <b>{soob}</b>
       </Grid>
     );
@@ -244,14 +243,14 @@ const RgsToDoMode = (props: {
     const ClickVertex = (mode: number) => {
       let fazer = massfaz[mode];
       if (fazer.runRec === 1) {
-        console.log(mode + 1 + "-й светофор пошёл", timerId[mode]);
+        console.log(mode + 1 + '-й светофор пошёл', timerId[mode]);
         SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
         timerId[mode] = setInterval(() => DoTimerId(mode), 60000);
         massInt[mode].push(timerId[mode]);
         massfaz[mode].runRec = 2;
       } else {
         if (fazer.runRec === 2) {
-          console.log(mode + 1 + "-й светофор закрыт", timerId[mode]);
+          console.log(mode + 1 + '-й светофор закрыт', timerId[mode]);
           SendSocketDispatch(debug, ws, fazer.idevice, 9, 9);
           for (let i = 0; i < massInt[mode].length; i++) {
             if (massInt[mode][i]) {
@@ -271,51 +270,40 @@ const RgsToDoMode = (props: {
     let resStr = [];
 
     for (let i = 0; i < massfaz.length; i++) {
-      let bull = " ";
-      if (massfaz[i].runRec === 2) bull = " •";
-      let host = "https://localhost:3000/18.svg";
+      let bull = ' ';
+      if (massfaz[i].runRec === 2) bull = ' •';
+      let host = 'https://localhost:3000/18.svg';
       if (!debug && massfaz[i].id <= 10000) {
         let num = map.tflight[massfaz[i].idx].tlsost.num.toString();
-        host =
-          window.location.origin + "/free/img/trafficLights/" + num + ".svg";
+        host = window.location.origin + '/free/img/trafficLights/' + num + '.svg';
       }
-      let star = "";
+      let star = '';
       // if (massfaz[i].starRec) star = '*';
       let takt = massfaz[i].faza;
-      if (!massfaz[i].faza) takt = "";
+      if (!massfaz[i].faza) takt = '';
       let fazaImg: null | string = null;
       // massfaz[i].img.length > massfaz[i].faza &&
       //   (fazaImg = massfaz[i].img[massfaz[i].faza - 1]);
       debug && (fazaImg = datestat.phSvg[0]); // для отладки
-      let pictImg: any = "";
+      let pictImg: any = '';
       if (massfaz[i].faza) pictImg = OutputFazaImg(fazaImg);
       if (massfaz[i].id > 10000) pictImg = CircleObj();
 
       resStr.push(
         <Grid key={i} container sx={{ marginTop: 1 }}>
-          <Grid item xs={1} sx={{ paddingTop: 0.7, textAlign: "center" }}>
-            <Button
-              variant="contained"
-              sx={styleStrokaTabl}
-              onClick={() => ClickKnop(i)}
-            >
+          <Grid item xs={1} sx={{ paddingTop: 0.7, textAlign: 'center' }}>
+            <Button variant="contained" sx={styleStrokaTabl} onClick={() => ClickKnop(i)}>
               {i + 1}
             </Button>
           </Grid>
 
-          <Grid item xs={1.2} sx={{ fontSize: 27, textAlign: "right" }}>
+          <Grid item xs={1.2} sx={{ fontSize: 27, textAlign: 'right' }}>
             {star}
           </Grid>
           <Grid item xs={1.0} sx={{}}>
-            {massfaz[i].runRec === 1 && massfaz[i].id <= 10000 && (
-              <>{OutputVertexImg(host)}</>
-            )}
+            {massfaz[i].runRec === 1 && massfaz[i].id <= 10000 && <>{OutputVertexImg(host)}</>}
             {massfaz[i].runRec === 2 && massfaz[i].id <= 10000 && (
-              <Button
-                variant="contained"
-                sx={styleStrokaTablImg}
-                onClick={() => ClickVertex(i)}
-              >
+              <Button variant="contained" sx={styleStrokaTablImg} onClick={() => ClickVertex(i)}>
                 {OutputVertexImg(host)}
               </Button>
             )}
@@ -327,14 +315,14 @@ const RgsToDoMode = (props: {
           <Grid item xs={1.1} sx={styleStrokaTakt}>
             {takt}
           </Grid>
-          <Grid item xs={2} sx={{ textAlign: "center" }}>
+          <Grid item xs={2} sx={{ textAlign: 'center' }}>
             {pictImg}
           </Grid>
 
           <Grid item xs sx={{ fontSize: 14 }}>
             {massfaz[i].name}
           </Grid>
-        </Grid>
+        </Grid>,
       );
     }
     return resStr;
@@ -342,7 +330,7 @@ const RgsToDoMode = (props: {
 
   const DoTimerId = (mode: number) => {
     let fazer = massfaz[mode];
-    console.log("Отправка с " + String(mode + 1) + "-го", timerId);
+    console.log('Отправка с ' + String(mode + 1) + '-го', timerId);
     SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
     for (let i = 0; i < massInt[mode].length - 1; i++) {
       if (massInt[mode][i]) {
@@ -365,9 +353,9 @@ const RgsToDoMode = (props: {
         )} */}
 
         <Grid container sx={{ marginTop: 0 }}>
-          <Grid item xs sx={{ fontSize: 18, textAlign: "center" }}>
+          <Grid item xs sx={{ fontSize: 18, textAlign: 'center' }}>
             {/* Режим: <b>{map.routes[newMode].description}</b> */}
-            Режим:{" "}
+            Режим:{' '}
             <b>
               произвольная {'"'}зелёная улица{'"'}
             </b>
@@ -375,14 +363,14 @@ const RgsToDoMode = (props: {
         </Grid>
 
         <Box sx={{ marginTop: 1 }}>
-          <Grid container sx={{ bgcolor: "#C0E2C3" }}>
-            {StrokaHeader(1, "Номер")}
-            {StrokaHeader(3.6, "Состояние")}
-            {StrokaHeader(1.9, "Фаза")}
-            {StrokaHeader(5.5, "ДК")}
+          <Grid container sx={{ bgcolor: '#C0E2C3' }}>
+            {StrokaHeader(1, 'Номер')}
+            {StrokaHeader(3.6, 'Состояние')}
+            {StrokaHeader(1.9, 'Фаза')}
+            {StrokaHeader(5.5, 'ДК')}
           </Grid>
 
-          <Box sx={{ overflowX: "auto", height: "81vh" }}>{StrokaTabl()}</Box>
+          <Box sx={{ overflowX: 'auto', height: '81vh' }}>{StrokaTabl()}</Box>
 
           {/* {!toDoMode && (
             <Box sx={{ marginTop: 1.5, textAlign: "center" }}>
@@ -393,7 +381,7 @@ const RgsToDoMode = (props: {
           )} */}
 
           {/* {toDoMode && ( */}
-          <Box sx={{ marginTop: 1.5, textAlign: "center" }}>
+          <Box sx={{ marginTop: 1.5, textAlign: 'center' }}>
             <Button sx={styleModalMenu} onClick={() => ToDoMode(0)}>
               Закончить исполнение
             </Button>

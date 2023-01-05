@@ -130,6 +130,29 @@ export const MakeMassRoute = (bindings: any, nom: number, map: any, addobj: any)
   return massRoute;
 };
 
+export const MakeMassRouteFirst = (klu: string, bindings: any, map: any) => {
+  let massRoute = [];
+  let massklu = [];
+  for (let i = 0; i < bindings.tfLinks.length; i++) {
+    let mass = bindings.tfLinks[i].tflink;
+    if (mass.west.id === klu) massklu.push(bindings.tfLinks[i].id);
+    if (mass.north.id === klu) massklu.push(bindings.tfLinks[i].id);
+    if (mass.east.id === klu) massklu.push(bindings.tfLinks[i].id);
+    if (mass.south.id === klu) massklu.push(bindings.tfLinks[i].id);
+  }
+  for (let j = 0; j < massklu.length; j++) {
+    let area = TakeAreaId(massklu[j])[0];
+    let id = TakeAreaId(massklu[j])[1];
+    for (let i = 0; i < map.tflight.length; i++) {
+      if (Number(map.tflight[i].area.num) === area && map.tflight[i].ID === id) {
+        massRoute.push([[map.tflight[i].points.Y], [map.tflight[i].points.X]]);
+        break;
+      }
+    }
+  }
+  return massRoute;
+};
+
 export const MakeFazer = (klu: string, bind: any) => {
   let mass = bind.tflink;
   let fazer = '';
@@ -263,17 +286,20 @@ export const getMultiRouteOptions = () => {
 };
 
 export const getMassMultiRouteOptions = (i: number) => {
-  let massColor = ['#E91427', '#E6762D', '#0078D7', '#000000'];
+  let massColor = ['#FF2626', '#0078D7', '#E6762D', '#000000'];
+  let col = '#000000';
+  if (i < 4) col = massColor[i];
+
   return {
     balloonCloseButton: false,
     routeStrokeStyle: 'dot',
     //strokeColor: '#1A9165',
-    //routeActiveStrokeColor: '#E91427', // красный
+    //routeActiveStrokeColor: '#EB3941', // красный
     //routeActiveStrokeColor: '#E6762D', // оранж
     //routeActiveStrokeColor: '#0078D7', // синий
     //routeActiveStrokeColor: '#547A25', // зелёный
     //routeActiveStrokeColor: '#000000', // чёрный
-    routeActiveStrokeColor: massColor[i],
+    routeActiveStrokeColor: col,
     routeActiveStrokeWidth: 4,
     routeStrokeWidth: 0,
     wayPointVisible: false,

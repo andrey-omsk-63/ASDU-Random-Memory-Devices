@@ -20,7 +20,7 @@ import RgsToDoMode from './RgsComponents/RgsToDoMode';
 import { getMultiRouteOptions, StrokaHelp } from './RgsServiceFunctions';
 import { getMassMultiRouteOptions } from './RgsServiceFunctions';
 import { getReferencePoints, CenterCoord } from './RgsServiceFunctions';
-import { getReferenceLine, TakeAreaId } from './RgsServiceFunctions';
+import { getReferenceLine, MakeMassRouteFirst } from './RgsServiceFunctions';
 import { StrokaMenuGlob, MakingKey } from './RgsServiceFunctions';
 import { MakeSoobErr, MakeMassRoute } from './RgsServiceFunctions';
 import { CheckHaveLink, MakeFazer } from './RgsServiceFunctions';
@@ -105,7 +105,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   const addRoute = (ymaps: any, bound: boolean) => {
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
-    //if (massCoord.length > 1) {
     let multiRoute: any = [];
     if (massCoord.length === 2) {
       multiRoute = new ymaps.multiRouter.MultiRoute(
@@ -124,7 +123,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     }
     mapp.current.geoObjects.add(multiRoute);
     let massMultiRoute: any = []; // исходящие связи
-    console.log('%%%', massRoute, massCoord);
     for (let i = 0; i < massRoute.length; i++) {
       massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
         getReferencePoints(massCoord[massCoord.length - 1], massRoute[i]),
@@ -132,7 +130,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       );
       mapp.current.geoObjects.add(massMultiRoute[i]);
     }
-    //}
   };
 
   const StatusQuo = () => {
@@ -182,31 +179,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     massKlu.push(klu);
     massNomBind.push(nom);
     massRoute = [];
-    if (massNomBind.length > 1 && klu.length < 9) {
+    if (massNomBind.length === 1) massRoute = MakeMassRouteFirst(klu, bindings, map);
+    if (massNomBind.length > 1 && klu.length < 9)
       massRoute = MakeMassRoute(bindings, nom, map, addobj);
-    } else {
-      console.log('!!!Начало пути', klu, index, bindings);
-      let massklu = [];
-      for (let i = 0; i < bindings.tfLinks.length; i++) {
-        //console.log('£££', i, bindings.tfLinks[i].id, bindings.tfLinks[i].tflink);
-        let mass = bindings.tfLinks[i].tflink;
-        if (mass.west.id === klu) massklu.push(bindings.tfLinks[i].id);
-        if (mass.north.id === klu) massklu.push(bindings.tfLinks[i].id);
-        if (mass.east.id === klu) massklu.push(bindings.tfLinks[i].id);
-        if (mass.south.id === klu) massklu.push(bindings.tfLinks[i].id);
-      }
-      for (let j = 0; j < massklu.length; j++) {
-        let area = TakeAreaId(massklu[j])[0];
-        let id = TakeAreaId(massklu[j])[1];
-        for (let i = 0; i < map.tflight.length; i++) {
-          if (Number(map.tflight[i].area.num) === area && map.tflight[i].ID === id) {
-            massRoute.push([[map.tflight[i].points.Y], [map.tflight[i].points.X]]);
-            break;
-          }
-        }
-      }
-    }
-    console.log('$$$', massRoute, massCoord);
     ymaps && addRoute(ymaps, false); // перерисовка связей
     if (massMem.length === 3) {
       PressButton(53);
@@ -337,7 +312,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       massfaz[nomInMass].runRec = 1;
       dispatch(massfazCreate(massfaz));
       setChangeFaz(nomInMass);
-      //setRisovka(true);
     }
   };
 
@@ -422,7 +396,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     StatusQuo();
     setFlagPusk(!flagPusk);
   };
-
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(map.tflight).length) {
     for (let i = 0; i < addobj.addObjects.length; i++) {
