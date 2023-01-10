@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { mapCreate, massmodeCreate } from '../../redux/actions';
+import { mapCreate, massmodeCreate } from '../src/redux/actions';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -10,14 +10,14 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 
-import { OutputFazaImg, NameMode } from '../RgsServiceFunctions';
-import { SendSocketCreateRoute } from '../RgsSocketFunctions';
-import { SendSocketUpdateRoute } from '../RgsSocketFunctions';
+import { OutputFazaImg, NameMode } from '../src/components/RgsServiceFunctions';
+import { SendSocketCreateRoute } from '../src/components/RgsSocketFunctions';
+import { SendSocketUpdateRoute } from '../src/components/RgsSocketFunctions';
 
-import { styleModalEnd } from '../MainMapStyle';
-import { styleSetInf, styleModalMenu } from './GsComponentsStyle';
-import { styleBoxFormFaza } from './GsComponentsStyle';
-import { styleSet, styleBoxFormName } from './GsComponentsStyle';
+import { styleModalEnd } from '../src/components/MainMapStyle';
+import { styleSetInf, styleModalMenu } from '../src/components/RgsComponents/GsComponentsStyle';
+import { styleBoxFormFaza } from '../src/components/RgsComponents/GsComponentsStyle';
+import { styleSet, styleBoxFormName } from '../src/components/RgsComponents/GsComponentsStyle';
 
 let newInput = true;
 let massFaz: any = [];

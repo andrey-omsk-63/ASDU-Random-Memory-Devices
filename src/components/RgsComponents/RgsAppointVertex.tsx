@@ -96,7 +96,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     if (valIdS && valAreaS) ch++;
     if (valIdV && valAreaV) ch++;
     if (valIdU && valAreaU) ch++;
-    if (ch < 2) {
+    if (ch === 1) {
       soobErr = 'Должно быть введено хотя бы два направления';
       setOpenSetErr(true);
     } else {
