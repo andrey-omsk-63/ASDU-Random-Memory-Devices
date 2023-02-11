@@ -5,7 +5,7 @@ import { bindingsCreate } from '../../redux/actions';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
+//import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 
@@ -66,7 +66,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   if (!datestat.pictSvg) otlOrKosyk = true;
   const dispatch = useDispatch();
   //========================================================
-  const [openSet, setOpenSet] = React.useState(true);
+  //const [openSet, setOpenSet] = React.useState(true);
   const [openSetErr, setOpenSetErr] = React.useState(false);
   const [valAreaZ, setValAreaZ] = React.useState(0);
   const [valAreaS, setValAreaS] = React.useState(0);
@@ -87,7 +87,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   const handleCloseSet = () => {
     oldIdx = -1;
     props.setOpen(false);
-    setOpenSet(false);
+    //setOpenSet(false);
   };
 
   const handleClose = () => {
@@ -110,7 +110,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         bindings.tfLinks.push(maskTfLinks); // добавление новой записи
       }
       SendSocketUpdateBindings(debug, ws, maskTfLinks);
-      //console.log('bindings2', bindings);
       dispatch(bindingsCreate(bindings));
       handleCloseSet();
     }
@@ -415,53 +414,53 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   }
 
   return (
-    <Modal open={openSet} onClose={handleCloseSet} hideBackdrop>
-      <Box sx={styleSetAppoint}>
-        <Button sx={styleModalEnd} onClick={handleCloseSet}>
-          &#10006;
-        </Button>
-        <Box sx={{ fontSize: 17, marginTop: 1, textAlign: 'center' }}>
-          <b>Массив связности перекрёстка {kluchGl} </b>
-        </Box>
-        <Grid container sx={{ marginTop: 1.5, paddingBottom: 1 }}>
-          <Grid item xs={4}>
-            {otlOrKosyk && <>{AppIconAsdu()}</>}
-            {!otlOrKosyk && <>{OutputPict()}</>}
-          </Grid>
+    // <Modal open={openSet} onClose={handleCloseSet} hideBackdrop>
+    <Box sx={styleSetAppoint}>
+      <Button sx={styleModalEnd} onClick={handleCloseSet}>
+        &#10006;
+      </Button>
+      <Box sx={{ fontSize: 17, marginTop: 1, textAlign: 'center' }}>
+        <b>Массив связности перекрёстка {kluchGl} </b>
+      </Box>
+      <Grid container sx={{ marginTop: 1.5, paddingBottom: 1 }}>
+        <Grid item xs={4}>
+          {otlOrKosyk && <>{AppIconAsdu()}</>}
+          {!otlOrKosyk && <>{OutputPict()}</>}
+        </Grid>
 
-          <Grid item xs={4} sx={{ border: 0 }}>
-            {AppointHeader(hBlock)}
-            {AppointStroka('З', valAreaZ, setValAreaZ, valIdZ, setValIdZ)}
-            {AppointStroka('С', valAreaS, setValAreaS, valIdS, setValIdS)}
-            {AppointStroka('В', valAreaV, setValAreaV, valIdV, setValIdV)}
-            {AppointStroka('Ю', valAreaU, setValAreaU, valIdU, setValIdU)}
-          </Grid>
+        <Grid item xs={4} sx={{ border: 0 }}>
+          {AppointHeader(hBlock)}
+          {AppointStroka('З', valAreaZ, setValAreaZ, valIdZ, setValIdZ)}
+          {AppointStroka('С', valAreaS, setValAreaS, valIdS, setValIdS)}
+          {AppointStroka('В', valAreaV, setValAreaV, valIdV, setValIdV)}
+          {AppointStroka('Ю', valAreaU, setValAreaU, valIdU, setValIdU)}
+        </Grid>
 
-          <Grid item xs={4}>
-            <Grid container>
-              {OutputNumFaza(1, imgFaza[0], maxFaza, hBlock)}
-              {OutputNumFaza(2, imgFaza[1], maxFaza, hBlock)}
-              {OutputNumFaza(3, imgFaza[2], maxFaza, hBlock)}
-            </Grid>
-            <Grid container>
-              {OutputNumFaza(4, imgFaza[3], maxFaza, hBlock)}
-              {OutputNumFaza(5, imgFaza[4], maxFaza, hBlock)}
-              {OutputNumFaza(6, imgFaza[5], maxFaza, hBlock)}
-            </Grid>
-            <Grid container>
-              {OutputNumFaza(7, imgFaza[6], maxFaza, hBlock)}
-              {OutputNumFaza(8, imgFaza[7], maxFaza, hBlock)}
-            </Grid>
+        <Grid item xs={4}>
+          <Grid container>
+            {OutputNumFaza(1, imgFaza[0], maxFaza, hBlock)}
+            {OutputNumFaza(2, imgFaza[1], maxFaza, hBlock)}
+            {OutputNumFaza(3, imgFaza[2], maxFaza, hBlock)}
+          </Grid>
+          <Grid container>
+            {OutputNumFaza(4, imgFaza[3], maxFaza, hBlock)}
+            {OutputNumFaza(5, imgFaza[4], maxFaza, hBlock)}
+            {OutputNumFaza(6, imgFaza[5], maxFaza, hBlock)}
+          </Grid>
+          <Grid container>
+            {OutputNumFaza(7, imgFaza[6], maxFaza, hBlock)}
+            {OutputNumFaza(8, imgFaza[7], maxFaza, hBlock)}
           </Grid>
         </Grid>
-        <Box sx={{ marginTop: 1, textAlign: 'center' }}>
-          <Button sx={styleModalMenu} onClick={() => handleClose()}>
-            Сохранить изменения
-          </Button>
-        </Box>
-        {openSetErr && <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />}
+      </Grid>
+      <Box sx={{ marginTop: 1, textAlign: 'center' }}>
+        <Button sx={styleModalMenu} onClick={() => handleClose()}>
+          Сохранить изменения
+        </Button>
       </Box>
-    </Modal>
+      {openSetErr && <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />}
+    </Box>
+    // </Modal>
   );
 };
 

@@ -1,37 +1,33 @@
-import * as React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addobjCreate, coordinatesCreate } from "../../redux/actions";
+import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addobjCreate, coordinatesCreate } from '../../redux/actions';
 
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
-import MenuItem from "@mui/material/MenuItem";
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+//import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 
-import GsErrorMessage from "./RgsErrorMessage";
+import GsErrorMessage from './RgsErrorMessage';
 
-import { NameMode } from "../RgsServiceFunctions";
+import { NameMode } from '../RgsServiceFunctions';
 
-import { SendSocketСreateAddObj } from "../RgsSocketFunctions";
+import { SendSocketСreateAddObj } from '../RgsSocketFunctions';
 
-import { styleSetAdress, styleBoxForm, styleInpKnop } from "../MainMapStyle";
-import { styleSet } from "../MainMapStyle";
-import { styleSetAdrArea, styleSetAdrID } from "./../MainMapStyle";
-import { styleSetArea, styleSetID } from "./../MainMapStyle";
-import { styleBoxFormArea, styleBoxFormID } from "./../MainMapStyle";
+import { styleSetAdress, styleBoxForm, styleInpKnop } from '../MainMapStyle';
+import { styleSet, styleModalEnd } from '../MainMapStyle';
+import { styleSetAdrArea, styleSetAdrID } from './../MainMapStyle';
+import { styleSetArea, styleSetID } from './../MainMapStyle';
+import { styleBoxFormArea, styleBoxFormID } from './../MainMapStyle';
 
 //let chNewCoord = 1;
-let soobErr = "";
-let valueName = "";
+let soobErr = '';
+let valueName = '';
 let valueID = 0;
 let freeId = 0;
 
-const RgsCreateObject = (props: {
-  setOpen: Function;
-  coord: any;
-  funcMode: Function;
-}) => {
+const RgsCreateObject = (props: { setOpen: Function; coord: any; funcMode: Function }) => {
   //== Piece of Redux ======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -46,7 +42,7 @@ const RgsCreateObject = (props: {
     return addobjReducer.addobj.dateAdd;
     //return addobjReducer.addobj.addObjects;
   });
-  console.log("RgsCreateObject", addobj);
+  console.log('RgsCreateObject', addobj);
   let coordinates = useSelector((state: any) => {
     const { coordinatesReducer } = state;
     return coordinatesReducer.coordinates;
@@ -66,8 +62,8 @@ const RgsCreateObject = (props: {
   }
   for (let i = 0; i < massKey.length; i++) {
     let maskCurrencies = {
-      value: "",
-      label: "",
+      value: '',
+      label: '',
     };
     maskCurrencies.value = massKey[i];
     maskCurrencies.label = massDat[i];
@@ -81,29 +77,29 @@ const RgsCreateObject = (props: {
     }
     if (!have) break;
   }
- //========================================================
+  //========================================================
 
-  const [openSetAdress, setOpenSetAdress] = React.useState(true);
+  //const [openSetAdress, setOpenSetAdress] = React.useState(true);
   const [currency, setCurrency] = React.useState(massKey[0]);
   const [openSetErr, setOpenSetErr] = React.useState(false);
 
   const handleKey = (event: any) => {
-    if (event.key === "Enter") event.preventDefault();
+    if (event.key === 'Enter') event.preventDefault();
   };
 
   const handleChangeArea = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrency(event.target.value);
-    setOpenSetAdress(true);
+    //setOpenSetAdress(true);
   };
 
   const handleCloseSet = () => {
     props.setOpen(false);
     props.funcMode(0);
-    setOpenSetAdress(false);
+    //setOpenSetAdress(false);
   };
 
   const InputName = () => {
-    const [value, setValue] = React.useState("Объект" + NameMode()); //"Объект 1000" + String(chNewCoord)
+    const [value, setValue] = React.useState('Объект' + NameMode()); //"Объект 1000" + String(chNewCoord)
     valueName = value;
 
     const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -147,8 +143,7 @@ const RgsCreateObject = (props: {
             InputProps={{ style: { fontSize: 13.4 } }}
             variant="standard"
             helperText="Введите район"
-            color="secondary"
-          >
+            color="secondary">
             {currencies.map((option: any) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
@@ -166,9 +161,9 @@ const RgsCreateObject = (props: {
 
     const handleChangeID = (event: any) => {
       if (event.target.value) {
-        let valueInp = event.target.value.replace(/^0+/, "");
+        let valueInp = event.target.value.replace(/^0+/, '');
         if (Number(valueInp) < freeId) valueInp = freeId;
-        if (valueInp === "") valueInp = 0;
+        if (valueInp === '') valueInp = 0;
         valueInp = Math.trunc(Number(valueInp)).toString();
         valueID = valueInp;
         setValue(valueInp);
@@ -207,8 +202,8 @@ const RgsCreateObject = (props: {
         have = true;
     }
     if (have) {
-      soobErr = "Oбъект с ключом [" + datestat.region + ", " + currency + ", ";
-      soobErr += valueID + "] уже существует";
+      soobErr = 'Oбъект с ключом [' + datestat.region + ', ' + currency + ', ';
+      soobErr += valueID + '] уже существует';
       setOpenSetErr(true);
     } else {
       let dater = {
@@ -229,29 +224,30 @@ const RgsCreateObject = (props: {
   };
 
   return (
-    <Modal open={openSetAdress} onClose={handleCloseSet} hideBackdrop>
-      <Grid item container sx={styleSetAdress}>
-        <Grid item xs={9.5} sx={{ border: 0 }}>
-          <InputName />
-        </Grid>
-        <Grid item sx={styleSetAdrArea} xs={9.5}>
-          <InputArea />
-        </Grid>
-        <Grid item xs={9.7} sx={styleSetAdrID}>
-          <InputID />
-        </Grid>
-        <Grid item xs={2.3}>
-          <Box sx={{ border: 1, borderColor: "#FFDB4D" }}>
-            <Button sx={styleInpKnop} onClick={handleClose}>
-              Ввод
-            </Button>
-          </Box>
-        </Grid>
-        {openSetErr && (
-          <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />
-        )}
+    // <Modal open={openSetAdress} onClose={handleCloseSet} hideBackdrop>
+    <Grid item container sx={styleSetAdress}>
+      <Button sx={styleModalEnd} onClick={handleCloseSet}>
+        &#10006;
+      </Button>
+      <Grid item xs={9.5} sx={{ border: 0 }}>
+        <InputName />
       </Grid>
-    </Modal>
+      <Grid item sx={styleSetAdrArea} xs={9.5}>
+        <InputArea />
+      </Grid>
+      <Grid item xs={9.7} sx={styleSetAdrID}>
+        <InputID />
+      </Grid>
+      <Grid item xs={2.3}>
+        <Box sx={{ border: 1, borderColor: '#FFDB4D' }}>
+          <Button sx={styleInpKnop} onClick={handleClose}>
+            Ввод
+          </Button>
+        </Box>
+      </Grid>
+      {openSetErr && <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />}
+    </Grid>
+    // </Modal>
   );
 };
 
