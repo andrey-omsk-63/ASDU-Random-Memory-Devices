@@ -44,13 +44,13 @@ export const styleSetAdress = {
   outline: 'none',
   width: '319px',
   height: '160px',
-  // marginTop: '9vh',
-  // marginLeft: '48px',
+  marginTop: '9vh',
+  marginLeft: '48px',
   //===
-  position: 'absolute',
-  left: '206px',
-  top: '157px',
-  transform: 'translate(-50%, -50%)',
+  // position: 'absolute',
+  // left: '206px',
+  // top: '157px',
+  // transform: 'translate(-50%, -50%)',
   //===
   border: '3px solid #000',
   borderColor: '#FFFEF7',
@@ -196,15 +196,15 @@ export const styleEditName = {
 //=== AppointVertex ===================================================
 export const styleSetAppoint = {
   outline: 'none',
-  // position: "relative",
-  // marginTop: "12vh",
-  // marginLeft: 1,
-  // marginRight: "auto",
+  position: 'relative',
+  marginTop: '12vh',
+  marginLeft: 1,
+  marginRight: 'auto',
   //===
-  position: 'absolute',
-  left: '50%',
-  top: '50%',
-  transform: 'translate(-50%, -50%)',
+  // position: 'absolute',
+  // left: '50%',
+  // top: '50%',
+  // transform: 'translate(-50%, -50%)',
   //===
   width: '98.5%',
   bgcolor: 'background.paper',

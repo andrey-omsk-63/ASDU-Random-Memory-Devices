@@ -5,7 +5,7 @@ import { addobjCreate, coordinatesCreate } from '../../redux/actions';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-//import Modal from '@mui/material/Modal';
+import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 
@@ -79,7 +79,7 @@ const RgsCreateObject = (props: { setOpen: Function; coord: any; funcMode: Funct
   }
   //========================================================
 
-  //const [openSetAdress, setOpenSetAdress] = React.useState(true);
+  const [openSetAdress, setOpenSetAdress] = React.useState(true);
   const [currency, setCurrency] = React.useState(massKey[0]);
   const [openSetErr, setOpenSetErr] = React.useState(false);
 
@@ -89,13 +89,13 @@ const RgsCreateObject = (props: { setOpen: Function; coord: any; funcMode: Funct
 
   const handleChangeArea = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrency(event.target.value);
-    //setOpenSetAdress(true);
+    setOpenSetAdress(true);
   };
 
   const handleCloseSet = () => {
     props.setOpen(false);
     props.funcMode(0);
-    //setOpenSetAdress(false);
+    setOpenSetAdress(false);
   };
 
   const InputName = () => {
@@ -224,30 +224,30 @@ const RgsCreateObject = (props: { setOpen: Function; coord: any; funcMode: Funct
   };
 
   return (
-    // <Modal open={openSetAdress} onClose={handleCloseSet} hideBackdrop>
-    <Grid item container sx={styleSetAdress}>
-      <Button sx={styleModalEnd} onClick={handleCloseSet}>
-        &#10006;
-      </Button>
-      <Grid item xs={9.5} sx={{ border: 0 }}>
-        <InputName />
+    <Modal open={openSetAdress} onClose={handleCloseSet} hideBackdrop>
+      <Grid item container sx={styleSetAdress}>
+        {/* <Button sx={styleModalEnd} onClick={handleCloseSet}>
+          &#10006;
+        </Button> */}
+        <Grid item xs={9.5} sx={{ border: 0 }}>
+          <InputName />
+        </Grid>
+        <Grid item sx={styleSetAdrArea} xs={9.5}>
+          <InputArea />
+        </Grid>
+        <Grid item xs={9.7} sx={styleSetAdrID}>
+          <InputID />
+        </Grid>
+        <Grid item xs={2.3}>
+          <Box sx={{ border: 1, borderColor: '#FFDB4D' }}>
+            <Button sx={styleInpKnop} onClick={handleClose}>
+              Ввод
+            </Button>
+          </Box>
+        </Grid>
+        {openSetErr && <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />}
       </Grid>
-      <Grid item sx={styleSetAdrArea} xs={9.5}>
-        <InputArea />
-      </Grid>
-      <Grid item xs={9.7} sx={styleSetAdrID}>
-        <InputID />
-      </Grid>
-      <Grid item xs={2.3}>
-        <Box sx={{ border: 1, borderColor: '#FFDB4D' }}>
-          <Button sx={styleInpKnop} onClick={handleClose}>
-            Ввод
-          </Button>
-        </Box>
-      </Grid>
-      {openSetErr && <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />}
-    </Grid>
-    // </Modal>
+    </Modal>
   );
 };
 
