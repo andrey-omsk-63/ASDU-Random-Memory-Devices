@@ -169,7 +169,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             type="number"
             onKeyPress={handleKey} //отключение Enter
             value={value}
-            inputProps={{ style: { fontSize: 12.1 } }}
+            InputProps={{disableUnderline: true, style: { fontSize: 12.1 } }}
             onChange={(e) => ChangeArea(e, func)}
             variant="standard"
             color="secondary"
@@ -189,7 +189,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               type="number"
               onKeyPress={handleKey} //отключение Enter
               value={value}
-              inputProps={{ style: { fontSize: 12.1 } }}
+              InputProps={{disableUnderline: true, style: { fontSize: 12.1 } }}
               onChange={(e) => ChangeId(e, func)}
               onBlur={(e) => BlurId(e, valueAr, value, func)}
               variant="standard"
@@ -244,7 +244,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               onKeyPress={handleKey} //отключение Enter
               value={currency}
               onChange={handleChange}
-              InputProps={{ style: { fontSize: 12.1 } }}
+              InputProps={{disableUnderline: true, style: { fontSize: 12.1 } }}
               variant="standard"
               color="secondary">
               {currencies.map((option: any) => (

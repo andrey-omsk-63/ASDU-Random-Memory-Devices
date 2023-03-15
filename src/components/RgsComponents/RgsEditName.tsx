@@ -79,7 +79,7 @@ const RgsEditName = (props: { setOpen: Function; idx: number }) => {
           <TextField
             size="small"
             onKeyPress={handleKey} //отключение Enter
-            inputProps={{ style: { fontSize: 13.3 } }}
+            InputProps={{disableUnderline: true, style: { fontSize: 13.3 } }}
             value={value}
             onChange={handleChangeName}
             variant="standard"

@@ -16,9 +16,8 @@ import { NameMode } from '../RgsServiceFunctions';
 import { SendSocketСreateAddObj } from '../RgsSocketFunctions';
 
 import { styleSetAdress, styleBoxForm, styleInpKnop } from '../MainMapStyle';
-import { styleSet, styleModalEnd } from '../MainMapStyle';
 import { styleSetAdrArea, styleSetAdrID } from './../MainMapStyle';
-import { styleSetArea, styleSetID } from './../MainMapStyle';
+import { styleSetArea, styleSetID, styleSet } from './../MainMapStyle';
 import { styleBoxFormArea, styleBoxFormID } from './../MainMapStyle';
 
 //let chNewCoord = 1;
@@ -118,7 +117,7 @@ const RgsCreateObject = (props: { setOpen: Function; coord: any; funcMode: Funct
           <TextField
             size="small"
             onKeyPress={handleKey} //отключение Enter
-            inputProps={{ style: { fontSize: 13.3 } }}
+            InputProps={{disableUnderline: true, style: { fontSize: 13.3 } }}
             value={value}
             onChange={handleChangeName}
             variant="standard"
@@ -140,7 +139,7 @@ const RgsCreateObject = (props: { setOpen: Function; coord: any; funcMode: Funct
             onKeyPress={handleKey} //отключение Enter
             value={currency}
             onChange={handleChangeArea}
-            InputProps={{ style: { fontSize: 13.4 } }}
+            InputProps={{disableUnderline: true, style: { fontSize: 13.4 } }}
             variant="standard"
             helperText="Введите район"
             color="secondary">
@@ -179,7 +178,7 @@ const RgsCreateObject = (props: { setOpen: Function; coord: any; funcMode: Funct
             size="small"
             onKeyPress={handleKey} //отключение Enter
             type="number"
-            inputProps={{ style: { fontSize: 13.3 } }}
+            InputProps={{disableUnderline: true, style: { fontSize: 13.3 } }}
             value={value}
             onChange={handleChangeID}
             variant="standard"
