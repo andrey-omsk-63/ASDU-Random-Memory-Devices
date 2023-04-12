@@ -169,7 +169,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             type="number"
             onKeyPress={handleKey} //отключение Enter
             value={value}
-            InputProps={{disableUnderline: true, style: { fontSize: 12.1 } }}
+            InputProps={{ disableUnderline: true, style: { fontSize: 12.1 } }}
             onChange={(e) => ChangeArea(e, func)}
             variant="standard"
             color="secondary"
@@ -189,7 +189,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               type="number"
               onKeyPress={handleKey} //отключение Enter
               value={value}
-              InputProps={{disableUnderline: true, style: { fontSize: 12.1 } }}
+              InputProps={{ disableUnderline: true, style: { fontSize: 12.1 } }}
               onChange={(e) => ChangeId(e, func)}
               onBlur={(e) => BlurId(e, valueAr, value, func)}
               variant="standard"
@@ -244,7 +244,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               onKeyPress={handleKey} //отключение Enter
               value={currency}
               onChange={handleChange}
-              InputProps={{disableUnderline: true, style: { fontSize: 12.1 } }}
+              InputProps={{ disableUnderline: true, style: { fontSize: 12.1 } }}
               variant="standard"
               color="secondary">
               {currencies.map((option: any) => (
@@ -323,7 +323,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
 
   const OutputPict = () => {
     return (
-      <Box sx={{ border: 0, marginLeft: 1 }}>
+      <Box sx={{ border: 0, marginLeft: 0 }}>
         <div dangerouslySetInnerHTML={{ __html: ReplaceInSvg(datestat.pictSvg) }} />
       </Box>
     );
@@ -422,10 +422,38 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         <Box sx={{ fontSize: 17, marginTop: 1, textAlign: 'center' }}>
           <b>Массив связности перекрёстка {kluchGl} </b>
         </Box>
-        <Grid container sx={{ marginTop: 1.5, paddingBottom: 1 }}>
-          <Grid item xs={4}>
+        <Grid container sx={{ marginTop: 1.5, paddingBottom: 0 }}>
+          <Grid item xs={0.15} sx={{ border: 0 }}>
+            <Box
+              sx={{
+                transform: 'rotate(270deg)',
+                position: 'relative',
+                top: '57.5%',
+                color: 'blue',
+              }}>
+              <b>З[1,1,35]</b>
+            </Box>
+          </Grid>
+          <Grid item xs={4} sx={{ border: 0 }}>
+            <Box sx={{ marginTop: -3, color: 'blue', textAlign: 'center' }}>
+              <b>C[1,1,36]</b>
+            </Box>
             {otlOrKosyk && <>{AppIconAsdu()}</>}
             {!otlOrKosyk && <>{OutputPict()}</>}
+            <Box sx={{ marginTop: -1, color: 'blue', textAlign: 'center' }}>
+              <b>Ю[1,1,38]</b>
+            </Box>
+          </Grid>
+          <Grid item xs={0.15} sx={{ border: 0 }}>
+            <Box
+              sx={{
+                transform: 'rotate(90deg)',
+                position: 'relative',
+                top: '44.5%',
+                color: 'blue',
+              }}>
+              <b>В[1,1,37]</b>
+            </Box>
           </Grid>
 
           <Grid item xs={4} sx={{ border: 0 }}>
@@ -436,7 +464,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             {AppointStroka('Ю', valAreaU, setValAreaU, valIdU, setValIdU)}
           </Grid>
 
-          <Grid item xs={4}>
+          <Grid item xs sx={{ border: 0 }}>
             <Grid container>
               {OutputNumFaza(1, imgFaza[0], maxFaza, hBlock)}
               {OutputNumFaza(2, imgFaza[1], maxFaza, hBlock)}

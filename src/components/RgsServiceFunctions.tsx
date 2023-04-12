@@ -571,7 +571,7 @@ export const MakingKluch = (rec1: string, homeRegion: any, massAreaId: Array<num
 
 export const OutputNumFaza = (num: number, imgFaza: any, maxFaza: number, hBlock: number) => {
   const OutputFaza = (img: any) => {
-    let widthHeight = hBlock / 3;
+    let widthHeight = (hBlock / 12) * 3.7;
     if (!img) widthHeight = hBlock / 12;
     return (
       <svg
@@ -602,7 +602,9 @@ export const OutputNumFaza = (num: number, imgFaza: any, maxFaza: number, hBlock
 export const ReplaceInSvg = (svgPict: any) => {
   let svgPipa = svgPict;
   if (svgPict) {
-    let heightImg = window.innerWidth / 3.333 + 14;
+    let heightImg = window.innerWidth / 3.333;
+    let aa = (heightImg / 100) * 9.5;
+    heightImg = heightImg + aa;
     let widthHeight = heightImg.toString();
     let ch = '';
     let vxod = svgPict.indexOf('width=');
