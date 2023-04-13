@@ -428,20 +428,20 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               sx={{
                 transform: 'rotate(270deg)',
                 position: 'relative',
-                top: '57.5%',
+                top: '51%',
                 color: 'blue',
               }}>
-              <b>З[1,1,35]</b>
+              <b>З.35</b>
             </Box>
           </Grid>
           <Grid item xs={4} sx={{ border: 0 }}>
             <Box sx={{ marginTop: -3, color: 'blue', textAlign: 'center' }}>
-              <b>C[1,1,36]</b>
+              <b>C.36</b>
             </Box>
             {otlOrKosyk && <>{AppIconAsdu()}</>}
             {!otlOrKosyk && <>{OutputPict()}</>}
             <Box sx={{ marginTop: -1, color: 'blue', textAlign: 'center' }}>
-              <b>Ю[1,1,38]</b>
+              <b>Ю.38</b>
             </Box>
           </Grid>
           <Grid item xs={0.15} sx={{ border: 0 }}>
@@ -449,10 +449,10 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               sx={{
                 transform: 'rotate(90deg)',
                 position: 'relative',
-                top: '44.5%',
+                top: '49%',
                 color: 'blue',
               }}>
-              <b>В[1,1,37]</b>
+              <b>В.37</b>
             </Box>
           </Grid>
 
