@@ -355,7 +355,7 @@ export const AppointHeader = (hBlock: number) => {
     </Grid>
   );
 };
-
+//StrokaMenuGlob
 export const AppointDirect = (rec1: string, hBlock: number) => {
   let hB = hBlock / 15;
   return (
@@ -632,6 +632,89 @@ export const CircleObj = () => {
   return <Box sx={circle}></Box>;
 };
 //=== Разное =======================================
+// export const InputDirect = (Mode: number) => {
+//   let mode = Mode - 51;
+//   const styleSetNapr = {
+//     border: 1,
+//     width: '150px',
+//     maxHeight: '3px',
+//     minHeight: '3px',
+//     bgcolor: '#FAFAFA',
+//     boxShadow: 3,
+//     marginLeft: 'auto',
+//     p: 1.5,
+//   };
+
+//   const styleBoxFormNapr = {
+//     '& > :not(style)': {
+//       marginTop: '-8px',
+//       //marginLeft: '-12px',
+//       width: '155px',
+//       //padding: '0 0px 0px 1px',
+//     },
+//   };
+//   const handleKey = (event: any) => {
+//     if (event.key === 'Enter') event.preventDefault();
+//   };
+
+//   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+//     setCurrency(Number(event.target.value));
+//     console.log('Currency', event.target.value);
+
+//     switch (Number(event.target.value)) {
+//       case 0: // режим управления
+//         inTarget = false;
+//         break;
+//       case 1: // режим назначения
+//         inTarget = true;
+//     }
+//     setTrigger(!trigger);
+//   };
+
+//   let dat = ['Режим управления', 'Режим назначения', 'Показать связи'];
+//   let massKey = [];
+//   let massDat: any[] = [];
+//   const currencies: any = [];
+//   for (let key in dat) {
+//     massKey.push(key);
+//     massDat.push(dat[key]);
+//   }
+//   for (let i = 0; i < massKey.length; i++) {
+//     let maskCurrencies = {
+//       value: '',
+//       label: '',
+//     };
+//     maskCurrencies.value = massKey[i];
+//     maskCurrencies.label = massDat[i];
+//     currencies.push(maskCurrencies);
+//   }
+
+//   const [currency, setCurrency] = React.useState(mode);
+//   const [trigger, setTrigger] = React.useState(true);
+
+//   return (
+//     <Box sx={styleSetNapr}>
+//       <Box component="form" sx={styleBoxFormNapr}>
+//         <TextField
+//           select
+//           size="small"
+//           onKeyPress={handleKey} //отключение Enter
+//           value={currency}
+//           onChange={handleChange}
+//           InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
+//           variant="standard"
+//           color="secondary">
+//           {currencies.map((option: any) => (
+//             <MenuItem key={option.value} value={option.value} sx={{ fontSize: 14 }}>
+//               {option.label}
+//             </MenuItem>
+//           ))}
+//         </TextField>
+//       </Box>
+//     </Box>
+//   );
+// };
+
 export const StrokaMenuGlob = (soob: string, func: any, mode: number) => {
   let dlSoob = (soob.length + 4) * 8;
   const styleApp01 = {

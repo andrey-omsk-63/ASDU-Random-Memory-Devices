@@ -4,6 +4,10 @@ import { coordinatesCreate, statsaveCreate } from '../redux/actions';
 import { massfazCreate } from '../redux/actions';
 
 import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 
 import { YMaps, Map, FullscreenControl } from 'react-yandex-maps';
 import { GeolocationControl, YMapsApi } from 'react-yandex-maps';
@@ -21,7 +25,10 @@ import { getMultiRouteOptions, StrokaHelp } from './RgsServiceFunctions';
 import { getMassMultiRouteOptions } from './RgsServiceFunctions';
 import { getReferencePoints, CenterCoord } from './RgsServiceFunctions';
 import { getReferenceLine, MakeMassRouteFirst } from './RgsServiceFunctions';
-import { StrokaMenuGlob, MakingKey } from './RgsServiceFunctions';
+import {
+  //StrokaMenuGlob,
+  MakingKey,
+} from './RgsServiceFunctions';
 import { MakeSoobErr, MakeMassRoute } from './RgsServiceFunctions';
 import { CheckHaveLink, MakeFazer } from './RgsServiceFunctions';
 
@@ -362,21 +369,25 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const ModeToDo = (mod: number) => {
     modeToDo = mod;
     if (!modeToDo) setChangeFaz(0);
-    //SetHelper();
   };
 
   const PressButton = (mode: number) => {
+    console.log('0mode:', inTarget, mode);
     switch (mode) {
       case 51: // режим управления
         datestat.finish = false;
         dispatch(statsaveCreate(datestat));
+        inTarget = true;
         SetHelper();
+        console.log('51mode:', inTarget);
         break;
       case 52: // режим назначения
         datestat.finish = false;
         dispatch(statsaveCreate(datestat));
         setToDoMode(false);
+        inTarget = false;
         SetHelper();
+        console.log('52mode:', inTarget);
         break;
       case 53: // выполнить режим
         xsMap = 7.7;
@@ -418,6 +429,112 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     zoom,
   };
 
+  const InputDirect = (func: any, Mode: number) => {
+    let mode = Mode - 51;
+    const styleSetNapr = {
+      //border: 1,
+      width: '150px',
+      maxHeight: '3px',
+      minHeight: '3px',
+      bgcolor: '#D7F1C0',
+      boxShadow: 3,
+      marginLeft: 'auto',
+      p: 1.5,
+    };
+
+    const styleBoxFormNapr = {
+      '& > :not(style)': {
+        marginTop: '-10px',
+        //marginLeft: '-12px',
+        width: '155px',
+        //padding: '0 0px 0px 1px',
+      },
+    };
+    const handleKey = (event: any) => {
+      if (event.key === 'Enter') event.preventDefault();
+    };
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setCurrency(Number(event.target.value));
+      console.log('Currency', event.target.value);
+
+      switch (Number(event.target.value)) {
+        case 0: // режим управления
+          func(51);
+          //inTarget = false;
+          console.log('511mode:', inTarget);
+          break;
+        case 1: // режим назначения
+          func(52);
+          console.log('521mode:', inTarget);
+        //inTarget = true;
+      }
+      //setTrigger(!trigger);
+    };
+
+    let dat = ['Режим управления', 'Режим назначения', 'Показать связи'];
+    let massKey = [];
+    let massDat: any[] = [];
+    const currencies: any = [];
+    for (let key in dat) {
+      massKey.push(key);
+      massDat.push(dat[key]);
+    }
+    for (let i = 0; i < massKey.length; i++) {
+      let maskCurrencies = {
+        value: '',
+        label: '',
+      };
+      maskCurrencies.value = massKey[i];
+      maskCurrencies.label = massDat[i];
+      currencies.push(maskCurrencies);
+    }
+
+    const [currency, setCurrency] = React.useState(mode);
+    //const [trigger, setTrigger] = React.useState(true);
+
+    return (
+      <Box sx={styleSetNapr}>
+        <Box component="form" sx={styleBoxFormNapr}>
+          <TextField
+            select
+            size="small"
+            onKeyPress={handleKey} //отключение Enter
+            value={currency}
+            onChange={handleChange}
+            InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
+            variant="standard"
+            color="secondary">
+            {currencies.map((option: any) => (
+              <MenuItem key={option.value} value={option.value} sx={{ fontSize: 14 }}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Box>
+      </Box>
+    );
+  };
+
+  const StrokaMenuGlob = (soob: string, func: any, mode: number) => {
+    const styleApp01 = {
+      fontSize: 14,
+      marginRight: 0.1,
+      width: 170,
+      maxHeight: '21px',
+      minHeight: '21px',
+      backgroundColor: '#D7F1C0',
+      color: 'black',
+      textTransform: 'unset !important',
+    };
+
+    return (
+      <Button sx={styleApp01} onClick={() => func(mode)}>
+        {InputDirect(PressButton, !inTarget ? 51 : 52)}
+      </Button>
+    );
+  };
+
   const MenuGl = () => {
     let soobHelpFiest = 'Маршрут сформирован';
     if (!datestat.finish) {
@@ -427,6 +544,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
     return (
       <>
+        {/* {InputDirect(PressButton,!inTarget ? 51 : 52)} */}
         {modeToDo === 1 && <>{StrokaHelp('Введите реквизиты доп.объекта (<Esc> - сброс)')}</>}
         {modeToDo === 3 && <>{StrokaHelp('Происходит выполнение режима')}</>}
         {modeToDo === 0 && (
