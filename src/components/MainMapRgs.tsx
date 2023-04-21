@@ -529,7 +529,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     };
 
     return (
-      <Button sx={styleApp01} onClick={() => func(mode)}>
+      <Button
+        sx={styleApp01}
+        //onClick={() => func(mode)}
+      >
         {InputDirect(PressButton, !inTarget ? 51 : 52)}
       </Button>
     );
