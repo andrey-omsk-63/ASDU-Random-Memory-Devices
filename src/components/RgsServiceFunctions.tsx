@@ -2,8 +2,10 @@ import * as React from 'react';
 
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+//import Button from '@mui/material/Button';
 import CardMedia from '@mui/material/CardMedia';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 
 import { Pointer } from '../App';
 //import { DateMAP } from "./../interfaceMAP.d";
@@ -715,42 +717,144 @@ export const CircleObj = () => {
 //   );
 // };
 
-export const StrokaMenuGlob = (soob: string, func: any, mode: number) => {
-  let dlSoob = (soob.length + 4) * 8;
+// export const StrokaMenuGlob = (soob: string, func: any, mode: number) => {
+//   let dlSoob = (soob.length + 4) * 8;
+//   const styleApp01 = {
+//     fontSize: 14,
+//     marginRight: 0.1,
+//     maxWidth: dlSoob,
+//     minWidth: dlSoob,
+//     maxHeight: '21px',
+//     minHeight: '21px',
+//     backgroundColor: '#D7F1C0',
+//     color: 'black',
+//     textTransform: 'unset !important',
+//   };
+
+//   return (
+//     <Button sx={styleApp01} onClick={() => func(mode)}>
+//       <b>{soob}</b>
+//     </Button>
+//   );
+// };
+
+export const InputDirect = (func: any) => {
+  const styleSetNapr = {
+    //border: 1,
+    width: '150px',
+    maxHeight: '3px',
+    minHeight: '3px',
+    bgcolor: '#D7F1C0',
+    boxShadow: 3,
+    marginLeft: 'auto',
+    p: 1.5,
+  };
+
+  const styleBoxFormNapr = {
+    '& > :not(style)': {
+      marginTop: '-12px',
+      //marginLeft: '-12px',
+      width: '155px',
+    },
+  };
+  const handleKey = (event: any) => {
+    if (event.key === 'Enter') event.preventDefault();
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrency(Number(event.target.value));
+    console.log('Currency', event.target.value);
+
+    switch (Number(event.target.value)) {
+      case 0: // режим управления
+        func(51);
+        //console.log('511mode:', inTarget, inDemo);
+        break;
+      case 1: // режим назначения
+        func(52);
+        //console.log('521mode:', inTarget, inDemo);
+        break;
+      case 2: // режим назначения
+        func(54);
+      //console.log('541mode:', inTarget, inDemo);
+    }
+  };
+
+  let dat = ['Режим управления', 'Режим назначения', 'Показать связи'];
+  let massKey = [];
+  let massDat: any[] = [];
+  const currencies: any = [];
+  for (let key in dat) {
+    massKey.push(key);
+    massDat.push(dat[key]);
+  }
+  for (let i = 0; i < massKey.length; i++) {
+    let maskCurrencies = {
+      value: '',
+      label: '',
+    };
+    maskCurrencies.value = massKey[i];
+    maskCurrencies.label = massDat[i];
+    currencies.push(maskCurrencies);
+  }
+
+  const [currency, setCurrency] = React.useState(0);
+
+  return (
+    <Box sx={styleSetNapr}>
+      <Box component="form" sx={styleBoxFormNapr}>
+        <TextField
+          select
+          size="small"
+          onKeyPress={handleKey} //отключение Enter
+          value={currency}
+          onChange={handleChange}
+          InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
+          variant="standard"
+          color="secondary">
+          {currencies.map((option: any) => (
+            <MenuItem key={option.value} value={option.value} sx={{ fontSize: 14 }}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Box>
+    </Box>
+  );
+};
+
+export const StrokaMenuGlob = (func: any) => {
   const styleApp01 = {
     fontSize: 14,
     marginRight: 0.1,
-    maxWidth: dlSoob,
-    minWidth: dlSoob,
+    width: 170,
     maxHeight: '21px',
     minHeight: '21px',
     backgroundColor: '#D7F1C0',
     color: 'black',
-    textTransform: 'unset !important',
   };
 
-  return (
-    <Button sx={styleApp01} onClick={() => func(mode)}>
-      <b>{soob}</b>
-    </Button>
-  );
+  return <Box sx={styleApp01}>{InputDirect(func)}</Box>;
 };
 
 export const StrokaHelp = (soobInfo: string) => {
-  let dlSoob = (soobInfo.length + 4) * 8;
+  let dlSoob = (soobInfo.length + 24) * 8;
   const styleInfoSoob = {
-    fontSize: 14,
+    fontSize: 15,
     marginRight: 0.1,
     width: dlSoob,
     maxHeight: '21px',
     minHeight: '21px',
     backgroundColor: '#E9F5D8',
     color: '#E6761B',
-    textTransform: 'unset !important',
+    textAlign: 'center',
+    marginTop: '-1px',
   };
   return (
-    <Button sx={styleInfoSoob}>
-      <em>{soobInfo}</em>
-    </Button>
+    <Box sx={styleInfoSoob}>
+      <b>
+        <em>{soobInfo}</em>
+      </b>
+    </Box>
   );
 };
