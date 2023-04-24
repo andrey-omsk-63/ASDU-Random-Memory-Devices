@@ -4,17 +4,11 @@ export const searchControl = {
   size: 'large',
 };
 
-// export const styleInfoSoob = {
-//   fontSize: 14,
-//   border: 1,
-//   marginRight: 0.1,
-//   width: 360,
-//   maxHeight: "21px",
-//   minHeight: "21px",
-//   backgroundColor: "#E9F5D8",
-//   color: "#E6761B",
-//   textTransform: "unset !important",
-// };
+export const styleMenuGl = {
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'flex-start',
+};
 
 export const styleModalEnd = {
   position: 'absolute',
@@ -274,5 +268,19 @@ export const styleBoxFormFaza = {
     marginLeft: '-1px',
     width: '32px',
   },
+};
+
+export const styleZId = {
+  transform: 'rotate(270deg)',
+  position: 'relative',
+  top: '51%',
+  color: 'blue',
+};
+
+export const styleVId = {
+  transform: 'rotate(90deg)',
+  position: 'relative',
+  top: '49%',
+  color: 'blue',
 };
 //=====================================================================

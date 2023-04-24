@@ -23,7 +23,7 @@ import { styleModalEnd, styleModalMenu } from '../MainMapStyle';
 import { styleSetAppoint, styleAppSt02 } from '../MainMapStyle';
 import { styleSetAV, styleBoxFormAV } from '../MainMapStyle';
 import { styleSetFaza, styleBoxFormFaza } from '../MainMapStyle';
-import { styleSetFazaNull } from '../MainMapStyle';
+import { styleSetFazaNull, styleZId, styleVId } from '../MainMapStyle';
 
 import { TfLink } from '../../interfaceBindings.d';
 
@@ -424,13 +424,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         </Box>
         <Grid container sx={{ marginTop: 1.5, paddingBottom: 0 }}>
           <Grid item xs={0.15} sx={{ border: 0 }}>
-            <Box
-              sx={{
-                transform: 'rotate(270deg)',
-                position: 'relative',
-                top: '51%',
-                color: 'blue',
-              }}>
+            <Box sx={styleZId}>
               <b>З.35</b>
             </Box>
           </Grid>
@@ -445,13 +439,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             </Box>
           </Grid>
           <Grid item xs={0.15} sx={{ border: 0 }}>
-            <Box
-              sx={{
-                transform: 'rotate(90deg)',
-                position: 'relative',
-                top: '49%',
-                color: 'blue',
-              }}>
+            <Box sx={styleVId}>
               <b>В.37</b>
             </Box>
           </Grid>
