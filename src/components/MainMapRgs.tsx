@@ -69,10 +69,12 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     const { bindingsReducer } = state;
     return bindingsReducer.bindings.dateBindings;
   });
+  console.log("bindings", bindings);
   let addobj = useSelector((state: any) => {
     const { addobjReducer } = state;
     return addobjReducer.addobj.dateAdd;
   });
+  console.log("addobj", addobj);
   let massfaz = useSelector((state: any) => {
     const { massfazReducer } = state;
     return massfazReducer.massfaz;
@@ -184,6 +186,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     if (massNomBind.length === 1) massRoute = MakeMassRouteFirst(klu, bindings, map);
     if (massNomBind.length > 1 && klu.length < 9)
       massRoute = MakeMassRoute(bindings, nom, map, addobj);
+      console.log('massRoute:',massRoute)
     ymaps && addRoute(ymaps, false); // перерисовка связей
     if (massMem.length === 3) {
       PressButton(53);

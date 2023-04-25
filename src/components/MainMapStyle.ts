@@ -271,16 +271,18 @@ export const styleBoxFormFaza = {
 };
 
 export const styleZId = {
+  fontSize: 19,
   transform: 'rotate(270deg)',
   position: 'relative',
-  top: '51%',
+  top: '50%',
   color: 'blue',
 };
 
 export const styleVId = {
+  fontSize: 19,
   transform: 'rotate(90deg)',
   position: 'relative',
-  top: '49%',
+  top: '50%',
   color: 'blue',
 };
 //=====================================================================
