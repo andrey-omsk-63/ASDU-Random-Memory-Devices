@@ -16,7 +16,7 @@ import {
   styleAppSt03,
   //styleAppSt021
 } from "./MainMapStyle";
-
+//getReferencePoints
 export const MasskPoint = (debug: boolean, rec: any, imgFaza: string) => {
   let masskPoint: Pointer = {
     ID: -1,
@@ -308,7 +308,7 @@ export const getMultiRouteOptions = () => {
 };
 
 export const getMassMultiRouteOptions = (i: number) => {
-  let massColor = ["#FF2626", "#0078D7", "#E6762D", "#000000"];
+  let massColor = ["#FF2626", "#0078D7", "#E6762D", "#EB3941"];
   let col = "#000000";
   if (i < 4) col = massColor[i];
 
@@ -323,6 +323,18 @@ export const getMassMultiRouteOptions = (i: number) => {
     //routeActiveStrokeColor: '#000000', // чёрный
     routeActiveStrokeColor: col,
     routeActiveStrokeWidth: 4,
+    routeStrokeWidth: 0,
+    wayPointVisible: false,
+  };
+};
+
+export const getMassMultiRouteOptionsDemo = (i: number) => {
+  return {
+    balloonCloseButton: false,
+    routeStrokeStyle: "dot",
+    //strokeColor: '#1A9165',
+    routeActiveStrokeColor: "#000000", // чёрный
+    routeActiveStrokeWidth: 3,
     routeStrokeWidth: 0,
     wayPointVisible: false,
   };
@@ -723,7 +735,6 @@ export const InputDirect = (func: any) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrency(Number(event.target.value));
-    console.log("Currency", event.target.value);
 
     switch (Number(event.target.value)) {
       case 0: // режим управления

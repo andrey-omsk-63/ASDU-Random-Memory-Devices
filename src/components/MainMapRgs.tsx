@@ -1,35 +1,36 @@
-import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { coordinatesCreate, statsaveCreate } from '../redux/actions';
-import { massfazCreate } from '../redux/actions';
+import * as React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { coordinatesCreate, statsaveCreate } from "../redux/actions";
+import { massfazCreate } from "../redux/actions";
 
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 
-import { YMaps, Map, FullscreenControl } from 'react-yandex-maps';
-import { GeolocationControl, YMapsApi } from 'react-yandex-maps';
-import { RulerControl, SearchControl } from 'react-yandex-maps';
-import { TrafficControl, TypeSelector, ZoomControl } from 'react-yandex-maps';
+import { YMaps, Map, FullscreenControl } from "react-yandex-maps";
+import { GeolocationControl, YMapsApi } from "react-yandex-maps";
+import { RulerControl, SearchControl } from "react-yandex-maps";
+import { TrafficControl, TypeSelector, ZoomControl } from "react-yandex-maps";
 
-import GsErrorMessage from './RgsComponents/RgsErrorMessage';
-import GsDoPlacemarkDo from './RgsComponents/RgsDoPlacemarkDo';
-import RgsCreateObject from './RgsComponents/RgsCreateObject';
-import RgsProcessObject from './RgsComponents/RgsProcessObject';
-import RgsAppointVertex from './RgsComponents/RgsAppointVertex';
-import RgsToDoMode from './RgsComponents/RgsToDoMode';
+import GsErrorMessage from "./RgsComponents/RgsErrorMessage";
+import GsDoPlacemarkDo from "./RgsComponents/RgsDoPlacemarkDo";
+import RgsCreateObject from "./RgsComponents/RgsCreateObject";
+import RgsProcessObject from "./RgsComponents/RgsProcessObject";
+import RgsAppointVertex from "./RgsComponents/RgsAppointVertex";
+import RgsToDoMode from "./RgsComponents/RgsToDoMode";
 
-import { getMultiRouteOptions, StrokaHelp } from './RgsServiceFunctions';
-import { getMassMultiRouteOptions } from './RgsServiceFunctions';
-import { getReferencePoints, CenterCoord } from './RgsServiceFunctions';
-import { getReferenceLine, MakeMassRouteFirst } from './RgsServiceFunctions';
-import { StrokaMenuGlob, MakingKey } from './RgsServiceFunctions';
-import { MakeSoobErr, MakeMassRoute } from './RgsServiceFunctions';
-import { CheckHaveLink, MakeFazer } from './RgsServiceFunctions';
+import { getMultiRouteOptions, StrokaHelp } from "./RgsServiceFunctions";
+import { getMassMultiRouteOptions } from "./RgsServiceFunctions";
+import { getMassMultiRouteOptionsDemo } from "./RgsServiceFunctions";
+import { getReferencePoints, CenterCoord } from "./RgsServiceFunctions";
+import { getReferenceLine, MakeMassRouteFirst } from "./RgsServiceFunctions";
+import { StrokaMenuGlob, MakingKey } from "./RgsServiceFunctions";
+import { MakeSoobErr, MakeMassRoute } from "./RgsServiceFunctions";
+import { CheckHaveLink, MakeFazer } from "./RgsServiceFunctions";
 
-import { SendSocketGetPhases } from './RgsSocketFunctions';
-import { SendSocketGetSvg } from './RgsSocketFunctions';
+import { SendSocketGetPhases } from "./RgsSocketFunctions";
+import { SendSocketGetSvg } from "./RgsSocketFunctions";
 
-import { searchControl, styleMenuGl } from './MainMapStyle';
+import { searchControl, styleMenuGl } from "./MainMapStyle";
 
 let flagOpen = false;
 let needRend = false;
@@ -43,10 +44,10 @@ let massMem: Array<number> = [];
 let massCoord: any = [];
 let massKlu: Array<string> = [];
 let massNomBind: Array<number> = [];
-let soobErr = '';
+let soobErr = "";
 let xsMap = 11.99;
 let xsTab = 0.01;
-let widthMap = '99.9%';
+let widthMap = "99.9%";
 
 let modeToDo = 0;
 let inTarget = false;
@@ -69,12 +70,12 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     const { bindingsReducer } = state;
     return bindingsReducer.bindings.dateBindings;
   });
-  console.log("bindings", bindings);
+  //console.log("bindings", bindings);
   let addobj = useSelector((state: any) => {
     const { addobjReducer } = state;
     return addobjReducer.addobj.dateAdd;
   });
-  console.log("addobj", addobj);
+  //console.log("addobj", addobj);
   let massfaz = useSelector((state: any) => {
     const { massfazReducer } = state;
     return massfazReducer.massfaz;
@@ -113,26 +114,54 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     if (massCoord.length === 2) {
       multiRoute = new ymaps.multiRouter.MultiRoute(
         getReferencePoints(massCoord[0], massCoord[1]),
-        getMultiRouteOptions(),
+        getMultiRouteOptions()
       );
     } else {
       let between = [];
       for (let i = 1; i < massCoord.length - 1; i++) {
         between.push(i);
       }
-      multiRoute = new ymaps.multiRouter.MultiRoute(getReferenceLine(massCoord, between), {
-        boundsAutoApply: bound,
-        wayPointVisible: false,
-      });
+      multiRoute = new ymaps.multiRouter.MultiRoute(
+        getReferenceLine(massCoord, between),
+        {
+          boundsAutoApply: bound,
+          wayPointVisible: false,
+        }
+      );
     }
     mapp.current.geoObjects.add(multiRoute);
     let massMultiRoute: any = []; // исходящие связи
     for (let i = 0; i < massRoute.length; i++) {
       massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
         getReferencePoints(massCoord[massCoord.length - 1], massRoute[i]),
-        getMassMultiRouteOptions(i),
+        getMassMultiRouteOptions(i)
       );
       mapp.current.geoObjects.add(massMultiRoute[i]);
+    }
+  };
+
+  const DoDemo = (ymaps: any) => {
+    for (let i = 0; i < bindings.tfLinks.length; i++) {
+      let massCoord: any = [];
+      let massRoute = MakeMassRoute(bindings, i, map, addobj);
+      for (let j = 0; j < map.tflight.length; j++) {
+        massCoord = [];
+        let rec = map.tflight[j];
+        let klu = MakingKey(homeRegion, rec.area.num, rec.ID);
+        if (bindings.tfLinks[i].id === klu) {
+          massCoord[0] = map.tflight[j].points.Y; // перекрёсток
+          massCoord[1] = map.tflight[j].points.X;
+          break;
+        }
+      }
+      let massMultiRoute: any = []; // исходящие связи
+      for (let j = 0; j < massRoute.length; j++) {
+        massMultiRoute[j] = new ymaps.multiRouter.MultiRoute(
+          getReferencePoints(massCoord, massRoute[j]),
+          getMassMultiRouteOptionsDemo(j)
+        );
+        mapp.current.geoObjects.add(massMultiRoute[j]);
+      }
     }
   };
 
@@ -142,6 +171,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     massKlu = [];
     massNomBind = [];
     zoom = zoomStart - 0.01;
+    mapState.zoom = zoom;
     ymaps && addRoute(ymaps, false); // перерисовка связей
     NewPointCenter(pointCenterEt);
   };
@@ -183,10 +213,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     massKlu.push(klu);
     massNomBind.push(nom);
     massRoute = [];
-    if (massNomBind.length === 1) massRoute = MakeMassRouteFirst(klu, bindings, map);
+    if (massNomBind.length === 1)
+      massRoute = MakeMassRouteFirst(klu, bindings, map);
     if (massNomBind.length > 1 && klu.length < 9)
       massRoute = MakeMassRoute(bindings, nom, map, addobj);
-      console.log('massRoute:',massRoute)
     ymaps && addRoute(ymaps, false); // перерисовка связей
     if (massMem.length === 3) {
       PressButton(53);
@@ -198,7 +228,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const AddVertex = (klu: string, index: number, nom: number) => {
     let nomInMass = massMem.indexOf(index);
     if (nomInMass >= 0) {
-      soobErr = MakeSoobErr(2, klu, '');
+      soobErr = MakeSoobErr(2, klu, "");
       setOpenSoobErr(true);
     } else {
       if (!massMem.length) {
@@ -224,10 +254,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   const ClickPointNotTarget = (index: number) => {
     if (datestat.finish) {
-      soobErr = 'Маршрут уже полностью сформирован';
+      soobErr = "Маршрут уже полностью сформирован";
       setOpenSoobErr(true);
     } else {
-      let klu = '';
+      let klu = "";
       if (index >= map.tflight.length) {
         let mass = addobj.addObjects[index - map.tflight.length]; // объект
         klu = MakingKey(homeRegion, mass.area, mass.id);
@@ -237,14 +267,14 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       }
       if (!massMem.length) {
         if (index < map.tflight.length) {
-          soobErr = 'Входящая точка маршрута должна быть объектом';
+          soobErr = "Входящая точка маршрута должна быть объектом";
           setOpenSoobErr(true);
         } else {
           AddVertex(klu, index, -1);
         }
       } else {
         if (massMem.length === 1 && klu.length > 8) {
-          soobErr = 'Объекты могут задаваться только в начале и конце маршрута';
+          soobErr = "Объекты могут задаваться только в начале и конце маршрута";
           setOpenSoobErr(true);
         } else {
           let have = -1;
@@ -252,7 +282,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
             if (bindings.tfLinks[i].id === klu) have = i;
           }
           if (have < 0 && klu.length < 9) {
-            soobErr = MakeSoobErr(3, klu, ''); // нет массива связности
+            soobErr = MakeSoobErr(3, klu, ""); // нет массива связности
             setOpenSoobErr(true);
           } else {
             if (massMem.length > 1) {
@@ -332,20 +362,20 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const InstanceRefDo = (ref: React.Ref<any>) => {
     if (ref) {
       mapp.current = ref;
-      mapp.current.events.remove('contextmenu', funcContex);
+      mapp.current.events.remove("contextmenu", funcContex);
       funcContex = function (e: any) {
         if (mapp.current.hint) {
-          if (inTarget) InputerObject(e.get('coords')); // нажата правая кнопка мыши
-          if (!inTarget) FindNearVertex(e.get('coords'));
+          if (inTarget) InputerObject(e.get("coords")); // нажата правая кнопка мыши
+          if (!inTarget) FindNearVertex(e.get("coords"));
         }
       };
-      mapp.current.events.add('contextmenu', funcContex);
-      mapp.current.events.remove('boundschange', funcBound);
+      mapp.current.events.add("contextmenu", funcContex);
+      mapp.current.events.remove("boundschange", funcBound);
       funcBound = function () {
         pointCenter = mapp.current.getCenter();
         zoom = mapp.current.getZoom(); // покрутили колёсико мыши
       };
-      mapp.current.events.add('boundschange', funcBound);
+      mapp.current.events.add("boundschange", funcBound);
       if (flagCenter) {
         pointCenter = newCenter;
         setFlagCenter(false);
@@ -375,14 +405,13 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const PressButton = (mode: number) => {
-    console.log('0mode:', inTarget, mode);
     switch (mode) {
       case 51: // режим управления
         datestat.finish = false;
         dispatch(statsaveCreate(datestat));
         inTarget = true;
         SetHelper(1);
-        console.log('51mode:', inTarget, inDemo);
+        console.log("51mode:", inTarget, inDemo, zoom);
         break;
       case 52: // режим назначения
         datestat.finish = false;
@@ -390,12 +419,12 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         setToDoMode(false);
         inTarget = false;
         SetHelper(1);
-        console.log('52mode:', inTarget, inDemo);
+        console.log("52mode:", inTarget, inDemo, zoom);
         break;
       case 53: // выполнить режим
         xsMap = 7.7;
         xsTab = 4.3;
-        widthMap = '99.9%';
+        widthMap = "99.9%";
         setToDoMode(true);
         setFlagPusk(!flagPusk);
         break;
@@ -403,14 +432,15 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         datestat.finish = false;
         dispatch(statsaveCreate(datestat));
         SetHelper(0);
-        console.log('54mode:', inTarget, inDemo);
+        ymaps && DoDemo(ymaps);
+        console.log("54mode:", inTarget, inDemo,  zoom);
     }
   };
 
   const OldSizeWind = (size: number) => {
     xsMap = size;
     xsTab = 0.01;
-    widthMap = '99.9%';
+    widthMap = "99.9%";
     modeToDo = 0;
     setToDoMode(false);
     StatusQuo();
@@ -427,7 +457,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       map.boxPoint.point0.Y,
       map.boxPoint.point0.X,
       map.boxPoint.point1.Y,
-      map.boxPoint.point1.X,
+      map.boxPoint.point1.X
     );
     pointCenterEt = pointCenter;
     flagOpen = true;
@@ -439,24 +469,31 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const MenuGl = () => {
-    let soobHelpFiest = 'Маршрут сформирован';
+    let soobHelpFiest = "Маршрут сформирован";
     if (!datestat.finish)
-      soobHelpFiest = 'Добавьте перекрёстки в маршруте [' + massMem.length + '🔆]';
+      soobHelpFiest =
+        "Добавьте перекрёстки в маршруте [" + massMem.length + "🔆]";
 
     return (
       <Box sx={styleMenuGl}>
         {StrokaMenuGlob(PressButton)}
-        {modeToDo === 1 && <>{StrokaHelp('Введите реквизиты доп.объекта (<Esc> - сброс)')}</>}
-        {modeToDo === 3 && <>{StrokaHelp('Происходит выполнение режима')}</>}
+        {modeToDo === 1 && (
+          <>{StrokaHelp("Введите реквизиты доп.объекта (<Esc> - сброс)")}</>
+        )}
+        {modeToDo === 3 && <>{StrokaHelp("Происходит выполнение режима")}</>}
         {modeToDo === 0 && (
           <>
             {!inTarget && !inDemo && (
               <>
                 {massMem.length === 0 && (
-                  <>{StrokaHelp('Начала работы - выбор первого перекрёстка')}</>
+                  <>{StrokaHelp("Начала работы - выбор первого перекрёстка")}</>
                 )}
-                {massMem.length > 0 && helper && <>{StrokaHelp(soobHelpFiest)}</>}
-                {massMem.length > 0 && !helper && <>{StrokaHelp(soobHelpFiest)}</>}
+                {massMem.length > 0 && helper && (
+                  <>{StrokaHelp(soobHelpFiest)}</>
+                )}
+                {massMem.length > 0 && !helper && (
+                  <>{StrokaHelp(soobHelpFiest)}</>
+                )}
               </>
             )}
           </>
@@ -471,34 +508,40 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   }
 
   return (
-    <Grid container sx={{ border: 0, height: '99.9vh' }}>
+    <Grid container sx={{ border: 0, height: "99.9vh" }}>
       <Grid item xs sx={{ border: 0 }}>
         {MenuGl()}
-        <Grid container sx={{ border: 0, height: '96.9vh' }}>
+        <Grid container sx={{ border: 0, height: "96.9vh" }}>
           <Grid item xs={xsMap} sx={{ border: 0 }}>
             {Object.keys(map.tflight).length && (
               <YMaps
                 query={{
-                  apikey: '65162f5f-2d15-41d1-a881-6c1acf34cfa1',
-                  lang: 'ru_RU',
-                }}>
+                  apikey: "65162f5f-2d15-41d1-a881-6c1acf34cfa1",
+                  lang: "ru_RU",
+                }}
+              >
                 <Map
-                  modules={['multiRouter.MultiRoute', 'Polyline', 'templateLayoutFactory']}
+                  modules={[
+                    "multiRouter.MultiRoute",
+                    "Polyline",
+                    "templateLayoutFactory",
+                  ]}
                   state={mapState}
                   instanceRef={(ref) => InstanceRefDo(ref)}
                   onLoad={(ref) => {
                     ref && setYmaps(ref);
                   }}
                   width={widthMap}
-                  height={'99.9%'}>
+                  height={"99.9%"}
+                >
                   {/* сервисы Яндекса */}
                   <FullscreenControl />
-                  <GeolocationControl options={{ float: 'left' }} />
-                  <RulerControl options={{ float: 'right' }} />
+                  <GeolocationControl options={{ float: "left" }} />
+                  <RulerControl options={{ float: "right" }} />
                   <SearchControl options={searchControl} />
-                  <TrafficControl options={{ float: 'right' }} />
-                  <TypeSelector options={{ float: 'right' }} />
-                  <ZoomControl options={{ float: 'right' }} />
+                  <TrafficControl options={{ float: "right" }} />
+                  <TypeSelector options={{ float: "right" }} />
+                  <ZoomControl options={{ float: "right" }} />
                   {/* служебные компоненты */}
                   {Pererisovka()}
                   <PlacemarkDo />
@@ -509,16 +552,20 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                       funcMode={ModeToDo}
                     />
                   )}
-                  {processObject && <RgsProcessObject setOpen={setProcessObject} idx={idxObj} />}
+                  {processObject && (
+                    <RgsProcessObject setOpen={setProcessObject} idx={idxObj} />
+                  )}
                   {appoint && datestat.readyPict && datestat.readyFaza && (
                     <RgsAppointVertex setOpen={setAppoint} idx={idxObj} />
                   )}
-                  {openSoobErr && <GsErrorMessage setOpen={setOpenSoobErr} sErr={soobErr} />}
+                  {openSoobErr && (
+                    <GsErrorMessage setOpen={setOpenSoobErr} sErr={soobErr} />
+                  )}
                 </Map>
               </YMaps>
             )}
           </Grid>
-          <Grid item xs={xsTab} sx={{ height: '97.0vh' }}>
+          <Grid item xs={xsTab} sx={{ height: "97.0vh" }}>
             {toDoMode && (
               <RgsToDoMode
                 massMem={massMem}
