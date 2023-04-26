@@ -11,7 +11,9 @@ const RgsDoPlacemarkDo = (props: {
   idx: number;
   massMem: Array<number>;
   OnPlacemarkClickPoint: Function;
+  vert: Array<number>;
 }) => {
+  //console.log('VERT:', props.idx, props.vert);
   //== Piece of Redux =======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -79,6 +81,8 @@ const RgsDoPlacemarkDo = (props: {
 
   const Hoster = React.useCallback(() => {
     let host = 'https://localhost:3000/18.svg';
+    let linked = props.vert.indexOf(idx);
+    if (linked > 0) host = 'https://localhost:3000/77.svg';
     if (!debug) {
       let mpp = mapp;
       if (nomSvg > 0) mpp = nomSvg.toString();
