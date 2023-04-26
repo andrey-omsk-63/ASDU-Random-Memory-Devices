@@ -171,7 +171,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     massKlu = [];
     massNomBind = [];
     zoom = zoomStart - 0.01;
-    mapState.zoom = zoom;
     ymaps && addRoute(ymaps, false); // перерисовка связей
     NewPointCenter(pointCenterEt);
   };
