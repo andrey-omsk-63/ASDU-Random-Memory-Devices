@@ -16,7 +16,7 @@ import {
   styleAppSt03,
   //styleAppSt021
 } from "./MainMapStyle";
-//getReferencePoints
+
 export const MasskPoint = (debug: boolean, rec: any, imgFaza: string) => {
   let masskPoint: Pointer = {
     ID: -1,
@@ -193,10 +193,20 @@ export const MakeFazer = (klu: string, bind: any) => {
 };
 
 //=== Placemark =====================================
-export const GetPointData = (index: number, map: any, addobjects: any) => {
+export const GetPointData = (
+  index: number,
+  map: any,
+  bindings: any,
+  addobjects: any
+) => {
   let cont1 = "";
   let cont2 = "";
   let cont3 = "";
+  let cont4 = "";
+  let contS = "";
+  let contV = "";
+  let contU = "";
+  let contZ = "";
   if (index < map.tflight.length) {
     cont1 = map.tflight[index].description + "<br/>";
     cont3 = map.tflight[index].tlsost.description + "<br/>";
@@ -204,6 +214,19 @@ export const GetPointData = (index: number, map: any, addobjects: any) => {
     cont2 += map.tflight[index].area.num;
     cont2 +=
       ", " + map.tflight[index].ID + ", " + map.tflight[index].idevice + "]";
+    for (let i = 0; i < bindings.tfLinks.length; i++) {
+      let rec = map.tflight[index];
+      let klu = MakingKey(rec.region.num, rec.area.num, rec.ID);
+      if (bindings.tfLinks[i].id === klu) {
+        let recc = bindings.tfLinks[i].tflink;
+        cont4 = "<br/>Связи:";
+        if (recc.north.id) contS = "<br/><b>C:</b> " + recc.north.id;
+        if (recc.east.id) contV = "<br/><b>В:</b> " + recc.east.id;
+        if (recc.south.id) contU = "<br/><b>Ю:</b> " + recc.south.id;
+        if (recc.west.id) contZ = "<br/><b>З:</b> " + recc.west.id;
+        break;
+      }
+    }
   } else {
     let idx = index - map.tflight.length;
     cont1 = addobjects[idx].description + "<br/>";
@@ -212,8 +235,7 @@ export const GetPointData = (index: number, map: any, addobjects: any) => {
   }
 
   return {
-    hintContent: cont1 + cont3 + cont2,
-    //+ "<br/>",
+    hintContent: cont1 + cont3 + cont2 + cont4 + contS + contV + contU + contZ,
   };
 };
 

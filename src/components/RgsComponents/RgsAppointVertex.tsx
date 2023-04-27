@@ -13,6 +13,7 @@ import GsErrorMessage from "./RgsErrorMessage";
 
 //import { SendSocketСreateBindings } from "../RgsSocketFunctions";
 import { SendSocketUpdateBindings } from "../RgsSocketFunctions";
+import { SendSocketDeleteBindings } from "../RgsSocketFunctions";
 
 import { TakeAreaId, CheckKey, MakeTflink } from "../RgsServiceFunctions";
 import { MakingKey, OutputKey, MakingKluch } from "../RgsServiceFunctions";
@@ -105,6 +106,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     if (valIdS && valAreaS) ch++;
     if (valIdV && valAreaV) ch++;
     if (valIdU && valAreaU) ch++;
+
     if (ch === 1) {
       soobErr = "Должно быть введено хотя бы два направления";
       setOpenSetErr(true);
@@ -113,12 +115,23 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         id: kluchGl,
         tflink: MakeTflink(homeRegion, massAreaId, massFaz),
       };
-      if (bindIdx >= 0) {
-        bindings.tfLinks[bindIdx] = maskTfLinks; // редактирование
+      if (!ch) {
+        if (bindIdx >= 0) {
+          let massRab = [];
+          for (let i = 0; i < bindings.tfLinks.length; i++) {
+            if (i !== bindIdx) massRab.push(bindings.tfLinks[i]);
+          }
+          bindings.tfLinks = massRab;
+          SendSocketDeleteBindings(debug, ws, maskTfLinks);
+        }
       } else {
-        bindings.tfLinks.push(maskTfLinks); // добавление новой записи
+        if (bindIdx >= 0) {
+          bindings.tfLinks[bindIdx] = maskTfLinks; // редактирование
+        } else {
+          bindings.tfLinks.push(maskTfLinks); // добавление новой записи
+        }
+        SendSocketUpdateBindings(debug, ws, maskTfLinks);
       }
-      SendSocketUpdateBindings(debug, ws, maskTfLinks);
       dispatch(bindingsCreate(bindings));
       handleCloseSet();
     }
@@ -169,8 +182,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       }
     }
   };
-
   const InputerArea = (value: number, func: any) => {
+  //const InputerArea = (value: number, func: any, valueAr: number) => {
     return (
       <Box sx={styleSetAV}>
         <Box component="form" sx={styleBoxFormAV}>
@@ -181,6 +194,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             value={value}
             InputProps={{ disableUnderline: true, style: { fontSize: 12.1 } }}
             onChange={(e) => ChangeArea(e, func)}
+            //onBlur={(e) => BlurId(e, valueAr, value, func)}
             variant="standard"
             color="secondary"
           />
@@ -301,7 +315,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               <Box sx={styleAppSt02}>Ведите район</Box>
             </Grid>
             <Grid item xs sx={{ border: 0 }}>
-              <Box sx={styleAppSt02}>{InputerArea(valueAr, funcAr)}</Box>
+              {/* <Box sx={styleAppSt02}>{InputerArea(valueAr, funcAr)}</Box> */}
+              <Box sx={styleAppSt02}>{InputerArea(valueAr, funcAr )}</Box>
             </Grid>
           </Grid>
           <Grid container>

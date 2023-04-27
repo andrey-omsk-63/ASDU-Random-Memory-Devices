@@ -327,4 +327,29 @@ export const SendSocketUpdateBindings = (
   };
   handleSendOpen();
 };
+
+export const SendSocketDeleteBindings = (
+  debugging: boolean,
+  ws: WebSocket,
+  dat: any
+) => {
+  console.log("deleteBindings:", dat);
+  const handleSendOpen = () => {
+    if (!debugging) {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(
+          JSON.stringify({
+            type: "deleteBindings",
+            data: dat,
+          })
+        );
+      } else {
+        setTimeout(() => {
+          handleSendOpen();
+        }, 1000);
+      }
+    }
+  };
+  handleSendOpen();
+};
 //==================================================
