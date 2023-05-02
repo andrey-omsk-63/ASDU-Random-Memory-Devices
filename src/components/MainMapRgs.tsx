@@ -56,7 +56,6 @@ let inDemo = false;
 let newCenter: any = [];
 let leftCoord: Array<number> = [0, 0];
 let massRoute: any = [];
-
 let helper = true;
 let funcContex: any = null;
 let funcBound: any = null;
@@ -91,7 +90,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   });
   const debug = datestat.debug;
   const ws = datestat.ws;
-  let homeRegion = datestat.region;
+  const homeRegion = datestat.region;
+  const SL = homeRegion < 10 ? 2 : 3;
   const dispatch = useDispatch();
   //===========================================================
   const [flagPusk, setFlagPusk] = React.useState(false);
@@ -100,12 +100,11 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const [appoint, setAppoint] = React.useState(false);
   const [toDoMode, setToDoMode] = React.useState(false);
   const [idxObj, setIdxObj] = React.useState(-1);
-
   const [flagCenter, setFlagCenter] = React.useState(false);
   const [openSoobErr, setOpenSoobErr] = React.useState(false);
   const [risovka, setRisovka] = React.useState(false);
+  const [restartBan, setRestartBan] = React.useState(false);
   const [changeFaz, setChangeFaz] = React.useState(0);
-
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const mapp = React.useRef<any>(null);
 
@@ -229,7 +228,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const AddVertex = (klu: string, index: number, nom: number) => {
     let nomInMass = massMem.indexOf(index);
     if (nomInMass >= 0) {
-      soobErr = MakeSoobErr(2, klu, "");
+      soobErr = MakeSoobErr(2, klu.slice(SL), "");
       setOpenSoobErr(true);
     } else {
       if (!massMem.length) {
@@ -243,7 +242,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           setFlagPusk(!flagPusk);
         } else {
           if (!MakeFazer(massKlu[massMem.length - 1], bindings.tfLinks[nom])) {
-            soobErr = MakeSoobErr(1, klu, massKlu[massMem.length - 1]);
+            let soob = massKlu[massMem.length - 1].slice(SL);
+            soobErr = MakeSoobErr(1, klu.slice(SL), soob);
             setOpenSoobErr(true);
           } else {
             Added(klu, index, nom); // вторая точка и далее
@@ -274,7 +274,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           AddVertex(klu, index, -1);
         }
       } else {
-        if (massMem.length === 1 && klu.length > 8) {
+        if (massMem.length === 1 && klu.length > 6) {
           soobErr = "Объекты могут задаваться только в начале и конце маршрута";
           setOpenSoobErr(true);
         } else {
@@ -283,13 +283,13 @@ const MainMapRgs = (props: { trigger: boolean }) => {
             if (bindings.tfLinks[i].id === klu) have = i;
           }
           if (have < 0 && klu.length < 9) {
-            soobErr = MakeSoobErr(3, klu, ""); // нет массива связности
+            soobErr = MakeSoobErr(3, klu.slice(SL), ""); // нет массива связности
             setOpenSoobErr(true);
           } else {
             if (massMem.length > 1) {
               let kluLast = massKlu[massKlu.length - 1];
               if (!CheckHaveLink(klu, kluLast, bindings)) {
-                soobErr = MakeSoobErr(5, klu, kluLast); // нет связи
+                soobErr = MakeSoobErr(5, klu.slice(SL), kluLast.slice(SL)); // нет связи
                 setOpenSoobErr(true);
               } else {
                 AddVertex(klu, index, have);
@@ -337,14 +337,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     }
   };
   //=== обработка instanceRef ==============================
-  const FindNearVertex = (coord: Array<number>) => {
+  const FindNearVertex = () => {
     let nomInMass = -1;
-    for (let i = 0; i < massMem.length; i++) {
-      if (massfaz[i].runRec === 2) {
-        nomInMass = i;
-        break;
-      }
-    }
+    for (let i = 0; i < massMem.length; i++)
+      if (massfaz[i].runRec === 2) nomInMass = i;
     if (nomInMass >= 0) {
       massfaz[nomInMass].runRec = 1;
       dispatch(massfazCreate(massfaz));
@@ -367,8 +363,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       mapp.current.events.remove("contextmenu", funcContex);
       funcContex = function (e: any) {
         if (mapp.current.hint) {
-          if (inTarget) InputerObject(e.get("coords")); // нажата правая кнопка мыши
-          if (!inTarget) FindNearVertex(e.get("coords"));
+          if (inTarget && !inDemo) InputerObject(e.get("coords")); // нажата правая кнопка мыши
+          if (!inTarget && !inDemo) FindNearVertex();
         }
       };
       mapp.current.events.add("contextmenu", funcContex);
@@ -408,35 +404,39 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   const PressButton = (mode: number) => {
     massVert = [];
-    switch (mode) {
-      case 51: // режим управления
-        datestat.finish = false;
-        dispatch(statsaveCreate(datestat));
-        inTarget = true;
-        SetHelper(1);
-        console.log("51mode:", inTarget, inDemo, zoom);
-        break;
-      case 52: // режим назначения
-        datestat.finish = false;
-        dispatch(statsaveCreate(datestat));
-        setToDoMode(false);
-        inTarget = false;
-        SetHelper(1);
-        console.log("52mode:", inTarget, inDemo, zoom);
-        break;
-      case 53: // выполнить режим
-        xsMap = 7.7;
-        xsTab = 4.3;
-        widthMap = "99.9%";
-        setToDoMode(true);
-        setFlagPusk(!flagPusk);
-        break;
-      case 54: // режим Demo
-        datestat.finish = false;
-        dispatch(statsaveCreate(datestat));
-        SetHelper(0);
-        ymaps && DoDemo(ymaps);
-        console.log("54mode:", inTarget, inDemo, zoom);
+    if (restartBan) {
+      soobErr = "Завершите режим управления нормальным образом"
+      setOpenSoobErr(true);
+    } else {
+      switch (mode) {
+        case 51: // режим управления
+          datestat.finish = false;
+          dispatch(statsaveCreate(datestat));
+          inTarget = true;
+          SetHelper(1);
+          break;
+        case 52: // режим назначения
+          datestat.finish = false;
+          dispatch(statsaveCreate(datestat));
+          setToDoMode(false);
+          inTarget = false;
+          SetHelper(1);
+          break;
+        case 53: // выполнить режим
+          xsMap = 7.7;
+          xsTab = 4.3;
+          widthMap = "99.9%";
+          setToDoMode(true);
+          setRestartBan(true);
+          setFlagPusk(!flagPusk);
+          break;
+        case 54: // режим Demo
+          datestat.finish = false;
+          dispatch(statsaveCreate(datestat));
+          SetHelper(0);
+          console.log("54:");
+          ymaps && DoDemo(ymaps);
+      }
     }
   };
 
@@ -451,11 +451,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(map.tflight).length) {
-    for (let i = 0; i < addobj.addObjects.length; i++) {
+    for (let i = 0; i < addobj.addObjects.length; i++)
       coordinates.push(addobj.addObjects[i].dgis);
-    }
     dispatch(coordinatesCreate(coordinates));
-
     pointCenter = CenterCoord(
       map.boxPoint.point0.Y,
       map.boxPoint.point0.X,
@@ -500,6 +498,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                   <>{StrokaHelp(soobHelpFiest)}</>
                 )}
               </>
+            )}
+            {inTarget && !inDemo && (
+              <>{StrokaHelp("Выберите перекрёсток или объект")}</>
             )}
           </>
         )}
@@ -581,6 +582,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                 funcHelper={SetHelper}
                 trigger={props.trigger}
                 changeFaz={changeFaz}
+                ban={setRestartBan}
               />
             )}
           </Grid>

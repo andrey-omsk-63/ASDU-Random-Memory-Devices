@@ -34,6 +34,7 @@ const RgsToDoMode = (props: {
   funcHelper: any;
   trigger: boolean;
   changeFaz: number;
+  ban: Function
 }) => {
   //== Piece of Redux ======================================
   const map = useSelector((state: any) => {
@@ -69,6 +70,7 @@ const RgsToDoMode = (props: {
     dispatch(statsaveCreate(datestat));
     props.funcSize(11.99);
     props.funcMode(0);
+    props.ban(false)
     //props.funcHelper(true);
     init = true;
     oldFaz = -1;
