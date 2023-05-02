@@ -191,7 +191,6 @@ export const MakeFazer = (klu: string, bind: any) => {
   }
   return fazer;
 };
-
 //=== Placemark =====================================
 export const GetPointData = (
   index: number,
@@ -300,7 +299,7 @@ export const MakeSoobErr = (mode: number, klu: string, klu2: string) => {
         "В радиусе 100м от указанной точки управляемые перекрёстки отсутствуют";
       break;
     case 5:
-      soobErr = "Нет связи с [" + klu + "] в массиве сязности перекрёстка [";
+      soobErr = "Нет связи с [" + klu + "] в массиве связности перекрёстка [";
       soobErr += klu2 + "]";
   }
   return soobErr;
@@ -424,7 +423,7 @@ export const AppointHeader = (hBlock: number) => {
     </Grid>
   );
 };
-//StrokaMenuGlob
+
 export const AppointDirect = (rec1: string, hBlock: number) => {
   let hB = hBlock / 15;
   return (
@@ -735,7 +734,7 @@ export const CircleObj = () => {
 export const InputDirect = (func: any) => {
   const styleSetNapr = {
     //border: 1,
-    width: "150px",
+    width: "165px",
     maxHeight: "3px",
     minHeight: "3px",
     bgcolor: "#D7F1C0",
@@ -748,7 +747,7 @@ export const InputDirect = (func: any) => {
     "& > :not(style)": {
       marginTop: "-12px",
       //marginLeft: '-12px',
-      width: "155px",
+      width: "165px",
     },
   };
   const handleKey = (event: any) => {
@@ -799,7 +798,10 @@ export const InputDirect = (func: any) => {
           onKeyPress={handleKey} //отключение Enter
           value={currency}
           onChange={handleChange}
-          InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
+          InputProps={{
+            disableUnderline: true,
+            style: { fontSize: 15, fontWeight: 700 },
+          }}
           variant="standard"
           color="secondary"
         >
@@ -833,7 +835,7 @@ export const StrokaMenuGlob = (func: any) => {
 };
 
 export const StrokaHelp = (soobInfo: string) => {
-  let dlSoob = (soobInfo.length + 24) * 8;
+  let dlSoob = (soobInfo.length + 12) * 8;
   const styleInfoSoob = {
     fontSize: 15,
     marginRight: 0.1,

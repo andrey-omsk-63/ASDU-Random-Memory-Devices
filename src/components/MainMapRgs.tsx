@@ -475,7 +475,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     let soobHelpFiest = "Маршрут сформирован";
     if (!datestat.finish)
       soobHelpFiest =
-        "Добавьте перекрёстки в маршруте [" + massMem.length + "🔆]";
+        "Добавьте перекрёстки в маршруте [" +
+        massMem.length +
+        "🔆]  Конец работы - ввод точки выхода";
 
     return (
       <Box sx={styleMenuGl}>
@@ -489,7 +491,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
             {!inTarget && !inDemo && (
               <>
                 {massMem.length === 0 && (
-                  <>{StrokaHelp("Начала работы - выбор первого перекрёстка")}</>
+                  <>{StrokaHelp("Начала работы - выбор точки вхождения")}</>
                 )}
                 {massMem.length > 0 && helper && (
                   <>{StrokaHelp(soobHelpFiest)}</>

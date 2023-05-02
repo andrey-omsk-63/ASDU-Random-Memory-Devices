@@ -69,7 +69,7 @@ const RgsToDoMode = (props: {
     dispatch(statsaveCreate(datestat));
     props.funcSize(11.99);
     props.funcMode(0);
-    props.funcHelper(true);
+    //props.funcHelper(true);
     init = true;
     oldFaz = -1;
     lengthMassMem = 0;

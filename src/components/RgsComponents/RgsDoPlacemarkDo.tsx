@@ -86,11 +86,11 @@ const RgsDoPlacemarkDo = (props: {
   const Hoster = React.useCallback(() => {
     let host = "https://localhost:3000/18.svg";
     let linked = props.vert.indexOf(idx);
-    if (linked > 0) host = "https://localhost:3000/77.svg";
+    if (linked >= 0) host = "https://localhost:3000/77.svg";
     if (!debug) {
       let mpp = mapp;
       if (nomSvg > 0) mpp = nomSvg.toString();
-      if (linked > 0) mpp = "4";
+      if (linked >= 0) mpp = "4";
       host = window.location.origin + "/free/img/trafficLights/" + mpp + ".svg";
     }
     return host;
