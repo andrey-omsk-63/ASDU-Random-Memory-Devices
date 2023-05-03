@@ -153,46 +153,7 @@ const RgsToDoMode = (props: {
       handleCloseSetEnd();
     }
   };
-  //=== инициализация ======================================
-  if (init) {
-    massfaz = [];
-    timerId = [];
-    massInt = [];
-    for (let i = 0; i < props.massMem.length; i++) {
-      massfaz.push(MakeMaskFaz(i));
-      timerId.push(null);
-    }
-    for (let i = 0; i < props.massMem.length; i++) {
-      massInt.push(JSON.parse(JSON.stringify(timerId)));
-    }
-    init = false;
-    lengthMassMem = props.massMem.length;
-    FindFaza();
-    oldFaz = props.changeFaz;
-  } else {
-    if (lengthMassMem !== props.massMem.length) {
-      massfaz.push(MakeMaskFaz(props.massMem.length - 1));
-      timerId.push(null);
-      massInt.push(JSON.parse(JSON.stringify(timerId)));
-      lengthMassMem = props.massMem.length;
-      FindFaza();
-    }
-    if (props.changeFaz !== oldFaz) {
-      let mode = props.changeFaz;
-      console.log(mode + 1 + '-й светофор закрыт', timerId[mode]);
-      SendSocketDispatch(debug, ws, massfaz[mode].idevice, 9, 9);
-      for (let i = 0; i < massInt[mode].length; i++) {
-        if (massInt[mode][i]) {
-          clearInterval(massInt[mode][i]);
-          massInt[mode][i] = null;
-        }
-      }
-      timerId[mode] = null;
-      oldFaz = props.changeFaz;
-      FindEnd();
-    }
-  }
-  //========================================================
+ 
   const ToDoMode = (mode: number) => {
     let massIdevice: Array<number> = [];
     if (mode) {
@@ -280,12 +241,9 @@ const RgsToDoMode = (props: {
         host = window.location.origin + '/free/img/trafficLights/' + num + '.svg';
       }
       let star = '';
-      // if (massfaz[i].starRec) star = '*';
       let takt = massfaz[i].faza;
       if (!massfaz[i].faza) takt = '';
       let fazaImg: null | string = null;
-      // massfaz[i].img.length > massfaz[i].faza &&
-      //   (fazaImg = massfaz[i].img[massfaz[i].faza - 1]);
       debug && (fazaImg = datestat.phSvg[0]); // для отладки
       let pictImg: any = '';
       if (massfaz[i].faza) pictImg = OutputFazaImg(fazaImg);
@@ -344,19 +302,51 @@ const RgsToDoMode = (props: {
       return el !== null;
     });
   };
-
+   //=== инициализация ======================================
+   if (init) {
+    massfaz = [];
+    timerId = [];
+    massInt = [];
+    for (let i = 0; i < props.massMem.length; i++) {
+      massfaz.push(MakeMaskFaz(i));
+      timerId.push(null);
+    }
+    for (let i = 0; i < props.massMem.length; i++) {
+      massInt.push(JSON.parse(JSON.stringify(timerId)));
+    }
+    init = false;
+    lengthMassMem = props.massMem.length;
+    FindFaza();
+    oldFaz = props.changeFaz;
+  } else {
+    if (lengthMassMem !== props.massMem.length) {
+      massfaz.push(MakeMaskFaz(props.massMem.length - 1));
+      timerId.push(null);
+      massInt.push(JSON.parse(JSON.stringify(timerId)));
+      lengthMassMem = props.massMem.length;
+      FindFaza();
+    }
+    if (props.changeFaz !== oldFaz) {
+      let mode = props.changeFaz;
+      console.log(mode + 1 + '-й светофор закрыт', timerId[mode]);
+      SendSocketDispatch(debug, ws, massfaz[mode].idevice, 9, 9);
+      for (let i = 0; i < massInt[mode].length; i++) {
+        if (massInt[mode][i]) {
+          clearInterval(massInt[mode][i]);
+          massInt[mode][i] = null;
+        }
+      }
+      timerId[mode] = null;
+      oldFaz = props.changeFaz;
+      FindEnd();
+    }
+  }
+  //========================================================
   return (
     <>
       <Box sx={styleToDoMode}>
-        {/* {!toDoMode && (
-          <Button sx={styleModalEnd} onClick={() => ToDoMode(0)}>
-            <b>&#10006;</b>
-          </Button>
-        )} */}
-
         <Grid container sx={{ marginTop: 0 }}>
           <Grid item xs sx={{ fontSize: 18, textAlign: 'center' }}>
-            {/* Режим: <b>{map.routes[newMode].description}</b> */}
             Режим:{' '}
             <b>
               произвольная {'"'}зелёная улица{'"'}
@@ -371,24 +361,12 @@ const RgsToDoMode = (props: {
             {StrokaHeader(1.9, 'Фаза')}
             {StrokaHeader(5.5, 'ДК')}
           </Grid>
-
           <Box sx={{ overflowX: 'auto', height: '81vh' }}>{StrokaTabl()}</Box>
-
-          {/* {!toDoMode && (
-            <Box sx={{ marginTop: 1.5, textAlign: "center" }}>
-              <Button sx={styleModalMenu} onClick={() => ToDoMode(3)}>
-                Начать исполнение
-              </Button>
-            </Box>
-          )} */}
-
-          {/* {toDoMode && ( */}
           <Box sx={{ marginTop: 1.5, textAlign: 'center' }}>
             <Button sx={styleModalMenu} onClick={() => ToDoMode(0)}>
               Закончить исполнение
             </Button>
           </Box>
-          {/* )} */}
         </Box>
       </Box>
     </>

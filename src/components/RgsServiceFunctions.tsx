@@ -279,10 +279,8 @@ export const MakeSoobErr = (mode: number, klu: string, klu2: string) => {
       soobErr = "Перекрёсток [";
       if (klu.length > 6) soobErr = "Объект [";
       vert = "перекрёстком [";
-      //if (massKlu[lastMem].length > 8) vert = "объектом [";
       if (klu2.length > 6) vert = "объектом [";
       soobErr += klu + "] не связан с " + vert;
-      //soobErr += massKlu[lastMem] + "]";
       soobErr += klu2 + "]";
       break;
     case 2:
@@ -654,7 +652,7 @@ export const MakingKluch = (
   }
   return [klushTo1, klushTo2, klushTo3];
 };
-//OutputKey
+
 export const OutputNumFaza = (
   num: number,
   imgFaza: any,
@@ -749,6 +747,100 @@ export function AppIconAsdu() {
   );
 }
 
+export const ChangeArea = (event: any, funcAr: Function, funcId: Function) => {
+  //let valueInp = event.target.value.replace(/^0+/, "");
+  let valueInp = event.target.value;
+  if (valueInp === "") valueInp = 1;
+  if (Number(valueInp) < 0) valueInp = 1;
+  if (Number(valueInp) === 0) {
+    valueInp = 0;
+    funcId(0);
+  }
+  if (Number(valueInp) < 100) funcAr(Number(valueInp));
+};
+
+export const ChangeId = (
+  event: any,
+  funcId: Function,
+  funcAr: Function,
+  map: any,
+  addobj: any
+) => {
+  //let valueInp = event.target.value.replace(/^0+/, "");
+  let valueInp = event.target.value;
+  if (valueInp === "") valueInp = 1;
+  if (Number(valueInp) < 0) valueInp = 1;
+  if (Number(valueInp) < 100000) funcId(Number(valueInp));
+  let have = false;
+  if (Number(valueInp) < 9999) {
+    // перекрёсток
+    for (let i = 0; i < map.tflight.length; i++) {
+      if (map.tflight[i].ID === Number(valueInp)) {
+        funcAr(Number(map.tflight[i].area.num));
+        have = true;
+      }
+    }
+  } else {
+    // объект
+    for (let i = 0; i < addobj.addObjects.length; i++) {
+      if (addobj.addObjects[i].id === Number(valueInp)) {
+        funcAr(addobj.addObjects[i].area);
+        have = true;
+      }
+    }
+  }
+  if (!have) funcAr(0);
+};
+
+export const OutPutZZ = (zz: string) => {
+  const styleZId = {
+    fontSize: 19,
+    transform: "rotate(270deg)",
+    position: "relative",
+    top: "50%",
+    color: "blue",
+  };
+  return (
+    <Grid item xs={0.15} sx={{ border: 0 }}>
+      <Box sx={styleZId}>
+        <b>{zz}</b>
+      </Box>
+    </Grid>
+  );
+};
+
+export const OutPutSS = (ss: string) => {
+  return (
+    <Box sx={{ marginTop: -3, color: "blue", textAlign: "center" }}>
+      <b>{ss}</b>
+    </Box>
+  );
+};
+
+export const OutPutUU = (uu: string) => {
+  return (
+    <Box sx={{ marginTop: -1, color: "blue", textAlign: "center" }}>
+      <b>{uu}</b>
+    </Box>
+  );
+};
+
+export const OutPutVV = (vv: string) => {
+  const styleVId = {
+    fontSize: 19,
+    transform: "rotate(90deg)",
+    position: "relative",
+    top: "50%",
+    color: "blue",
+  };
+  return (
+    <Grid item xs={0.15} sx={{ border: 0 }}>
+      <Box sx={styleVId}>
+        <b>{vv}</b>
+      </Box>
+    </Grid>
+  );
+};
 //=== ToDoMode =====================================
 export const CircleObj = () => {
   const circle = {
