@@ -232,8 +232,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     let nomInMass = massMem.indexOf(index);
     if (nomInMass >= 0) {
       SoobErr(MakeSoobErr(2, klu.slice(SL), ""));
-      // soobErr = MakeSoobErr(2, klu.slice(SL), '');
-      // setOpenSoobErr(true);
     } else {
       if (!massMem.length) {
         Added(klu, index, nom); // первая точка
@@ -248,8 +246,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           if (!MakeFazer(massKlu[massMem.length - 1], bindings.tfLinks[nom])) {
             let soob = massKlu[massMem.length - 1].slice(SL);
             SoobErr(MakeSoobErr(1, klu.slice(SL), soob));
-            // soobErr = MakeSoobErr(1, klu.slice(SL), soob);
-            // setOpenSoobErr(true);
           } else {
             Added(klu, index, nom); // вторая точка и далее
           }
@@ -261,8 +257,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const ClickPointNotTarget = (index: number) => {
     if (datestat.finish) {
       SoobErr("Маршрут уже полностью сформирован");
-      // soobErr = 'Маршрут уже полностью сформирован';
-      // setOpenSoobErr(true);
     } else {
       let klu = "";
       if (index >= map.tflight.length) {
@@ -275,32 +269,23 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       if (!massMem.length) {
         if (index < map.tflight.length) {
           SoobErr("Входящая точка маршрута должна быть объектом");
-          // soobErr = 'Входящая точка маршрута должна быть объектом';
-          // setOpenSoobErr(true);
         } else {
           AddVertex(klu, index, -1);
         }
       } else {
         if (massMem.length === 1 && klu.length > 6) {
           SoobErr("Объекты могут задаваться только в начале и конце маршрута");
-          // soobErr = 'Объекты могут задаваться только в начале и конце маршрута';
-          // setOpenSoobErr(true);
         } else {
           let have = -1;
-          for (let i = 0; i < bindings.tfLinks.length; i++) {
+          for (let i = 0; i < bindings.tfLinks.length; i++) 
             if (bindings.tfLinks[i].id === klu) have = i;
-          }
           if (have < 0 && klu.length < 9) {
             SoobErr(MakeSoobErr(3, klu.slice(SL), "")); // нет массива связности
-            // soobErr = MakeSoobErr(3, klu.slice(SL), ''); // нет массива связности
-            // setOpenSoobErr(true);
           } else {
             if (massMem.length > 1) {
               let kluLast = massKlu[massKlu.length - 1];
               if (!CheckHaveLink(klu, kluLast, bindings)) {
                 SoobErr(MakeSoobErr(5, klu.slice(SL), kluLast.slice(SL))); // нет связи
-                // soobErr = MakeSoobErr(5, klu.slice(SL), kluLast.slice(SL)); // нет связи
-                // setOpenSoobErr(true);
               } else {
                 AddVertex(klu, index, have);
               }
@@ -420,8 +405,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     massVert = [];
     if (restartBan) {
       SoobErr("Завершите режим управления нормальным образом");
-      // soobErr = "Завершите режим управления нормальным образом";
-      // setOpenSoobErr(true);
     } else {
       switch (mode) {
         case 51: // режим управления
@@ -449,7 +432,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           datestat.finish = false;
           dispatch(statsaveCreate(datestat));
           SetHelper(0);
-          console.log("54:");
           ymaps && DoDemo(ymaps);
       }
     }
