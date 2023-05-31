@@ -196,7 +196,8 @@ const RgsDoPlacemarkDo = (props: {
       // размеры метки
       iconImageSize: [50, 50],
       // её "ножки" (точки привязки)
-      iconImageOffset: [-15, -38],
+      //iconImageOffset: [-15, -38],
+      iconImageOffset: [-25, -25],
     };
   };
 
