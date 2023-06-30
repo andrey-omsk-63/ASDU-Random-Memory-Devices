@@ -277,7 +277,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           SoobErr("Объекты могут задаваться только в начале и конце маршрута");
         } else {
           let have = -1;
-          for (let i = 0; i < bindings.tfLinks.length; i++) 
+          for (let i = 0; i < bindings.tfLinks.length; i++)
             if (bindings.tfLinks[i].id === klu) have = i;
           if (have < 0 && klu.length < 9) {
             SoobErr(MakeSoobErr(3, klu.slice(SL), "")); // нет массива связности
@@ -402,6 +402,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const PressButton = (mode: number) => {
+    console.log("MODE:", mode);
     massVert = [];
     if (restartBan) {
       SoobErr("Завершите режим управления нормальным образом");
@@ -409,6 +410,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       switch (mode) {
         case 51: // режим управления
           datestat.finish = false;
+          datestat.demo = false;
           dispatch(statsaveCreate(datestat));
           inTarget = true;
           SetHelper(1);
@@ -428,11 +430,18 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           setRestartBan(true);
           setFlagPusk(!flagPusk);
           break;
-        case 54: // режим Demo
+        case 54: // режим Показать связи
           datestat.finish = false;
           dispatch(statsaveCreate(datestat));
           SetHelper(0);
           ymaps && DoDemo(ymaps);
+          break;
+        case 55: // режим Демо
+          datestat.finish = false;
+          datestat.demo = true;
+          dispatch(statsaveCreate(datestat));
+          inTarget = true;
+          SetHelper(1);
       }
     }
   };

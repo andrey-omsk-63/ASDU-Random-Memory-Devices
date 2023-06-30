@@ -890,10 +890,18 @@ export const InputDirect = (func: any) => {
         break;
       case 2: // режим назначения
         func(54);
+        break;
+      case 3: // режим Demo
+        func(55);
     }
   };
 
-  let dat = ["Режим управления", "Режим назначения", "Показать связи"];
+  let dat = [
+    "Режим управления",
+    "Режим назначения",
+    "Показать связи",
+    "Режим Демо",
+  ];
   let massKey = [];
   let massDat: any[] = [];
   const currencies: any = [];
@@ -924,7 +932,12 @@ export const InputDirect = (func: any) => {
           onChange={handleChange}
           InputProps={{
             disableUnderline: true,
-            style: { fontSize: 15, fontWeight: 700 },
+            style: {
+              fontSize: currency === 3 ? 17 : 15,
+              fontWeight: 700,
+              color: currency === 3 ? "red" : "black",
+              marginTop: currency === 3 ? -3 : 0,
+            },
           }}
           variant="standard"
           color="secondary"
@@ -933,7 +946,10 @@ export const InputDirect = (func: any) => {
             <MenuItem
               key={option.value}
               value={option.value}
-              sx={{ fontSize: 14 }}
+              sx={{
+                fontSize: 14,
+                color: option.label === "Режим Демо" ? "red" : "black",
+              }}
             >
               {option.label}
             </MenuItem>

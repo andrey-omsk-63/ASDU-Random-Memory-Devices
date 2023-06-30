@@ -52,6 +52,7 @@ const RgsDoPlacemarkDo = (props: {
   let nomSvg = -1;
   if (idx < map.tflight.length) {
     mapp = map.tflight[idx].tlsost.num.toString();
+    //console.log("MAPP:", idx, mapp, props.vert);
     mappp = map.tflight[idx];
   }
   if (props.massMem.length >= 1) {
@@ -89,8 +90,12 @@ const RgsDoPlacemarkDo = (props: {
     if (linked >= 0) host = "https://localhost:3000/77.svg";
     if (!debug) {
       let mpp = mapp;
-      if (nomSvg > 0) mpp = nomSvg.toString();
-      if (linked >= 0) mpp = "4";
+      if (datestat.demo) {
+        mpp = "18"; // режим Демо
+      } else {
+        if (nomSvg > 0) mpp = nomSvg.toString();
+        if (linked >= 0) mpp = "4";
+      }
       host = window.location.origin + "/free/img/trafficLights/" + mpp + ".svg";
     }
     return host;
@@ -202,9 +207,10 @@ const RgsDoPlacemarkDo = (props: {
   };
 
   const getPointOptions1 = React.useCallback(() => {
+    let numSost = datestat.demo ? 18 : mappp.tlsost.num
     return pC < 0
       ? {
-          iconLayout: createChipsLayout(calculate, mappp.tlsost.num),
+          iconLayout: createChipsLayout(calculate, numSost),
         }
       : GetPointOptions0(fazaImg);
   }, [createChipsLayout, mappp.tlsost.num, fazaImg, pC]);
