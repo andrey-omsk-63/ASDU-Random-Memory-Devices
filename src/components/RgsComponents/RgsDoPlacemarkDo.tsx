@@ -99,7 +99,7 @@ const RgsDoPlacemarkDo = (props: {
       host = window.location.origin + "/free/img/trafficLights/" + mpp + ".svg";
     }
     return host;
-  }, [mapp, nomSvg, idx, props.vert, debug]);
+  }, [mapp, nomSvg, idx, props.vert, debug, datestat.demo]);
 
   const createChipsLayout = React.useCallback(
     (calcFunc: Function, currnum: number, rotateDeg?: number) => {
@@ -207,13 +207,13 @@ const RgsDoPlacemarkDo = (props: {
   };
 
   const getPointOptions1 = React.useCallback(() => {
-    let numSost = datestat.demo ? 18 : mappp.tlsost.num
+    let numSost = datestat.demo ? 18 : mappp.tlsost.num;
     return pC < 0
       ? {
           iconLayout: createChipsLayout(calculate, numSost),
         }
       : GetPointOptions0(fazaImg);
-  }, [createChipsLayout, mappp.tlsost.num, fazaImg, pC]);
+  }, [createChipsLayout, mappp.tlsost.num, fazaImg, pC, datestat.demo]);
 
   const getPointOptions2 = () => {
     let colorBalloon = "islands#violetCircleIcon";

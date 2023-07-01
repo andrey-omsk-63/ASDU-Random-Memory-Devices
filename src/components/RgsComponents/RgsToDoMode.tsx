@@ -36,7 +36,6 @@ const RgsToDoMode = (props: {
   changeFaz: number;
   ban: Function;
 }) => {
-  console.log("PROPS:", props);
   //== Piece of Redux ======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -61,6 +60,7 @@ const RgsToDoMode = (props: {
   });
   const debug = datestat.debug;
   const ws = datestat.ws;
+  const DEMO = datestat.demo;
   const homeRegion = datestat.region;
   const dispatch = useDispatch();
   //========================================================
@@ -72,7 +72,6 @@ const RgsToDoMode = (props: {
     props.funcSize(11.99);
     props.funcMode(0);
     props.ban(false);
-    //props.funcHelper(true);
     init = true;
     oldFaz = -1;
     lengthMassMem = 0;
@@ -134,7 +133,7 @@ const RgsToDoMode = (props: {
     faz.runRec = 2;
     let mode = lengthMassMem - 2;
     console.log(mode + 1 + "-й светофор пошёл", timerId[mode]);
-    SendSocketDispatch(debug, ws, faz.idevice, 9, faz.faza);
+    !DEMO && SendSocketDispatch(debug, ws, faz.idevice, 9, faz.faza);
     timerId[mode] = setInterval(() => DoTimerId(mode), 60000);
     massInt[mode].push(timerId[mode]);
     dispatch(massfazCreate(massfaz));
@@ -142,7 +141,7 @@ const RgsToDoMode = (props: {
     for (let i = 1; i < massfaz.length - 1; i++) {
       massIdevice.push(massfaz[i].idevice);
     }
-    SendSocketRoute(debug, ws, massIdevice, true);
+    !DEMO && SendSocketRoute(debug, ws, massIdevice, true);
   };
 
   const FindEnd = () => {
@@ -162,7 +161,7 @@ const RgsToDoMode = (props: {
       for (let i = 1; i < massfaz.length - 1; i++) {
         massIdevice.push(massfaz[i].idevice);
       }
-      SendSocketRoute(debug, ws, massIdevice, true); // выполнение режима
+      !DEMO && SendSocketRoute(debug, ws, massIdevice, true); // выполнение режима
       props.funcMode(mode);
       setTrigger(!trigger);
     } else {
@@ -181,12 +180,12 @@ const RgsToDoMode = (props: {
       console.log("Финиш", timerId, massInt);
       for (let i = 0; i < massfaz.length; i++) {
         if (massfaz[i].runRec === 2) {
-          SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
+          !DEMO && SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
           massfaz[mode].runRec = 1;
         }
       }
       dispatch(massfazCreate(massfaz));
-      SendSocketRoute(debug, ws, massIdevice, false);
+      !DEMO && SendSocketRoute(debug, ws, massIdevice, false);
       handleCloseSetEnd();
     }
   };
@@ -209,14 +208,14 @@ const RgsToDoMode = (props: {
       let fazer = massfaz[mode];
       if (fazer.runRec === 1) {
         console.log(mode + 1 + "-й светофор пошёл", timerId[mode]);
-        SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
+        !DEMO && SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
         timerId[mode] = setInterval(() => DoTimerId(mode), 60000);
         massInt[mode].push(timerId[mode]);
         massfaz[mode].runRec = 2;
       } else {
         if (fazer.runRec === 2) {
           console.log(mode + 1 + "-й светофор закрыт", timerId[mode]);
-          SendSocketDispatch(debug, ws, fazer.idevice, 9, 9);
+          !DEMO && SendSocketDispatch(debug, ws, fazer.idevice, 9, 9);
           for (let i = 0; i < massInt[mode].length; i++) {
             if (massInt[mode][i]) {
               clearInterval(massInt[mode][i]);
@@ -304,7 +303,7 @@ const RgsToDoMode = (props: {
   const DoTimerId = (mode: number) => {
     let fazer = massfaz[mode];
     console.log("Отправка с " + String(mode + 1) + "-го", timerId);
-    SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
+    !DEMO && SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
     for (let i = 0; i < massInt[mode].length - 1; i++) {
       if (massInt[mode][i]) {
         clearInterval(massInt[mode][i]);
@@ -342,7 +341,7 @@ const RgsToDoMode = (props: {
     if (props.changeFaz !== oldFaz) {
       let mode = props.changeFaz;
       console.log(mode + 1 + "-й светофор закрыт", timerId[mode]);
-      SendSocketDispatch(debug, ws, massfaz[mode].idevice, 9, 9);
+      !DEMO && SendSocketDispatch(debug, ws, massfaz[mode].idevice, 9, 9);
       for (let i = 0; i < massInt[mode].length; i++) {
         if (massInt[mode][i]) {
           clearInterval(massInt[mode][i]);
@@ -364,7 +363,7 @@ const RgsToDoMode = (props: {
             <b>
               произвольная {'"'}зелёная улица{'"'}
             </b>
-            {datestat.demo && (
+            {DEMO && (
               <Box sx={{ fontSize: 15, color: "red" }}>Демонстрационный</Box>
             )}
           </Grid>
@@ -380,7 +379,7 @@ const RgsToDoMode = (props: {
           <Box
             sx={{
               overflowX: "auto",
-              height: datestat.demo ? "78vh" : "81vh",
+              height: DEMO ? "78vh" : "81vh",
             }}
           >
             {StrokaTabl()}

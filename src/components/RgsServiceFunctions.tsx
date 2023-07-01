@@ -850,7 +850,7 @@ export const CircleObj = () => {
     marginTop: 1.2,
     marginLeft: 2.5,
     borderRadius: 9,
-    borderColor: "#9B5BDD",
+    borderColor: "#9adeb5e",
   };
   return <Box sx={circle}></Box>;
 };
@@ -863,12 +863,14 @@ export const InputDirect = (func: any) => {
     minHeight: "3px",
     bgcolor: "#D7F1C0",
     boxShadow: 3,
-    marginLeft: "auto",
-    p: 1.5,
+    paddingTop: 1.5,
+    paddingBottom: 1.5,
+    textAlign: 'center',
   };
 
   const styleBoxFormNapr = {
     "& > :not(style)": {
+      //border: 1,
       marginTop: "-12px",
       //marginLeft: '-12px',
       width: "165px",
@@ -962,9 +964,11 @@ export const InputDirect = (func: any) => {
 
 export const StrokaMenuGlob = (func: any) => {
   const styleApp01 = {
+    //border: 1,
     fontSize: 14,
     marginRight: 0.1,
-    width: 170,
+    marginLeft: 0.5,
+    width: 165,
     maxHeight: "21px",
     minHeight: "21px",
     backgroundColor: "#D7F1C0",
