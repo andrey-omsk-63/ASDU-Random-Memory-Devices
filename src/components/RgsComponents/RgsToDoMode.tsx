@@ -351,7 +351,11 @@ const RgsToDoMode = (props: {
             <b>
               произвольная {'"'}зелёная улица{'"'}
             </b>
-            {DEMO && <Box sx={{ fontSize: 15, color: 'red' }}>(демонстрационный</Box>}
+            {DEMO && (
+              <Box sx={{ fontSize: 15, color: 'red' }}>
+                {'( '}демонстрационный{' )'}
+              </Box>
+            )}
           </Grid>
         </Grid>
 
