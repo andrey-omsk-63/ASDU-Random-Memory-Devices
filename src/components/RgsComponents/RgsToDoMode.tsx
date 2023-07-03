@@ -1,28 +1,28 @@
-import * as React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { massfazCreate, statsaveCreate } from '../../redux/actions';
+import * as React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { massfazCreate, statsaveCreate } from "../../redux/actions";
 
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 
-import { Fazer } from '../../App';
+import { Fazer } from "../../App";
 
-import { OutputFazaImg, OutputVertexImg } from '../RgsServiceFunctions';
-import { CircleObj } from '../RgsServiceFunctions';
+import { OutputFazaImg, OutputVertexImg } from "../RgsServiceFunctions";
+import { CircleObj } from "../RgsServiceFunctions";
 
-import { SendSocketRoute, SendSocketDispatch } from '../RgsSocketFunctions';
+import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 
 //import { styleModalEnd } from "../MainMapStyle";
-import { styleModalMenu, styleStrokaTablImg } from './GsComponentsStyle';
-import { styleToDoMode, styleStrokaTabl } from './GsComponentsStyle';
-import { styleStrokaTakt } from './GsComponentsStyle';
+import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
+import { styleToDoMode, styleStrokaTabl } from "./GsComponentsStyle";
+import { styleStrokaTakt } from "./GsComponentsStyle";
 
 let init = true;
 let lengthMassMem = 0;
 let timerId: any[] = [];
 
-let massInt: any[][] = [];
+let massInt: any[][] = []; //null
 let oldFaz = -1;
 
 const RgsToDoMode = (props: {
@@ -83,17 +83,19 @@ const RgsToDoMode = (props: {
       area: 0,
       id: 0,
       faza: 0,
+      fazaDemo: 0,
       fazaSist: -1,
       phases: [],
       idevice: 0,
-      name: '',
+      name: "",
       starRec: false,
       runRec: 0,
       img: [],
     };
     maskFaz.idx = props.massMem[i];
     if (maskFaz.idx >= map.tflight.length) {
-      maskFaz.name = addobj.addObjects[maskFaz.idx - map.tflight.length].description; // объект
+      maskFaz.name =
+        addobj.addObjects[maskFaz.idx - map.tflight.length].description; // объект
       maskFaz.area = addobj.addObjects[maskFaz.idx - map.tflight.length].area;
       maskFaz.id = addobj.addObjects[maskFaz.idx - map.tflight.length].id;
     } else {
@@ -107,12 +109,14 @@ const RgsToDoMode = (props: {
   };
 
   const FindFaza = () => {
-    let faz = massfaz[lengthMassMem - 2];
+    let mode = lengthMassMem - 2;
+    //let faz = JSON.parse(JSON.stringify(massfaz[mode]));
+    let faz = massfaz[mode];
     let fazIn = massfaz[lengthMassMem - 3];
     let fazOn = massfaz[lengthMassMem - 1];
-    let klu = homeRegion + '-' + faz.area + '-' + faz.id;
-    let kluIn = homeRegion + '-' + fazIn.area + '-' + fazIn.id;
-    let kluOn = homeRegion + '-' + fazOn.area + '-' + fazOn.id;
+    let klu = homeRegion + "-" + faz.area + "-" + faz.id;
+    let kluIn = homeRegion + "-" + fazIn.area + "-" + fazIn.id;
+    let kluOn = homeRegion + "-" + fazOn.area + "-" + fazOn.id;
     let numRec = -1;
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       if (bindings.tfLinks[i].id === klu) {
@@ -130,17 +134,41 @@ const RgsToDoMode = (props: {
       if (inFaz[i].id === kluOn) faz.faza = Number(inFaz[i].phase);
     }
     faz.runRec = 2;
-    let mode = lengthMassMem - 2;
-    console.log(mode + 1 + '-й светофор пошёл', timerId[mode]);
-    !DEMO && SendSocketDispatch(debug, ws, faz.idevice, 9, faz.faza);
-    timerId[mode] = setInterval(() => DoTimerId(mode), 60000);
+    console.log(mode + 1 + "-й светофор пошёл", DEMO, timerId[mode]);
+    //!DEMO && SendSocketDispatch(debug, ws, faz.idevice, 9, faz.faza);
+    if (!DEMO) {
+      SendSocketDispatch(debug, ws, faz.idevice, 9, faz.faza);
+    } else {
+      faz.fazaDemo = 1;
+      dispatch(massfazCreate(massfaz));
+      setTrigger(!trigger);
+      //console.log("#setTrigger", trigger);
+    }
+    //=====================================
+    timerId[mode] = setInterval(() => DoTimerId(mode), 15000); // 60000
+    //=====================================
+    console.log(
+      "10MassInt",
+      mode,
+      timerId,
+      JSON.parse(JSON.stringify(massInt))
+    );
+
     massInt[mode].push(timerId[mode]);
+
+    console.log(
+      "11MassInt",
+      mode,
+      timerId,
+      JSON.parse(JSON.stringify(massInt))
+    );
     dispatch(massfazCreate(massfaz));
     let massIdevice: Array<number> = [];
     for (let i = 1; i < massfaz.length - 1; i++) {
       massIdevice.push(massfaz[i].idevice);
     }
     !DEMO && SendSocketRoute(debug, ws, massIdevice, true);
+    //console.log("3MASSFAZ:", massfaz);
   };
 
   const FindEnd = () => {
@@ -149,7 +177,7 @@ const RgsToDoMode = (props: {
       if (massfaz[i].runRec === 2) ch++;
     }
     if (!ch) {
-      console.log('Финиш');
+      console.log("Финиш");
       handleCloseSetEnd();
     }
   };
@@ -163,6 +191,7 @@ const RgsToDoMode = (props: {
       !DEMO && SendSocketRoute(debug, ws, massIdevice, true); // выполнение режима
       props.funcMode(mode);
       setTrigger(!trigger);
+      console.log("0setTrigger", trigger);
     } else {
       // принудительное закрытие
       for (let i = 0; i < timerId.length; i++) {
@@ -176,7 +205,7 @@ const RgsToDoMode = (props: {
           timerId[i] = null;
         }
       }
-      console.log('Финиш', timerId, massInt);
+      console.log("Финиш", timerId, massInt);
       for (let i = 0; i < massfaz.length; i++) {
         if (massfaz[i].runRec === 2) {
           !DEMO && SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
@@ -191,7 +220,7 @@ const RgsToDoMode = (props: {
 
   const StrokaHeader = (xss: number, soob: string) => {
     return (
-      <Grid item xs={xss} sx={{ fontSize: 14, textAlign: 'center' }}>
+      <Grid item xs={xss} sx={{ fontSize: 14, textAlign: "center" }}>
         <b>{soob}</b>
       </Grid>
     );
@@ -201,19 +230,45 @@ const RgsToDoMode = (props: {
     const ClickKnop = (mode: number) => {
       props.funcCenter(props.massCoord[mode]);
       setTrigger(!trigger);
+      console.log("1setTrigger", trigger);
     };
 
     const ClickVertex = (mode: number) => {
       let fazer = massfaz[mode];
+      console.log("1MASSFAZ:", massfaz);
       if (fazer.runRec === 1) {
-        console.log(mode + 1 + '-й светофор пошёл', timerId[mode]);
-        !DEMO && SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
-        timerId[mode] = setInterval(() => DoTimerId(mode), 60000);
-        massInt[mode].push(timerId[mode]);
+        console.log(mode + 1 + "-й светофор пошёл", timerId[mode]);
+        //!DEMO && SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
+        if (!DEMO) {
+          SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
+        } else {
+          massfaz[mode].fazaDemo = 1;
+          //dispatch(massfazCreate(massfaz));
+          setTrigger(!trigger);
+          console.log("!!!setTrigger", trigger);
+        }
+        //============
+        timerId[mode] = setInterval(() => DoTimerId(mode), 15000); // 60000
+        //============
+        console.log(
+          "1MassInt",
+          mode,
+          timerId,
+          JSON.parse(JSON.stringify(massInt))
+        );
+
+        massInt[mode].push(JSON.parse(JSON.stringify(timerId[mode])));
+
+        console.log(
+          "2MassInt",
+          mode,
+          timerId,
+          JSON.parse(JSON.stringify(massInt))
+        );
         massfaz[mode].runRec = 2;
       } else {
         if (fazer.runRec === 2) {
-          console.log(mode + 1 + '-й светофор закрыт', timerId[mode]);
+          console.log(mode + 1 + "-й светофор закрыт", timerId[mode]);
           !DEMO && SendSocketDispatch(debug, ws, fazer.idevice, 9, 9);
           for (let i = 0; i < massInt[mode].length; i++) {
             if (massInt[mode][i]) {
@@ -228,42 +283,58 @@ const RgsToDoMode = (props: {
       dispatch(massfazCreate(massfaz));
       FindEnd();
       setTrigger(!trigger);
+      console.log("2setTrigger", trigger);
     };
 
     let resStr = [];
 
     for (let i = 0; i < massfaz.length; i++) {
-      let bull = ' ';
-      if (massfaz[i].runRec === 2) bull = ' •';
-      let host = 'https://localhost:3000/18.svg';
+      let bull = massfaz[i].runRec === 2 ? " •" : " ";
+      let host =
+        massfaz[i].fazaDemo !== 2
+          ? "https://localhost:3000/18.svg"
+          : "https://localhost:3000/77.svg";
       if (!debug && massfaz[i].id <= 10000) {
         let num = map.tflight[massfaz[i].idx].tlsost.num.toString();
-        host = window.location.origin + '/free/img/trafficLights/' + num + '.svg';
+        host =
+          window.location.origin + "/free/img/trafficLights/" + num + ".svg";
+      } else {
+        //console.log("###:", massfaz[i].faza);
       }
-      let star = '';
+      let star = "";
       let takt = massfaz[i].faza;
-      if (!massfaz[i].faza) takt = '';
+      if (!massfaz[i].faza) takt = "";
       let fazaImg: null | string = null;
       debug && (fazaImg = datestat.phSvg[0]); // для отладки
-      let pictImg: any = '';
+      let pictImg: any = "";
       if (massfaz[i].faza) pictImg = OutputFazaImg(fazaImg);
       if (massfaz[i].id > 10000) pictImg = CircleObj();
 
       resStr.push(
         <Grid key={i} container sx={{ marginTop: 1 }}>
-          <Grid item xs={1} sx={{ paddingTop: 0.7, textAlign: 'center' }}>
-            <Button variant="contained" sx={styleStrokaTabl} onClick={() => ClickKnop(i)}>
+          <Grid item xs={1} sx={{ paddingTop: 0.7, textAlign: "center" }}>
+            <Button
+              variant="contained"
+              sx={styleStrokaTabl}
+              onClick={() => ClickKnop(i)}
+            >
               {i + 1}
             </Button>
           </Grid>
 
-          <Grid item xs={1.2} sx={{ fontSize: 27, textAlign: 'right' }}>
+          <Grid item xs={1.2} sx={{ fontSize: 27, textAlign: "right" }}>
             {star}
           </Grid>
           <Grid item xs={1.0} sx={{}}>
-            {massfaz[i].runRec === 1 && massfaz[i].id <= 10000 && <>{OutputVertexImg(host)}</>}
+            {massfaz[i].runRec === 1 && massfaz[i].id <= 10000 && (
+              <>{OutputVertexImg(host)}</>
+            )}
             {massfaz[i].runRec === 2 && massfaz[i].id <= 10000 && (
-              <Button variant="contained" sx={styleStrokaTablImg} onClick={() => ClickVertex(i)}>
+              <Button
+                variant="contained"
+                sx={styleStrokaTablImg}
+                onClick={() => ClickVertex(i)}
+              >
                 {OutputVertexImg(host)}
               </Button>
             )}
@@ -275,14 +346,14 @@ const RgsToDoMode = (props: {
           <Grid item xs={1.1} sx={styleStrokaTakt}>
             {takt}
           </Grid>
-          <Grid item xs={2} sx={{ textAlign: 'center' }}>
+          <Grid item xs={2} sx={{ textAlign: "center" }}>
             {pictImg}
           </Grid>
 
           <Grid item xs sx={{ fontSize: 14 }}>
             {massfaz[i].name}
           </Grid>
-        </Grid>,
+        </Grid>
       );
     }
     return resStr;
@@ -290,8 +361,17 @@ const RgsToDoMode = (props: {
 
   const DoTimerId = (mode: number) => {
     let fazer = massfaz[mode];
-    console.log('Отправка с ' + String(mode + 1) + '-го', timerId);
-    !DEMO && SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
+    //console.log("2MASSFAZ:", massfaz);
+    console.log("Отправка с " + String(mode + 1) + "-го", DEMO, timerId);
+    if (!DEMO) {
+      SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
+    } else {
+      massfaz[mode].fazaDemo = fazer.fazaDemo === 2 ? 1 : 2;
+      dispatch(massfazCreate(massfaz));
+      setTrigger(!trigger);
+      //console.log("3setTrigger", trigger, fazer.fazaDemo);
+    }
+    console.log("0MassInt", mode, timerId, JSON.parse(JSON.stringify(massInt)));
     for (let i = 0; i < massInt[mode].length - 1; i++) {
       if (massInt[mode][i]) {
         clearInterval(massInt[mode][i]);
@@ -321,14 +401,24 @@ const RgsToDoMode = (props: {
   } else {
     if (lengthMassMem !== props.massMem.length) {
       massfaz.push(MakeMaskFaz(props.massMem.length - 1));
+
+      console.log("20MassInt", timerId, JSON.parse(JSON.stringify(massInt)));
+
       timerId.push(null);
-      massInt.push(JSON.parse(JSON.stringify(timerId)));
+      let mass = [];
+      for (let i = 0; i < props.massMem.length; i++) mass.push(null);
+
+      massInt.push(mass);
+      //massInt.push(JSON.parse(JSON.stringify(timerId)));
+
+      console.log("21MassInt", timerId, JSON.parse(JSON.stringify(massInt)));
+
       lengthMassMem = props.massMem.length;
       FindFaza();
     }
     if (props.changeFaz !== oldFaz) {
       let mode = props.changeFaz;
-      console.log(mode + 1 + '-й светофор закрыт', timerId[mode]);
+      console.log(mode + 1 + "-й светофор закрыт", timerId[mode]);
       !DEMO && SendSocketDispatch(debug, ws, massfaz[mode].idevice, 9, 9);
       for (let i = 0; i < massInt[mode].length; i++) {
         if (massInt[mode][i]) {
@@ -342,38 +432,42 @@ const RgsToDoMode = (props: {
     }
   }
   //========================================================
+
+  //DEMO && console.log("TRIGGER:", trigger);
+
   return (
     <>
       <Box sx={styleToDoMode}>
         <Grid container sx={{ marginTop: 0 }}>
-          <Grid item xs sx={{ fontSize: 18, textAlign: 'center' }}>
-            Режим:{' '}
+          <Grid item xs sx={{ fontSize: 18, textAlign: "center" }}>
+            Режим:{" "}
             <b>
               произвольная {'"'}зелёная улица{'"'}
             </b>
             {DEMO && (
-              <Box sx={{ fontSize: 15, color: 'red' }}>
-                {'( '}демонстрационный{' )'}
+              <Box sx={{ fontSize: 15, color: "red" }}>
+                {"( "}демонстрационный{" )"}
               </Box>
             )}
           </Grid>
         </Grid>
 
         <Box sx={{ marginTop: 1 }}>
-          <Grid container sx={{ bgcolor: '#C0E2C3' }}>
-            {StrokaHeader(1, 'Номер')}
-            {StrokaHeader(3.6, 'Состояние')}
-            {StrokaHeader(1.9, 'Фаза')}
-            {StrokaHeader(5.5, 'ДК')}
+          <Grid container sx={{ bgcolor: "#C0E2C3" }}>
+            {StrokaHeader(1, "Номер")}
+            {StrokaHeader(3.6, "Состояние")}
+            {StrokaHeader(1.9, "Фаза")}
+            {StrokaHeader(5.5, "ДК")}
           </Grid>
           <Box
             sx={{
-              overflowX: 'auto',
-              height: DEMO ? '78vh' : '81vh',
-            }}>
+              overflowX: "auto",
+              height: DEMO ? "78vh" : "81vh",
+            }}
+          >
             {StrokaTabl()}
           </Box>
-          <Box sx={{ marginTop: 1.5, textAlign: 'center' }}>
+          <Box sx={{ marginTop: 1.5, textAlign: "center" }}>
             <Button sx={styleModalMenu} onClick={() => ToDoMode(0)}>
               Закончить исполнение
             </Button>

@@ -42,6 +42,7 @@ const RgsDoPlacemarkDo = (props: {
     return statsaveReducer.datestat;
   });
   const debug = datestat.debug;
+  const DEMO = datestat.demo;
   //===========================================================
   let idx = props.idx;
   let mapp = map.tflight[0].tlsost.num.toString();
@@ -88,9 +89,10 @@ const RgsDoPlacemarkDo = (props: {
     let host = "https://localhost:3000/18.svg";
     let linked = props.vert.indexOf(idx);
     if (linked >= 0) host = "https://localhost:3000/77.svg";
+    //if (DEMO) console.log('#MASSFAZ:',massfaz)
     if (!debug) {
       let mpp = mapp;
-      if (datestat.demo) {
+      if (DEMO) {
         mpp = "18"; // режим Демо
       } else {
         if (nomSvg > 0) mpp = nomSvg.toString();
@@ -99,7 +101,7 @@ const RgsDoPlacemarkDo = (props: {
       host = window.location.origin + "/free/img/trafficLights/" + mpp + ".svg";
     }
     return host;
-  }, [mapp, nomSvg, idx, props.vert, debug, datestat.demo]);
+  }, [mapp, nomSvg, idx, props.vert, debug, DEMO]);
 
   const createChipsLayout = React.useCallback(
     (calcFunc: Function, currnum: number, rotateDeg?: number) => {
