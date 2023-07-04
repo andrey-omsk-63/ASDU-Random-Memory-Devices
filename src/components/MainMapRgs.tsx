@@ -417,6 +417,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           break;
         case 52: // режим назначения
           datestat.finish = false;
+          datestat.demo = false;
           dispatch(statsaveCreate(datestat));
           setToDoMode(false);
           inTarget = false;
@@ -432,6 +433,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           break;
         case 54: // режим Показать связи
           datestat.finish = false;
+          datestat.demo = false;
           dispatch(statsaveCreate(datestat));
           SetHelper(0);
           ymaps && DoDemo(ymaps);

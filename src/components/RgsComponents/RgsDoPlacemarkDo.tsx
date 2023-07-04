@@ -53,7 +53,6 @@ const RgsDoPlacemarkDo = (props: {
   let nomSvg = -1;
   if (idx < map.tflight.length) {
     mapp = map.tflight[idx].tlsost.num.toString();
-    //console.log("MAPP:", idx, mapp, props.vert);
     mappp = map.tflight[idx];
   }
   if (props.massMem.length >= 1) {
@@ -93,12 +92,14 @@ const RgsDoPlacemarkDo = (props: {
     if (!debug) {
       let mpp = mapp;
       if (DEMO) {
-        mpp = "18"; // режим Демо
+        mpp = "1"; // режим Демо
       } else {
         if (nomSvg > 0) mpp = nomSvg.toString();
         if (linked >= 0) mpp = "4";
       }
       host = window.location.origin + "/free/img/trafficLights/" + mpp + ".svg";
+    } else {
+      if (DEMO) host = "https://localhost:3000/1.svg";
     }
     return host;
   }, [mapp, nomSvg, idx, props.vert, debug, DEMO]);
