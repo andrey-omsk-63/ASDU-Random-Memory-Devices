@@ -341,7 +341,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       }
     }
     if (nomInMass >= 0) {
-      massfaz[nomInMass].runRec = 1;
+      massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;;
       dispatch(massfazCreate(massfaz));
       setChangeFaz(nomInMass);
     }
@@ -402,7 +402,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const PressButton = (mode: number) => {
-    console.log("MODE:", mode);
+    //console.log("MODE:", mode);
     massVert = [];
     if (restartBan) {
       SoobErr("Завершите режим управления нормальным образом");
