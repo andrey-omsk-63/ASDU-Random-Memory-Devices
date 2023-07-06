@@ -341,7 +341,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       }
     }
     if (nomInMass >= 0) {
-      massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;;
+      massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
       dispatch(massfazCreate(massfaz));
       setChangeFaz(nomInMass);
     }
@@ -457,6 +457,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     StatusQuo();
     setFlagPusk(!flagPusk);
   };
+
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(map.tflight).length) {
     for (let i = 0; i < addobj.addObjects.length; i++)

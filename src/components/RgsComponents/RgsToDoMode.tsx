@@ -21,9 +21,11 @@ import { styleStrokaTakt } from "./GsComponentsStyle";
 let init = true;
 let lengthMassMem = 0;
 let timerId: any[] = [];
-
 let massInt: any[][] = []; //null
+
 let oldFaz = -1;
+let needRend = false;
+//let massTm: any = [];
 
 const RgsToDoMode = (props: {
   massMem: Array<number>;
@@ -63,8 +65,24 @@ const RgsToDoMode = (props: {
   const DEMO = datestat.demo;
   const homeRegion = datestat.region;
   const dispatch = useDispatch();
+  let timer = debug ? 15000 : 30000;
   //========================================================
   const [trigger, setTrigger] = React.useState(true);
+  const [flagPusk, setFlagPusk] = React.useState(false);
+
+  const ForcedClose = () => {
+    for (let i = 0; i < timerId.length; i++) {
+      if (timerId[i]) {
+        for (let j = 0; j < massInt[i].length; j++) {
+          if (massInt[i][j]) {
+            clearInterval(massInt[i][j]);
+            massInt[i][j] = null;
+          }
+        }
+        timerId[i] = null;
+      }
+    }
+  };
 
   const handleCloseSetEnd = () => {
     datestat.finish = false; // закончить исполнение
@@ -75,6 +93,7 @@ const RgsToDoMode = (props: {
     init = true;
     oldFaz = -1;
     lengthMassMem = 0;
+    DEMO && ForcedClose();
   };
 
   const MakeMaskFaz = (i: number) => {
@@ -83,6 +102,7 @@ const RgsToDoMode = (props: {
       area: 0,
       id: 0,
       faza: 0,
+      fazaBegin: 0,
       fazaSist: -1,
       phases: [],
       idevice: 0,
@@ -108,21 +128,22 @@ const RgsToDoMode = (props: {
   };
 
   const RunVertex = (mode: number) => {
-    let faz = massfaz[mode];
+    //let faz = massfaz[mode];
     console.log(mode + 1 + "-й светофор пошёл", DEMO, timerId[mode]);
-    !DEMO && SendSocketDispatch(debug, ws, faz.idevice, 9, faz.faza);
+    //!DEMO && SendSocketDispatch(debug, ws, faz.idevice, 9, faz.faza);
     //=====================================
-    let timer = debug ? 15000 : 30000;
     timerId[mode] = setInterval(() => DoTimerId(mode), timer); // 60000
     massInt[mode].push(JSON.parse(JSON.stringify(timerId[mode])));
     //=====================================
     // massfaz[mode].runRec = DEMO ? 4 : 2;
     // dispatch(massfazCreate(massfaz));
-    let massIdevice: Array<number> = [];
-    for (let i = 1; i < massfaz.length - 1; i++) {
-      massIdevice.push(massfaz[i].idevice);
-    }
-    !DEMO && SendSocketRoute(debug, ws, massIdevice, true);
+    //=====================================
+    ToDoMode(mode);
+    // let massIdevice: Array<number> = [];
+    // for (let i = 1; i < massfaz.length - 1; i++) {
+    //   massIdevice.push(massfaz[i].idevice);
+    // }
+    // !DEMO && SendSocketRoute(debug, ws, massIdevice, true);
   };
 
   const FindFaza = () => {
@@ -147,7 +168,10 @@ const RgsToDoMode = (props: {
     if (mass.east.id === kluIn) inFaz = mass.east.wayPointsArray;
     if (mass.south.id === kluIn) inFaz = mass.south.wayPointsArray;
     for (let i = 0; i < inFaz.length; i++) {
-      if (inFaz[i].id === kluOn) faz.faza = Number(inFaz[i].phase);
+      if (inFaz[i].id === kluOn) {
+        faz.faza = Number(inFaz[i].phase);
+        faz.fazaBegin = faz.faza;
+      }
     }
     dispatch(massfazCreate(massfaz));
     RunVertex(mode);
@@ -161,7 +185,6 @@ const RgsToDoMode = (props: {
         if (runREC === 0 || runREC === 2 || runREC === 4) ch++;
       }
     }
-    //console.log("CH:", ch, massfaz);
     if (!ch) {
       console.log("Финиш");
       handleCloseSetEnd();
@@ -171,25 +194,16 @@ const RgsToDoMode = (props: {
   const ToDoMode = (mode: number) => {
     let massIdevice: Array<number> = [];
     if (mode) {
-      for (let i = 1; i < massfaz.length - 1; i++) {
-        massIdevice.push(massfaz[i].idevice);
-      }
+      // for (let i = 1; i < massfaz.length - 1; i++) {
+      //   massIdevice.push(massfaz[i].idevice);
+      // }
+      massIdevice.push(massfaz[mode].idevice);
       !DEMO && SendSocketRoute(debug, ws, massIdevice, true); // выполнение режима
       props.funcMode(mode);
       setTrigger(!trigger);
     } else {
       // принудительное закрытие
-      for (let i = 0; i < timerId.length; i++) {
-        if (timerId[i]) {
-          for (let j = 0; j < massInt[i].length; j++) {
-            if (massInt[i][j]) {
-              clearInterval(massInt[i][j]);
-              massInt[i][j] = null;
-            }
-          }
-          timerId[i] = null;
-        }
-      }
+      ForcedClose();
       console.log("Финиш", timerId, massInt);
       for (let i = 0; i < massfaz.length; i++) {
         if (massfaz[i].runRec === 2) {
@@ -217,10 +231,12 @@ const RgsToDoMode = (props: {
     if (!DEMO) {
       SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
     } else {
-      massfaz[mode].faza = fazer.faza === 2 ? 1 : 2;
-      console.log('massfaz[mode].faza:',mode,massfaz[mode].faza)
-      dispatch(massfazCreate(massfaz));
-      setTrigger(!trigger);
+      if (fazer.runRec < 2) {
+        massfaz[mode].faza = fazer.faza === 2 ? 1 : 2;
+        dispatch(massfazCreate(massfaz));
+        needRend = true;
+        setFlagPusk(!flagPusk);
+      }
     }
     for (let i = 0; i < massInt[mode].length - 1; i++) {
       if (massInt[mode][i]) {
@@ -241,10 +257,16 @@ const RgsToDoMode = (props: {
 
     const ClickVertex = (mode: number) => {
       let fazer = massfaz[mode];
+      console.log("ClickVertex_fazer.runRec:", fazer.runRec);
       if (fazer.runRec === 0) {
-        console.log(mode + 1 + "-й светофор пошёл!!!", timerId[mode]);
+        console.log(mode + 1 + "-й светофор АКТИВИРОВАН", timerId[mode]);
         if (!DEMO) {
-          !DEMO && SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
+          // SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
+          // let massIdevice: Array<number> = [];
+          // for (let i = 1; i < massfaz.length - 1; i++) {
+          //   massIdevice.push(massfaz[i].idevice);
+          // }
+          // SendSocketRoute(debug, ws, massIdevice, true);
         } else {
           // massfaz[mode].faza = fazer.faza === 2 ? 1 : 2;
           // dispatch(massfazCreate(massfaz));
@@ -256,10 +278,16 @@ const RgsToDoMode = (props: {
         // massInt[mode].push(JSON.parse(JSON.stringify(timerId[mode])));
         //============
         massfaz[mode].runRec = DEMO ? 4 : 2;
+        if (DEMO) massfaz[mode].faza = massfaz[mode].fazaBegin
       } else {
         if (fazer.runRec === 2) {
           console.log(mode + 1 + "-й светофор закрыт", timerId[mode]);
-          !DEMO && SendSocketDispatch(debug, ws, fazer.idevice, 9, 9);
+          if (!DEMO) {
+            SendSocketDispatch(debug, ws, fazer.idevice, 9, 9);
+            let massIdevice: Array<number> = [];
+            massIdevice.push(massfaz[mode].idevice);
+            SendSocketRoute(debug, ws, massIdevice, false); // завершенение режима
+          }
           for (let i = 0; i < massInt[mode].length; i++) {
             if (massInt[mode][i]) {
               clearInterval(massInt[mode][i]);
@@ -301,7 +329,7 @@ const RgsToDoMode = (props: {
       }
       let star = "";
       let takt = massfaz[i].faza;
-      console.log('ФАЗА:',i,massfaz[i].faza)
+      //console.log("ФАЗА:", i, massfaz[i].faza);
       if (!massfaz[i].faza) takt = "";
       let fazaImg: null | string = null;
       debug && (fazaImg = datestat.phSvg[0]); // для отладки
@@ -387,21 +415,26 @@ const RgsToDoMode = (props: {
     if (props.changeFaz !== oldFaz) {
       let mode = props.changeFaz;
       console.log(mode + 1 + "-й светофор закрыт", timerId[mode]);
-      !DEMO && SendSocketDispatch(debug, ws, massfaz[mode].idevice, 9, 9);
-      for (let i = 0; i < massInt[mode].length; i++) {
-        if (massInt[mode][i]) {
-          clearInterval(massInt[mode][i]);
-          massInt[mode][i] = null;
+      if (!DEMO) {
+        SendSocketDispatch(debug, ws, massfaz[mode].idevice, 9, 9);
+        let massIdevice: Array<number> = [];
+        massIdevice.push(massfaz[mode].idevice);
+        SendSocketRoute(debug, ws, massIdevice, false); // завершенение режима
+        for (let i = 0; i < massInt[mode].length; i++) {
+          if (massInt[mode][i]) {
+            clearInterval(massInt[mode][i]);
+            massInt[mode][i] = null;
+          }
         }
+        timerId[mode] = null;
       }
-      timerId[mode] = null;
       oldFaz = props.changeFaz;
       FindEnd();
     }
   }
   //========================================================
+
   const CheckRun = React.useCallback(() => {
-    //console.log("Запуск проверки");
     for (let i = 0; i < massfaz.length; i++) {
       const TmOut = (mode: number) => {
         setTimeout(() => {
@@ -419,7 +452,10 @@ const RgsToDoMode = (props: {
     DEMO && CheckRun();
   }, [DEMO, CheckRun, props.changeFaz, trigger]);
 
-  console.log('Перересовка')
+  if (needRend) {
+    needRend = false;
+    setFlagPusk(!flagPusk);
+  }
 
   return (
     <>
