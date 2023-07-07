@@ -15,8 +15,7 @@ import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 
 //import { styleModalEnd } from "../MainMapStyle";
 import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
-import { styleToDoMode, styleStrokaTabl } from "./GsComponentsStyle";
-import { styleStrokaTakt } from "./GsComponentsStyle";
+import {styleStrokaTabl,  styleStrokaTakt } from "./GsComponentsStyle";
 
 let init = true;
 let lengthMassMem = 0;
@@ -450,6 +449,20 @@ const RgsToDoMode = (props: {
     needRend = false;
     setFlagPusk(!flagPusk);
   }
+
+  const styleToDoMode = {
+    position: "relative",
+    marginTop: 0.1,
+    marginLeft: "auto",
+    marginRight: 1,
+    width: "96%",
+    bgcolor: "background.paper",
+    border: "3px solid #000",
+    borderColor: DEMO ? "red" : "primary.main",
+    borderRadius: 2,
+    boxShadow: 24,
+    p: 1.0,
+  };
 
   return (
     <>

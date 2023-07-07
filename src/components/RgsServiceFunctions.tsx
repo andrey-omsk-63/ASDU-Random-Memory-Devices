@@ -812,7 +812,7 @@ export const InputDirect = (func: any) => {
       case 1: // режим назначения
         func(52);
         break;
-      case 2: // режим назначения
+      case 2: // режим Показать связи
         func(54);
         break;
       case 3: // режим Demo
