@@ -15,7 +15,7 @@ import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 
 //import { styleModalEnd } from "../MainMapStyle";
 import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
-import {styleStrokaTabl,  styleStrokaTakt } from "./GsComponentsStyle";
+import { styleStrokaTabl, styleStrokaTakt } from "./GsComponentsStyle";
 
 let init = true;
 let lengthMassMem = 0;
@@ -42,6 +42,10 @@ const RgsToDoMode = (props: {
     const { mapReducer } = state;
     return mapReducer.map.dateMap;
   });
+  let massdk = useSelector((state: any) => {
+    const { massdkReducer } = state;
+    return massdkReducer.massdk;
+  });
   let addobj = useSelector((state: any) => {
     const { addobjReducer } = state;
     return addobjReducer.addobj.dateAdd;
@@ -54,7 +58,7 @@ const RgsToDoMode = (props: {
     const { massfazReducer } = state;
     return massfazReducer.massfaz;
   });
-  //console.log("TODOmassfaz", massfaz);
+  console.log("TODOmassfaz", massfaz);
   let datestat = useSelector((state: any) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
@@ -122,7 +126,15 @@ const RgsToDoMode = (props: {
       maskFaz.id = map.tflight[maskFaz.idx].ID;
       maskFaz.idevice = map.tflight[maskFaz.idx].idevice;
     }
-    maskFaz.img = datestat.phSvg[0]; // для отладки
+    //maskFaz.img = datestat.phSvg[0]; // для отладки
+    if (maskFaz.id < 10000) {
+      for (let j = 0; j < massdk.length; j++) {
+        if (massdk[j].area === maskFaz.area && massdk[j].ID === maskFaz.id) {
+          maskFaz.img = massdk[j].phSvg;
+          break;
+        }
+      }
+    }
     return maskFaz;
   };
 
@@ -323,9 +335,14 @@ const RgsToDoMode = (props: {
       let takt = massfaz[i].faza;
       if (!massfaz[i].faza) takt = "";
       let fazaImg: null | string = null;
-      debug && (fazaImg = datestat.phSvg[0]); // для отладки
+      //debug && (fazaImg = datestat.phSvg[0]); // для отладки
+      fazaImg = massfaz[i].img[takt-1]
+
       let pictImg: any = "";
-      if (massfaz[i].faza) pictImg = OutputFazaImg(fazaImg);
+
+      //console.log("###:", fazaImg, datestat);
+
+      if (massfaz[i].faza) pictImg = OutputFazaImg(fazaImg,massfaz[i].faza);
       if (massfaz[i].id > 10000) pictImg = CircleObj();
 
       resStr.push(

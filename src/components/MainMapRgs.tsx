@@ -27,7 +27,7 @@ import { StrokaMenuGlob, MakingKey } from "./RgsServiceFunctions";
 import { MakeSoobErr, MakeMassRoute } from "./RgsServiceFunctions";
 import { CheckHaveLink, MakeFazer } from "./RgsServiceFunctions";
 
-import { SendSocketGetPhases } from "./RgsSocketFunctions";
+//import { SendSocketGetPhases } from "./RgsSocketFunctions";
 import { SendSocketGetSvg } from "./RgsSocketFunctions";
 
 import { searchControl, styleMenuGl } from "./MainMapStyle";
@@ -76,6 +76,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     return addobjReducer.addobj.dateAdd;
   });
   //console.log("addobj", addobj);
+  let massdk = useSelector((state: any) => {
+    const { massdkReducer } = state;
+    return massdkReducer.massdk;
+  });
   let massfaz = useSelector((state: any) => {
     const { massfazReducer } = state;
     return massfazReducer.massfaz;
@@ -189,8 +193,13 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         datestat.readyPict = false;
         datestat.readyFaza = false;
       }
-      SendSocketGetPhases(debug, ws, homeRegion, area, id);
+      //SendSocketGetPhases(debug, ws, homeRegion, area, id);
+      console.log("@@@:", area, id, massdk[index]);
       SendSocketGetSvg(debug, ws, homeRegion, area, id);
+      // for (let i = 0; i < massdk[index].phSvg.length; i++) {
+      //   datestat.phSvg[i] = massdk[index].phSvg[i];
+      // }
+      datestat.phSvg = massdk[index].phSvg;
       dispatch(statsaveCreate(datestat));
       setAppoint(true);
     }
@@ -265,6 +274,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       } else {
         let mass = map.tflight[index]; // перекрёсток
         klu = MakingKey(homeRegion, mass.area.num, mass.ID);
+        console.log('***',index,mass,klu)
       }
       if (!massMem.length) {
         if (index < map.tflight.length) {
@@ -273,7 +283,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           AddVertex(klu, index, -1);
         }
       } else {
-        if (massMem.length === 1 && klu.length > 6) {
+
+        console.log('!!!',massMem,klu)
+
+        if (massMem.length === 1 && klu.length > 8) {
           SoobErr("Объекты могут задаваться только в начале и конце маршрута");
         } else {
           let have = -1;
@@ -333,6 +346,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
   //=== обработка instanceRef ==============================
   const FindNearVertex = () => {
+    console.log("1MASSFAZ:", massfaz);
     let nomInMass = -1;
     for (let i = 0; i < massMem.length; i++) {
       if (massfaz[i].runRec === 2) {
@@ -362,6 +376,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       mapp.current.events.remove("contextmenu", funcContex);
       funcContex = function (e: any) {
         if (mapp.current.hint) {
+          console.log("2MASSFAZ:", massfaz);
           if (inTarget && !inDemo) InputerObject(e.get("coords")); // нажата правая кнопка мыши
           if (!inTarget && !inDemo) FindNearVertex();
         }
@@ -570,7 +585,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                   {processObject && (
                     <RgsProcessObject setOpen={setProcessObject} idx={idxObj} />
                   )}
-                  {appoint && datestat.readyPict && datestat.readyFaza && (
+                  {/* {appoint && datestat.readyPict && datestat.readyFaza && ( */}
+                  {appoint && datestat.readyPict && (
                     <RgsAppointVertex setOpen={setAppoint} idx={idxObj} />
                   )}
                   {openSoobErr && (
