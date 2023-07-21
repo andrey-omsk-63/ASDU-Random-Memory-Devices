@@ -668,17 +668,22 @@ export const OutputNumFaza = (
     let widthHeight = (hBlock / 12) * 3.7;
     if (!img) widthHeight = hBlock / 12;
     return (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
-        style={{ width: widthHeight, height: widthHeight }}
-      >
-        <image
-          width={"95%"}
-          height={"100%"}
-          xlinkHref={"data:image/png;base64," + img}
-        />
-      </svg>
+      <>
+        {img && (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            style={{ width: widthHeight, height: widthHeight }}
+          >
+            <image
+              width={"95%"}
+              height={"100%"}
+              xlinkHref={"data:image/png;base64," + img}
+            />
+          </svg>
+        )}
+        {!img && <Box sx={{ fontSize: 36 }}>{num}</Box>}
+      </>
     );
   };
 

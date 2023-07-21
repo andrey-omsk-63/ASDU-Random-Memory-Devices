@@ -274,7 +274,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       } else {
         let mass = map.tflight[index]; // перекрёсток
         klu = MakingKey(homeRegion, mass.area.num, mass.ID);
-        console.log('***',index,mass,klu)
       }
       if (!massMem.length) {
         if (index < map.tflight.length) {
@@ -283,9 +282,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           AddVertex(klu, index, -1);
         }
       } else {
-
-        console.log('!!!',massMem,klu)
-
         if (massMem.length === 1 && klu.length > 8) {
           SoobErr("Объекты могут задаваться только в начале и конце маршрута");
         } else {

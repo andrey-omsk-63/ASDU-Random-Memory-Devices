@@ -4,6 +4,10 @@ import { useSelector } from "react-redux";
 import { Placemark, YMapsApi } from "react-yandex-maps";
 
 import { GetPointData } from "../RgsServiceFunctions";
+import { imgFaza } from "./otladkaPicFaza";
+
+let FAZASIST = -1;
+//let oldFAZASIST = 1;
 
 const RgsDoPlacemarkDo = (props: {
   ymaps: YMapsApi | null;
@@ -47,24 +51,19 @@ const RgsDoPlacemarkDo = (props: {
   let idx = props.idx;
   let mapp = map.tflight[0].tlsost.num.toString();
   let mappp = map.tflight[0];
-  // let pA = -1;
-  // let pB = -1;
   let pC = -1;
   let nomSvg = -1;
   if (idx < map.tflight.length) {
     mapp = map.tflight[idx].tlsost.num.toString();
     mappp = map.tflight[idx];
   }
-  if (props.massMem.length >= 1) {
-    // pA = props.massMem[0];
-    // pB = props.massMem[props.massMem.length - 1];
-    //if (datestat.toDoMode) pC = props.massMem.indexOf(props.idx);
-    pC = props.massMem.indexOf(props.idx);
-  }
+  if (props.massMem.length >= 1) pC = props.massMem.indexOf(props.idx);
   let fazaImg: null | string = null;
+  FAZASIST = !debug ? -1 : 0;
   if (!debug && pC >= 0) {
     for (let i = 0; i < massfaz.length; i++) {
       if (mappp.idevice === massfaz[i].idevice) {
+        FAZASIST = massfaz[i].fazaSist;
         if (massfaz[i].fazaSist === 11 || massfaz[i].fazaSist === 15) {
           nomSvg = 12; // ОС
           pC = -1;
@@ -73,7 +72,11 @@ const RgsDoPlacemarkDo = (props: {
             nomSvg = 7; // ЖМ
             pC = -1;
           } else {
-            if (massfaz[i].fazaSist > 0 && massfaz[i].img) {
+            if (
+              massfaz[i].fazaSist > 0 &&
+              massfaz[i].fazaSist < 9 &&
+              massfaz[i].img
+            ) {
               if (massfaz[i].fazaSist <= massfaz[i].img.length)
                 fazaImg = massfaz[i].img[massfaz[i].fazaSist - 1];
             }
@@ -81,14 +84,15 @@ const RgsDoPlacemarkDo = (props: {
         }
       }
     }
+    //console.log("3FAZASIST:", FAZASIST);
   }
-  debug && (fazaImg = datestat.phSvg[0]); // для отладки
+  debug && (fazaImg = imgFaza); // для отладки
+  //debug && (fazaImg = null); // для отладки
 
   const Hoster = React.useCallback(() => {
     let host = "https://localhost:3000/18.svg";
     let linked = props.vert.indexOf(idx);
     if (linked >= 0) host = "https://localhost:3000/77.svg";
-    //if (DEMO) console.log('#MASSFAZ:',massfaz)
     if (!debug) {
       let mpp = mapp;
       if (DEMO) {
@@ -190,33 +194,65 @@ const RgsDoPlacemarkDo = (props: {
   //   };
   // }, [createChipsLayout, mappp.tlsost.num]);
 
-  const GetPointOptions0 = (Hoster: any) => {
-    let imger = window.location.origin + "/free/img/notImage.png";
-    if (Hoster) imger = "data:image/png;base64," + Hoster;
+  const GetPointOptions0 = React.useCallback(
+    (Hoster: any) => {
+      if (!Hoster) console.log("Картинка фазы:", Hoster, FAZASIST, massfaz);
+      let imger = window.location.origin + "/free/img/notImage.png";
+      let FZSIST = debug ? 1 : FAZASIST;
+      // if (FAZASIST === 9) {
+      //   FZSIST = debug ? 1 : oldFAZASIST;
+      // } else {
+      //   oldFAZASIST = FAZASIST;
+      // }
 
-    return {
-      // данный тип макета
-      iconLayout: "default#image",
-      // изображение иконки метки
-      //iconImageHref: '/faza.png',
-      // iconImageHref: 'data:image/png;base64,' + Hoster,
-      iconImageHref: imger,
-      // размеры метки
-      iconImageSize: [50, 50],
-      // её "ножки" (точки привязки)
-      //iconImageOffset: [-15, -38],
-      iconImageOffset: [-25, -25],
-    };
-  };
+      //console.log("oldFAZASIST:", oldFAZASIST);
+
+      let iconSize = Hoster ? 50 : 25;
+      let iconOffset = Hoster ? -25 : -12.5;
+
+      if (Hoster) imger = "data:image/png;base64," + Hoster;
+
+      if (!Hoster) {
+        if (debug) {
+          imger = "https://localhost:3000/1.jpg";
+        } else {
+          imger = window.location.origin + "/free/img/" + FZSIST + ".jpg";
+        }
+      }
+
+      return {
+        // данный тип макета
+        iconLayout: "default#image",
+        // изображение иконки метки
+        //iconImageHref: '/faza.png',
+        // iconImageHref: 'data:image/png;base64,' + Hoster,
+        iconImageHref: imger,
+        // размеры метки
+        iconImageSize: [iconSize, iconSize],
+        // её "ножки" (точки привязки)
+        //iconImageOffset: [-15, -38],
+        iconImageOffset: [iconOffset, iconOffset],
+      };
+    },
+    [debug]
+  );
 
   const getPointOptions1 = React.useCallback(() => {
     let numSost = datestat.demo ? 18 : mappp.tlsost.num;
-    return pC < 0
+
+    return pC < 0 || FAZASIST < 0
       ? {
           iconLayout: createChipsLayout(calculate, numSost),
         }
       : GetPointOptions0(fazaImg);
-  }, [createChipsLayout, mappp.tlsost.num, fazaImg, pC, datestat.demo]);
+  }, [
+    createChipsLayout,
+    GetPointOptions0,
+    mappp.tlsost.num,
+    fazaImg,
+    pC,
+    datestat.demo,
+  ]);
 
   const getPointOptions2 = () => {
     let colorBalloon = "islands#violetCircleIcon";

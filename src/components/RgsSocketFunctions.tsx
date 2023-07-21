@@ -196,7 +196,7 @@ export const SendSocketGetPhases = (
   area: string,
   id: number,
 ) => {
-  console.log('getPhases:', region, area, id);
+  //console.log('getPhases:', region, area, id);
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {

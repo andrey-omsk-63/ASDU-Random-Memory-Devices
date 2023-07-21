@@ -337,11 +337,7 @@ const RgsToDoMode = (props: {
       let fazaImg: null | string = null;
       //debug && (fazaImg = datestat.phSvg[0]); // для отладки
       fazaImg = massfaz[i].img[takt-1]
-
       let pictImg: any = "";
-
-      //console.log("###:", fazaImg, datestat);
-
       if (massfaz[i].faza) pictImg = OutputFazaImg(fazaImg,massfaz[i].faza);
       if (massfaz[i].id > 10000) pictImg = CircleObj();
 
