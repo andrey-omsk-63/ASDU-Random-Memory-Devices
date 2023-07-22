@@ -1,11 +1,11 @@
-import * as React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import * as React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { massfazCreate } from "../../redux/actions";
+import { massfazCreate } from '../../redux/actions';
 
-import { Placemark, YMapsApi } from "react-yandex-maps";
+import { Placemark, YMapsApi } from 'react-yandex-maps';
 
-import { GetPointData } from "../RgsServiceFunctions";
+import { GetPointData } from '../RgsServiceFunctions';
 //import { imgFaza } from "./otladkaPicFaza";
 
 let FAZASIST = -1;
@@ -78,11 +78,7 @@ const RgsDoPlacemarkDo = (props: {
             nomSvg = 7; // ЖМ
             pC = -1;
           } else {
-            if (
-              massfaz[i].fazaSist > 0 &&
-              massfaz[i].fazaSist < 9 &&
-              massfaz[i].img
-            ) {
+            if (massfaz[i].fazaSist > 0 && massfaz[i].fazaSist < 9 && massfaz[i].img) {
               if (massfaz[i].fazaSist <= massfaz[i].img.length)
                 fazaImg = massfaz[i].img[massfaz[i].fazaSist - 1];
               massfaz[i].fazaSistOld = massfaz[i].fazaSist;
@@ -98,20 +94,20 @@ const RgsDoPlacemarkDo = (props: {
   //debug && (fazaImg = null); // для отладки
 
   const Hoster = React.useCallback(() => {
-    let host = "https://localhost:3000/18.svg";
+    let host = 'https://localhost:3000/18.svg';
     let linked = props.vert.indexOf(idx);
-    if (linked >= 0) host = "https://localhost:3000/77.svg";
+    if (linked >= 0) host = 'https://localhost:3000/77.svg';
     if (!debug) {
       let mpp = mapp;
       if (DEMO) {
-        mpp = "1"; // режим Демо
+        mpp = '1'; // режим Демо
       } else {
         if (nomSvg > 0) mpp = nomSvg.toString();
-        if (linked >= 0) mpp = "4";
+        if (linked >= 0) mpp = '4';
       }
-      host = window.location.origin + "/free/img/trafficLights/" + mpp + ".svg";
+      host = window.location.origin + '/free/img/trafficLights/' + mpp + '.svg';
     } else {
-      if (DEMO) host = "https://localhost:3000/1.svg";
+      if (DEMO) host = 'https://localhost:3000/1.svg';
     }
     return host;
   }, [mapp, nomSvg, idx, props.vert, debug, DEMO]);
@@ -121,9 +117,7 @@ const RgsDoPlacemarkDo = (props: {
       const Chips = props.ymaps?.templateLayoutFactory.createClass(
         '<div class="placemark"  ' +
           `style="background-image:url(${Hoster()}); ` +
-          `background-size: 100%; transform: rotate(${
-            rotateDeg ?? 0
-          }deg);\n"></div>`,
+          `background-size: 100%; transform: rotate(${rotateDeg ?? 0}deg);\n"></div>`,
         {
           build: function () {
             Chips.superclass.build.call(this);
@@ -134,7 +128,7 @@ const RgsDoPlacemarkDo = (props: {
               let zoom = map.getZoom();
               // Подпишемся на событие изменения области просмотра карты.
               map.events.add(
-                "boundschange",
+                'boundschange',
                 function () {
                   // Запустим перестраивание макета при изменении уровня зума.
                   const currentZoom = map.getZoom();
@@ -144,37 +138,36 @@ const RgsDoPlacemarkDo = (props: {
                     this.rebuild();
                   }
                 },
-                this
+                this,
               );
             }
             const options = this.getData().options,
               // Получим размер метки в зависимости от уровня зума.
               size = calcFunc(map.getZoom()) + 6,
-              element =
-                this.getParentElement().getElementsByClassName("placemark")[0],
+              element = this.getParentElement().getElementsByClassName('placemark')[0],
               // По умолчанию при задании своего HTML макета фигура активной области не задается,
               // и её нужно задать самостоятельно.
               // Создадим фигуру активной области "Круг".
               circleShape = {
-                type: "Circle",
+                type: 'Circle',
                 coordinates: [0, 0],
                 radius: size / 2,
               };
             // Зададим высоту и ширину метки.
-            element.style.width = element.style.height = size + "px";
+            element.style.width = element.style.height = size + 'px';
             // Зададим смещение.
             //element.style.marginLeft = element.style.marginTop =
             //-size / 2 + "px";
-            element.style.marginLeft = -size / 2.0 + "px";
-            element.style.marginTop = -size / 1.97 + "px";
+            element.style.marginLeft = -size / 2.0 + 'px';
+            element.style.marginTop = -size / 1.97 + 'px';
             // Зададим фигуру активной области.
-            options.set("shape", circleShape);
+            options.set('shape', circleShape);
           },
-        }
+        },
       );
       return Chips;
     },
-    [Hoster, props.ymaps?.templateLayoutFactory]
+    [Hoster, props.ymaps?.templateLayoutFactory],
   );
 
   const calculate = function (zoom: number): number {
@@ -196,37 +189,32 @@ const RgsDoPlacemarkDo = (props: {
     }
   };
 
-  // const getPointOptions1 = React.useCallback(() => {
-  //   return {
-  //     iconLayout: createChipsLayout(calculate, mappp.tlsost.num),
-  //   };
-  // }, [createChipsLayout, mappp.tlsost.num]);
-
   const GetPointOptions0 = React.useCallback(
     (hoster: any) => {
-      let Hoster = hoster
-      if (!Hoster) console.log("Картинка фазы:", Hoster, FAZASIST, massfaz);
-      let imger = window.location.origin + "/free/img/notImage.png";
-      let FZSIST = debug ? 1 : FAZASIST;
+      let Hoster = hoster;
+      if (!Hoster) console.log('Картинка фазы:', Hoster, nomInMassfaz, FAZASIST, massfaz);
+      let imger = window.location.origin + '/free/img/notImage.png';
+      let FZSIST = FAZASIST;
       if (FAZASIST === 9) {
         FZSIST = debug ? 1 : massfaz[nomInMassfaz].fazaSistOld;
-        console.log("oldFAZASIST:", FZSIST);
+        console.log('oldFAZASIST:', FZSIST);
         Hoster = massfaz[nomInMassfaz].img[massfaz[nomInMassfaz].fazaSistOld - 1];
       }
       let iconSize = Hoster ? 50 : 25;
       let iconOffset = Hoster ? -25 : -12.5;
-      if (Hoster) imger = "data:image/png;base64," + Hoster;
+      if (Hoster) imger = 'data:image/png;base64,' + Hoster;
       if (!Hoster) {
         if (debug) {
-          imger = "https://localhost:3000/1.jpg";
+          imger = 'https://localhost:3000/' + FZSIST + '.jpg';
         } else {
-          imger = window.location.origin + "/free/img/" + FZSIST + ".jpg";
+          imger = window.location.origin + '/free/img/' + FZSIST + '.jpg';
         }
+        console.log('Fазы:', imger);
       }
 
       return {
         // данный тип макета
-        iconLayout: "default#image",
+        iconLayout: 'default#image',
         // изображение иконки метки
         //iconImageHref: '/faza.png',
         // iconImageHref: 'data:image/png;base64,' + Hoster,
@@ -238,7 +226,7 @@ const RgsDoPlacemarkDo = (props: {
         iconImageOffset: [iconOffset, iconOffset],
       };
     },
-    [debug,massfaz]
+    [debug, massfaz],
   );
 
   const getPointOptions1 = React.useCallback(() => {
@@ -249,17 +237,10 @@ const RgsDoPlacemarkDo = (props: {
           iconLayout: createChipsLayout(calculate, numSost),
         }
       : GetPointOptions0(fazaImg);
-  }, [
-    createChipsLayout,
-    GetPointOptions0,
-    mappp.tlsost.num,
-    fazaImg,
-    pC,
-    DEMO,
-  ]);
+  }, [createChipsLayout, GetPointOptions0, mappp.tlsost.num, fazaImg, pC, DEMO]);
 
   const getPointOptions2 = () => {
-    let colorBalloon = "islands#violetCircleIcon";
+    let colorBalloon = 'islands#violetCircleIcon';
     return {
       preset: colorBalloon,
     };
@@ -275,14 +256,12 @@ const RgsDoPlacemarkDo = (props: {
         //   iconLayout: createChipsLayout(calculate, mappp.tlsost.num),
         // }}
 
-        options={
-          idx < map.tflight.length ? getPointOptions1() : getPointOptions2()
-        }
-        modules={["geoObject.addon.balloon", "geoObject.addon.hint"]}
+        options={idx < map.tflight.length ? getPointOptions1() : getPointOptions2()}
+        modules={['geoObject.addon.balloon', 'geoObject.addon.hint']}
         onClick={() => props.OnPlacemarkClickPoint(idx)}
       />
     ),
-    [idx, map, addobj, getPointOptions1, bindings, props]
+    [idx, map, addobj, getPointOptions1, bindings, props],
   );
   return MemoPlacemarkDo;
 };
