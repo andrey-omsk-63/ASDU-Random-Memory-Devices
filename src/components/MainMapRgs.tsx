@@ -110,6 +110,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const [restartBan, setRestartBan] = React.useState(false);
   const [changeFaz, setChangeFaz] = React.useState(0);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
+  const [demoSost, setDemoSost] = React.useState(-1);
   const mapp = React.useRef<any>(null);
 
   const addRoute = (ymaps: any, bound: boolean) => {
@@ -528,6 +529,11 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     );
   };
 
+  const ChangeDemoSost = (mode: number) => {
+    console.log('ChangeDemoSost:',mode)
+    setDemoSost(mode + demoSost); // костыль
+  };
+
   if (needRend) {
     needRend = false;
     setFlagPusk(!flagPusk);
@@ -604,6 +610,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                 trigger={props.trigger}
                 changeFaz={changeFaz}
                 ban={setRestartBan}
+                changeDemo={ChangeDemoSost}
               />
             )}
           </Grid>

@@ -24,7 +24,6 @@ let massInt: any[][] = []; //null
 
 let oldFaz = -1;
 let needRend = false;
-//let massTm: any = [];
 
 const RgsToDoMode = (props: {
   massMem: Array<number>;
@@ -36,6 +35,7 @@ const RgsToDoMode = (props: {
   trigger: boolean;
   changeFaz: number;
   ban: Function;
+  changeDemo: Function;
 }) => {
   //== Piece of Redux ======================================
   const map = useSelector((state: any) => {
@@ -68,7 +68,7 @@ const RgsToDoMode = (props: {
   const DEMO = datestat.demo;
   const homeRegion = datestat.region;
   const dispatch = useDispatch();
-  let timer = debug ? 15000 : 60000;
+  let timer = debug || DEMO ? 15000 : 60000;
   //========================================================
   const [trigger, setTrigger] = React.useState(true);
   const [flagPusk, setFlagPusk] = React.useState(false);
@@ -107,6 +107,7 @@ const RgsToDoMode = (props: {
       faza: 0,
       fazaBegin: 0,
       fazaSist: -1,
+      fazaSistOld: -1,
       phases: [],
       idevice: 0,
       name: "",
@@ -241,12 +242,13 @@ const RgsToDoMode = (props: {
       fazer.runRec === 2 &&
         SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
     } else {
-      if (fazer.runRec < 2) {
-        massfaz[mode].faza = fazer.faza === 2 ? 1 : 2;
-        dispatch(massfazCreate(massfaz));
-        needRend = true;
-        setFlagPusk(!flagPusk);
-      }
+      //if (fazer.runRec < 2) {
+      massfaz[mode].fazaSist = fazer.fazaSist === 2 ? 1 : 2;
+      dispatch(massfazCreate(massfaz));
+      props.changeDemo(fazer.fazaSist)
+      needRend = true;
+      setFlagPusk(!flagPusk);
+      //}
     }
     for (let i = 0; i < massInt[mode].length - 1; i++) {
       if (massInt[mode][i]) {
@@ -275,9 +277,9 @@ const RgsToDoMode = (props: {
           // massIdevice.push(massfaz[mode].idevice);
           // SendSocketRoute(debug, ws, massIdevice, true);
         } else {
-          // massfaz[mode].faza = fazer.faza === 2 ? 1 : 2;
-          // dispatch(massfazCreate(massfaz));
-          // setTrigger(!trigger);
+          massfaz[mode].fazaSist = fazer.fazaSist === 2 ? 1 : 2;
+          dispatch(massfazCreate(massfaz));
+          setTrigger(!trigger);
         }
         //============
         // timerId[mode] = setInterval(() => DoTimerId(mode), timer); // 60000
@@ -336,9 +338,9 @@ const RgsToDoMode = (props: {
       if (!massfaz[i].faza) takt = "";
       let fazaImg: null | string = null;
       //debug && (fazaImg = datestat.phSvg[0]); // для отладки
-      fazaImg = massfaz[i].img[takt-1]
+      fazaImg = massfaz[i].img[takt - 1];
       let pictImg: any = "";
-      if (massfaz[i].faza) pictImg = OutputFazaImg(fazaImg,massfaz[i].faza);
+      if (massfaz[i].faza) pictImg = OutputFazaImg(fazaImg, massfaz[i].faza);
       if (massfaz[i].id > 10000) pictImg = CircleObj();
 
       resStr.push(

@@ -1,12 +1,15 @@
 import * as React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
+import { massfazCreate } from "../../redux/actions";
 
 import { Placemark, YMapsApi } from "react-yandex-maps";
 
 import { GetPointData } from "../RgsServiceFunctions";
-import { imgFaza } from "./otladkaPicFaza";
+//import { imgFaza } from "./otladkaPicFaza";
 
 let FAZASIST = -1;
+let nomInMassfaz = -1;
 //let oldFAZASIST = 1;
 
 const RgsDoPlacemarkDo = (props: {
@@ -47,6 +50,7 @@ const RgsDoPlacemarkDo = (props: {
   });
   const debug = datestat.debug;
   const DEMO = datestat.demo;
+  const dispatch = useDispatch();
   //===========================================================
   let idx = props.idx;
   let mapp = map.tflight[0].tlsost.num.toString();
@@ -60,10 +64,12 @@ const RgsDoPlacemarkDo = (props: {
   if (props.massMem.length >= 1) pC = props.massMem.indexOf(props.idx);
   let fazaImg: null | string = null;
   FAZASIST = !debug ? -1 : 0;
-  if (!debug && pC >= 0) {
+  nomInMassfaz = -1;
+  if (pC >= 0) {
     for (let i = 0; i < massfaz.length; i++) {
       if (mappp.idevice === massfaz[i].idevice) {
         FAZASIST = massfaz[i].fazaSist;
+        nomInMassfaz = i;
         if (massfaz[i].fazaSist === 11 || massfaz[i].fazaSist === 15) {
           nomSvg = 12; // ОС
           pC = -1;
@@ -79,6 +85,8 @@ const RgsDoPlacemarkDo = (props: {
             ) {
               if (massfaz[i].fazaSist <= massfaz[i].img.length)
                 fazaImg = massfaz[i].img[massfaz[i].fazaSist - 1];
+              massfaz[i].fazaSistOld = massfaz[i].fazaSist;
+              dispatch(massfazCreate(massfaz));
             }
           }
         }
@@ -86,7 +94,7 @@ const RgsDoPlacemarkDo = (props: {
     }
     //console.log("3FAZASIST:", FAZASIST);
   }
-  debug && (fazaImg = imgFaza); // для отладки
+  //debug && (fazaImg = imgFaza); // для отладки
   //debug && (fazaImg = null); // для отладки
 
   const Hoster = React.useCallback(() => {
@@ -195,23 +203,19 @@ const RgsDoPlacemarkDo = (props: {
   // }, [createChipsLayout, mappp.tlsost.num]);
 
   const GetPointOptions0 = React.useCallback(
-    (Hoster: any) => {
+    (hoster: any) => {
+      let Hoster = hoster
       if (!Hoster) console.log("Картинка фазы:", Hoster, FAZASIST, massfaz);
       let imger = window.location.origin + "/free/img/notImage.png";
       let FZSIST = debug ? 1 : FAZASIST;
-      // if (FAZASIST === 9) {
-      //   FZSIST = debug ? 1 : oldFAZASIST;
-      // } else {
-      //   oldFAZASIST = FAZASIST;
-      // }
-
-      //console.log("oldFAZASIST:", oldFAZASIST);
-
+      if (FAZASIST === 9) {
+        FZSIST = debug ? 1 : massfaz[nomInMassfaz].fazaSistOld;
+        console.log("oldFAZASIST:", FZSIST);
+        Hoster = massfaz[nomInMassfaz].img[massfaz[nomInMassfaz].fazaSistOld - 1];
+      }
       let iconSize = Hoster ? 50 : 25;
       let iconOffset = Hoster ? -25 : -12.5;
-
       if (Hoster) imger = "data:image/png;base64," + Hoster;
-
       if (!Hoster) {
         if (debug) {
           imger = "https://localhost:3000/1.jpg";
@@ -234,11 +238,11 @@ const RgsDoPlacemarkDo = (props: {
         iconImageOffset: [iconOffset, iconOffset],
       };
     },
-    [debug]
+    [debug,massfaz]
   );
 
   const getPointOptions1 = React.useCallback(() => {
-    let numSost = datestat.demo ? 18 : mappp.tlsost.num;
+    let numSost = DEMO ? 18 : mappp.tlsost.num;
 
     return pC < 0 || FAZASIST < 0
       ? {
@@ -251,7 +255,7 @@ const RgsDoPlacemarkDo = (props: {
     mappp.tlsost.num,
     fazaImg,
     pC,
-    datestat.demo,
+    DEMO,
   ]);
 
   const getPointOptions2 = () => {

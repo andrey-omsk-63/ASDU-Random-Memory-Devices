@@ -73,6 +73,7 @@ export interface Fazer {
   faza: number;
   fazaBegin: number;
   fazaSist: number;
+  fazaSistOld: number;
   phases: Array<number>;
   idevice: number;
   name: string;
