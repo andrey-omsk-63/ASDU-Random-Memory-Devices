@@ -202,7 +202,7 @@ const RgsDoPlacemarkDo = (props: {
       let FZSIST = FAZASIST;
       if (FAZASIST === 9 || !FAZASIST) {
         FZSIST = massfaz[nomInMassfaz].fazaSistOld;
-        console.log("oldFAZASIST:", FZSIST);
+        //console.log("oldFAZASIST:", FZSIST);
         Hoster =
           massfaz[nomInMassfaz].img[massfaz[nomInMassfaz].fazaSistOld - 1];
       }
