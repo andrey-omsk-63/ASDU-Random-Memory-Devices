@@ -187,10 +187,12 @@ const App = () => {
           let flagChange = false;
           for (let i = 0; i < data.phases.length; i++) {
             for (let j = 0; j < massfaz.length; j++) {
-              if (massfaz[j].idevice === data.phases[i].device) {
-                if (massfaz[j].fazaSist !== data.phases[i].phase) {
-                  massfaz[j].fazaSist = data.phases[i].phase;
-                  flagChange = true;
+              if (data.phases[i].phase) {
+                if (massfaz[j].idevice === data.phases[i].device) {
+                  if (massfaz[j].fazaSist !== data.phases[i].phase) {
+                    massfaz[j].fazaSist = data.phases[i].phase;
+                    flagChange = true;
+                  }
                 }
               }
             }
@@ -226,20 +228,6 @@ const App = () => {
           setTrigger(!trigger);
           break;
         case "getPhases":
-          //console.log("getPhases:", data.phases);
-          //============
-          // dateStat.area = data.pos.area;
-          // dateStat.id = data.pos.id.toString();
-          // dateStat.phSvg = Array(8).fill(null);
-          // if (data.phases) {
-          //   for (let i = 0; i < data.phases.length; i++) {
-          //     dateStat.phSvg[i] = data.phases[i].phase;
-          //   }
-          // }
-          // dateStat.readyFaza = true;
-          // dispatch(statsaveCreate(dateStat));
-          // setTrigger(!trigger);
-          //============
           for (let i = 0; i < massdk.length; i++) {
             if (
               massdk[i].region.toString() === data.pos.region &&
@@ -248,7 +236,6 @@ const App = () => {
             ) {
               if (data.phases) {
                 if (data.phases.length) {
-                  console.log("######:", i, data.phases);
                   for (let j = 0; j < data.phases.length; j++) {
                     massdk[i].phSvg[j] = data.phases[j].phase;
                   }
