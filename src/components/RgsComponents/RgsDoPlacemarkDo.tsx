@@ -60,7 +60,7 @@ const RgsDoPlacemarkDo = (props: {
   }
   if (props.massMem.length >= 1) pC = props.massMem.indexOf(props.idx);
   let fazaImg: null | string = null;
-  FAZASIST =  -1;
+  FAZASIST = -1;
   nomInMassfaz = -1;
   if (pC >= 0) {
     for (let i = 0; i < massfaz.length; i++) {
@@ -237,7 +237,9 @@ const RgsDoPlacemarkDo = (props: {
 
   const getPointOptions1 = React.useCallback(() => {
     let numSost = DEMO ? 18 : mappp.tlsost.num;
-    return pC < 0 || FAZASIST < 0
+    return pC < 0 ||
+      FAZASIST < 0 ||
+      (FAZASIST === 9 && massfaz[nomInMassfaz].fazaSistOld < 0)
       ? {
           iconLayout: createChipsLayout(calculate, numSost),
         }
