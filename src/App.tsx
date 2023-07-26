@@ -137,6 +137,10 @@ const App = () => {
       let area = massdk[i].area.toString();
       SendSocketGetPhases(dateStat.debug, WS, reg, area, massdk[i].ID);
     }
+    flagMap = false;
+    flagBindings = false;
+    flagAddObjects = false;
+    setOpenMapInfo(true);
   };
 
   const host =
@@ -242,7 +246,6 @@ const App = () => {
           }
           break;
         case "getSvg":
-          //console.log("getSvg:", data.status, data.svg, data);
           dateStat.pictSvg = data.svg;
           dateStat.readyPict = true;
           dispatch(statsaveCreate(dateStat));
@@ -284,13 +287,8 @@ const App = () => {
     flagOpenDebug = false;
   }
 
-  if (flagMap && flagBindings && flagAddObjects && !flagOpenWS) {
+  if (flagMap && flagBindings && flagAddObjects && !flagOpenWS)
     Initialisation();
-    flagMap = false;
-    flagBindings = false;
-    flagAddObjects = false;
-    setOpenMapInfo(true);
-  }
 
   return (
     <Grid container sx={{ height: "100vh", width: "100%", bgcolor: "#E9F5D8" }}>
