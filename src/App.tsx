@@ -110,15 +110,10 @@ const App = () => {
     const { massfazReducer } = state;
     return massfazReducer.massfaz;
   });
-  //console.log("APPmassfaz", massfaz);
   let coordinates = useSelector((state: any) => {
     const { coordinatesReducer } = state;
     return coordinatesReducer.coordinates;
   });
-  // let massmode = useSelector((state: any) => {
-  //   const { massmodeReducer } = state;
-  //   return massmodeReducer.massmode;
-  // });
   const dispatch = useDispatch();
   //========================================================
   const Initialisation = () => {

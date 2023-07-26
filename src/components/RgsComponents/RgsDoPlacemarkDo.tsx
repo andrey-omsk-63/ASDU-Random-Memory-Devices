@@ -19,7 +19,6 @@ const RgsDoPlacemarkDo = (props: {
   OnPlacemarkClickPoint: Function;
   vert: Array<number>;
 }) => {
-  //console.log('VERT:', props.idx, props.vert);
   //== Piece of Redux =======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -33,10 +32,6 @@ const RgsDoPlacemarkDo = (props: {
     const { addobjReducer } = state;
     return addobjReducer.addobj.dateAdd;
   });
-  // let massdk = useSelector((state: any) => {
-  //   const { massdkReducer } = state;
-  //   return massdkReducer.massdk;
-  // });
   let massfaz = useSelector((state: any) => {
     const { massfazReducer } = state;
     return massfazReducer.massfaz;
@@ -91,7 +86,6 @@ const RgsDoPlacemarkDo = (props: {
     }
   }
   //debug && (fazaImg = imgFaza); // для отладки
-  //debug && (fazaImg = null); // для отладки
 
   const Hoster = React.useCallback(() => {
     let host = "https://localhost:3000/18.svg";
@@ -202,7 +196,6 @@ const RgsDoPlacemarkDo = (props: {
       let FZSIST = FAZASIST;
       if (FAZASIST === 9 || !FAZASIST) {
         FZSIST = massfaz[nomInMassfaz].fazaSistOld;
-        //console.log("oldFAZASIST:", FZSIST);
         Hoster =
           massfaz[nomInMassfaz].img[massfaz[nomInMassfaz].fazaSistOld - 1];
       }
@@ -215,20 +208,16 @@ const RgsDoPlacemarkDo = (props: {
             ? "https://localhost:3000/" + FZSIST + ".jpg"
             : window.location.origin + "/free/img/" + FZSIST + ".jpg";
         }
-        //console.log("Fазы:", imger);
       }
 
       return {
         // данный тип макета
         iconLayout: "default#image",
         // изображение иконки метки
-        //iconImageHref: '/faza.png',
-        // iconImageHref: 'data:image/png;base64,' + Hoster,
         iconImageHref: imger,
         // размеры метки
         iconImageSize: [iconSize, iconSize],
         // её "ножки" (точки привязки)
-        //iconImageOffset: [-15, -38],
         iconImageOffset: [iconOffset, iconOffset],
       };
     },

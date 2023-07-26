@@ -127,7 +127,6 @@ const RgsToDoMode = (props: {
       maskFaz.id = map.tflight[maskFaz.idx].ID;
       maskFaz.idevice = map.tflight[maskFaz.idx].idevice;
     }
-    //maskFaz.img = datestat.phSvg[0]; // для отладки
     if (maskFaz.id < 10000) {
       for (let j = 0; j < massdk.length; j++) {
         if (massdk[j].area === maskFaz.area && massdk[j].ID === maskFaz.id) {
@@ -227,13 +226,11 @@ const RgsToDoMode = (props: {
       fazer.runRec === 2 &&
         SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
     } else {
-      //if (fazer.runRec < 2) {
       massfaz[mode].fazaSist = fazer.fazaSist === 2 ? 1 : 2;
       dispatch(massfazCreate(massfaz));
       props.changeDemo(fazer.fazaSist);
       needRend = true;
       setFlagPusk(!flagPusk);
-      //}
     }
     for (let i = 0; i < massInt[mode].length - 1; i++) {
       if (massInt[mode][i]) {
@@ -315,7 +312,6 @@ const RgsToDoMode = (props: {
       let takt = massfaz[i].faza;
       if (!massfaz[i].faza) takt = "";
       let fazaImg: null | string = null;
-      //debug && (fazaImg = datestat.phSvg[0]); // для отладки
       fazaImg = massfaz[i].img[takt - 1];
       let pictImg: any = "";
       if (massfaz[i].faza) pictImg = OutputFazaImg(fazaImg, massfaz[i].faza);

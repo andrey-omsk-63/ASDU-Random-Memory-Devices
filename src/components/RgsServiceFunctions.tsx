@@ -11,11 +11,7 @@ import { Pointer } from "../App";
 //import { DateMAP } from "./../interfaceMAP.d";
 import { Tflink, WayPointsArray } from "../interfaceBindings";
 
-import {
-  styleAppSt02,
-  styleAppSt03,
-  //styleAppSt021
-} from "./MainMapStyle";
+import { styleAppSt02, styleAppSt03 } from "./MainMapStyle";
 
 export const MasskPoint = (debug: boolean, rec: any, imgFaza: string) => {
   let masskPoint: Pointer = {
@@ -28,7 +24,6 @@ export const MasskPoint = (debug: boolean, rec: any, imgFaza: string) => {
     phSvg: [],
   };
   let img = null;
-  //if (debug) img = imgFaza;
   masskPoint.ID = rec.ID;
   masskPoint.coordinates[0] = rec.points.Y;
   masskPoint.coordinates[1] = rec.points.X;
@@ -231,7 +226,6 @@ export const GetPointData = (
   } else {
     let idx = index - map.tflight.length;
     cont1 = addobjects[idx].description + "<br/>";
-    // cont2 = "[" + addobjects[idx].region + ", " + addobjects[idx].area;
     cont2 = "[" + addobjects[idx].area + ", " + addobjects[idx].id + "]";
   }
 
@@ -252,25 +246,6 @@ export const GetPointOptions1 = (Hoster: any) => {
     iconImageOffset: [-15, -38],
   };
 };
-
-// export const GetPointOptions2 = (index: number, massMem: Array<number>) => {
-//   let colorBalloon = "islands#violetCircleDotIcon";
-//   let aaa = massMem.indexOf(index);
-
-//   if (aaa >= 0) {
-//     colorBalloon = "islands#redCircleDotIcon";
-//     if (massMem.length === aaa + 1 && massMem.length) {
-//       colorBalloon = "islands#darkBlueStretchyIcon";
-//     }
-//     if (!aaa && massMem.length) {
-//       colorBalloon = "islands#redStretchyIcon";
-//     }
-//   }
-
-//   return {
-//     preset: colorBalloon,
-//   };
-// };
 
 export const MakeSoobErr = (mode: number, klu: string, klu2: string) => {
   let soobErr = "";
@@ -880,9 +855,7 @@ export const InputDirect = (func: any) => {
 
   const styleBoxFormNapr = {
     "& > :not(style)": {
-      //border: 1,
       marginTop: "-12px",
-      //marginLeft: '-12px',
       width: "165px",
     },
   };
@@ -974,7 +947,6 @@ export const InputDirect = (func: any) => {
 
 export const StrokaMenuGlob = (func: any) => {
   const styleApp01 = {
-    //border: 1,
     fontSize: 14,
     marginRight: 0.1,
     marginLeft: 0.5,

@@ -50,12 +50,10 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
-  //console.log("datestat", datestat);
   let bindings = useSelector((state: any) => {
     const { bindingsReducer } = state;
     return bindingsReducer.bindings.dateBindings;
   });
-  // console.log("bindings", bindings);
   let addobj = useSelector((state: any) => {
     const { addobjReducer } = state;
     return addobjReducer.addobj.dateAdd;

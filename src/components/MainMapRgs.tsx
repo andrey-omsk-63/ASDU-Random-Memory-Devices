@@ -27,7 +27,6 @@ import { StrokaMenuGlob, MakingKey } from "./RgsServiceFunctions";
 import { MakeSoobErr, MakeMassRoute } from "./RgsServiceFunctions";
 import { CheckHaveLink, MakeFazer } from "./RgsServiceFunctions";
 
-//import { SendSocketGetPhases } from "./RgsSocketFunctions";
 import { SendSocketGetSvg } from "./RgsSocketFunctions";
 
 import { searchControl, styleMenuGl } from "./MainMapStyle";
@@ -192,8 +191,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         datestat.readyPict = false;
         datestat.readyFaza = false;
       }
-      //SendSocketGetPhases(debug, ws, homeRegion, area, id);
-      //console.log("@@@:", area, id, massdk[index]);
       SendSocketGetSvg(debug, ws, homeRegion, area, id);
       datestat.phSvg = massdk[index].phSvg;
       dispatch(statsaveCreate(datestat));
@@ -335,7 +332,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
   //=== обработка instanceRef ==============================
   const FindNearVertex = () => {
-    console.log("1MASSFAZ:", massfaz);
     let nomInMass = -1;
     for (let i = 0; i < massMem.length; i++) {
       if (massfaz[i].runRec === 2) {
@@ -516,7 +512,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const ChangeDemoSost = (mode: number) => {
-    //console.log('ChangeDemoSost:',mode)
     setDemoSost(mode + demoSost); // костыль
   };
 
@@ -573,7 +568,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                   {processObject && (
                     <RgsProcessObject setOpen={setProcessObject} idx={idxObj} />
                   )}
-                  {/* {appoint && datestat.readyPict && datestat.readyFaza && ( */}
                   {appoint && datestat.readyPict && (
                     <RgsAppointVertex setOpen={setAppoint} idx={idxObj} />
                   )}
