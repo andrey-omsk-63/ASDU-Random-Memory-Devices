@@ -431,7 +431,9 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
           &#10006;
         </Button>
         <Box sx={{ fontSize: 17, marginTop: 1, textAlign: "center" }}>
-          <b>Массив связности перекрёстка {kluchGl.slice(2)} </b>
+          {/* <b>Массив связности перекрёстка {kluchGl.slice(2)} </b> */}
+          <b>Массив связности перекрёстка {kluchGl.slice(2)}</b> (
+          <b>{map.tflight[props.idx].description}</b>)
         </Box>
         <Grid container sx={{ marginTop: 1.5, paddingBottom: 0 }}>
           {OutPutZZ(zz)}
@@ -442,7 +444,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             {OutPutUU(uu)}
           </Grid>
           {OutPutVV(vv)}
-          
+
           <Grid item xs={4} sx={{ border: 0 }}>
             {AppointHeader(hBlock)}
             {AppointStroka("З", valAreaZ, setValAreaZ, valIdZ, setValIdZ)}

@@ -113,23 +113,23 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const addRoute = (ymaps: any, bound: boolean) => {
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
     let multiRoute: any = [];
-    if (massCoord.length === 2) {
-      multiRoute = new ymaps.multiRouter.MultiRoute(
-        getReferencePoints(massCoord[0], massCoord[1]),
-        getMultiRouteOptions()
-      );
-    } else {
-      let between = [];
-      for (let i = 1; i < massCoord.length - 1; i++) between.push(i);
-      multiRoute = new ymaps.multiRouter.MultiRoute(
-        getReferenceLine(massCoord, between),
-        {
-          boundsAutoApply: bound,
-          wayPointVisible: false,
-        }
-      );
-    }
-    mapp.current.geoObjects.add(multiRoute);
+    // if (massCoord.length === 2) {
+    //   multiRoute = new ymaps.multiRouter.MultiRoute(
+    //     getReferencePoints(massCoord[0], massCoord[1]),
+    //     getMultiRouteOptions()
+    //   );
+    // } else {
+    //   let between = [];
+    //   for (let i = 1; i < massCoord.length - 1; i++) between.push(i);
+    //   multiRoute = new ymaps.multiRouter.MultiRoute(
+    //     getReferenceLine(massCoord, between),
+    //     {
+    //       boundsAutoApply: bound,
+    //       wayPointVisible: false,
+    //     }
+    //   );
+    // }
+    // mapp.current.geoObjects.add(multiRoute);
     let massMultiRoute: any = []; // исходящие связи
     for (let i = 0; i < massRoute.length; i++) {
       massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
