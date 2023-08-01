@@ -18,11 +18,11 @@ import RgsProcessObject from "./RgsComponents/RgsProcessObject";
 import RgsAppointVertex from "./RgsComponents/RgsAppointVertex";
 import RgsToDoMode from "./RgsComponents/RgsToDoMode";
 
-import { getMultiRouteOptions, StrokaHelp } from "./RgsServiceFunctions";
+//import { getReferenceLine, getMultiRouteOptions } from "./RgsServiceFunctions";
 import { getMassMultiRouteOptions } from "./RgsServiceFunctions";
 import { getMassMultiRouteOptionsDemo } from "./RgsServiceFunctions";
 import { getReferencePoints, CenterCoord } from "./RgsServiceFunctions";
-import { getReferenceLine, MakeMassRouteFirst } from "./RgsServiceFunctions";
+import { MakeMassRouteFirst, StrokaHelp } from "./RgsServiceFunctions";
 import { StrokaMenuGlob, MakingKey } from "./RgsServiceFunctions";
 import { MakeSoobErr, MakeMassRoute } from "./RgsServiceFunctions";
 import { CheckHaveLink, MakeFazer } from "./RgsServiceFunctions";
@@ -112,7 +112,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   const addRoute = (ymaps: any, bound: boolean) => {
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
-    let multiRoute: any = [];
+    //let multiRoute: any = [];
     // if (massCoord.length === 2) {
     //   multiRoute = new ymaps.multiRouter.MultiRoute(
     //     getReferencePoints(massCoord[0], massCoord[1]),
@@ -512,6 +512,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const ChangeDemoSost = (mode: number) => {
+    //console.log('ChangeDemoSost:',mode)
     setDemoSost(mode + demoSost); // костыль
   };
 

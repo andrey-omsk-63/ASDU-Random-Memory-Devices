@@ -139,13 +139,13 @@ export const styleBoxFormArea = {
   },
 };
 
-export const styleBoxFormID = {
-  '& > :not(style)': {
-    marginTop: '-9px',
-    marginLeft: '-12px',
-    width: '253px',
-  },
-};
+// export const styleBoxFormID = {
+//   '& > :not(style)': {
+//     marginTop: '-9px',
+//     marginLeft: '-12px',
+//     width: '253px',
+//   },
+// };
 //=== ProcessObject ===================================================
 export const styleModalMenu = {
   fontSize: 17,

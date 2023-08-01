@@ -13,7 +13,6 @@ import { CircleObj } from "../RgsServiceFunctions";
 
 import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 
-//import { styleModalEnd } from "../MainMapStyle";
 import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
 import { styleStrokaTabl, styleStrokaTakt } from "./GsComponentsStyle";
 
@@ -200,16 +199,16 @@ const RgsToDoMode = (props: {
     RunVertex(mode);
   };
 
-  const FindEnd = () => {
-    let ch = 0;
-    for (let i = 0; i < massfaz.length; i++) {
-      if (massfaz[i].id <= 10000) {
-        let runREC = massfaz[i].runRec;
-        if (runREC === 0 || runREC === 2 || runREC === 4) ch++;
-      }
-    }
-    !ch && handleCloseSetEnd();
-  };
+  // const FindEnd = () => {
+  //   let ch = 0;
+  //   for (let i = 0; i < massfaz.length; i++) {
+  //     if (massfaz[i].id <= 10000) {
+  //       let runREC = massfaz[i].runRec;
+  //       if (runREC === 0 || runREC === 2 || runREC === 4) ch++;
+  //     }
+  //   }
+  //   //!ch && handleCloseSetEnd();
+  // };
 
   const StrokaHeader = (xss: number, soob: string) => {
     return (
@@ -226,9 +225,17 @@ const RgsToDoMode = (props: {
       fazer.runRec === 2 &&
         SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
     } else {
-      massfaz[mode].fazaSist = fazer.fazaSist === 2 ? 1 : 2;
+      if (!fazer.runRec || fazer.runRec === 5 || fazer.runRec === 1) {
+        if (fazer.fazaSist < 0) {
+          massfaz[mode].fazaSist = 1;
+        } else {
+          massfaz[mode].fazaSist = fazer.fazaSist === 2 ? 1 : 2;
+        }
+      } else {
+        massfaz[mode].fazaSist = fazer.faza;
+      }
       dispatch(massfazCreate(massfaz));
-      props.changeDemo(fazer.fazaSist);
+      props.changeDemo(mode);
       needRend = true;
       setFlagPusk(!flagPusk);
     }
@@ -256,7 +263,7 @@ const RgsToDoMode = (props: {
         if (!DEMO) {
           SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
         } else {
-          massfaz[mode].fazaSist = fazer.fazaSist === 2 ? 1 : 2;
+          massfaz[mode].fazaSist = fazer.faza;
           dispatch(massfazCreate(massfaz));
           setTrigger(!trigger);
         }
@@ -271,18 +278,19 @@ const RgsToDoMode = (props: {
             massIdevice.push(massfaz[mode].idevice);
             SendSocketRoute(debug, ws, massIdevice, false); // завершенение режима
           }
-          for (let i = 0; i < massInt[mode].length; i++) {
-            if (massInt[mode][i]) {
-              clearInterval(massInt[mode][i]);
-              massInt[mode][i] = null;
-            }
-          }
-          timerId[mode] = null;
+          // for (let i = 0; i < massInt[mode].length; i++) {
+          //   if (massInt[mode][i]) {
+          //     clearInterval(massInt[mode][i]);
+          //     massInt[mode][i] = null;
+          //   }
+          // }
+          // timerId[mode] = null;
+          //=========================================================================
           massfaz[mode].runRec = DEMO ? 5 : 1;
         }
       }
       dispatch(massfazCreate(massfaz));
-      FindEnd();
+      //FindEnd();
       setTrigger(!trigger);
     };
 
@@ -362,7 +370,6 @@ const RgsToDoMode = (props: {
     }
     return resStr;
   };
-
   //=== инициализация ======================================
   if (init) {
     massfaz = [];
@@ -397,21 +404,20 @@ const RgsToDoMode = (props: {
         massIdevice.push(massfaz[mode].idevice);
         SendSocketRoute(debug, ws, massIdevice, false); // завершенение режима
       }
-      for (let i = 0; i < massInt[mode].length; i++) {
-        if (massInt[mode][i]) {
-          clearInterval(massInt[mode][i]);
-          massInt[mode][i] = null;
-        }
-      }
-      timerId[mode] = null;
+      // for (let i = 0; i < massInt[mode].length; i++) {
+      //   if (massInt[mode][i]) {
+      //     clearInterval(massInt[mode][i]);
+      //     massInt[mode][i] = null;
+      //   }
+      // }
+      // timerId[mode] = null;
       massfaz[mode].runRec = DEMO ? 5 : 1;
       oldFaz = props.changeFaz;
-      FindEnd();
+      // FindEnd();
     }
     dispatch(massfazCreate(massfaz));
   }
   //========================================================
-
   const CheckRun = React.useCallback(() => {
     for (let i = 0; i < massfaz.length; i++) {
       const TmOut = (mode: number) => {

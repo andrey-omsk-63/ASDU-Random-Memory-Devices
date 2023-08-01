@@ -189,9 +189,6 @@ const RgsDoPlacemarkDo = (props: {
   const GetPointOptions0 = React.useCallback(
     (hoster: any) => {
       let Hoster = hoster;
-      // if (!Hoster)
-      //   console.log("Картинка фазы:", Hoster, nomInMassfaz, FAZASIST, massfaz);
-      //let imger = window.location.origin + "/free/img/notImage.png";
       let imger = "";
       let FZSIST = FAZASIST;
       if (FAZASIST === 9 || !FAZASIST) {
@@ -237,6 +234,7 @@ const RgsDoPlacemarkDo = (props: {
     createChipsLayout,
     GetPointOptions0,
     mappp.tlsost.num,
+    massfaz,
     fazaImg,
     pC,
     DEMO,
