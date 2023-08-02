@@ -19,7 +19,7 @@ import RgsAppointVertex from "./RgsComponents/RgsAppointVertex";
 import RgsToDoMode from "./RgsComponents/RgsToDoMode";
 
 //import { getReferenceLine, getMultiRouteOptions } from "./RgsServiceFunctions";
-import { getMassMultiRouteOptions } from "./RgsServiceFunctions";
+import { getMassMultiRouteOptions, Distance } from "./RgsServiceFunctions";
 import { getMassMultiRouteOptionsDemo } from "./RgsServiceFunctions";
 import { getReferencePoints, CenterCoord } from "./RgsServiceFunctions";
 import { MakeMassRouteFirst, StrokaHelp } from "./RgsServiceFunctions";
@@ -331,12 +331,23 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     }
   };
   //=== обработка instanceRef ==============================
-  const FindNearVertex = () => {
+  const FindNearVertex = (coord: Array<number>) => {
+    let minDist = 999999;
     let nomInMass = -1;
     for (let i = 0; i < massMem.length; i++) {
-      if (massfaz[i].runRec === 2) {
+      let corFromMap = [massfaz[i].coordinates[0], massfaz[i].coordinates[1]];
+      let dister = Distance(coord, corFromMap);
+      if (dister < 150 && minDist > dister) {
+        minDist = dister;
         nomInMass = i;
-        break;
+      }
+    }
+    if (nomInMass < 0) {
+      for (let i = 0; i < massMem.length; i++) {
+        if (massfaz[i].runRec === 2) {
+          nomInMass = i;
+          break;
+        }
       }
     }
     if (nomInMass >= 0) {
@@ -362,7 +373,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       funcContex = function (e: any) {
         if (mapp.current.hint) {
           if (inTarget && !inDemo) InputerObject(e.get("coords")); // нажата правая кнопка мыши
-          if (!inTarget && !inDemo) FindNearVertex();
+          if (!inTarget && !inDemo) FindNearVertex(e.get("coords"));
         }
       };
       mapp.current.events.add("contextmenu", funcContex);

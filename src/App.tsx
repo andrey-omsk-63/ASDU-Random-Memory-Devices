@@ -70,6 +70,7 @@ export interface Fazer {
   idx: number;
   area: number;
   id: number;
+  coordinates: Array<number>;
   faza: number;
   fazaBegin: number;
   fazaSist: number;

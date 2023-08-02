@@ -42,7 +42,7 @@ const RgsCreateObject = (props: {
     const { addobjReducer } = state;
     return addobjReducer.addobj.dateAdd;
   });
-  console.log("RgsCreateObject", addobj);
+  //console.log("RgsCreateObject", addobj);
   let coordinates = useSelector((state: any) => {
     const { coordinatesReducer } = state;
     return coordinatesReducer.coordinates;
@@ -81,7 +81,6 @@ const RgsCreateObject = (props: {
     if (!have) datID.push(freeID);
     if (datID.length > 76) break;
   }
-  //let datID = massFreeId;
   const currenciesID: any = [];
   for (let key in datID) {
     massKeyID.push(datID[key].toString());
@@ -251,7 +250,7 @@ const RgsCreateObject = (props: {
   return (
     <Modal open={openSetAdress} onClose={handleCloseSet} hideBackdrop>
       <Grid item container sx={styleSetAdress}>
-        <Grid item xs={9.5} sx={{ border: 0 }}>
+        <Grid item xs={9.5}>
           <InputName />
         </Grid>
         <Grid item sx={styleSetAdrArea} xs={9.5}>
