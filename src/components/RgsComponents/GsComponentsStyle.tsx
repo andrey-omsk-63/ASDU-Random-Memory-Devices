@@ -16,9 +16,12 @@ export const styleSetInf = {
 export const styleModalMenu = {
   marginTop: 0.5,
   marginRight: 1,
+  maxHeight: '24px',
+  minHeight: '24px',
   backgroundColor: "#E6F5D6",
   textTransform: "unset !important",
   color: "black",
+  boxShadow: 2,
 };
 
 export const styleBoxFormFaza = {

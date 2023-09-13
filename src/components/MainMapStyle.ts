@@ -5,6 +5,8 @@ export const searchControl = {
 };
 
 export const styleMenuGl = {
+  maxHeight: '24px',
+  minHeight: '24px',
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'flex-start',
@@ -157,6 +159,7 @@ export const styleModalMenu = {
   marginBottom: 2,
   textTransform: 'unset !important',
   textAlign: 'center',
+  boxShadow: 2,
 };
 
 export const styleSetProcess = {

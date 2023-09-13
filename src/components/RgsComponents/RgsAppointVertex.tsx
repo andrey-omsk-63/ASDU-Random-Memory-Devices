@@ -435,7 +435,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
           <b>Массив связности перекрёстка {kluchGl.slice(2)}</b> (
           <b>{map.tflight[props.idx].description}</b>)
         </Box>
-        <Grid container sx={{ marginTop: 1.5, paddingBottom: 0 }}>
+        <Grid container sx={{ marginTop: 2 }}>
+          {/* вывод картиноки перекрёстка */}
           {OutPutZZ(zz)}
           <Grid item xs={4} sx={{ border: 0 }}>
             {OutPutSS(ss)}
@@ -444,7 +445,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             {OutPutUU(uu)}
           </Grid>
           {OutPutVV(vv)}
-
+          {/* редактор связей */}
           <Grid item xs={4} sx={{ border: 0 }}>
             {AppointHeader(hBlock)}
             {AppointStroka("З", valAreaZ, setValAreaZ, valIdZ, setValIdZ)}
@@ -452,7 +453,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             {AppointStroka("В", valAreaV, setValAreaV, valIdV, setValIdV)}
             {AppointStroka("Ю", valAreaU, setValAreaU, valIdU, setValIdU)}
           </Grid>
-
+          {/* вывод картинок фаз */}
           <Grid item xs sx={{ border: 0 }}>
             <Grid container>
               {OutputNumFaza(1, imgFaza[0], maxFaza, hBlock)}

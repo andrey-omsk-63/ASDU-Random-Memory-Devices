@@ -844,9 +844,9 @@ export const InputDirect = (func: any) => {
   const styleSetNapr = {
     //border: 1,
     width: "165px",
-    maxHeight: "3px",
-    minHeight: "3px",
-    bgcolor: "#D7F1C0",
+    maxHeight: "1px",
+    minHeight: "1px",
+    bgcolor: "#93D145",
     boxShadow: 3,
     paddingTop: 1.5,
     paddingBottom: 1.5,
@@ -951,10 +951,11 @@ export const StrokaMenuGlob = (func: any) => {
     marginRight: 0.1,
     marginLeft: 0.5,
     width: 165,
-    maxHeight: "21px",
-    minHeight: "21px",
-    backgroundColor: "#D7F1C0",
+    maxHeight: "24px",
+    minHeight: "24px",
+    backgroundColor: "#93D145",
     color: "black",
+    boxShadow: 2,
   };
 
   return <Box sx={styleApp01}>{InputDirect(func)}</Box>;

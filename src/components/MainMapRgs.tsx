@@ -334,26 +334,28 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const FindNearVertex = (coord: Array<number>) => {
     let minDist = 999999;
     let nomInMass = -1;
-    for (let i = 0; i < massMem.length; i++) {
-      let corFromMap = [massfaz[i].coordinates[0], massfaz[i].coordinates[1]];
-      let dister = Distance(coord, corFromMap);
-      if (dister < 150 && minDist > dister) {
-        minDist = dister;
-        nomInMass = i;
-      }
-    }
-    if (nomInMass < 0) {
+    if (massMem.length > 2) {
       for (let i = 0; i < massMem.length; i++) {
-        if (massfaz[i].runRec === 2) {
+        let corFromMap = [massfaz[i].coordinates[0], massfaz[i].coordinates[1]];
+        let dister = Distance(coord, corFromMap);
+        if (dister < 150 && minDist > dister) {
+          minDist = dister;
           nomInMass = i;
-          break;
         }
       }
-    }
-    if (nomInMass >= 0) {
-      massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
-      dispatch(massfazCreate(massfaz));
-      setChangeFaz(nomInMass);
+      if (nomInMass < 0) {
+        for (let i = 0; i < massMem.length; i++) {
+          if (massfaz[i].runRec === 2) {
+            nomInMass = i;
+            break;
+          }
+        }
+      }
+      if (nomInMass >= 0) {
+        massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
+        dispatch(massfazCreate(massfaz));
+        setChangeFaz(nomInMass);
+      }
     }
   };
 
@@ -372,6 +374,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       mapp.current.events.remove("contextmenu", funcContex);
       funcContex = function (e: any) {
         if (mapp.current.hint) {
+          console.log("Правая кнопка:", inTarget, inDemo);
           if (inTarget && !inDemo) InputerObject(e.get("coords")); // нажата правая кнопка мыши
           if (!inTarget && !inDemo) FindNearVertex(e.get("coords"));
         }
@@ -534,80 +537,80 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   return (
     <Grid container sx={{ border: 0, height: "99.9vh" }}>
-      <Grid item xs sx={{ border: 0 }}>
-        {MenuGl()}
-        <Grid container sx={{ border: 0, height: "96.9vh" }}>
-          <Grid item xs={xsMap} sx={{ border: 0 }}>
-            {Object.keys(map.tflight).length && (
-              <YMaps
-                query={{
-                  apikey: "65162f5f-2d15-41d1-a881-6c1acf34cfa1",
-                  lang: "ru_RU",
-                }}
-              >
-                <Map
-                  modules={[
-                    "multiRouter.MultiRoute",
-                    "Polyline",
-                    "templateLayoutFactory",
-                  ]}
-                  state={mapState}
-                  instanceRef={(ref) => InstanceRefDo(ref)}
-                  onLoad={(ref) => {
-                    ref && setYmaps(ref);
-                  }}
-                  width={widthMap}
-                  height={"99.9%"}
-                >
-                  {/* сервисы Яндекса */}
-                  <FullscreenControl />
-                  <GeolocationControl options={{ float: "left" }} />
-                  <RulerControl options={{ float: "right" }} />
-                  <SearchControl options={searchControl} />
-                  <TrafficControl options={{ float: "right" }} />
-                  <TypeSelector options={{ float: "right" }} />
-                  <ZoomControl options={{ float: "right" }} />
-                  {/* служебные компоненты */}
-                  {Pererisovka()}
-                  <PlacemarkDo />
-                  {createObject && (
-                    <RgsCreateObject
-                      setOpen={setCreateObject}
-                      coord={leftCoord}
-                      funcMode={ModeToDo}
-                    />
-                  )}
-                  {processObject && (
-                    <RgsProcessObject setOpen={setProcessObject} idx={idxObj} />
-                  )}
-                  {appoint && datestat.readyPict && (
-                    <RgsAppointVertex setOpen={setAppoint} idx={idxObj} />
-                  )}
-                  {openSoobErr && (
-                    <GsErrorMessage setOpen={setOpenSoobErr} sErr={soobErr} />
-                  )}
-                </Map>
-              </YMaps>
-            )}
-          </Grid>
-          <Grid item xs={xsTab} sx={{ height: "97.0vh" }}>
-            {toDoMode && (
-              <RgsToDoMode
-                massMem={massMem}
-                massCoord={massCoord}
-                funcMode={ModeToDo}
-                funcSize={OldSizeWind}
-                funcCenter={NewPointCenter}
-                funcHelper={SetHelper}
-                trigger={props.trigger}
-                changeFaz={changeFaz}
-                ban={setRestartBan}
-                changeDemo={ChangeDemoSost}
-              />
-            )}
-          </Grid>
-        </Grid>
+      {/* <Grid item xs sx={{ border: 0 }}> */}
+      {MenuGl()}
+      {/* <Grid container sx={{ border: 0, height: "96vh" }}> */}
+      <Grid item xs={xsMap} sx={{ border: 0, height: "97vh" }}>
+        {Object.keys(map.tflight).length && (
+          <YMaps
+            query={{
+              apikey: "65162f5f-2d15-41d1-a881-6c1acf34cfa1",
+              lang: "ru_RU",
+            }}
+          >
+            <Map
+              modules={[
+                "multiRouter.MultiRoute",
+                "Polyline",
+                "templateLayoutFactory",
+              ]}
+              state={mapState}
+              instanceRef={(ref) => InstanceRefDo(ref)}
+              onLoad={(ref) => {
+                ref && setYmaps(ref);
+              }}
+              width={widthMap}
+              height={"97%"}
+            >
+              {/* сервисы Яндекса */}
+              <FullscreenControl />
+              <GeolocationControl options={{ float: "left" }} />
+              <RulerControl options={{ float: "right" }} />
+              <SearchControl options={searchControl} />
+              <TrafficControl options={{ float: "right" }} />
+              <TypeSelector options={{ float: "right" }} />
+              <ZoomControl options={{ float: "right" }} />
+              {/* служебные компоненты */}
+              {Pererisovka()}
+              <PlacemarkDo />
+              {createObject && (
+                <RgsCreateObject
+                  setOpen={setCreateObject}
+                  coord={leftCoord}
+                  funcMode={ModeToDo}
+                />
+              )}
+              {processObject && (
+                <RgsProcessObject setOpen={setProcessObject} idx={idxObj} />
+              )}
+              {appoint && datestat.readyPict && (
+                <RgsAppointVertex setOpen={setAppoint} idx={idxObj} />
+              )}
+              {openSoobErr && (
+                <GsErrorMessage setOpen={setOpenSoobErr} sErr={soobErr} />
+              )}
+            </Map>
+          </YMaps>
+        )}
       </Grid>
+      <Grid item xs={xsTab} sx={{ height: "97.0vh" }}>
+        {toDoMode && (
+          <RgsToDoMode
+            massMem={massMem}
+            massCoord={massCoord}
+            funcMode={ModeToDo}
+            funcSize={OldSizeWind}
+            funcCenter={NewPointCenter}
+            funcHelper={SetHelper}
+            trigger={props.trigger}
+            changeFaz={changeFaz}
+            ban={setRestartBan}
+            changeDemo={ChangeDemoSost}
+          />
+        )}
+      </Grid>
+      {/* </Grid> */}
+      {/* </Grid> */}
     </Grid>
   );
 };

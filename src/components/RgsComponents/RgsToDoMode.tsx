@@ -99,7 +99,6 @@ const RgsToDoMode = (props: {
   };
 
   const MakeMaskFaz = (i: number) => {
-    
     let maskFaz: Fazer = {
       idx: 0,
       area: 0,
@@ -288,7 +287,6 @@ const RgsToDoMode = (props: {
         // if (DEMO) massfaz[mode].faza = massfaz[mode].fazaBegin;
       } else {
         if (fazer.runRec === 2) {
-          
           if (!DEMO) {
             SendSocketDispatch(debug, ws, fazer.idevice, 9, 9);
             let massIdevice: Array<number> = [];
