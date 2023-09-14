@@ -17,7 +17,8 @@ import { SendSocketDeleteBindings } from "../RgsSocketFunctions";
 import { TakeAreaId, CheckKey, MakeTflink } from "../RgsServiceFunctions";
 import { MakingKey, OutputKey, MakingKluch } from "../RgsServiceFunctions";
 import { AppointDirect, AppointHeader } from "../RgsServiceFunctions";
-import { OutputNumFaza, ChangeArea, ChangeId } from "../RgsServiceFunctions";
+import { OutputNumFaza } from "../RgsServiceFunctions";
+import { BadExit } from "../RgsServiceFunctions";
 import { AppIconAsdu, OutputPict } from "../RgsServiceFunctions";
 import { OutPutZZ, OutPutSS, OutPutUU, OutPutVV } from "../RgsServiceFunctions";
 
@@ -39,6 +40,7 @@ let soobErr = "";
 
 let bindIdx = -1;
 let maxFaza = 0;
+let HAVE = 0;
 
 const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   //== Piece of Redux ======================================
@@ -61,22 +63,26 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   const debug = datestat.debug;
   const ws = datestat.ws;
   const homeRegion = datestat.region;
-  const SL = homeRegion < 10 ? 2 : 3;
+  const SL = homeRegion < 10 ? 4 : 5;
   let imgFaza = datestat.phSvg;
   let otlOrKosyk = false;
   if (!datestat.pictSvg) otlOrKosyk = true;
   const dispatch = useDispatch();
+  const AREA = Number(map.tflight[props.idx].area.num);
+
   //========================================================
   const [openSet, setOpenSet] = React.useState(true);
   const [openSetErr, setOpenSetErr] = React.useState(false);
-  const [valAreaZ, setValAreaZ] = React.useState(0);
-  const [valAreaS, setValAreaS] = React.useState(0);
-  const [valAreaV, setValAreaV] = React.useState(0);
-  const [valAreaU, setValAreaU] = React.useState(0);
+  const [valAreaZ, setValAreaZ] = React.useState(AREA);
+  const [valAreaS, setValAreaS] = React.useState(AREA);
+  const [valAreaV, setValAreaV] = React.useState(AREA);
+  const [valAreaU, setValAreaU] = React.useState(AREA);
   const [valIdZ, setValIdZ] = React.useState(0);
   const [valIdS, setValIdS] = React.useState(0);
   const [valIdV, setValIdV] = React.useState(0);
   const [valIdU, setValIdU] = React.useState(0);
+  const [badExit, setBadExit] = React.useState(false);
+
   let massAreaId = [
     valAreaZ,
     valIdZ,
@@ -87,6 +93,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     valAreaU,
     valIdU,
   ];
+
   let hBlock = window.innerWidth / 3 + 15;
   let hB = hBlock / 15;
 
@@ -94,10 +101,25 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     if (event.key === "Enter") event.preventDefault();
   };
 
-  const handleCloseSet = () => {
-    oldIdx = -1;
+  const handleCloseAll = () => {
+    oldIdx = -1; // выход из формы
+    HAVE = 0;
     props.setOpen(false);
     setOpenSet(false);
+  };
+
+  const handleCloseBadExit = (mode: boolean) => {
+    setBadExit(false);
+    mode && handleCloseAll(); // выход
+  };
+
+  const handleCloseBad = () => {
+    HAVE && setBadExit(true);
+    !HAVE && handleCloseAll(); // выход без сохранения
+  };
+
+  const handleCloseEnd = (event: any, reason: string) => {
+    if (reason === "escapeKeyDown") handleCloseBad();
   };
 
   const handleClose = () => {
@@ -132,7 +154,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         SendSocketUpdateBindings(debug, ws, maskTfLinks);
       }
       dispatch(bindingsCreate(bindings));
-      handleCloseSet();
+      handleCloseAll();
     }
   };
 
@@ -176,35 +198,42 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     BlurContent(0, area, id, funcAr);
   };
 
-  const BlurArea = (event: any, area: number, id: number, funcAr: Function) => {
-    if (!area && !id) return;
-    if (!id) return;
-    BlurContent(1, area, id, funcAr);
-  };
-
-  const InputerArea = (
-    valueAr: number,
+  const ChangeId = (
+    event: any,
+    funcId: Function,
     funcAr: Function,
-    valueId: number,
-    funcId: Function
+    map: any,
+    addobj: any,
+    AREA: number
   ) => {
-    return (
-      <Box sx={styleSetAV}>
-        <Box component="form" sx={styleBoxFormAV}>
-          <TextField
-            size="small"
-            type="number"
-            onKeyPress={handleKey} //отключение Enter
-            value={valueAr}
-            InputProps={{ disableUnderline: true, style: { fontSize: 12.1 } }}
-            onChange={(e) => ChangeArea(e, funcAr, funcId)}
-            onBlur={(e) => BlurArea(e, valueAr, valueId, funcAr)}
-            variant="standard"
-            color="secondary"
-          />
-        </Box>
-      </Box>
-    );
+    //let valueInp = event.target.value.replace(/^0+/, "");
+    let valueInp = event.target.value;
+    if (valueInp === "") valueInp = 1;
+    if (Number(valueInp) < 0) valueInp = 1;
+    if (Number(valueInp) < 100000) funcId(Number(valueInp));
+    let have = false;
+    HAVE++;
+    if (Number(valueInp) < 9999) {
+      // перекрёсток
+      for (let i = 0; i < map.tflight.length; i++) {
+        if (
+          map.tflight[i].ID === Number(valueInp) &&
+          Number(map.tflight[i].area.num) === AREA
+        ) {
+          funcAr(Number(map.tflight[i].area.num));
+          have = true;
+        }
+      }
+    } else {
+      // объект
+      for (let i = 0; i < addobj.addObjects.length; i++) {
+        if (addobj.addObjects[i].id === Number(valueInp)) {
+          funcAr(addobj.addObjects[i].area);
+          have = true;
+        }
+      }
+    }
+    if (!have) funcAr(0);
   };
 
   const InputerId = (
@@ -222,7 +251,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             onKeyPress={handleKey} //отключение Enter
             value={valueId}
             InputProps={{ disableUnderline: true, style: { fontSize: 12.1 } }}
-            onChange={(e) => ChangeId(e, funcId, funcAr, map, addobj)}
+            onChange={(e) => ChangeId(e, funcId, funcAr, map, addobj, AREA)}
             onBlur={(e) => BlurId(e, valueAr, valueId, funcAr)}
             variant="standard"
             color="secondary"
@@ -236,6 +265,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setCurrency(Number(event.target.value));
       massFaz[mode + shift] = massDat[Number(event.target.value)];
+      HAVE++;
     };
 
     let mode = 0;
@@ -318,14 +348,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         {/* === Откуда === */}
         <Grid item xs={5.5} sx={{ fontSize: 14, height: hBlock / 5 }}>
           <Grid container>
-            <Grid item xs={7.7} sx={{ paddingLeft: 0.5, height: hB }}>
-              <Box sx={styleAppSt02}>Ведите район</Box>
-            </Grid>
-            <Grid item xs sx={{ border: 0 }}>
-              <Box sx={styleAppSt02}>
-                {InputerArea(valueAr, funcAr, valueId, funcId)}
-              </Box>
-            </Grid>
+            <Grid item xs={7.7} sx={{ paddingLeft: 0.5, height: hB }}></Grid>
           </Grid>
           <Grid container>
             <Grid item xs={7.7} sx={{ paddingLeft: 0.5, height: hB }}>
@@ -364,6 +387,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   };
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
+    HAVE = 0;
     kluchGl = homeRegion + "-" + map.tflight[props.idx].area.num + "-";
     kluchGl += map.tflight[props.idx].ID;
     maxFaza = map.tflight[props.idx].phases.length;
@@ -425,62 +449,65 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   let zz = valIdZ ? "З." + valIdZ : "З";
 
   return (
-    <Modal open={openSet} onClose={handleCloseSet} hideBackdrop>
-      <Box sx={styleSetAppoint}>
-        <Button sx={styleModalEnd} onClick={handleCloseSet}>
-          &#10006;
-        </Button>
-        <Box sx={{ fontSize: 17, marginTop: 1, textAlign: "center" }}>
-          {/* <b>Массив связности перекрёстка {kluchGl.slice(2)} </b> */}
-          <b>Массив связности перекрёстка {kluchGl.slice(2)}</b> (
-          <b>{map.tflight[props.idx].description}</b>)
-        </Box>
-        <Grid container sx={{ marginTop: 2 }}>
-          {/* вывод картиноки перекрёстка */}
-          {OutPutZZ(zz)}
-          <Grid item xs={4} sx={{ border: 0 }}>
-            {OutPutSS(ss)}
-            {otlOrKosyk && <>{AppIconAsdu()}</>}
-            {!otlOrKosyk && <>{OutputPict(datestat.pictSvg)}</>}
-            {OutPutUU(uu)}
-          </Grid>
-          {OutPutVV(vv)}
-          {/* редактор связей */}
-          <Grid item xs={4} sx={{ border: 0 }}>
-            {AppointHeader(hBlock)}
-            {AppointStroka("З", valAreaZ, setValAreaZ, valIdZ, setValIdZ)}
-            {AppointStroka("С", valAreaS, setValAreaS, valIdS, setValIdS)}
-            {AppointStroka("В", valAreaV, setValAreaV, valIdV, setValIdV)}
-            {AppointStroka("Ю", valAreaU, setValAreaU, valIdU, setValIdU)}
-          </Grid>
-          {/* вывод картинок фаз */}
-          <Grid item xs sx={{ border: 0 }}>
-            <Grid container>
-              {OutputNumFaza(1, imgFaza[0], maxFaza, hBlock)}
-              {OutputNumFaza(2, imgFaza[1], maxFaza, hBlock)}
-              {OutputNumFaza(3, imgFaza[2], maxFaza, hBlock)}
-            </Grid>
-            <Grid container>
-              {OutputNumFaza(4, imgFaza[3], maxFaza, hBlock)}
-              {OutputNumFaza(5, imgFaza[4], maxFaza, hBlock)}
-              {OutputNumFaza(6, imgFaza[5], maxFaza, hBlock)}
-            </Grid>
-            <Grid container>
-              {OutputNumFaza(7, imgFaza[6], maxFaza, hBlock)}
-              {OutputNumFaza(8, imgFaza[7], maxFaza, hBlock)}
-            </Grid>
-          </Grid>
-        </Grid>
-        <Box sx={{ marginTop: 1, textAlign: "center" }}>
-          <Button sx={styleModalMenu} onClick={() => handleClose()}>
-            Сохранить изменения
+    <>
+      <Modal open={openSet} onClose={handleCloseEnd}>
+        <Box sx={styleSetAppoint}>
+          <Button sx={styleModalEnd} onClick={handleCloseBad}>
+            &#10006;
           </Button>
+          <Box sx={{ fontSize: 17, marginTop: 1, textAlign: "center" }}>
+            {/* <b>Массив связности перекрёстка {kluchGl.slice(2)} </b> */}
+            <b>Массив связности перекрёстка {kluchGl.slice(2)}</b> (
+            <b>{map.tflight[props.idx].description}</b>)
+          </Box>
+          <Grid container sx={{ marginTop: 2 }}>
+            {/* вывод картиноки перекрёстка */}
+            {OutPutZZ(zz)}
+            <Grid item xs={4} sx={{ border: 0 }}>
+              {OutPutSS(ss)}
+              {otlOrKosyk && <>{AppIconAsdu()}</>}
+              {!otlOrKosyk && <>{OutputPict(datestat.pictSvg)}</>}
+              {OutPutUU(uu)}
+            </Grid>
+            {OutPutVV(vv)}
+            {/* редактор связей */}
+            <Grid item xs={4} sx={{ border: 0 }}>
+              {AppointHeader(hBlock)}
+              {AppointStroka("З", valAreaZ, setValAreaZ, valIdZ, setValIdZ)}
+              {AppointStroka("С", valAreaS, setValAreaS, valIdS, setValIdS)}
+              {AppointStroka("В", valAreaV, setValAreaV, valIdV, setValIdV)}
+              {AppointStroka("Ю", valAreaU, setValAreaU, valIdU, setValIdU)}
+            </Grid>
+            {/* вывод картинок фаз */}
+            <Grid item xs sx={{ border: 0 }}>
+              <Grid container>
+                {OutputNumFaza(1, imgFaza[0], maxFaza, hBlock)}
+                {OutputNumFaza(2, imgFaza[1], maxFaza, hBlock)}
+                {OutputNumFaza(3, imgFaza[2], maxFaza, hBlock)}
+              </Grid>
+              <Grid container>
+                {OutputNumFaza(4, imgFaza[3], maxFaza, hBlock)}
+                {OutputNumFaza(5, imgFaza[4], maxFaza, hBlock)}
+                {OutputNumFaza(6, imgFaza[5], maxFaza, hBlock)}
+              </Grid>
+              <Grid container>
+                {OutputNumFaza(7, imgFaza[6], maxFaza, hBlock)}
+                {OutputNumFaza(8, imgFaza[7], maxFaza, hBlock)}
+              </Grid>
+            </Grid>
+          </Grid>
+          <Box sx={{ marginTop: 1, textAlign: "center" }}>
+            <Button sx={styleModalMenu} onClick={() => handleClose()}>
+              Сохранить изменения
+            </Button>
+          </Box>
+          {openSetErr && (
+            <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />
+          )}
         </Box>
-        {openSetErr && (
-          <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />
-        )}
-      </Box>
-    </Modal>
+      </Modal>
+      {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
+    </>
   );
 };
 

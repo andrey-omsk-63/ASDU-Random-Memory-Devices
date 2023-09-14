@@ -15,6 +15,7 @@ import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 
 import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
 import { styleStrokaTabl, styleStrokaTakt } from "./GsComponentsStyle";
+import { StyleToDoMode } from "./GsComponentsStyle";
 
 let init = true;
 let lengthMassMem = 0;
@@ -61,12 +62,14 @@ const RgsToDoMode = (props: {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
+  const dispatch = useDispatch();
   const debug = datestat.debug;
   const ws = datestat.ws;
   const DEMO = datestat.demo;
   const homeRegion = datestat.region;
-  const dispatch = useDispatch();
+  const styleToDoMode = StyleToDoMode(DEMO);
   let timer = debug || DEMO ? 20000 : 60000;
+  let hTabl = DEMO ? "78vh" : "81vh";
   //========================================================
   const [trigger, setTrigger] = React.useState(true);
   const [flagPusk, setFlagPusk] = React.useState(false);
@@ -180,6 +183,9 @@ const RgsToDoMode = (props: {
       //setTrigger(!trigger);
     }
     massfaz[mode].runRec = DEMO ? 4 : 2;
+
+    console.log(mode + 1 + "-й светофор!!!", DEMO, massfaz[mode].runRec);
+
     if (DEMO) massfaz[mode].faza = massfaz[mode].fazaBegin;
     setTrigger(!trigger);
   };
@@ -250,6 +256,9 @@ const RgsToDoMode = (props: {
       } else {
         massfaz[mode].fazaSist = fazer.faza;
       }
+
+      console.log("###:", mode + 1, fazer.runRec, fazer.fazaSist);
+
       dispatch(massfazCreate(massfaz));
       props.changeDemo(mode);
       needRend = true;
@@ -292,16 +301,25 @@ const RgsToDoMode = (props: {
             let massIdevice: Array<number> = [];
             massIdevice.push(massfaz[mode].idevice);
             SendSocketRoute(debug, ws, massIdevice, false); // завершенение режима
-          }
-          for (let i = 0; i < massInt[mode].length; i++) {
-            if (massInt[mode][i]) {
-              clearInterval(massInt[mode][i]);
-              massInt[mode][i] = null;
+            //====== ???
+            for (let i = 0; i < massInt[mode].length; i++) {
+              if (massInt[mode][i]) {
+                clearInterval(massInt[mode][i]);
+                massInt[mode][i] = null;
+              }
             }
+            timerId[mode] = null;
+            //============
           }
-          timerId[mode] = null;
+          // for (let i = 0; i < massInt[mode].length; i++) {
+          //   if (massInt[mode][i]) {
+          //     clearInterval(massInt[mode][i]);
+          //     massInt[mode][i] = null;
+          //   }
+          // }
+          // timerId[mode] = null;
           massfaz[mode].runRec = DEMO ? 5 : 1;
-          console.log(mode + 1 + "-й светофор закрыт", timerId[mode]);
+          console.log(mode + 1 + "-й светофор закрыт",massfaz[mode].runRec, timerId[mode]);
         }
       }
       dispatch(massfazCreate(massfaz));
@@ -418,14 +436,16 @@ const RgsToDoMode = (props: {
         let massIdevice: Array<number> = [];
         massIdevice.push(massfaz[mode].idevice);
         SendSocketRoute(debug, ws, massIdevice, false); // завершенение режима
-      }
-      for (let i = 0; i < massInt[mode].length; i++) {
-        if (massInt[mode][i]) {
-          clearInterval(massInt[mode][i]);
-          massInt[mode][i] = null;
+        //====== ???
+        for (let i = 0; i < massInt[mode].length; i++) {
+          if (massInt[mode][i]) {
+            clearInterval(massInt[mode][i]);
+            massInt[mode][i] = null;
+          }
         }
+        timerId[mode] = null;
+        //============
       }
-      timerId[mode] = null;
       massfaz[mode].runRec = DEMO ? 5 : 1;
       oldFaz = props.changeFaz;
       FindEnd();
@@ -455,22 +475,6 @@ const RgsToDoMode = (props: {
     needRend = false;
     setFlagPusk(!flagPusk);
   }
-
-  const styleToDoMode = {
-    position: "relative",
-    marginTop: 0.1,
-    marginLeft: "auto",
-    marginRight: 1,
-    width: "96%",
-    bgcolor: "background.paper",
-    border: "3px solid #000",
-    borderColor: DEMO ? "red" : "primary.main",
-    borderRadius: 2,
-    boxShadow: 24,
-    p: 1.0,
-  };
-
-  let hTabl = DEMO ? "78vh" : "81vh";
 
   return (
     <>

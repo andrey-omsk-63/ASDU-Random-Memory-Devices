@@ -6,10 +6,7 @@ import { massfazCreate } from "../redux/actions";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 
-import { YMaps, Map, FullscreenControl } from "react-yandex-maps";
-import { GeolocationControl, YMapsApi } from "react-yandex-maps";
-import { RulerControl, SearchControl } from "react-yandex-maps";
-import { TrafficControl, TypeSelector, ZoomControl } from "react-yandex-maps";
+import { YMaps, Map, YMapsApi } from "react-yandex-maps";
 
 import GsErrorMessage from "./RgsComponents/RgsErrorMessage";
 import GsDoPlacemarkDo from "./RgsComponents/RgsDoPlacemarkDo";
@@ -26,10 +23,11 @@ import { MakeMassRouteFirst, StrokaHelp } from "./RgsServiceFunctions";
 import { StrokaMenuGlob, MakingKey } from "./RgsServiceFunctions";
 import { MakeSoobErr, MakeMassRoute } from "./RgsServiceFunctions";
 import { CheckHaveLink, MakeFazer } from "./RgsServiceFunctions";
+import { YandexServices } from "./RgsServiceFunctions";
 
 import { SendSocketGetSvg } from "./RgsSocketFunctions";
 
-import { searchControl, styleMenuGl } from "./MainMapStyle";
+import { styleMenuGl } from "./MainMapStyle";
 
 let flagOpen = false;
 let needRend = false;
@@ -37,7 +35,7 @@ let needRend = false;
 const zoomStart = 10;
 let zoom = zoomStart;
 let pointCenter: any = 0;
-let pointCenterEt: any = 0;
+//let pointCenterEt: any = 0;
 
 let massMem: Array<number> = [];
 let massVert: Array<number> = [];
@@ -109,6 +107,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const [demoSost, setDemoSost] = React.useState(-1);
   const mapp = React.useRef<any>(null);
+  const MyYandexKey = "65162f5f-2d15-41d1-a881-6c1acf34cfa1";
 
   const addRoute = (ymaps: any, bound: boolean) => {
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
@@ -171,9 +170,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     massCoord = [];
     massKlu = [];
     massNomBind = [];
-    zoom = zoomStart - 0.01;
+    zoom = zoom - 0.01;
     ymaps && addRoute(ymaps, false); // перерисовка связей
-    NewPointCenter(pointCenterEt);
+    //NewPointCenter(pointCenterEt);
   };
 
   const ClickPointInTarget = (index: number) => {
@@ -477,7 +476,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       map.boxPoint.point1.Y,
       map.boxPoint.point1.X
     );
-    pointCenterEt = pointCenter;
+    //pointCenterEt = pointCenter;
     flagOpen = true;
   }
   //========================================================
@@ -537,80 +536,69 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   return (
     <Grid container sx={{ border: 0, height: "99.9vh" }}>
-      {/* <Grid item xs sx={{ border: 0 }}> */}
-      {MenuGl()}
-      {/* <Grid container sx={{ border: 0, height: "96vh" }}> */}
-      <Grid item xs={xsMap} sx={{ border: 0, height: "97vh" }}>
-        {Object.keys(map.tflight).length && (
-          <YMaps
-            query={{
-              apikey: "65162f5f-2d15-41d1-a881-6c1acf34cfa1",
-              lang: "ru_RU",
-            }}
-          >
-            <Map
-              modules={[
-                "multiRouter.MultiRoute",
-                "Polyline",
-                "templateLayoutFactory",
-              ]}
-              state={mapState}
-              instanceRef={(ref) => InstanceRefDo(ref)}
-              onLoad={(ref) => {
-                ref && setYmaps(ref);
-              }}
-              width={widthMap}
-              height={"97%"}
-            >
-              {/* сервисы Яндекса */}
-              <FullscreenControl />
-              <GeolocationControl options={{ float: "left" }} />
-              <RulerControl options={{ float: "right" }} />
-              <SearchControl options={searchControl} />
-              <TrafficControl options={{ float: "right" }} />
-              <TypeSelector options={{ float: "right" }} />
-              <ZoomControl options={{ float: "right" }} />
-              {/* служебные компоненты */}
-              {Pererisovka()}
-              <PlacemarkDo />
-              {createObject && (
-                <RgsCreateObject
-                  setOpen={setCreateObject}
-                  coord={leftCoord}
-                  funcMode={ModeToDo}
-                />
-              )}
-              {processObject && (
-                <RgsProcessObject setOpen={setProcessObject} idx={idxObj} />
-              )}
-              {appoint && datestat.readyPict && (
-                <RgsAppointVertex setOpen={setAppoint} idx={idxObj} />
-              )}
-              {openSoobErr && (
-                <GsErrorMessage setOpen={setOpenSoobErr} sErr={soobErr} />
-              )}
-            </Map>
-          </YMaps>
-        )}
+      <Grid item xs={12}>
+        {MenuGl()}
+        <Grid container>
+          <Grid item xs={xsMap} sx={{ border: 0, height: "96.9vh" }}>
+            {Object.keys(map.tflight).length && (
+              <YMaps query={{ apikey: MyYandexKey, lang: "ru_RU" }}>
+                <Map
+                  modules={[
+                    "multiRouter.MultiRoute",
+                    "Polyline",
+                    "templateLayoutFactory",
+                  ]}
+                  state={mapState}
+                  instanceRef={(ref) => InstanceRefDo(ref)}
+                  onLoad={(ref) => {
+                    ref && setYmaps(ref);
+                  }}
+                  width={widthMap}
+                  height={"99.9%"}
+                >
+                  {YandexServices()}
+                  {/* служебные компоненты */}
+                  {Pererisovka()}
+                  <PlacemarkDo />
+                  {createObject && (
+                    <RgsCreateObject
+                      setOpen={setCreateObject}
+                      coord={leftCoord}
+                      funcMode={ModeToDo}
+                    />
+                  )}
+                  {processObject && (
+                    <RgsProcessObject setOpen={setProcessObject} idx={idxObj} />
+                  )}
+                  {appoint && datestat.readyPict && (
+                    <RgsAppointVertex setOpen={setAppoint} idx={idxObj} />
+                  )}
+                  {openSoobErr && (
+                    <GsErrorMessage setOpen={setOpenSoobErr} sErr={soobErr} />
+                  )}
+                </Map>
+              </YMaps>
+            )}
+          </Grid>
+
+          <Grid item xs={xsTab} sx={{ height: "97.0vh" }}>
+            {toDoMode && (
+              <RgsToDoMode
+                massMem={massMem}
+                massCoord={massCoord}
+                funcMode={ModeToDo}
+                funcSize={OldSizeWind}
+                funcCenter={NewPointCenter}
+                funcHelper={SetHelper}
+                trigger={props.trigger}
+                changeFaz={changeFaz}
+                ban={setRestartBan}
+                changeDemo={ChangeDemoSost}
+              />
+            )}
+          </Grid>
+        </Grid>
       </Grid>
-      <Grid item xs={xsTab} sx={{ height: "97.0vh" }}>
-        {toDoMode && (
-          <RgsToDoMode
-            massMem={massMem}
-            massCoord={massCoord}
-            funcMode={ModeToDo}
-            funcSize={OldSizeWind}
-            funcCenter={NewPointCenter}
-            funcHelper={SetHelper}
-            trigger={props.trigger}
-            changeFaz={changeFaz}
-            ban={setRestartBan}
-            changeDemo={ChangeDemoSost}
-          />
-        )}
-      </Grid>
-      {/* </Grid> */}
-      {/* </Grid> */}
     </Grid>
   );
 };

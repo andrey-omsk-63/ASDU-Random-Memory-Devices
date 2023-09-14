@@ -2,16 +2,36 @@ import * as React from "react";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-//import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
 import CardMedia from "@mui/material/CardMedia";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
 
 import { Pointer } from "../App";
-//import { DateMAP } from "./../interfaceMAP.d";
 import { Tflink, WayPointsArray } from "../interfaceBindings";
 
+import { FullscreenControl, GeolocationControl } from "react-yandex-maps";
+import { RulerControl, SearchControl } from "react-yandex-maps";
+import { TrafficControl, TypeSelector, ZoomControl } from "react-yandex-maps";
+
 import { styleAppSt02, styleAppSt03 } from "./MainMapStyle";
+import { styleModalEndAttent, searchControl } from "./MainMapStyle";
+
+export const YandexServices = () => {
+  return (
+    <>
+      <FullscreenControl />
+      <GeolocationControl options={{ float: "left" }} />
+      <RulerControl options={{ float: "right" }} />
+      <SearchControl options={searchControl} />
+      <TrafficControl options={{ float: "right" }} />
+      <TypeSelector options={{ float: "right" }} />
+      <ZoomControl options={{ float: "right" }} />
+    </>
+  );
+};
 
 export const MasskPoint = (debug: boolean, rec: any, imgFaza: string) => {
   let masskPoint: Pointer = {
@@ -203,13 +223,13 @@ export const GetPointData = (
   let contU = "";
   let contZ = "";
   if (index < map.tflight.length) {
-    let SL = Number(map.tflight[index].region.num) < 10 ? 2 : 3;
+    let SL = Number(map.tflight[index].region.num) < 10 ? 4 : 5;
     cont1 = map.tflight[index].description + "<br/>";
     cont3 = map.tflight[index].tlsost.description + "<br/>";
     //cont2 = "[" + map.tflight[index].region.num + ", ";
-    cont2 += "[" + map.tflight[index].area.num;
-    cont2 +=
-      ", " + map.tflight[index].ID + ", " + map.tflight[index].idevice + "]";
+    //cont2 = "[" + map.tflight[index].area.num + ", ";
+    cont2 =
+      "[" + map.tflight[index].ID + ", " + map.tflight[index].idevice + "]";
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       let rec = map.tflight[index];
       let klu = MakingKey(rec.region.num, rec.area.num, rec.ID);
@@ -380,6 +400,62 @@ export const OutputVertexImg = (host: string) => {
   );
 };
 //=== AppointVertex ================================
+export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
+  const styleSetPoint = {
+    outline: "none",
+    position: "absolute",
+    left: "50%",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "1px solid #000",
+    borderColor: "red",
+    borderRadius: 2,
+    boxShadow: 24,
+    textAlign: "center",
+    p: 1,
+  };
+
+  const styleModalMenu = {
+    marginTop: 0.5,
+    maxHeight: "24px",
+    minHeight: "24px",
+    backgroundColor: "#E6F5D6",
+    textTransform: "unset !important",
+    color: "black",
+  };
+
+  const handleClose = (mode: boolean) => {
+    handleCloseEnd(mode);
+  };
+
+  return (
+    <Modal open={badExit} onClose={() => handleClose(false)}>
+      <Box sx={styleSetPoint}>
+        <Button sx={styleModalEndAttent} onClick={() => handleClose(false)}>
+          <b>&#10006;</b>
+        </Button>
+        <Typography variant="h6" sx={{ color: "red" }}>
+          Предупреждение
+        </Typography>
+        <Box sx={{ marginTop: 0.5 }}>
+          <Box sx={{ marginBottom: 1.2 }}>
+            <b>Будет произведён выход без сохранения. Продолжать?</b>
+          </Box>
+          <Button sx={styleModalMenu} onClick={() => handleClose(true)}>
+            Да
+          </Button>
+          &nbsp;
+          <Button sx={styleModalMenu} onClick={() => handleClose(false)}>
+            Нет
+          </Button>
+        </Box>
+      </Box>
+    </Modal>
+  );
+};
+
 export const AppointHeader = (hBlock: number) => {
   return (
     <Grid container sx={{ bgcolor: "#C0E2C3" }}>
@@ -744,38 +820,47 @@ export const ChangeArea = (event: any, funcAr: Function, funcId: Function) => {
   if (Number(valueInp) < 100) funcAr(Number(valueInp));
 };
 
-export const ChangeId = (
-  event: any,
-  funcId: Function,
-  funcAr: Function,
-  map: any,
-  addobj: any
-) => {
-  //let valueInp = event.target.value.replace(/^0+/, "");
-  let valueInp = event.target.value;
-  if (valueInp === "") valueInp = 1;
-  if (Number(valueInp) < 0) valueInp = 1;
-  if (Number(valueInp) < 100000) funcId(Number(valueInp));
-  let have = false;
-  if (Number(valueInp) < 9999) {
-    // перекрёсток
-    for (let i = 0; i < map.tflight.length; i++) {
-      if (map.tflight[i].ID === Number(valueInp)) {
-        funcAr(Number(map.tflight[i].area.num));
-        have = true;
-      }
-    }
-  } else {
-    // объект
-    for (let i = 0; i < addobj.addObjects.length; i++) {
-      if (addobj.addObjects[i].id === Number(valueInp)) {
-        funcAr(addobj.addObjects[i].area);
-        have = true;
-      }
-    }
-  }
-  if (!have) funcAr(0);
-};
+// export const ChangeId = (
+//   event: any,
+//   funcId: Function,
+//   funcAr: Function,
+//   map: any,
+//   addobj: any,
+//   AREA: number
+// ) => {
+//   //let valueInp = event.target.value.replace(/^0+/, "");
+//   let valueInp = event.target.value;
+//   if (valueInp === "") valueInp = 1;
+//   if (Number(valueInp) < 0) valueInp = 1;
+//   if (Number(valueInp) < 100000) funcId(Number(valueInp));
+//   let have = false;
+//   HAVE++;
+//   if (Number(valueInp) < 9999) {
+//     // перекрёсток
+//     for (let i = 0; i < map.tflight.length; i++) {
+//       // if (map.tflight[i].ID === Number(valueInp)) {
+//       //   funcAr(Number(map.tflight[i].area.num));
+//       //   have = true;
+//       // }
+//       if (
+//         map.tflight[i].ID === Number(valueInp) &&
+//         Number(map.tflight[i].area.num) === AREA
+//       ) {
+//         funcAr(Number(map.tflight[i].area.num));
+//         have = true;
+//       }
+//     }
+//   } else {
+//     // объект
+//     for (let i = 0; i < addobj.addObjects.length; i++) {
+//       if (addobj.addObjects[i].id === Number(valueInp)) {
+//         funcAr(addobj.addObjects[i].area);
+//         have = true;
+//       }
+//     }
+//   }
+//   if (!have) funcAr(0);
+// };
 
 export const OutPutZZ = (zz: string) => {
   const styleZId = {
@@ -784,6 +869,7 @@ export const OutPutZZ = (zz: string) => {
     position: "relative",
     top: "50%",
     color: "blue",
+    marginLeft: -0.5,
   };
   return (
     <Grid item xs={0.15} sx={{ border: 0 }}>
@@ -796,7 +882,15 @@ export const OutPutZZ = (zz: string) => {
 
 export const OutPutSS = (ss: string) => {
   return (
-    <Box sx={{ marginTop: -3, color: "blue", textAlign: "center" }}>
+    <Box
+      sx={{
+        marginTop: -2.5,
+        color: "blue",
+        textAlign: "center",
+        maxHeight: "18px",
+        minHeight: "18px",
+      }}
+    >
       <b>{ss}</b>
     </Box>
   );
@@ -817,6 +911,7 @@ export const OutPutVV = (vv: string) => {
     position: "relative",
     top: "50%",
     color: "blue",
+    marginLeft: 0.7,
   };
   return (
     <Grid item xs={0.15} sx={{ border: 0 }}>
@@ -955,7 +1050,7 @@ export const StrokaMenuGlob = (func: any) => {
     minHeight: "24px",
     backgroundColor: "#93D145",
     color: "black",
-    boxShadow: 2,
+    boxShadow: 4,
   };
 
   return <Box sx={styleApp01}>{InputDirect(func)}</Box>;

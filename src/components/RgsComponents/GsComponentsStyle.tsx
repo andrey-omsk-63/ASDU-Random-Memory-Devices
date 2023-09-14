@@ -16,8 +16,8 @@ export const styleSetInf = {
 export const styleModalMenu = {
   marginTop: 0.5,
   marginRight: 1,
-  maxHeight: '24px',
-  minHeight: '24px',
+  maxHeight: "24px",
+  minHeight: "24px",
   backgroundColor: "#E6F5D6",
   textTransform: "unset !important",
   color: "black",
@@ -94,5 +94,22 @@ export const styleStrokaTakt = {
   fontSize: 12,
   paddingTop: 1.7,
   textAlign: "right",
+};
+
+export const StyleToDoMode = (DEMO: boolean) => {
+  const styleToDoMode = {
+    position: "relative",
+    marginTop: 0.1,
+    marginLeft: "auto",
+    marginRight: 1,
+    width: "96%",
+    bgcolor: "background.paper",
+    border: "1px solid #000",
+    borderColor: DEMO ? "red" : "primary.main",
+    borderRadius: 2,
+    boxShadow: 24,
+    p: 1.0,
+  };
+  return styleToDoMode;
 };
 //========================================================
