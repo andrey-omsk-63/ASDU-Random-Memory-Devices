@@ -75,6 +75,7 @@ export const styleStrokaTabl = {
   borderRadius: 2,
   color: "black",
   textTransform: "unset !important",
+  boxShadow: 5,
 };
 
 export const styleStrokaTablImg = {
@@ -88,6 +89,7 @@ export const styleStrokaTablImg = {
   borderRadius: 2,
   color: "black",
   textTransform: "unset !important",
+  boxShadow: 5,
 };
 
 export const styleStrokaTakt = {

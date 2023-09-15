@@ -69,7 +69,7 @@ const RgsProcessObject = (props: { setOpen: Function; idx: number }) => {
   };
 
   return (
-    <Modal open={openSet} onClose={handleCloseSet} hideBackdrop>
+    <Modal open={openSet} onClose={handleCloseSet}>
       <Box sx={styleSetProcess}>
         <Button sx={styleModalEnd} onClick={handleCloseSet}>
           &#10006;

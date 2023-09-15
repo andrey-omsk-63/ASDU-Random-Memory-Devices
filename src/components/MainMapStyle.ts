@@ -62,7 +62,7 @@ export const styleSetAdress = {
   //===
   border: "3px solid #000",
   borderColor: "#FFFEF7",
-  borderRadius: 2,
+  borderRadius: 1,
   boxShadow: 24,
   bgcolor: "#FFFEF7",
   opacity: 0.85,
@@ -171,7 +171,7 @@ export const styleModalMenu = {
   marginBottom: 2,
   textTransform: "unset !important",
   textAlign: "center",
-  boxShadow: 2,
+  boxShadow: 5,
 };
 
 export const styleSetProcess = {
@@ -182,7 +182,7 @@ export const styleSetProcess = {
   marginRight: "auto",
   width: 333,
   bgcolor: "background.paper",
-  border: "3px solid #000",
+  border: "1px solid #000",
   borderColor: "primary.main",
   borderRadius: 2,
   boxShadow: 24,
@@ -244,7 +244,7 @@ export const styleSetAV = {
   minHeight: "19px",
   //marginTop: '2px',
   bgcolor: "#FFFBE5",
-  boxShadow: 2,
+  boxShadow: 5,
 };
 
 export const styleBoxFormAV = {

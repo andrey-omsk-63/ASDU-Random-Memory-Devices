@@ -248,7 +248,7 @@ const RgsCreateObject = (props: {
   };
 
   return (
-    <Modal open={openSetAdress} onClose={handleCloseSet} hideBackdrop>
+    <Modal open={openSetAdress} onClose={handleCloseSet}>
       <Grid item container sx={styleSetAdress}>
         <Grid item xs={9.5}>
           <InputName />

@@ -780,7 +780,7 @@ export const ReplaceInSvg = (svgPict: any) => {
 
 export const OutputPict = (pict: any) => {
   return (
-    <Box sx={{ border: 0, marginLeft: 0 }}>
+    <Box sx={{ border: 0, boxShadow: 24, }}>
       <div dangerouslySetInnerHTML={{ __html: ReplaceInSvg(pict) }} />
     </Box>
   );
@@ -898,7 +898,7 @@ export const OutPutSS = (ss: string) => {
 
 export const OutPutUU = (uu: string) => {
   return (
-    <Box sx={{ marginTop: -1, color: "blue", textAlign: "center" }}>
+    <Box sx={{ marginTop: -0.5, color: "blue", textAlign: "center" }}>
       <b>{uu}</b>
     </Box>
   );
