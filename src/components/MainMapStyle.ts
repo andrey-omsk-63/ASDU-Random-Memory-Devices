@@ -242,15 +242,18 @@ export const styleSetAV = {
   width: "48px",
   maxHeight: "19px",
   minHeight: "19px",
-  //marginTop: '2px',
+  border: "1px solid #000",
+  borderRadius: 1,
+  borderColor: "#d4d4d4", // серый
+  textTransform: "unset !important",
   bgcolor: "#FFFBE5",
-  boxShadow: 5,
+  boxShadow: 6,
 };
 
 export const styleBoxFormAV = {
   "& > :not(style)": {
     marginTop: "-0px",
-    marginLeft: "-2px",
+    marginLeft: "1px",
     //height: "15px",
     width: "50px",
   },
@@ -274,7 +277,10 @@ export const styleSetFaza = {
   maxHeight: "19px",
   minHeight: "19px",
   bgcolor: "#FFFBE5",
-  boxShadow: 3,
+  border: "1px solid #000",
+  borderRadius: 1,
+  borderColor: "#d4d4d4", // серый
+  boxShadow: 6,
 };
 
 export const styleBoxFormFaza = {
