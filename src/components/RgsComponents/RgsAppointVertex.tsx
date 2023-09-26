@@ -496,11 +496,15 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               </Grid>
             </Grid>
           </Grid>
-          <Box sx={{ marginTop: 1, textAlign: "center" }}>
-            <Button sx={styleModalMenu} onClick={() => handleClose()}>
-              Сохранить изменения
-            </Button>
-          </Box>
+          {HAVE > 0 ? (
+            <Box sx={{ marginTop: 1, textAlign: "center" }}>
+              <Button sx={styleModalMenu} onClick={() => handleClose()}>
+                Сохранить изменения
+              </Button>
+            </Box>
+          ) : (
+            <Box sx={{ marginTop: 1, height: "36px" }}> </Box>
+          )}
           {openSetErr && (
             <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />
           )}

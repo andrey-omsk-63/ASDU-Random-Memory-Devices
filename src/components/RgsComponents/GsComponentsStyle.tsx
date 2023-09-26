@@ -64,18 +64,32 @@ export const styleToDoMode = {
   p: 1.0,
 };
 
-export const styleStrokaTabl = {
-  border: "2px solid #000",
-  bgcolor: "#E6F5D6",
-  maxWidth: "3px",
-  minWidth: "3px",
-  maxHeight: "20px",
-  minHeight: "20px",
-  borderColor: "#E6F5D6",
-  borderRadius: 2,
+export const styleStrokaTabl01 = {
+  maxWidth: "24px",
+  minWidth: "24px",
+  maxHeight: "24px",
+  minHeight: "24px",
+  bgcolor: "#BAE186", // тёмно-салатовый
+  border: "1px solid #000",
+  borderColor: "#93D145", // ярко-салатовый
+  borderRadius: 1,
+  boxShadow: 8,
   color: "black",
   textTransform: "unset !important",
-  boxShadow: 5,
+};
+
+export const styleStrokaTabl02 = {
+  border: "1px solid #000",
+  bgcolor: "#E6F5D6",
+  maxWidth: "24px",
+  minWidth: "24px",
+  maxHeight: "24px",
+  minHeight: "24px",
+  borderColor: "#d4d4d4", // серый
+  borderRadius: 1,
+  color: "black",
+  textTransform: "unset !important",
+  boxShadow: 2,
 };
 
 export const styleStrokaTablImg = {
@@ -86,10 +100,10 @@ export const styleStrokaTablImg = {
   maxHeight: "45px",
   minHeight: "45px",
   borderColor: "#EFF9E6",
-  borderRadius: 2,
+  borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
-  boxShadow: 5,
+  boxShadow: 6,
 };
 
 export const styleStrokaTakt = {

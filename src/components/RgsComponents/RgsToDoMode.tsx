@@ -14,8 +14,8 @@ import { CircleObj } from "../RgsServiceFunctions";
 import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 
 import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
-import { styleStrokaTabl, styleStrokaTakt } from "./GsComponentsStyle";
-import { StyleToDoMode } from "./GsComponentsStyle";
+import { styleStrokaTabl01, styleStrokaTakt } from "./GsComponentsStyle";
+import { styleStrokaTabl02, StyleToDoMode } from "./GsComponentsStyle";
 
 let init = true;
 let lengthMassMem = 0;
@@ -24,6 +24,7 @@ let massInt: any[][] = []; //null
 
 let oldFaz = -1;
 let needRend = false;
+let nomIllum = -1;
 
 const RgsToDoMode = (props: {
   massMem: Array<number>;
@@ -277,6 +278,7 @@ const RgsToDoMode = (props: {
 
   const StrokaTabl = () => {
     const ClickKnop = (mode: number) => {
+      nomIllum = mode;
       props.funcCenter(props.massCoord[mode]);
       setTrigger(!trigger);
     };
@@ -319,7 +321,11 @@ const RgsToDoMode = (props: {
           // }
           // timerId[mode] = null;
           massfaz[mode].runRec = DEMO ? 5 : 1;
-          console.log(mode + 1 + "-й светофор закрыт",massfaz[mode].runRec, timerId[mode]);
+          console.log(
+            mode + 1 + "-й светофор закрыт",
+            massfaz[mode].runRec,
+            timerId[mode]
+          );
         }
       }
       dispatch(massfazCreate(massfaz));
@@ -357,15 +363,12 @@ const RgsToDoMode = (props: {
       let pictImg: any = "";
       if (massfaz[i].faza) pictImg = OutputFazaImg(fazaImg, massfaz[i].faza);
       if (massfaz[i].id > 10000) pictImg = CircleObj();
+      let illum = nomIllum === i ? styleStrokaTabl01 : styleStrokaTabl02;
 
       resStr.push(
         <Grid key={i} container sx={{ marginTop: 1 }}>
           <Grid item xs={1} sx={{ paddingTop: 0.7, textAlign: "center" }}>
-            <Button
-              variant="contained"
-              sx={styleStrokaTabl}
-              onClick={() => ClickKnop(i)}
-            >
+            <Button sx={illum} onClick={() => ClickKnop(i)}>
               {i + 1}
             </Button>
           </Grid>
@@ -408,6 +411,7 @@ const RgsToDoMode = (props: {
     massfaz = [];
     timerId = [];
     massInt = [];
+    nomIllum = -1;
     for (let i = 0; i < props.massMem.length; i++) {
       massfaz.push(MakeMaskFaz(i));
       timerId.push(null);

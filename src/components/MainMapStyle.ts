@@ -162,7 +162,7 @@ export const styleBoxFormArea = {
 // };
 //=== ProcessObject ===================================================
 export const styleModalMenu = {
-  fontSize: 16,
+  fontSize: 15,
   maxHeight: "21px",
   minHeight: "21px",
   backgroundColor: "#E6F5D6",
@@ -240,14 +240,15 @@ export const styleAppSt03 = {
 
 export const styleSetAV = {
   width: "48px",
-  maxHeight: "19px",
-  minHeight: "19px",
+  maxHeight: "21px",
+  minHeight: "21px",
   border: "1px solid #000",
   borderRadius: 1,
   borderColor: "#d4d4d4", // серый
   textTransform: "unset !important",
   bgcolor: "#FFFBE5",
   boxShadow: 6,
+  paddingTop: 0.5,
 };
 
 export const styleBoxFormAV = {

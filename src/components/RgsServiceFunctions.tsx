@@ -422,6 +422,10 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     maxHeight: "24px",
     minHeight: "24px",
     backgroundColor: "#E6F5D6",
+    border: "1px solid #000",
+    borderRadius: 1,
+    borderColor: "#d4d4d4", // серый
+    boxShadow: 6,
     textTransform: "unset !important",
     color: "black",
   };
@@ -780,7 +784,7 @@ export const ReplaceInSvg = (svgPict: any) => {
 
 export const OutputPict = (pict: any) => {
   return (
-    <Box sx={{ border: 0, boxShadow: 24, }}>
+    <Box sx={{ border: 0, boxShadow: 24 }}>
       <div dangerouslySetInnerHTML={{ __html: ReplaceInSvg(pict) }} />
     </Box>
   );
@@ -937,7 +941,6 @@ export const CircleObj = () => {
 //=== Разное =======================================
 export const InputDirect = (func: any) => {
   const styleSetNapr = {
-    //border: 1,
     width: "165px",
     maxHeight: "1px",
     minHeight: "1px",
@@ -947,7 +950,7 @@ export const InputDirect = (func: any) => {
     borderColor: "#93D145",
     boxShadow: 6,
     paddingTop: 1.5,
-    paddingBottom: 1.5,
+    paddingBottom: 1.2,
     textAlign: "center",
   };
 
@@ -1074,7 +1077,8 @@ export const StrokaHelp = (soobInfo: string) => {
     backgroundColor: "#E9F5D8",
     color: "#E6761B",
     textAlign: "center",
-    marginTop: "-1px",
+    marginLeft: "6px",
+    p: 0.2,
   };
   return (
     <Box sx={styleInfoSoob}>
