@@ -380,11 +380,7 @@ const RgsToDoMode = (props: {
               <>{OutputVertexImg(host)}</>
             )}
             {massfaz[i].runRec !== 1 && massfaz[i].id <= 10000 && (
-              <Button
-                variant="contained"
-                sx={styleStrokaTablImg}
-                onClick={() => ClickVertex(i)}
-              >
+              <Button sx={styleStrokaTablImg} onClick={() => ClickVertex(i)}>
                 {OutputVertexImg(host)}
               </Button>
             )}
