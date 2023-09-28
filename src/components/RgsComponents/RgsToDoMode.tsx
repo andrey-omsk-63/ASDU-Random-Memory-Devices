@@ -258,8 +258,6 @@ const RgsToDoMode = (props: {
         massfaz[mode].fazaSist = fazer.faza;
       }
 
-      console.log("###:", mode + 1, fazer.runRec, fazer.fazaSist);
-
       dispatch(massfazCreate(massfaz));
       props.changeDemo(mode);
       needRend = true;
@@ -380,7 +378,11 @@ const RgsToDoMode = (props: {
               <>{OutputVertexImg(host)}</>
             )}
             {massfaz[i].runRec !== 1 && massfaz[i].id <= 10000 && (
-              <Button sx={styleStrokaTablImg} onClick={() => ClickVertex(i)}>
+              <Button
+                //variant="contained"
+                sx={styleStrokaTablImg}
+                onClick={() => ClickVertex(i)}
+              >
                 {OutputVertexImg(host)}
               </Button>
             )}

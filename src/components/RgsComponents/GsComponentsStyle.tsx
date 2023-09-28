@@ -93,10 +93,10 @@ export const styleStrokaTabl02 = {
 };
 
 export const styleStrokaTablImg = {
-  border: "2px solid #000",
+  border: "1px solid #000",
   bgcolor: "#EFF9E6",
-  maxWidth: "10px",
-  minWidth: "10px",
+  maxWidth: "33px",
+  minWidth: "33px",
   maxHeight: "45px",
   minHeight: "45px",
   borderColor: "#EFF9E6",

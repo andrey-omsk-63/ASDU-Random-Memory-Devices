@@ -373,7 +373,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       mapp.current.events.remove("contextmenu", funcContex);
       funcContex = function (e: any) {
         if (mapp.current.hint) {
-          console.log("Правая кнопка:", inTarget, inDemo);
           if (inTarget && !inDemo) InputerObject(e.get("coords")); // нажата правая кнопка мыши
           if (!inTarget && !inDemo) FindNearVertex(e.get("coords"));
         }
