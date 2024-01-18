@@ -35,7 +35,6 @@ let needRend = false;
 const zoomStart = 10;
 let zoom = zoomStart;
 let pointCenter: any = 0;
-//let pointCenterEt: any = 0;
 
 let massMem: Array<number> = [];
 let massVert: Array<number> = [];
@@ -111,24 +110,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   const addRoute = (ymaps: any, bound: boolean) => {
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
-    //let multiRoute: any = [];
-    // if (massCoord.length === 2) {
-    //   multiRoute = new ymaps.multiRouter.MultiRoute(
-    //     getReferencePoints(massCoord[0], massCoord[1]),
-    //     getMultiRouteOptions()
-    //   );
-    // } else {
-    //   let between = [];
-    //   for (let i = 1; i < massCoord.length - 1; i++) between.push(i);
-    //   multiRoute = new ymaps.multiRouter.MultiRoute(
-    //     getReferenceLine(massCoord, between),
-    //     {
-    //       boundsAutoApply: bound,
-    //       wayPointVisible: false,
-    //     }
-    //   );
-    // }
-    // mapp.current.geoObjects.add(multiRoute);
     let massMultiRoute: any = []; // исходящие связи
     for (let i = 0; i < massRoute.length; i++) {
       massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
@@ -172,7 +153,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     massNomBind = [];
     zoom = zoom - 0.01;
     ymaps && addRoute(ymaps, false); // перерисовка связей
-    //NewPointCenter(pointCenterEt);
   };
 
   const ClickPointInTarget = (index: number) => {
@@ -523,10 +503,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     );
   };
 
-  const ChangeDemoSost = (mode: number) => {
-    //console.log('ChangeDemoSost:',mode)
-    setDemoSost(mode + demoSost); // костыль
-  };
+  const ChangeDemoSost = (mode: number) => setDemoSost(mode + demoSost); // костыль
 
   if (needRend) {
     needRend = false;

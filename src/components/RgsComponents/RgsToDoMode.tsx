@@ -16,6 +16,7 @@ import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
 import { styleStrokaTabl01, styleStrokaTakt } from "./GsComponentsStyle";
 import { styleStrokaTabl02, StyleToDoMode } from "./GsComponentsStyle";
+import { styleToDo01 } from "./GsComponentsStyle";
 
 let init = true;
 let lengthMassMem = 0;
@@ -379,7 +380,6 @@ const RgsToDoMode = (props: {
             )}
             {massfaz[i].runRec !== 1 && massfaz[i].id <= 10000 && (
               <Button
-                //variant="contained"
                 sx={styleStrokaTablImg}
                 onClick={() => ClickVertex(i)}
               >
@@ -483,10 +483,12 @@ const RgsToDoMode = (props: {
       <Box sx={styleToDoMode}>
         <Grid container sx={{ marginTop: 0 }}>
           <Grid item xs sx={{ fontSize: 18, textAlign: "center" }}>
-            Режим:{" "}
-            <b>
-              произвольная {'"'}зелёная улица{'"'}
-            </b>
+            <em>
+              Режим:{" "}
+              <b>
+                произвольная {'"'}зелёная улица{'"'}
+              </b>
+            </em>
             {DEMO && (
               <Box sx={{ fontSize: 15, color: "red" }}>
                 {"( "}демонстрационный{" )"}
@@ -494,7 +496,7 @@ const RgsToDoMode = (props: {
             )}
           </Grid>
         </Grid>
-        <Box sx={{ marginTop: 1 }}>
+        <Box sx={styleToDo01}>
           <Grid container sx={{ bgcolor: "#C0E2C3" }}>
             {StrokaHeader(1, "Номер")}
             {StrokaHeader(3.6, "Состояние")}
@@ -502,11 +504,11 @@ const RgsToDoMode = (props: {
             {StrokaHeader(5.5, "ДК")}
           </Grid>
           <Box sx={{ overflowX: "auto", height: hTabl }}>{StrokaTabl()}</Box>
-          <Box sx={{ marginTop: 1.5, textAlign: "center" }}>
-            <Button sx={styleModalMenu} onClick={() => ToDoMode(0)}>
-              Закончить исполнение
-            </Button>
-          </Box>
+        </Box>
+        <Box sx={{ marginTop: 0.5, textAlign: "center" }}>
+          <Button sx={styleModalMenu} onClick={() => ToDoMode(0)}>
+            Закончить исполнение
+          </Button>
         </Box>
       </Box>
     </>

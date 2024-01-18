@@ -22,6 +22,7 @@ export const styleModalMenu = {
   textTransform: "unset !important",
   color: "black",
   boxShadow: 2,
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
 
 export const styleBoxFormFaza = {
@@ -73,9 +74,10 @@ export const styleStrokaTabl01 = {
   border: "1px solid #000",
   borderColor: "#93D145", // ярко-салатовый
   borderRadius: 1,
-  boxShadow: 8,
   color: "black",
   textTransform: "unset !important",
+  boxShadow: 8,
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
 
 export const styleStrokaTabl02 = {
@@ -90,6 +92,7 @@ export const styleStrokaTabl02 = {
   color: "black",
   textTransform: "unset !important",
   boxShadow: 2,
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
 
 export const styleStrokaTablImg = {
@@ -120,12 +123,22 @@ export const StyleToDoMode = (DEMO: boolean) => {
     marginRight: 1,
     width: "96%",
     bgcolor: "background.paper",
-    border: "1px solid #000",
-    borderColor: DEMO ? "red" : "primary.main",
+    border: "1px solid #FFF",
+    //borderColor: DEMO ? "red" : "primary.main",
     borderRadius: 2,
     boxShadow: 24,
+    textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
     p: 1.0,
   };
   return styleToDoMode;
+};
+
+export const styleToDo01 = {
+  bgcolor: "#F1F5FB",
+  border: "1px solid #d4d4d4",
+  borderRadius: 1,
+  marginTop: 1,
+  boxShadow: 6,
+  padding: "5px",
 };
 //========================================================
