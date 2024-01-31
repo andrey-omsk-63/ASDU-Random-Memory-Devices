@@ -16,7 +16,7 @@ import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
 import { styleStrokaTabl01, styleStrokaTakt } from "./GsComponentsStyle";
 import { styleStrokaTabl02, StyleToDoMode } from "./GsComponentsStyle";
-import { styleToDo01 } from "./GsComponentsStyle";
+import { styleToDo01, styleToDo02 } from "./GsComponentsStyle";
 
 let init = true;
 let lengthMassMem = 0;
@@ -379,10 +379,7 @@ const RgsToDoMode = (props: {
               <>{OutputVertexImg(host)}</>
             )}
             {massfaz[i].runRec !== 1 && massfaz[i].id <= 10000 && (
-              <Button
-                sx={styleStrokaTablImg}
-                onClick={() => ClickVertex(i)}
-              >
+              <Button sx={styleStrokaTablImg} onClick={() => ClickVertex(i)}>
                 {OutputVertexImg(host)}
               </Button>
             )}
@@ -482,7 +479,7 @@ const RgsToDoMode = (props: {
     <>
       <Box sx={styleToDoMode}>
         <Grid container sx={{ marginTop: 0 }}>
-          <Grid item xs sx={{ fontSize: 18, textAlign: "center" }}>
+          <Grid item xs sx={styleToDo02}>
             <em>
               Режим:{" "}
               <b>

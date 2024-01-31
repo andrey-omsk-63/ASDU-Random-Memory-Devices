@@ -1,9 +1,9 @@
-import * as React from 'react';
+import * as React from "react";
 
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Modal from '@mui/material/Modal';
-import Typography from '@mui/material/Typography';
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
 
 //import { styleModalEnd } from '../MainMapStyle';
 
@@ -12,27 +12,29 @@ const GsErrorMessage = (props: { sErr: string; setOpen: any }) => {
 
   const styleSetInf = {
     outline: "none",
-    position: 'absolute',
-    marginTop: '15vh',
-    marginLeft: '24vh',
+    position: "absolute",
+    marginTop: "15vh",
+    marginLeft: "24vh",
     width: 380,
-    bgcolor: 'background.paper',
-    border: '1px solid #000',
-    borderColor: 'red',
+    //bgcolor: "background.paper",
+    bgcolor: "#fcebfb", // бледно-розовый
+    border: "1px solid #fcebfb", // бледно-розовый
+    //borderColor: "red",
     borderRadius: 2,
     boxShadow: 24,
     p: 1.5,
   };
 
   const styleModalEnd = {
-    position: 'absolute',
-    top: '0%',
-    left: 'auto',
-    right: '-0%',
-    height: '21px',
-    maxWidth: '2%',
-    minWidth: '2%',
-    color: 'red',
+    position: "absolute",
+    top: "0%",
+    left: "auto",
+    right: "-0%",
+    height: "21px",
+    maxWidth: "2%",
+    minWidth: "2%",
+    color: "red",
+    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
   };
 
   const handleClose = () => {
@@ -46,7 +48,14 @@ const GsErrorMessage = (props: { sErr: string; setOpen: any }) => {
         <Button sx={styleModalEnd} onClick={handleClose}>
           <b>&#10006;</b>
         </Button>
-        <Typography variant="h6" sx={{ textAlign: 'center', color: 'red' }}>
+        <Typography
+          variant="h6"
+          sx={{
+            textAlign: "center",
+            color: "red",
+            textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+          }}
+        >
           {props.sErr}
         </Typography>
       </Box>

@@ -238,6 +238,14 @@ export const styleAppSt03 = {
   left: "50%",
 };
 
+export const styleAppSt04 = {
+  fontSize: 17,
+  marginTop: 1,
+  textAlign: "center",
+  color: "#7620a2", // сиреневый
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+};
+
 export const styleSetAV = {
   width: "48px",
   maxHeight: "21px",

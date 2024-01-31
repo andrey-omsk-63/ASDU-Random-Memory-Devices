@@ -141,4 +141,10 @@ export const styleToDo01 = {
   boxShadow: 6,
   padding: "5px",
 };
+
+export const styleToDo02 = {
+  fontSize: 18,
+  textAlign: "center",
+  color: "#7620a2", // сиреневый
+};
 //========================================================

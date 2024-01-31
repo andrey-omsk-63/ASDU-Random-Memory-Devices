@@ -29,6 +29,7 @@ import { SendSocketGetSvg } from "./RgsSocketFunctions";
 
 import { styleMenuGl } from "./MainMapStyle";
 
+export let BAN = false;
 let flagOpen = false;
 let needRend = false;
 
@@ -414,7 +415,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           xsTab = 4.3;
           widthMap = "99.9%";
           setToDoMode(true);
-          setRestartBan(true);
+          setRestartBan(BAN = true);
           setFlagPusk(!flagPusk);
           break;
         case 54: // режим Показать связи
@@ -442,6 +443,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     setToDoMode(false);
     StatusQuo();
     setFlagPusk(!flagPusk);
+  };
+
+  const SetRestartBan = (mode: boolean) => {
+    setRestartBan(BAN = mode)
   };
 
   //=== инициализация ======================================
@@ -568,7 +573,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                 funcHelper={SetHelper}
                 trigger={props.trigger}
                 changeFaz={changeFaz}
-                ban={setRestartBan}
+                ban={SetRestartBan}
                 changeDemo={ChangeDemoSost}
               />
             )}

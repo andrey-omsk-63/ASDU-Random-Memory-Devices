@@ -16,6 +16,8 @@ import { FullscreenControl, GeolocationControl } from "react-yandex-maps";
 import { RulerControl, SearchControl } from "react-yandex-maps";
 import { TrafficControl, TypeSelector, ZoomControl } from "react-yandex-maps";
 
+import { BAN } from "./MainMapRgs";
+
 import { styleAppSt02, styleAppSt03 } from "./MainMapStyle";
 import { styleModalEndAttent, searchControl } from "./MainMapStyle";
 
@@ -488,7 +490,17 @@ export const AppointDirect = (rec1: string, hBlock: number) => {
   return (
     <Grid container>
       <Grid item xs={12} sx={{ height: hBlock / 15 }}></Grid>
-      <Grid item xs={12} sx={{ fontSize: 21, textAlign: "center", height: hB }}>
+      <Grid
+        item
+        xs={12}
+        sx={{
+          fontSize: 21,
+          textAlign: "center",
+          height: hB,
+          color: "#7620a2", // сиреневый
+          textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+        }}
+      >
         <Box sx={styleAppSt02}>
           <b>{rec1}</b>
         </Box>
@@ -500,7 +512,15 @@ export const AppointDirect = (rec1: string, hBlock: number) => {
 export const OutputKey = (klush: string, hBlock: number) => {
   return (
     <Grid container>
-      <Grid item xs={12} sx={{ textAlign: "center", height: hBlock / 15 }}>
+      <Grid
+        item
+        xs={12}
+        sx={{
+          textAlign: "center",
+          height: hBlock / 15,
+          textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+        }}
+      >
         <Box sx={styleAppSt02}>{klush}</Box>
       </Grid>
     </Grid>
@@ -965,8 +985,7 @@ export const InputDirect = (func: any) => {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrency(Number(event.target.value));
-
+    !BAN && setCurrency(Number(event.target.value));
     switch (Number(event.target.value)) {
       case 0: // режим управления
         func(51);
@@ -1019,10 +1038,11 @@ export const InputDirect = (func: any) => {
           InputProps={{
             disableUnderline: true,
             style: {
-              fontSize: currency === 3 ? 17 : 15,
+              //fontSize: currency === 3 ? 17 : 15,
+              fontSize: 15,
               fontWeight: 700,
               color: currency === 3 ? "red" : "black",
-              marginTop: currency === 3 ? -3 : 0,
+              //marginTop: currency === 3 ? -3 : 0,
             },
           }}
           variant="standard"
@@ -1033,7 +1053,7 @@ export const InputDirect = (func: any) => {
               key={option.value}
               value={option.value}
               sx={{
-                fontSize: 14,
+                fontSize: 15,
                 color: option.label === "Режим Демо" ? "red" : "black",
               }}
             >
@@ -1052,15 +1072,6 @@ export const StrokaMenuGlob = (func: any) => {
     marginRight: 0.1,
     marginLeft: 0.5,
     width: 165,
-    //maxHeight: "2px",
-    //minHeight: "2px",
-    // bgcolor: "#BAE186",
-    // border: 1,
-    // borderRadius: 1,
-    // borderColor: "#93D145",
-    // color: "red",
-    //p: 1.25,
-    //boxShadow: 6,
   };
 
   return <Box sx={styleApp01}>{InputDirect(func)}</Box>;

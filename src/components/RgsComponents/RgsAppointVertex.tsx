@@ -22,9 +22,11 @@ import { BadExit } from "../RgsServiceFunctions";
 import { AppIconAsdu, OutputPict } from "../RgsServiceFunctions";
 import { OutPutZZ, OutPutSS, OutPutUU, OutPutVV } from "../RgsServiceFunctions";
 
+//import { BAN } from "../MainMapRgs";
+
 import { styleModalEnd, styleModalMenu } from "../MainMapStyle";
 import { styleSetAppoint, styleAppSt02 } from "../MainMapStyle";
-import { styleSetAV, styleBoxFormAV } from "../MainMapStyle";
+import { styleSetAV, styleBoxFormAV, styleAppSt04 } from "../MainMapStyle";
 import { styleSetFaza, styleBoxFormFaza } from "../MainMapStyle";
 import { styleSetFazaNull } from "../MainMapStyle";
 
@@ -455,7 +457,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
           <Button sx={styleModalEnd} onClick={handleCloseBad}>
             &#10006;
           </Button>
-          <Box sx={{ fontSize: 17, marginTop: 1, textAlign: "center" }}>
+          <Box sx={styleAppSt04}>
             {/* <b>Массив связности перекрёстка {kluchGl.slice(2)} </b> */}
             <b>Массив связности перекрёстка {kluchGl.slice(2)}</b> (
             <b>{map.tflight[props.idx].description}</b>)
