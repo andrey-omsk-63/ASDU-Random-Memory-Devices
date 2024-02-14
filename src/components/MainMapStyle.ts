@@ -21,6 +21,7 @@ export const styleModalEnd = {
   maxWidth: "2%",
   minWidth: "2%",
   color: "black",
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
 
 export const styleSetInf = {
@@ -217,8 +218,8 @@ export const styleSetAppoint = {
   //===
   width: "98.5%",
   bgcolor: "background.paper",
-  border: "1px solid #000",
-  borderColor: "primary.main",
+  border: "1px solid #fff",
+  //borderColor: "primary.main",
   borderRadius: 2,
   boxShadow: 24,
 };
