@@ -17,10 +17,11 @@ const GsErrorMessage = (props: { sErr: string; setOpen: any }) => {
     marginLeft: "24vh",
     width: 380,
     //bgcolor: "background.paper",
-    bgcolor: "#fcebfb", // бледно-розовый
+    //bgcolor: "#fcebfb", // бледно-розовый
+    bgcolor: "#fff", // бледно-розовый
     border: "1px solid #fcebfb", // бледно-розовый
     //borderColor: "red",
-    borderRadius: 2,
+    borderRadius: 1,
     boxShadow: 24,
     p: 1.5,
   };
@@ -43,10 +44,10 @@ const GsErrorMessage = (props: { sErr: string; setOpen: any }) => {
   };
 
   return (
-    <Modal open={openSet} onClose={handleClose} hideBackdrop>
+    <Modal open={openSet} onClose={handleClose} hideBackdrop={false}>
       <Box sx={styleSetInf}>
         <Button sx={styleModalEnd} onClick={handleClose}>
-          <b>&#10006;</b>
+          &#10006;
         </Button>
         <Typography
           variant="h6"

@@ -96,7 +96,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     valIdU,
   ];
 
-  let hBlock = window.innerWidth / 3 + 15;
+  let hBlock = window.innerWidth / 2.5 + 15;
   let hB = hBlock / 15;
 
   const handleKey = (event: any) => {
@@ -342,7 +342,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     klushTo3 = MakingKluch(rec1, homeRegion, massAreaId)[2];
 
     return (
-      <Grid container sx={{ borderBottom: 1 }}>
+      <Grid container sx={{ borderBottom: 1, borderColor: "#d4d4d4" }}>
         {/* === Направление === */}
         <Grid item xs={1} sx={{ height: hBlock / 5 }}>
           {AppointDirect(rec1, hBlock)}
@@ -458,7 +458,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             &#10006;
           </Button>
           <Box sx={styleAppSt04}>
-            {/* <b>Массив связности перекрёстка {kluchGl.slice(2)} </b> */}
             <b>Массив связности перекрёстка {kluchGl.slice(2)}</b> (
             <b>{map.tflight[props.idx].description}</b>)
           </Box>

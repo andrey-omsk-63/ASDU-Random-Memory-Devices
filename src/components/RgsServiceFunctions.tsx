@@ -411,9 +411,8 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     transform: "translate(-50%, -50%)",
     width: 400,
     bgcolor: "background.paper",
-    border: "1px solid #000",
-    borderColor: "red",
-    borderRadius: 2,
+    border: "1px solid #fff",
+    borderRadius: 1,
     boxShadow: 24,
     textAlign: "center",
     p: 1,
@@ -424,9 +423,8 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     maxHeight: "24px",
     minHeight: "24px",
     backgroundColor: "#E6F5D6",
-    border: "1px solid #000",
+    border: "1px solid #d4d4d4", // серый
     borderRadius: 1,
-    borderColor: "#d4d4d4", // серый
     boxShadow: 6,
     textTransform: "unset !important",
     color: "black",
@@ -739,6 +737,18 @@ export const OutputNumFaza = (
   maxFaza: number,
   hBlock: number
 ) => {
+  const styleOutputFaza01 = {
+    fontSize: 36,
+    color: "#7620a2", // сиреневый
+    textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  };
+
+  const styleOutputFaza02 = {
+    fontSize: 12,
+    textAlign: "right",
+    height: hBlock / 3,
+  };
+
   const OutputFaza = (img: any) => {
     let widthHeight = (hBlock / 12) * 3.7;
     if (!img) widthHeight = hBlock / 12;
@@ -757,7 +767,7 @@ export const OutputNumFaza = (
             />
           </svg>
         )}
-        {!img && <Box sx={{ fontSize: 36 }}>{num}</Box>}
+        {!img && <Box sx={styleOutputFaza01}>{num}</Box>}
       </>
     );
   };
@@ -766,11 +776,7 @@ export const OutputNumFaza = (
     <>
       {num <= maxFaza && (
         <>
-          <Grid
-            item
-            xs={0.4}
-            sx={{ fontSize: 12, textAlign: "right", height: hBlock / 3 }}
-          >
+          <Grid item xs={0.4} sx={styleOutputFaza02}>
             <Box sx={styleAppSt02}>{num}</Box>
           </Grid>
           <Grid item xs={3.6} sx={{ textAlign: "center" }}>

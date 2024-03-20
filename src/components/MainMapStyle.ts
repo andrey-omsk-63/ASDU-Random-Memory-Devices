@@ -74,7 +74,6 @@ export const styleSet = {
   width: "230px",
   maxHeight: "4px",
   minHeight: "4px",
-  //bgcolor: "#FAFAFA",
   bgcolor: "#FFFBE5",
   boxShadow: 3,
   textAlign: "center",
@@ -127,7 +126,6 @@ export const styleSetArea = {
   width: "230px",
   maxHeight: "3px",
   minHeight: "3px",
-  //bgcolor: "#FAFAFA",
   bgcolor: "#FFFBE5",
   boxShadow: 3,
   textAlign: "center",
@@ -139,7 +137,6 @@ export const styleSetID = {
   width: "230px",
   maxHeight: "3px",
   minHeight: "3px",
-  //bgcolor: "#FAFAFA",
   bgcolor: "#FFFBE5",
   boxShadow: 3,
   textAlign: "center",
@@ -207,20 +204,20 @@ export const styleEditName = {
 export const styleSetAppoint = {
   outline: "none",
   position: "relative",
-  marginTop: "12vh",
-  marginLeft: 1,
-  marginRight: "auto",
+  // marginTop: "12vh",
+  // marginLeft: 1,
+  // marginRight: "auto",
   //===
   // position: 'absolute',
-  // left: '50%',
-  // top: '50%',
-  // transform: 'translate(-50%, -50%)',
+   left: '50%',
+   top: '50%',
+   transform: 'translate(-50%, -50%)',
   //===
   width: "98.5%",
   bgcolor: "background.paper",
   border: "1px solid #fff",
   //borderColor: "primary.main",
-  borderRadius: 2,
+  borderRadius: 1,
   boxShadow: 24,
 };
 
@@ -264,7 +261,6 @@ export const styleBoxFormAV = {
   "& > :not(style)": {
     marginTop: "-0px",
     marginLeft: "1px",
-    //height: "15px",
     width: "50px",
   },
 };
