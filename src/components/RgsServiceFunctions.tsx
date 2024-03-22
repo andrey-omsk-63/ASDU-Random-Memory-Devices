@@ -387,7 +387,7 @@ export const OutputFazaImg = (img: any, i: number) => {
           />
         </svg>
       )}
-      {!img && <Box sx={{ fontSize: 33 }}>{i}</Box>}
+      {!img && <Box sx={{ color: "#7620a2", fontSize: 33 }}>{i}</Box>}
     </>
   );
 };
@@ -461,44 +461,39 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
 };
 
 export const AppointHeader = (hBlock: number) => {
+  const RecHeader = (xss: number, rec: string) => {
+    return (
+      <Grid item xs={xss} sx={{ height: hBlock / 10, paddingTop: 3 }}>
+        <Box sx={styleAppSt03}>
+          <b>{rec}</b>
+        </Box>
+      </Grid>
+    );
+  };
   return (
     <Grid container sx={{ bgcolor: "#C0E2C3" }}>
       <Grid item xs={1}></Grid>
-      <Grid item xs={5.5} sx={{ height: hBlock / 10, paddingTop: 3 }}>
-        <Box sx={styleAppSt03}>
-          <b>Откуда</b>
-        </Box>
-      </Grid>
-      <Grid item xs={4} sx={{ height: hBlock / 10, paddingTop: 3 }}>
-        <Box sx={styleAppSt03}>
-          <b>Куда</b>
-        </Box>
-      </Grid>
-      <Grid item xs sx={{ height: hBlock / 10, paddingTop: 3 }}>
-        <Box sx={styleAppSt03}>
-          <b>Фаза</b>
-        </Box>
-      </Grid>
+      {RecHeader(5.5,"Откуда")}
+      {RecHeader(4.0,"Куда")}
+      {RecHeader(1.5,"Фаза")}
     </Grid>
   );
 };
 
 export const AppointDirect = (rec1: string, hBlock: number) => {
   let hB = hBlock / 15;
+  const styleAppointDirect = {
+    fontSize: 21,
+    textAlign: "center",
+    height: hB,
+    color: "#7620a2", // сиреневый
+    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  };
+
   return (
     <Grid container>
       <Grid item xs={12} sx={{ height: hBlock / 15 }}></Grid>
-      <Grid
-        item
-        xs={12}
-        sx={{
-          fontSize: 21,
-          textAlign: "center",
-          height: hB,
-          color: "#7620a2", // сиреневый
-          textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
-        }}
-      >
+      <Grid item xs={12} sx={styleAppointDirect}>
         <Box sx={styleAppSt02}>
           <b>{rec1}</b>
         </Box>
@@ -508,17 +503,15 @@ export const AppointDirect = (rec1: string, hBlock: number) => {
 };
 
 export const OutputKey = (klush: string, hBlock: number) => {
+  const styleOutputKey = {
+    textAlign: "center",
+    height: hBlock / 15,
+    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  };
+
   return (
     <Grid container>
-      <Grid
-        item
-        xs={12}
-        sx={{
-          textAlign: "center",
-          height: hBlock / 15,
-          textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
-        }}
-      >
+      <Grid item xs={12} sx={styleOutputKey}>
         <Box sx={styleAppSt02}>{klush}</Box>
       </Grid>
     </Grid>
@@ -739,7 +732,7 @@ export const OutputNumFaza = (
 ) => {
   const styleOutputFaza01 = {
     fontSize: 36,
-    color: "#7620a2", // сиреневый
+    color: "#7620A2", // сиреневый
     textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
   };
 
@@ -901,6 +894,7 @@ export const OutPutZZ = (zz: string) => {
     color: "blue",
     marginLeft: -0.5,
   };
+
   return (
     <Grid item xs={0.15} sx={{ border: 0 }}>
       <Box sx={styleZId}>
@@ -911,16 +905,16 @@ export const OutPutZZ = (zz: string) => {
 };
 
 export const OutPutSS = (ss: string) => {
+  const OutPutSS = {
+    marginTop: -2.5,
+    color: "blue",
+    textAlign: "center",
+    maxHeight: "18px",
+    minHeight: "18px",
+  };
+
   return (
-    <Box
-      sx={{
-        marginTop: -2.5,
-        color: "blue",
-        textAlign: "center",
-        maxHeight: "18px",
-        minHeight: "18px",
-      }}
-    >
+    <Box sx={OutPutSS}>
       <b>{ss}</b>
     </Box>
   );
@@ -943,6 +937,7 @@ export const OutPutVV = (vv: string) => {
     color: "blue",
     marginLeft: 0.7,
   };
+
   return (
     <Grid item xs={0.15} sx={{ border: 0 }}>
       <Box sx={styleVId}>
@@ -962,6 +957,7 @@ export const CircleObj = () => {
     borderRadius: 9,
     borderColor: "#B51EFF", // сереневый
   };
+
   return <Box sx={circle}></Box>;
 };
 //=== Разное =======================================
@@ -971,9 +967,8 @@ export const InputDirect = (func: any) => {
     maxHeight: "1px",
     minHeight: "1px",
     bgcolor: "#BAE186",
-    border: 1,
+    border: "1px solid #93D145",
     borderRadius: 1,
-    borderColor: "#93D145",
     boxShadow: 6,
     paddingTop: 1.5,
     paddingBottom: 1.2,

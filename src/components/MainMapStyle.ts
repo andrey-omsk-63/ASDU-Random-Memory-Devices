@@ -165,8 +165,7 @@ export const styleModalMenu = {
   minHeight: "21px",
   backgroundColor: "#E6F5D6",
   color: "black",
-  marginRight: 1,
-  marginBottom: 2,
+  marginBottom: '12px',
   textTransform: "unset !important",
   textAlign: "center",
   boxShadow: 5,
@@ -244,7 +243,7 @@ export const styleAppSt04 = {
 };
 
 export const styleSetAV = {
-  width: "48px",
+  width: "52px",
   maxHeight: "21px",
   minHeight: "21px",
   border: "1px solid #000",
@@ -290,7 +289,7 @@ export const styleSetFaza = {
 
 export const styleBoxFormFaza = {
   "& > :not(style)": {
-    marginTop: "-2px",
+    marginTop: "-0px",
     marginLeft: "-1px",
     width: "32px",
   },
