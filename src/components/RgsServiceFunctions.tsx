@@ -473,9 +473,9 @@ export const AppointHeader = (hBlock: number) => {
   return (
     <Grid container sx={{ bgcolor: "#C0E2C3" }}>
       <Grid item xs={1}></Grid>
-      {RecHeader(5.5,"Откуда")}
-      {RecHeader(4.0,"Куда")}
-      {RecHeader(1.5,"Фаза")}
+      {RecHeader(5.5, "Откуда")}
+      {RecHeader(4.0, "Куда")}
+      {RecHeader(1.5, "Фаза")}
     </Grid>
   );
 };
@@ -743,7 +743,7 @@ export const OutputNumFaza = (
   };
 
   const OutputFaza = (img: any) => {
-    let widthHeight = (hBlock / 12) * 3.7;
+    let widthHeight = (hBlock / 12) * 3.0;
     if (!img) widthHeight = hBlock / 12;
     return (
       <>
