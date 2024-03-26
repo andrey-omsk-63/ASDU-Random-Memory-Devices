@@ -117,6 +117,10 @@ const RgsCreateObject = (props: {
     setOpenSetAdress(false);
   };
 
+  const handleCloseEnd = (event: any, reason: string) => {
+    if (reason === "escapeKeyDown") handleCloseSet();
+  };
+
   const InputName = () => {
     const [value, setValue] = React.useState("Объект" + NameMode());
     valueName = value;
@@ -248,7 +252,7 @@ const RgsCreateObject = (props: {
   };
 
   return (
-    <Modal open={openSetAdress} onClose={handleCloseSet}>
+    <Modal open={openSetAdress} onClose={handleCloseEnd}>
       <Grid item container sx={styleSetAdress}>
         <Grid item xs={9.5}>
           <InputName />
