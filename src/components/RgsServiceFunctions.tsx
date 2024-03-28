@@ -53,10 +53,7 @@ export const MasskPoint = (debug: boolean, rec: any, imgFaza: string) => {
   masskPoint.region = Number(rec.region.num);
   masskPoint.area = Number(rec.area.num);
   masskPoint.phases = rec.phases;
-  //for (let i = 0; i < rec.phases.length; i++) {
-  for (let i = 0; i < 8; i++) {
-    masskPoint.phSvg.push(img);
-  }
+  for (let i = 0; i < 8; i++) masskPoint.phSvg.push(img);
   return masskPoint;
 };
 
@@ -843,48 +840,6 @@ export const ChangeArea = (event: any, funcAr: Function, funcId: Function) => {
   if (Number(valueInp) < 100) funcAr(Number(valueInp));
 };
 
-// export const ChangeId = (
-//   event: any,
-//   funcId: Function,
-//   funcAr: Function,
-//   map: any,
-//   addobj: any,
-//   AREA: number
-// ) => {
-//   //let valueInp = event.target.value.replace(/^0+/, "");
-//   let valueInp = event.target.value;
-//   if (valueInp === "") valueInp = 1;
-//   if (Number(valueInp) < 0) valueInp = 1;
-//   if (Number(valueInp) < 100000) funcId(Number(valueInp));
-//   let have = false;
-//   HAVE++;
-//   if (Number(valueInp) < 9999) {
-//     // перекрёсток
-//     for (let i = 0; i < map.tflight.length; i++) {
-//       // if (map.tflight[i].ID === Number(valueInp)) {
-//       //   funcAr(Number(map.tflight[i].area.num));
-//       //   have = true;
-//       // }
-//       if (
-//         map.tflight[i].ID === Number(valueInp) &&
-//         Number(map.tflight[i].area.num) === AREA
-//       ) {
-//         funcAr(Number(map.tflight[i].area.num));
-//         have = true;
-//       }
-//     }
-//   } else {
-//     // объект
-//     for (let i = 0; i < addobj.addObjects.length; i++) {
-//       if (addobj.addObjects[i].id === Number(valueInp)) {
-//         funcAr(addobj.addObjects[i].area);
-//         have = true;
-//       }
-//     }
-//   }
-//   if (!have) funcAr(0);
-// };
-
 export const OutPutZZ = (zz: string) => {
   const styleZId = {
     fontSize: 19,
@@ -1039,11 +994,9 @@ export const InputDirect = (func: any) => {
           InputProps={{
             disableUnderline: true,
             style: {
-              //fontSize: currency === 3 ? 17 : 15,
               fontSize: 15,
               fontWeight: 700,
               color: currency === 3 ? "red" : "black",
-              //marginTop: currency === 3 ? -3 : 0,
             },
           }}
           variant="standard"
