@@ -193,7 +193,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     if (valIdU && valAreaU) ch++;
 
     if (ch === 1) {
-      soobErr = "Должно быть введено хотя бы два направления";
+      soobErr = "Должно быть введено введено хотя бы два направления";
       setOpenSetErr(true);
     } else {
       let maskTfLinks: TfLink = {
@@ -261,6 +261,22 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     BlurContent(0, area, id, funcAr);
   };
   //=== Компоненты =========================================
+  const SaveСhange = () => {
+    return (
+      <>
+        {HAVE > 0 ? (
+          <Box sx={{ marginTop: "12px", textAlign: "center" }}>
+            <Button sx={styleModalMenu} onClick={() => handleClose()}>
+              Сохранить изменения
+            </Button>
+          </Box>
+        ) : (
+          <Box sx={{ marginTop: "10px", height: "36px" }}> </Box>
+        )}
+      </>
+    );
+  };
+
   const ChangeId = (
     event: any,
     funcId: Function,
@@ -496,15 +512,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               </Grid>
             </Grid>
           </Grid>
-          {HAVE > 0 ? (
-            <Box sx={{ marginTop: "12px", textAlign: "center" }}>
-              <Button sx={styleModalMenu} onClick={() => handleClose()}>
-                Сохранить изменения
-              </Button>
-            </Box>
-          ) : (
-            <Box sx={{ marginTop: "10px", height: "36px" }}> </Box>
-          )}
+          {SaveСhange()}
           {openSetErr && (
             <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />
           )}
