@@ -845,7 +845,7 @@ export const OutPutZZ = (zz: string) => {
     fontSize: 19,
     transform: "rotate(270deg)",
     position: "relative",
-    top: "50%",
+    top: "33%",
     color: "blue",
     marginLeft: -0.5,
   };
@@ -888,7 +888,7 @@ export const OutPutVV = (vv: string) => {
     fontSize: 19,
     transform: "rotate(90deg)",
     position: "relative",
-    top: "50%",
+    top: "33%",
     color: "blue",
     marginLeft: 0.7,
   };

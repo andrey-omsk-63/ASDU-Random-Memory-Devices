@@ -38,6 +38,14 @@ export const dataBindings = {
             id: "",
             wayPointsArray: [],
           },
+          add3: {
+            id: "",
+            wayPointsArray: null,
+          },
+          add4: {
+            id: "",
+            wayPointsArray: null,
+          },
         },
       },
       {
@@ -76,6 +84,14 @@ export const dataBindings = {
           add2: {
             id: "",
             wayPointsArray: [],
+          },
+          add3: {
+            id: "",
+            wayPointsArray: null,
+          },
+          add4: {
+            id: "",
+            wayPointsArray: null,
           },
         },
       },
@@ -116,6 +132,14 @@ export const dataBindings = {
             id: "",
             wayPointsArray: [],
           },
+          add3: {
+            id: "",
+            wayPointsArray: null,
+          },
+          add4: {
+            id: "",
+            wayPointsArray: null,
+          },
         },
       },
       {
@@ -154,6 +178,14 @@ export const dataBindings = {
           add2: {
             id: "",
             wayPointsArray: [],
+          },
+          add3: {
+            id: "",
+            wayPointsArray: null,
+          },
+          add4: {
+            id: "",
+            wayPointsArray: null,
           },
         },
       },
@@ -194,6 +226,14 @@ export const dataBindings = {
             id: "",
             wayPointsArray: [],
           },
+          add3: {
+            id: "",
+            wayPointsArray: null,
+          },
+          add4: {
+            id: "",
+            wayPointsArray: null,
+          },
         },
       },
       {
@@ -232,6 +272,14 @@ export const dataBindings = {
           add2: {
             id: "",
             wayPointsArray: [],
+          },
+          add3: {
+            id: "",
+            wayPointsArray: null,
+          },
+          add4: {
+            id: "",
+            wayPointsArray: null,
           },
         },
       },
@@ -272,6 +320,14 @@ export const dataBindings = {
             id: "",
             wayPointsArray: [],
           },
+          add3: {
+            id: "",
+            wayPointsArray: null,
+          },
+          add4: {
+            id: "",
+            wayPointsArray: null,
+          },
         },
       },
       {
@@ -284,6 +340,14 @@ export const dataBindings = {
           add2: {
             id: "",
             wayPointsArray: [],
+          },
+          add3: {
+            id: "",
+            wayPointsArray: null,
+          },
+          add4: {
+            id: "",
+            wayPointsArray: null,
           },
           east: {
             id: "1-1-6",
@@ -367,6 +431,14 @@ export const dataBindings = {
             id: "",
             wayPointsArray: [],
           },
+          add3: {
+            id: "",
+            wayPointsArray: null,
+          },
+          add4: {
+            id: "",
+            wayPointsArray: null,
+          },
         },
       },
       {
@@ -379,6 +451,14 @@ export const dataBindings = {
           add2: {
             id: "",
             wayPointsArray: [],
+          },
+          add3: {
+            id: "",
+            wayPointsArray: null,
+          },
+          add4: {
+            id: "",
+            wayPointsArray: null,
           },
           east: {
             id: "1-1-36",
@@ -461,6 +541,14 @@ export const dataBindings = {
             id: "",
             wayPointsArray: [],
           },
+          add3: {
+            id: "",
+            wayPointsArray: null,
+          },
+          add4: {
+            id: "",
+            wayPointsArray: null,
+          },
           east: {
             id: "1-1-35",
             wayPointsArray: [
@@ -516,6 +604,14 @@ export const dataBindings = {
           add2: {
             id: "",
             wayPointsArray: [],
+          },
+          add3: {
+            id: "",
+            wayPointsArray: null,
+          },
+          add4: {
+            id: "",
+            wayPointsArray: null,
           },
           east: {
             id: "1-1-10003",

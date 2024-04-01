@@ -78,10 +78,18 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   const [valAreaS, setValAreaS] = React.useState(AREA);
   const [valAreaV, setValAreaV] = React.useState(AREA);
   const [valAreaU, setValAreaU] = React.useState(AREA);
+  const [valAreaSZ, setValAreaSZ] = React.useState(AREA);
+  const [valAreaUZ, setValAreaUZ] = React.useState(AREA);
+  const [valAreaUV, setValAreaUV] = React.useState(AREA);
+  const [valAreaSV, setValAreaSV] = React.useState(AREA);
   const [valIdZ, setValIdZ] = React.useState(0);
   const [valIdS, setValIdS] = React.useState(0);
   const [valIdV, setValIdV] = React.useState(0);
   const [valIdU, setValIdU] = React.useState(0);
+  const [valIdSZ, setValIdSZ] = React.useState(0);
+  const [valIdUZ, setValIdUZ] = React.useState(0);
+  const [valIdUV, setValIdUV] = React.useState(0);
+  const [valIdSV, setValIdSV] = React.useState(0);
   const [badExit, setBadExit] = React.useState(false);
 
   let massAreaId = [
@@ -95,7 +103,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     valIdU,
   ];
 
-  let hBlock = window.innerWidth / 2.5 + 15;
+  let hBlock = window.innerWidth / 3.8 + 0;
   let hB = hBlock / 15;
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
@@ -489,9 +497,13 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             {/* редактор связей */}
             <Grid item xs={4} sx={{ border: 0 }}>
               {AppointHeader(hBlock)}
+              {AppointStroka("ЮЗ", valAreaZ, setValAreaZ, valIdZ, setValIdZ)}
               {AppointStroka("З", valAreaZ, setValAreaZ, valIdZ, setValIdZ)}
+              {AppointStroka("СЗ", valAreaS, setValAreaS, valIdS, setValIdS)}
               {AppointStroka("С", valAreaS, setValAreaS, valIdS, setValIdS)}
+              {AppointStroka("СВ", valAreaV, setValAreaV, valIdV, setValIdV)}
               {AppointStroka("В", valAreaV, setValAreaV, valIdV, setValIdV)}
+              {AppointStroka("ЮВ", valAreaU, setValAreaU, valIdU, setValIdU)}
               {AppointStroka("Ю", valAreaU, setValAreaU, valIdU, setValIdU)}
             </Grid>
             {/* вывод картинок фаз */}
