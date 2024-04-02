@@ -34,12 +34,20 @@ import { TfLink } from "../../interfaceBindings.d";
 
 let oldIdx = -1;
 let kluchGl = "";
-let massFaz = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+// let massFaz = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+// let massFazAdd = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; //====== new
+let massFaz = new Array(28).fill(0);
+let massFazAdd = new Array(28).fill(0); //====== new
 let klushTo1 = "";
 let klushTo2 = "";
 let klushTo3 = "";
-let soobErr = "";
+//====== new ======
+let klushTo4 = "";
+let klushTo5 = "";
+let klushTo6 = "";
+let klushTo7 = "";
 
+let soobErr = "";
 let bindIdx = -1;
 let maxFaza = 0;
 let HAVE = 0;
@@ -74,23 +82,27 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
 
   const [openSet, setOpenSet] = React.useState(true);
   const [openSetErr, setOpenSetErr] = React.useState(false);
+  const [badExit, setBadExit] = React.useState(false);
+
   const [valAreaZ, setValAreaZ] = React.useState(AREA);
   const [valAreaS, setValAreaS] = React.useState(AREA);
   const [valAreaV, setValAreaV] = React.useState(AREA);
   const [valAreaU, setValAreaU] = React.useState(AREA);
+  //====== new
   const [valAreaSZ, setValAreaSZ] = React.useState(AREA);
   const [valAreaUZ, setValAreaUZ] = React.useState(AREA);
   const [valAreaUV, setValAreaUV] = React.useState(AREA);
   const [valAreaSV, setValAreaSV] = React.useState(AREA);
+  //======
   const [valIdZ, setValIdZ] = React.useState(0);
   const [valIdS, setValIdS] = React.useState(0);
   const [valIdV, setValIdV] = React.useState(0);
   const [valIdU, setValIdU] = React.useState(0);
+  //====== new
   const [valIdSZ, setValIdSZ] = React.useState(0);
   const [valIdUZ, setValIdUZ] = React.useState(0);
   const [valIdUV, setValIdUV] = React.useState(0);
   const [valIdSV, setValIdSV] = React.useState(0);
-  const [badExit, setBadExit] = React.useState(false);
 
   let massAreaId = [
     valAreaZ,
@@ -101,6 +113,15 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     valIdV,
     valAreaU,
     valIdU,
+    //====== new ======
+    valAreaSZ,
+    valIdSZ,
+    valAreaSV,
+    valIdSV,
+    valAreaUV,
+    valIdUV,
+    valAreaUZ,
+    valIdUZ,
   ];
 
   let hBlock = window.innerWidth / 3.8 + 0;
@@ -116,15 +137,24 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     for (let i = 0; i < bindings.tfLinks.length; i++)
       if (bindings.tfLinks[i].id === kluchGl) bindIdx = i;
     if (bindIdx >= 0) {
-      let kluchZ = bindings.tfLinks[bindIdx].tflink.west.id; // запись существует
+      // запись существует
+      let kluchZ = bindings.tfLinks[bindIdx].tflink.west.id;
       let kluchS = bindings.tfLinks[bindIdx].tflink.north.id;
       let kluchV = bindings.tfLinks[bindIdx].tflink.east.id;
       let kluchU = bindings.tfLinks[bindIdx].tflink.south.id;
+      //====== new ======
+      let kluchSZ = bindings.tfLinks[bindIdx].tflink.add4.id;
+      let kluchSV = bindings.tfLinks[bindIdx].tflink.add1.id;
+      let kluchUV = bindings.tfLinks[bindIdx].tflink.add2.id;
+      let kluchUZ = bindings.tfLinks[bindIdx].tflink.add3.id;
+      //======
       let mass = bindings.tfLinks[bindIdx].tflink;
       const GetFaza = (mas: any, kluch: string) => {
         let faza = 0;
-        for (let i = 0; i < mas.length; i++)
-          if (mas[i].id === kluch) faza = Number(mas[i].phase);
+        if (mass) {
+          for (let i = 0; i < mas.length; i++)
+            if (mas[i].id === kluch) faza = Number(mas[i].phase);
+        }
         if (faza > maxFaza || !faza) faza = 1;
         return faza;
       };
@@ -133,6 +163,39 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         massFaz[0] = GetFaza(mas, kluchU);
         massFaz[1] = GetFaza(mas, kluchV);
         massFaz[2] = GetFaza(mas, kluchS);
+        setValAreaZ(TakeAreaId(kluchZ)[0]);
+        setValIdZ(TakeAreaId(kluchZ)[1]);
+      }
+      if (kluchS) {
+        let mas = mass.north.wayPointsArray;
+        massFaz[3] = GetFaza(mas, kluchZ);
+        massFaz[4] = GetFaza(mas, kluchU);
+        massFaz[5] = GetFaza(mas, kluchV);
+        setValAreaS(TakeAreaId(kluchS)[0]);
+        setValIdS(TakeAreaId(kluchS)[1]);
+      }
+      if (kluchV) {
+        let mas = mass.east.wayPointsArray;
+        massFaz[6] = GetFaza(mas, kluchS);
+        massFaz[7] = GetFaza(mas, kluchZ);
+        massFaz[8] = GetFaza(mas, kluchU);
+        setValAreaV(TakeAreaId(kluchV)[0]);
+        setValIdV(TakeAreaId(kluchV)[1]);
+      }
+      if (kluchU) {
+        let mas = mass.south.wayPointsArray;
+        massFaz[9] = GetFaza(mas, kluchV);
+        massFaz[10] = GetFaza(mas, kluchS);
+        massFaz[11] = GetFaza(mas, kluchZ);
+        setValAreaU(TakeAreaId(kluchU)[0]);
+        setValIdU(TakeAreaId(kluchU)[1]);
+      }
+      //====== new ======
+      if (kluchSZ) {
+        let mas = mass.add4.wayPointsArray;
+        massFazAdd[0] = GetFaza(mas, kluchU);
+        massFazAdd[1] = GetFaza(mas, kluchV);
+        massFazAdd[2] = GetFaza(mas, kluchS);
         setValAreaZ(TakeAreaId(kluchZ)[0]);
         setValIdZ(TakeAreaId(kluchZ)[1]);
       }
@@ -425,6 +488,36 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     klushTo1 = MakingKluch(rec1, homeRegion, massAreaId)[0];
     klushTo2 = MakingKluch(rec1, homeRegion, massAreaId)[1];
     klushTo3 = MakingKluch(rec1, homeRegion, massAreaId)[2];
+    klushTo4 = MakingKluch(rec1, homeRegion, massAreaId)[0];
+    klushTo5 = MakingKluch(rec1, homeRegion, massAreaId)[1];
+    klushTo6 = MakingKluch(rec1, homeRegion, massAreaId)[2];
+    klushTo7 = MakingKluch(rec1, homeRegion, massAreaId)[2];
+    let masDirect: Array<string> = [];
+    switch (rec1) {
+      case "З":
+        masDirect = ["ЮЗ", "Ю", "ЮВ", "В", "СВ", "С", "СЗ"];
+        break;
+      case "СЗ":
+        masDirect = ["З", "ЮЗ", "Ю", "ЮВ", "В", "СВ", "С"];
+        break;
+      case "С":
+        masDirect = ["СЗ", "З", "ЮЗ", "Ю", "ЮВ", "В", "СВ"];
+        break;
+      case "СВ":
+        masDirect = ["С", "СЗ", "З", "ЮЗ", "Ю", "ЮВ", "В"];
+        break;
+      case "В":
+        masDirect = ["СВ", "С", "СЗ", "З", "ЮЗ", "Ю", "ЮВ"];
+        break;
+      case "ЮВ":
+        masDirect = ["В", "СВ", "С", "СЗ", "З", "ЮЗ", "Ю"];
+        break;
+      case "Ю":
+        masDirect = ["ЮВ", "В", "СВ", "С", "СЗ", "З", "ЮЗ"];
+        break;
+      case "ЮЗ":
+        masDirect = ["Ю", "ЮВ", "В", "СВ", "С", "СЗ", "З"];
+    }
 
     return (
       <Grid container sx={{ borderBottom: 1, borderColor: "#d4d4d4" }}>
@@ -447,16 +540,20 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               </Box>
             </Grid>
           </Grid>
-          <b>{OutputKey(klushFrom.slice(SL), hBlock)}</b>
+          {OutputKey(klushFrom.slice(SL), hBlock, "")}
         </Grid>
         {/* === Куда === */}
-        <Grid item xs={4} sx={{ fontSize: 14, height: hB }}>
-          <b>{OutputKey(klushTo1.slice(SL), hBlock)}</b>
-          <b>{OutputKey(klushTo2.slice(SL), hBlock)}</b>
-          <b>{OutputKey(klushTo3.slice(SL), hBlock)}</b>
+        <Grid item xs={4} sx={{ border: 1, fontSize: 14, height: hB }}>
+          {OutputKey(klushTo1.slice(SL), hBlock, masDirect[0])}
+          {OutputKey(klushTo2.slice(SL), hBlock, masDirect[1])}
+          {OutputKey(klushTo3.slice(SL), hBlock, masDirect[2])}
         </Grid>
         {/* === Фаза === */}
-        <Grid item xs sx={{ fontSize: 14, height: hBlock / 5 }}>
+        <Grid
+          item
+          xs={1.5}
+          sx={{ border: 1, fontSize: 14, height: hBlock / 5 }}
+        >
           <Grid container>
             <Grid item xs={12} sx={{ textAlign: "center", height: hB }}>
               <Box sx={styleAppSt02}>{InputerFaza(rec1, 0, klushTo1)}</Box>
@@ -497,7 +594,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             {/* редактор связей */}
             <Grid item xs={4} sx={{ border: 0 }}>
               {AppointHeader(hBlock)}
-              {AppointStroka("ЮЗ", valAreaZ, setValAreaZ, valIdZ, setValIdZ)}
               {AppointStroka("З", valAreaZ, setValAreaZ, valIdZ, setValIdZ)}
               {AppointStroka("СЗ", valAreaS, setValAreaS, valIdS, setValIdS)}
               {AppointStroka("С", valAreaS, setValAreaS, valIdS, setValIdS)}
@@ -505,6 +601,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               {AppointStroka("В", valAreaV, setValAreaV, valIdV, setValIdV)}
               {AppointStroka("ЮВ", valAreaU, setValAreaU, valIdU, setValIdU)}
               {AppointStroka("Ю", valAreaU, setValAreaU, valIdU, setValIdU)}
+              {AppointStroka("ЮЗ", valAreaZ, setValAreaZ, valIdZ, setValIdZ)}
             </Grid>
             {/* вывод картинок фаз */}
             <Grid item xs sx={{ border: 0 }}>

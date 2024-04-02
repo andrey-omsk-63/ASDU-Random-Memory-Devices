@@ -499,7 +499,7 @@ export const AppointDirect = (rec1: string, hBlock: number) => {
   );
 };
 
-export const OutputKey = (klush: string, hBlock: number) => {
+export const OutputKey = (klush: string, hBlock: number, dir: string) => {
   const styleOutputKey = {
     textAlign: "center",
     height: hBlock / 15,
@@ -509,7 +509,12 @@ export const OutputKey = (klush: string, hBlock: number) => {
   return (
     <Grid container>
       <Grid item xs={12} sx={styleOutputKey}>
-        <Box sx={styleAppSt02}>{klush}</Box>
+        <Box sx={styleAppSt02}>
+          <Box sx={{ fontWeight: 600, display: "inline-block" }}>{klush}</Box>{" "}
+          <Box sx={{ fontSize: 11, fontWeight: 50, display: "inline-block" }}>
+            {dir}
+          </Box>
+        </Box>
       </Grid>
     </Grid>
   );
