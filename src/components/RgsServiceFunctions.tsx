@@ -478,7 +478,7 @@ export const AppointHeader = (hBlock: number) => {
 };
 
 export const AppointDirect = (rec1: string, hBlock: number) => {
-  let hB = hBlock / 15;
+  let hB = hBlock / 6;
   const styleAppointDirect = {
     fontSize: 21,
     textAlign: "center",
@@ -488,12 +488,14 @@ export const AppointDirect = (rec1: string, hBlock: number) => {
   };
 
   return (
-    <Grid container>
-      <Grid item xs={12} sx={{ height: hBlock / 15 }}></Grid>
-      <Grid item xs={12} sx={styleAppointDirect}>
-        <Box sx={styleAppSt02}>
-          <b>{rec1}</b>
-        </Box>
+    <Grid item xs={1} sx={{ height: hBlock / 2.1 }}>
+      <Grid container>
+        <Grid item xs={12} sx={{ height: hBlock / 6 }}></Grid>
+        <Grid item xs={12} sx={styleAppointDirect}>
+          <Box sx={styleAppSt02}>
+            <b>{rec1}</b>
+          </Box>
+        </Grid>
       </Grid>
     </Grid>
   );
@@ -506,14 +508,19 @@ export const OutputKey = (klush: string, hBlock: number, dir: string) => {
     textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
   };
 
+  const styleOutputHint = {
+    fontSize: 10,
+    color: "#C0C0C0",
+    fontWeight: 50,
+    display: "inline-block",
+  };
+
   return (
     <Grid container>
       <Grid item xs={12} sx={styleOutputKey}>
         <Box sx={styleAppSt02}>
           <Box sx={{ fontWeight: 600, display: "inline-block" }}>{klush}</Box>{" "}
-          <Box sx={{ fontSize: 11, fontWeight: 50, display: "inline-block" }}>
-            {dir}
-          </Box>
+          <Box sx={styleOutputHint}>{dir}</Box>
         </Box>
       </Grid>
     </Grid>
@@ -561,6 +568,36 @@ export const CheckKey = (kluch: string, map: any, addobj: any) => {
   return have;
 };
 
+export const MakeMasDirect = (rec1: string) => {
+  let masDirect: Array<string> = [];
+  switch (rec1) {
+    case "З":
+      masDirect = ["ЮЗ", "Ю", "ЮВ", "В", "СВ", "С", "СЗ"];
+      break;
+    case "СЗ":
+      masDirect = ["З", "ЮЗ", "Ю", "ЮВ", "В", "СВ", "С"];
+      break;
+    case "С":
+      masDirect = ["СЗ", "З", "ЮЗ", "Ю", "ЮВ", "В", "СВ"];
+      break;
+    case "СВ":
+      masDirect = ["С", "СЗ", "З", "ЮЗ", "Ю", "ЮВ", "В"];
+      break;
+    case "В":
+      masDirect = ["СВ", "С", "СЗ", "З", "ЮЗ", "Ю", "ЮВ"];
+      break;
+    case "ЮВ":
+      masDirect = ["В", "СВ", "С", "СЗ", "З", "ЮЗ", "Ю"];
+      break;
+    case "Ю":
+      masDirect = ["ЮВ", "В", "СВ", "С", "СЗ", "З", "ЮЗ"];
+      break;
+    case "ЮЗ":
+      masDirect = ["Ю", "ЮВ", "В", "СВ", "С", "СЗ", "З"];
+  }
+  return masDirect;
+};
+
 export const MakeTflink = (
   homeRegion: any,
   massAreaId: Array<number>,
@@ -581,6 +618,8 @@ export const MakeTflink = (
   let maskTflink: Tflink = {
     add1: { id: "", wayPointsArray: [] },
     add2: { id: "", wayPointsArray: [] },
+    add3: { id: "", wayPointsArray: [] },
+    add4: { id: "", wayPointsArray: [] },
     east: { id: "", wayPointsArray: [] },
     north: { id: "", wayPointsArray: [] },
     south: { id: "", wayPointsArray: [] },
@@ -685,45 +724,117 @@ export const MakingKluch = (
   let klushTo1 = "";
   let klushTo2 = "";
   let klushTo3 = "";
+  let klushTo4 = "";
+  let klushTo5 = "";
+  let klushTo6 = "";
+  let klushTo7 = "";
   let valAreaZ = massAreaId[0];
   let valIdZ = massAreaId[1];
-  let valAreaS = massAreaId[2];
-  let valIdS = massAreaId[3];
-  let valAreaV = massAreaId[4];
-  let valIdV = massAreaId[5];
-  let valAreaU = massAreaId[6];
-  let valIdU = massAreaId[7];
+  let valAreaSZ = massAreaId[2]; //====== new ======
+  let valIdSZ = massAreaId[3];
+  let valAreaS = massAreaId[4];
+  let valIdS = massAreaId[5];
+  let valAreaSV = massAreaId[6]; //====== new ======
+  let valIdSV = massAreaId[7];
+  let valAreaV = massAreaId[8];
+  let valIdV = massAreaId[9];
+  let valAreaUV = massAreaId[10]; //====== new ======
+  let valIdUV = massAreaId[11];
+  let valAreaU = massAreaId[12];
+  let valIdU = massAreaId[13];
+  let valAreaUZ = massAreaId[14]; //====== new ======
+  let valIdUZ = massAreaId[15];
 
   switch (rec1) {
     case "З":
       if (valAreaZ && valIdZ) {
-        klushTo1 = MakingKey(homeRegion, valAreaU, valIdU);
-        klushTo2 = MakingKey(homeRegion, valAreaV, valIdV);
-        klushTo3 = MakingKey(homeRegion, valAreaS, valIdS);
+        klushTo1 = MakingKey(homeRegion, valAreaUZ, valIdUZ);
+        klushTo2 = MakingKey(homeRegion, valAreaU, valIdU);
+        klushTo3 = MakingKey(homeRegion, valAreaUV, valIdUV);
+        klushTo4 = MakingKey(homeRegion, valAreaV, valIdV);
+        klushTo5 = MakingKey(homeRegion, valAreaSV, valIdSV);
+        klushTo6 = MakingKey(homeRegion, valAreaS, valIdS);
+        klushTo7 = MakingKey(homeRegion, valAreaSZ, valIdSZ);
+      }
+      break;
+    case "СЗ":
+      if (valAreaSZ && valIdSZ) {
+        klushTo1 = MakingKey(homeRegion, valAreaZ, valIdZ);
+        klushTo2 = MakingKey(homeRegion, valAreaUZ, valIdUZ);
+        klushTo3 = MakingKey(homeRegion, valAreaU, valIdU);
+        klushTo4 = MakingKey(homeRegion, valAreaUV, valIdUV);
+        klushTo5 = MakingKey(homeRegion, valAreaV, valIdV);
+        klushTo6 = MakingKey(homeRegion, valAreaSV, valIdSV);
+        klushTo7 = MakingKey(homeRegion, valAreaS, valIdS);
       }
       break;
     case "С":
       if (valAreaS && valIdS) {
-        klushTo1 = MakingKey(homeRegion, valAreaZ, valIdZ);
-        klushTo2 = MakingKey(homeRegion, valAreaU, valIdU);
-        klushTo3 = MakingKey(homeRegion, valAreaV, valIdV);
+        klushTo1 = MakingKey(homeRegion, valAreaSZ, valIdSZ);
+        klushTo2 = MakingKey(homeRegion, valAreaZ, valIdZ);
+        klushTo3 = MakingKey(homeRegion, valAreaUZ, valIdUZ);
+        klushTo4 = MakingKey(homeRegion, valAreaU, valIdU);
+        klushTo5 = MakingKey(homeRegion, valAreaUV, valIdUV);
+        klushTo6 = MakingKey(homeRegion, valAreaV, valIdV);
+        klushTo7 = MakingKey(homeRegion, valAreaSV, valIdSV);
+      }
+      break;
+    case "СВ":
+      if (valAreaSV && valIdSV) {
+        klushTo1 = MakingKey(homeRegion, valAreaS, valIdS);
+        klushTo2 = MakingKey(homeRegion, valAreaSZ, valIdSZ);
+        klushTo3 = MakingKey(homeRegion, valAreaZ, valIdZ);
+        klushTo4 = MakingKey(homeRegion, valAreaUZ, valIdUZ);
+        klushTo5 = MakingKey(homeRegion, valAreaU, valIdU);
+        klushTo6 = MakingKey(homeRegion, valAreaUV, valIdUV);
+        klushTo7 = MakingKey(homeRegion, valAreaV, valIdV);
       }
       break;
     case "В":
       if (valAreaV && valIdV) {
-        klushTo1 = MakingKey(homeRegion, valAreaS, valIdS);
-        klushTo2 = MakingKey(homeRegion, valAreaZ, valIdZ);
-        klushTo3 = MakingKey(homeRegion, valAreaU, valIdU);
+        klushTo1 = MakingKey(homeRegion, valAreaSV, valIdSV);
+        klushTo2 = MakingKey(homeRegion, valAreaS, valIdS);
+        klushTo3 = MakingKey(homeRegion, valAreaSZ, valIdSZ);
+        klushTo4 = MakingKey(homeRegion, valAreaZ, valIdZ);
+        klushTo5 = MakingKey(homeRegion, valAreaUZ, valIdUZ);
+        klushTo6 = MakingKey(homeRegion, valAreaU, valIdU);
+        klushTo7 = MakingKey(homeRegion, valAreaUV, valIdUV);
+      }
+      break;
+    case "ЮВ":
+      if (valAreaUV && valIdUV) {
+        klushTo1 = MakingKey(homeRegion, valAreaV, valIdV);
+        klushTo2 = MakingKey(homeRegion, valAreaSV, valIdSV);
+        klushTo3 = MakingKey(homeRegion, valAreaS, valIdS);
+        klushTo4 = MakingKey(homeRegion, valAreaSZ, valIdSZ);
+        klushTo5 = MakingKey(homeRegion, valAreaZ, valIdZ);
+        klushTo6 = MakingKey(homeRegion, valAreaUZ, valIdUZ);
+        klushTo7 = MakingKey(homeRegion, valAreaU, valIdU);
       }
       break;
     case "Ю":
       if (valAreaU && valIdU) {
-        klushTo1 = MakingKey(homeRegion, valAreaV, valIdV);
-        klushTo2 = MakingKey(homeRegion, valAreaS, valIdS);
-        klushTo3 = MakingKey(homeRegion, valAreaZ, valIdZ);
+        klushTo1 = MakingKey(homeRegion, valAreaUV, valIdUV);
+        klushTo2 = MakingKey(homeRegion, valAreaV, valIdV);
+        klushTo3 = MakingKey(homeRegion, valAreaSV, valIdSV);
+        klushTo4 = MakingKey(homeRegion, valAreaS, valIdS);
+        klushTo5 = MakingKey(homeRegion, valAreaSZ, valIdSZ);
+        klushTo6 = MakingKey(homeRegion, valAreaZ, valIdZ);
+        klushTo7 = MakingKey(homeRegion, valAreaUZ, valIdUZ);
+      }
+      break;
+    case "ЮЗ":
+      if (valAreaUZ && valIdUZ) {
+        klushTo1 = MakingKey(homeRegion, valAreaU, valIdU);
+        klushTo2 = MakingKey(homeRegion, valAreaUV, valIdUV);
+        klushTo3 = MakingKey(homeRegion, valAreaV, valIdV);
+        klushTo4 = MakingKey(homeRegion, valAreaSV, valIdSV);
+        klushTo5 = MakingKey(homeRegion, valAreaS, valIdS);
+        klushTo6 = MakingKey(homeRegion, valAreaSZ, valIdSZ);
+        klushTo7 = MakingKey(homeRegion, valAreaZ, valIdZ);
       }
   }
-  return [klushTo1, klushTo2, klushTo3];
+  return [klushTo1, klushTo2, klushTo3, klushTo4, klushTo5, klushTo6, klushTo7];
 };
 
 export const OutputNumFaza = (

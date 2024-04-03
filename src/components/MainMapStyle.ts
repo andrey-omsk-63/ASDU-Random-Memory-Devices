@@ -165,7 +165,7 @@ export const styleModalMenu = {
   minHeight: "21px",
   backgroundColor: "#E6F5D6",
   color: "black",
-  marginBottom: '12px',
+  marginBottom: "12px",
   textTransform: "unset !important",
   textAlign: "center",
   boxShadow: 5,
@@ -240,6 +240,13 @@ export const styleAppSt04 = {
   textAlign: "center",
   color: "#7620a2", // сиреневый
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+};
+
+export const styleAppSt05 = {
+  bgcolor: "#F1F5FB",
+  border: "1px solid #d4d4d4",
+  borderRadius: 1,
+  boxShadow: 9,
 };
 
 export const styleSetAV = {

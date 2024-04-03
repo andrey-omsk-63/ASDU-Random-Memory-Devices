@@ -19,6 +19,8 @@ export interface Tflink {
     south: Add1;
     add1:  Add1;
     add2:  Add1;
+    add3:  Add1;
+    add4:  Add1;
 }
 
 export interface Add1 {

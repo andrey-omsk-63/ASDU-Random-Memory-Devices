@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-, "basket/GsSelectMD.tsx", "basket/GsSetPhase.tsx"  ]
+, "basket/GsSelectMD.tsx", "basket/GsSetPhase.tsx", "basket/RgsAppointVertexOld.tsx"  ]
 }

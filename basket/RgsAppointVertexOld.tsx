@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { bindingsCreate } from '../../redux/actions';
+import { bindingsCreate } from '../src/redux/actions';
 
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -9,28 +9,28 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 
-import GsErrorMessage from './RgsErrorMessage';
+import GsErrorMessage from '../src/components/RgsComponents/RgsErrorMessage';
 
-import { SendSocketUpdateBindings } from '../RgsSocketFunctions';
-import { SendSocketDeleteBindings } from '../RgsSocketFunctions';
+import { SendSocketUpdateBindings } from '../src/components/RgsSocketFunctions';
+import { SendSocketDeleteBindings } from '../src/components/RgsSocketFunctions';
 
-import { TakeAreaId, CheckKey, MakeTflink } from '../RgsServiceFunctions';
-import { MakingKey, OutputKey, MakingKluch } from '../RgsServiceFunctions';
-import { AppointDirect, AppointHeader } from '../RgsServiceFunctions';
-import { OutputNumFaza } from '../RgsServiceFunctions';
-import { BadExit } from '../RgsServiceFunctions';
-import { AppIconAsdu, OutputPict } from '../RgsServiceFunctions';
-import { OutPutZZ, OutPutSS, OutPutUU, OutPutVV } from '../RgsServiceFunctions';
+import { TakeAreaId, CheckKey, MakeTflink } from '../src/components/RgsServiceFunctions';
+import { MakingKey, OutputKey, MakingKluch } from '../src/components/RgsServiceFunctions';
+import { AppointDirect, AppointHeader } from '../src/components/RgsServiceFunctions';
+import { OutputNumFaza } from '../src/components/RgsServiceFunctions';
+import { BadExit } from '../src/components/RgsServiceFunctions';
+import { AppIconAsdu, OutputPict } from '../src/components/RgsServiceFunctions';
+import { OutPutZZ, OutPutSS, OutPutUU, OutPutVV } from '../src/components/RgsServiceFunctions';
 
 //import { BAN } from "../MainMapRgs";
 
-import { styleModalEnd, styleModalMenu } from '../MainMapStyle';
-import { styleSetAppoint, styleAppSt02 } from '../MainMapStyle';
-import { styleSetAV, styleBoxFormAV, styleAppSt04 } from '../MainMapStyle';
-import { styleSetFaza, styleBoxFormFaza } from '../MainMapStyle';
-import { styleSetFazaNull } from '../MainMapStyle';
+import { styleModalEnd, styleModalMenu } from '../src/components/MainMapStyle';
+import { styleSetAppoint, styleAppSt02 } from '../src/components/MainMapStyle';
+import { styleSetAV, styleBoxFormAV, styleAppSt04 } from '../src/components/MainMapStyle';
+import { styleSetFaza, styleBoxFormFaza } from '../src/components/MainMapStyle';
+import { styleSetFazaNull } from '../src/components/MainMapStyle';
 
-import { TfLink } from '../../interfaceBindings.d';
+import { TfLink } from '../src/interfaceBindings';
 
 let oldIdx = -1;
 let kluchGl = '';
