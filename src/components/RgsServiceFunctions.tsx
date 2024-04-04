@@ -520,7 +520,8 @@ export const OutputKey = (klush: string, hBlock: number, dir: string) => {
       <Grid item xs={12} sx={styleOutputKey}>
         <Box sx={styleAppSt02}>
           <Box sx={{ fontWeight: 600, display: "inline-block" }}>{klush}</Box>{" "}
-          <Box sx={styleOutputHint}>{dir}</Box>
+          {klush && <Box sx={styleOutputHint}>{dir}</Box>}
+          {/* <Box sx={styleOutputHint}>{dir}</Box> */}
         </Box>
       </Grid>
     </Grid>
@@ -598,6 +599,42 @@ export const MakeMasDirect = (rec1: string) => {
   return masDirect;
 };
 
+export const AdditionalButton = (
+  rec1: string,
+  hBlock: number,
+  funcAddKnop: Function
+) => {
+  let dir = "";
+  if (rec1 === "З") dir = "СЗ";
+  if (rec1 === "С") dir = "СВ";
+  if (rec1 === "В") dir = "ЮВ";
+  if (rec1 === "Ю") dir = "ЮЗ";
+
+  const styleAppSt06 = {
+    fontSize: 12.1,
+    maxHeight: "21px",
+    minHeight: "21px",
+    backgroundColor: "#E6F5D6",
+    color: "black",
+    //marginTop: "5px",
+    textTransform: "unset !important",
+    textAlign: "center",
+    boxShadow: 5,
+  };
+
+  return (
+    <>
+      {dir && (
+        <Box sx={{ height: hBlock / 15, border: 0 }}>
+          <Button sx={styleAppSt06} onClick={() => funcAddKnop(dir)}>
+            Доп.направление {dir}
+          </Button>
+        </Box>
+      )}
+    </>
+  );
+};
+
 export const MakeTflink = (
   homeRegion: any,
   massAreaId: Array<number>,
@@ -605,12 +642,20 @@ export const MakeTflink = (
 ) => {
   let valAreaZ = massAreaId[0];
   let valIdZ = massAreaId[1];
-  let valAreaS = massAreaId[2];
-  let valIdS = massAreaId[3];
-  let valAreaV = massAreaId[4];
-  let valIdV = massAreaId[5];
-  let valAreaU = massAreaId[6];
-  let valIdU = massAreaId[7];
+  let valAreaSZ = massAreaId[2]; //====== new ======
+  let valIdSZ = massAreaId[3];
+  let valAreaS = massAreaId[4];
+  let valIdS = massAreaId[5];
+  let valAreaSV = massAreaId[6]; //====== new ======
+  let valIdSV = massAreaId[7];
+  let valAreaV = massAreaId[8];
+  let valIdV = massAreaId[9];
+  let valAreaUV = massAreaId[10]; //====== new ======
+  let valIdUV = massAreaId[11];
+  let valAreaU = massAreaId[12];
+  let valIdU = massAreaId[13];
+  let valAreaUZ = massAreaId[14]; //====== new ======
+  let valIdUZ = massAreaId[15];
   let maskPoints: WayPointsArray = {
     id: "",
     phase: "",
@@ -625,92 +670,372 @@ export const MakeTflink = (
     south: { id: "", wayPointsArray: [] },
     west: { id: "", wayPointsArray: [] },
   };
-  // запад
+  //=== запад ===
   if (valAreaZ && valIdZ) {
     maskTflink.west.id = homeRegion + "-" + valAreaZ + "-" + valIdZ;
-    if (valAreaU && valIdU) {
-      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
-      maskPoint.id = homeRegion + "-" + valAreaU + "-" + valIdU;
+    if (valAreaUZ && valIdUZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaUZ + "-" + valIdUZ;
       maskPoint.phase = massFaz[0].toString();
       maskTflink.west.wayPointsArray.push(maskPoint);
     }
-    if (valAreaV && valIdV) {
-      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
-      maskPoint.id = homeRegion + "-" + valAreaV + "-" + valIdV;
-      maskPoint.phase = massFaz[1].toString();
-      maskTflink.west.wayPointsArray.push(maskPoint);
-    }
-    if (valAreaS && valIdS) {
-      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
-      maskPoint.id = homeRegion + "-" + valAreaS + "-" + valIdS;
-      maskPoint.phase = massFaz[2].toString();
-      maskTflink.west.wayPointsArray.push(maskPoint);
-    }
-  }
-  // север
-  if (valAreaS && valIdS) {
-    maskTflink.north.id = homeRegion + "-" + valAreaS + "-" + valIdS;
-    if (valAreaZ && valIdZ) {
-      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
-      maskPoint.id = homeRegion + "-" + valAreaZ + "-" + valIdZ;
-      maskPoint.phase = massFaz[3].toString();
-      maskTflink.north.wayPointsArray.push(maskPoint);
-    }
     if (valAreaU && valIdU) {
       let maskPoint = JSON.parse(JSON.stringify(maskPoints));
       maskPoint.id = homeRegion + "-" + valAreaU + "-" + valIdU;
-      maskPoint.phase = massFaz[4].toString();
-      maskTflink.north.wayPointsArray.push(maskPoint);
+      maskPoint.phase = massFaz[1].toString();
+      maskTflink.west.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaUV && valIdUV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaUV + "-" + valIdUV;
+      maskPoint.phase = massFaz[2].toString();
+      maskTflink.west.wayPointsArray.push(maskPoint);
     }
     if (valAreaV && valIdV) {
       let maskPoint = JSON.parse(JSON.stringify(maskPoints));
       maskPoint.id = homeRegion + "-" + valAreaV + "-" + valIdV;
+      maskPoint.phase = massFaz[3].toString();
+      maskTflink.west.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaSV && valIdSV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaSV + "-" + valIdSV;
+      maskPoint.phase = massFaz[4].toString();
+      maskTflink.west.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaS && valIdS) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaS + "-" + valIdS;
       maskPoint.phase = massFaz[5].toString();
-      maskTflink.north.wayPointsArray.push(maskPoint);
+      maskTflink.west.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaSZ && valIdSZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaSZ + "-" + valIdSZ;
+      maskPoint.phase = massFaz[6].toString();
+      maskTflink.west.wayPointsArray.push(maskPoint);
     }
   }
-  // восток
-  if (valAreaV && valIdV) {
-    let maskPoint = JSON.parse(JSON.stringify(maskPoints));
-    maskTflink.east.id = homeRegion + "-" + valAreaV + "-" + valIdV;
-    if (valAreaS && valIdS) {
-      maskPoint.id = homeRegion + "-" + valAreaS + "-" + valIdS;
-      maskPoint.phase = massFaz[6].toString();
-      maskTflink.east.wayPointsArray.push(maskPoint);
-    }
+  //=== северо-запад ===
+  if (valAreaSZ && valIdSZ) {
+    maskTflink.add4.id = homeRegion + "-" + valAreaSZ + "-" + valIdSZ;
     if (valAreaZ && valIdZ) {
       let maskPoint = JSON.parse(JSON.stringify(maskPoints));
       maskPoint.id = homeRegion + "-" + valAreaZ + "-" + valIdZ;
       maskPoint.phase = massFaz[7].toString();
+      maskTflink.add4.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaUZ && valIdUZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaUZ + "-" + valIdUZ;
+      maskPoint.phase = massFaz[8].toString();
+      maskTflink.add4.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaU && valIdU) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaU + "-" + valIdU;
+      maskPoint.phase = massFaz[9].toString();
+      maskTflink.add4.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaUV && valIdUV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaUV + "-" + valIdUV;
+      maskPoint.phase = massFaz[10].toString();
+      maskTflink.add4.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaV && valIdV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaV + "-" + valIdV;
+      maskPoint.phase = massFaz[11].toString();
+      maskTflink.add4.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaSV && valIdSV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaSV + "-" + valIdSV;
+      maskPoint.phase = massFaz[12].toString();
+      maskTflink.add4.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaS && valIdS) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaS + "-" + valIdS;
+      maskPoint.phase = massFaz[13].toString();
+      maskTflink.add4.wayPointsArray.push(maskPoint);
+    }
+  }
+  //=== север ===
+  if (valAreaS && valIdS) {
+    maskTflink.north.id = homeRegion + "-" + valAreaS + "-" + valIdS;
+    if (valAreaSZ && valIdSZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaSZ + "-" + valIdSZ;
+      maskPoint.phase = massFaz[14].toString();
+      maskTflink.north.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaZ && valIdZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaZ + "-" + valIdZ;
+      maskPoint.phase = massFaz[15].toString();
+      maskTflink.north.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaUZ && valIdUZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaUZ + "-" + valIdUZ;
+      maskPoint.phase = massFaz[16].toString();
+      maskTflink.north.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaU && valIdU) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaU + "-" + valIdU;
+      maskPoint.phase = massFaz[17].toString();
+      maskTflink.north.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaUV && valIdUV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaUV + "-" + valIdUV;
+      maskPoint.phase = massFaz[18].toString();
+      maskTflink.north.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaV && valIdV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaV + "-" + valIdV;
+      maskPoint.phase = massFaz[19].toString();
+      maskTflink.north.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaSV && valIdSV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaSV + "-" + valIdSV;
+      maskPoint.phase = massFaz[20].toString();
+      maskTflink.north.wayPointsArray.push(maskPoint);
+    }
+  }
+  //=== северo-восток ===
+  if (valAreaSV && valIdSV) {
+    maskTflink.add1.id = homeRegion + "-" + valAreaSV + "-" + valIdSV;
+    if (valAreaS && valIdS) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaS + "-" + valIdS;
+      maskPoint.phase = massFaz[21].toString();
+      maskTflink.add1.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaSZ && valIdSZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaSZ + "-" + valIdSZ;
+      maskPoint.phase = massFaz[22].toString();
+      maskTflink.add1.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaZ && valIdZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaZ + "-" + valIdZ;
+      maskPoint.phase = massFaz[23].toString();
+      maskTflink.add1.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaUZ && valIdUZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaUZ + "-" + valIdUZ;
+      maskPoint.phase = massFaz[24].toString();
+      maskTflink.add1.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaU && valIdU) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaU + "-" + valIdU;
+      maskPoint.phase = massFaz[25].toString();
+      maskTflink.add1.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaUV && valIdUV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaUV + "-" + valIdUV;
+      maskPoint.phase = massFaz[26].toString();
+      maskTflink.add1.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaV && valIdV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaV + "-" + valIdV;
+      maskPoint.phase = massFaz[27].toString();
+      maskTflink.add1.wayPointsArray.push(maskPoint);
+    }
+  }
+  //=== восток ===
+  if (valAreaV && valIdV) {
+    maskTflink.east.id = homeRegion + "-" + valAreaV + "-" + valIdV;
+    if (valAreaSV && valIdSV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaSV + "-" + valIdSV;
+      maskPoint.phase = massFaz[28].toString();
+      maskTflink.east.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaS && valIdS) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaS + "-" + valIdS;
+      maskPoint.phase = massFaz[29].toString();
+      maskTflink.east.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaSZ && valIdSZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaSZ + "-" + valIdSZ;
+      maskPoint.phase = massFaz[30].toString();
+      maskTflink.east.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaZ && valIdZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaZ + "-" + valIdZ;
+      maskPoint.phase = massFaz[31].toString();
+      maskTflink.east.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaUZ && valIdUZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaUZ + "-" + valIdUZ;
+      maskPoint.phase = massFaz[32].toString();
       maskTflink.east.wayPointsArray.push(maskPoint);
     }
     if (valAreaU && valIdU) {
       let maskPoint = JSON.parse(JSON.stringify(maskPoints));
       maskPoint.id = homeRegion + "-" + valAreaU + "-" + valIdU;
-      maskPoint.phase = massFaz[8].toString();
+      maskPoint.phase = massFaz[33].toString();
+      maskTflink.east.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaUV && valIdUV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaUV + "-" + valIdUV;
+      maskPoint.phase = massFaz[34].toString();
       maskTflink.east.wayPointsArray.push(maskPoint);
     }
   }
-  // юг
-  if (valAreaU && valIdU) {
-    maskTflink.south.id = homeRegion + "-" + valAreaU + "-" + valIdU;
+  //=== юго-восток ===
+  if (valAreaUV && valIdUV) {
+    maskTflink.add2.id = homeRegion + "-" + valAreaUV + "-" + valIdUV;
     if (valAreaV && valIdV) {
       let maskPoint = JSON.parse(JSON.stringify(maskPoints));
       maskPoint.id = homeRegion + "-" + valAreaV + "-" + valIdV;
-      maskPoint.phase = massFaz[9].toString();
+      maskPoint.phase = massFaz[35].toString();
+      maskTflink.add2.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaSV && valIdSV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaSV + "-" + valIdSV;
+      maskPoint.phase = massFaz[36].toString();
+      maskTflink.add2.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaS && valIdS) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaS + "-" + valIdS;
+      maskPoint.phase = massFaz[37].toString();
+      maskTflink.add2.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaSZ && valIdSZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaSZ + "-" + valIdSZ;
+      maskPoint.phase = massFaz[38].toString();
+      maskTflink.add2.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaZ && valIdZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaZ + "-" + valIdZ;
+      maskPoint.phase = massFaz[39].toString();
+      maskTflink.add2.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaUZ && valIdUZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaUZ + "-" + valIdUZ;
+      maskPoint.phase = massFaz[40].toString();
+      maskTflink.add2.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaU && valIdU) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaU + "-" + valIdU;
+      maskPoint.phase = massFaz[41].toString();
+      maskTflink.add2.wayPointsArray.push(maskPoint);
+    }
+  }
+  //=== юг ===
+  if (valAreaU && valIdU) {
+    maskTflink.south.id = homeRegion + "-" + valAreaU + "-" + valIdU;
+    if (valAreaUV && valIdUV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaUV + "-" + valIdUV;
+      maskPoint.phase = massFaz[42].toString();
+      maskTflink.south.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaV && valIdV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaV + "-" + valIdV;
+      maskPoint.phase = massFaz[43].toString();
+      maskTflink.south.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaSV && valIdSV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaSV + "-" + valIdSV;
+      maskPoint.phase = massFaz[44].toString();
       maskTflink.south.wayPointsArray.push(maskPoint);
     }
     if (valAreaS && valIdS) {
       let maskPoint = JSON.parse(JSON.stringify(maskPoints));
       maskPoint.id = homeRegion + "-" + valAreaS + "-" + valIdS;
-      maskPoint.phase = massFaz[10].toString();
+      maskPoint.phase = massFaz[45].toString();
+      maskTflink.south.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaSZ && valIdSZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaSZ + "-" + valIdSZ;
+      maskPoint.phase = massFaz[46].toString();
       maskTflink.south.wayPointsArray.push(maskPoint);
     }
     if (valAreaZ && valIdZ) {
       let maskPoint = JSON.parse(JSON.stringify(maskPoints));
       maskPoint.id = homeRegion + "-" + valAreaZ + "-" + valIdZ;
-      maskPoint.phase = massFaz[11].toString();
+      maskPoint.phase = massFaz[47].toString();
       maskTflink.south.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaUZ && valIdUZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaUZ + "-" + valIdUZ;
+      maskPoint.phase = massFaz[48].toString();
+      maskTflink.south.wayPointsArray.push(maskPoint);
+    }
+  }
+  //=== юго-запад ===
+  if (valAreaUZ && valIdUZ) {
+    maskTflink.add3.id = homeRegion + "-" + valAreaUZ + "-" + valIdUZ;
+    if (valAreaU && valIdU) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaU + "-" + valIdU;
+      maskPoint.phase = massFaz[49].toString();
+      maskTflink.add3.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaUV && valIdUV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaUV + "-" + valIdUV;
+      maskPoint.phase = massFaz[50].toString();
+      maskTflink.add3.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaV && valIdV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaV + "-" + valIdV;
+      maskPoint.phase = massFaz[51].toString();
+      maskTflink.add3.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaSV && valIdSV) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaSV + "-" + valIdSV;
+      maskPoint.phase = massFaz[52].toString();
+      maskTflink.add3.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaS && valIdS) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaS + "-" + valIdS;
+      maskPoint.phase = massFaz[53].toString();
+      maskTflink.add3.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaSZ && valIdSZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints)); //====== new ======
+      maskPoint.id = homeRegion + "-" + valAreaSZ + "-" + valIdSZ;
+      maskPoint.phase = massFaz[54].toString();
+      maskTflink.add3.wayPointsArray.push(maskPoint);
+    }
+    if (valAreaZ && valIdZ) {
+      let maskPoint = JSON.parse(JSON.stringify(maskPoints));
+      maskPoint.id = homeRegion + "-" + valAreaZ + "-" + valIdZ;
+      maskPoint.phase = massFaz[55].toString();
+      maskTflink.add3.wayPointsArray.push(maskPoint);
     }
   }
   return maskTflink;
@@ -975,27 +1300,83 @@ export const OutPutZZ = (zz: string) => {
   );
 };
 
-export const OutPutSS = (ss: string) => {
-  const OutPutSS = {
-    marginTop: -2.5,
-    color: "blue",
-    textAlign: "center",
-    maxHeight: "18px",
-    minHeight: "18px",
-  };
-
+export const OutPutSZ = (sz: string) => {
   return (
-    <Box sx={OutPutSS}>
-      <b>{ss}</b>
-    </Box>
+    <Grid item xs={4} sx={{ border: 0 }}>
+      <Box sx={{ textAlign: "left" }}>
+        <b>{sz}</b>
+      </Box>
+    </Grid>
+  );
+};
+
+export const OutPutSS = (ss: string) => {
+  return (
+    <Grid item xs={4} sx={{ border: 0 }}>
+      <Box sx={{ textAlign: "center" }}>
+        <b>{ss}</b>
+      </Box>
+    </Grid>
+  );
+};
+
+export const OutPutSV = (sv: string) => {
+  return (
+    <Grid item xs={4} sx={{ border: 0 }}>
+      <Box sx={{ textAlign: "right" }}>
+        <b>{sv}</b>
+      </Box>
+    </Grid>
+  );
+};
+
+export const OutTopRow = (sz: string, ss: string, sv: string) => {
+  return (
+    <Grid container sx={{ color: "blue", marginTop: -2.5 }}>
+      {OutPutSZ(sz)}
+      {OutPutSS(ss)}
+      {OutPutSV(sv)}
+    </Grid>
+  );
+};
+
+export const OutPutUZ = (uz: string) => {
+  return (
+    <Grid item xs={4} sx={{ border: 0 }}>
+      <Box sx={{ textAlign: "left" }}>
+        <b>{uz}</b>
+      </Box>
+    </Grid>
   );
 };
 
 export const OutPutUU = (uu: string) => {
   return (
-    <Box sx={{ marginTop: -0.5, color: "blue", textAlign: "center" }}>
-      <b>{uu}</b>
-    </Box>
+    <Grid item xs={4} sx={{ border: 0 }}>
+      <Box sx={{ textAlign: "center" }}>
+        <b>{uu}</b>
+      </Box>
+    </Grid>
+  );
+};
+
+export const OutPutUV = (uv: string) => {
+  return (
+    <Grid item xs={4} sx={{ border: 0 }}>
+      <Box sx={{ textAlign: "right" }}>
+        <b>{uv}</b>
+      </Box>
+    </Grid>
+  );
+};
+
+export const OutBottomRow = (uz: string, uu: string, uv: string) => {
+  return (
+    <Grid container sx={{ color: "blue", marginTop: -0.25 }}>
+      {OutPutUZ(uz)}
+      {OutPutUU(uu)}
+      {OutPutUV(uv)}
+    </Grid>
   );
 };
 

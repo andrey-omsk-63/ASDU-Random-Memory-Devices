@@ -18,9 +18,9 @@ import { TakeAreaId, CheckKey, MakeTflink } from "../RgsServiceFunctions";
 import { MakingKey, OutputKey, MakingKluch } from "../RgsServiceFunctions";
 import { AppointDirect, AppointHeader } from "../RgsServiceFunctions";
 import { OutputNumFaza, MakeMasDirect } from "../RgsServiceFunctions";
-import { BadExit } from "../RgsServiceFunctions";
+import { BadExit, OutBottomRow, OutTopRow } from "../RgsServiceFunctions";
 import { AppIconAsdu, OutputPict } from "../RgsServiceFunctions";
-import { OutPutZZ, OutPutSS, OutPutUU, OutPutVV } from "../RgsServiceFunctions";
+import { OutPutZZ, OutPutVV, AdditionalButton } from "../RgsServiceFunctions";
 
 //import { BAN } from "../MainMapRgs";
 
@@ -34,14 +34,10 @@ import { TfLink } from "../../interfaceBindings.d";
 
 let oldIdx = -1;
 let kluchGl = "";
-// let massFaz = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-// let massFazAdd = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; //====== new
 let massFaz = new Array(56).fill(0);
-//let massFazAdd = new Array(28).fill(0); //====== new
 let klushTo1 = "";
 let klushTo2 = "";
 let klushTo3 = "";
-//====== new ======
 let klushTo4 = "";
 let klushTo5 = "";
 let klushTo6 = "";
@@ -141,7 +137,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       let mass = bindings.tfLinks[bindIdx].tflink;
 
       console.log("###:", mass);
-      
+
       let kluchZ = bindings.tfLinks[bindIdx].tflink.west.id;
       let kluchS = bindings.tfLinks[bindIdx].tflink.north.id;
       let kluchV = bindings.tfLinks[bindIdx].tflink.east.id;
@@ -152,7 +148,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       let kluchUV = bindings.tfLinks[bindIdx].tflink.add2.id;
       let kluchUZ = bindings.tfLinks[bindIdx].tflink.add3.id;
       //======
-      
 
       const GetFaza = (mas: any, kluch: string) => {
         let faza = 0;
@@ -250,13 +245,13 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       }
       if (kluchUZ) {
         let mas = mass.add3.wayPointsArray;
-        massFaz[33] = GetFaza(mas, kluchU);
-        massFaz[42] = GetFaza(mas, kluchUV);
-        massFaz[43] = GetFaza(mas, kluchV);
-        massFaz[44] = GetFaza(mas, kluchSV);
-        massFaz[45] = GetFaza(mas, kluchS);
-        massFaz[46] = GetFaza(mas, kluchSZ);
-        massFaz[47] = GetFaza(mas, kluchZ);
+        massFaz[49] = GetFaza(mas, kluchU);
+        massFaz[50] = GetFaza(mas, kluchUV);
+        massFaz[51] = GetFaza(mas, kluchV);
+        massFaz[52] = GetFaza(mas, kluchSV);
+        massFaz[53] = GetFaza(mas, kluchS);
+        massFaz[54] = GetFaza(mas, kluchSZ);
+        massFaz[55] = GetFaza(mas, kluchZ);
         setValAreaUZ(TakeAreaId(kluchUZ)[0]);
         setValIdUZ(TakeAreaId(kluchUZ)[1]);
       }
@@ -264,9 +259,13 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     oldIdx = props.idx;
   }
   let ss = valIdS ? "С." + valIdS : "С";
+  let sv = valIdSV ? "СВ." + valIdSV : "СВ";
   let vv = valIdV ? "В." + valIdV : "В";
+  let uv = valIdUV ? "ЮВ." + valIdUV : "ЮВ";
   let uu = valIdU ? "Ю." + valIdU : "Ю";
+  let uz = valIdUZ ? "ЮЗ." + valIdUZ : "ЮЗ";
   let zz = valIdZ ? "З." + valIdZ : "З";
+  let sz = valIdSZ ? "СЗ." + valIdSZ : "СЗ";
   //=== Функции - обработчики ==============================
   const handleKey = (event: any) => {
     if (event.key === "Enter") event.preventDefault();
@@ -333,28 +332,32 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     }
   };
 
-  const BlurContent = (
-    mode: number,
+  const BlurId = (
+    event: any,
     area: number,
     id: number,
-    funcAr: Function
+    funcAr: Function,
+    funcId: Function
   ) => {
+    if (!area && !id) return;
     let kluch = homeRegion + "-" + area + "-" + id;
     let kluchOutput = area + "-" + id;
     if (kluch === kluchGl) {
       soobErr = "Вы пытаетесь связать перекрёсток с самим собой";
       setOpenSetErr(true);
-      mode && funcAr(0);
+      funcAr(0);
+      funcId(0);
     } else {
       if (!CheckKey(kluch, map, addobj)) {
         soobErr = "Перекрёсток [";
         if (id > 10000) soobErr = "Объект [";
         soobErr += kluchOutput + "] не существует";
         setOpenSetErr(true);
-        mode && funcAr(0);
+        funcAr(0);
+        funcId(0);
       } else {
         let have = 0;
-        for (let i = 0; i < 4; i++)
+        for (let i = 0; i < 8; i++)
           if (massAreaId[i * 2] === area && massAreaId[i * 2 + 1] === id)
             have++;
         if (have > 1) {
@@ -362,15 +365,11 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
           if (id > 10000) soobErr = "Объект [";
           soobErr += kluchOutput + "] был введён с другого направления";
           setOpenSetErr(true);
-          mode && funcAr(0);
+          funcAr(0);
+          funcId(0);
         }
       }
     }
-  };
-
-  const BlurId = (event: any, area: number, id: number, funcAr: Function) => {
-    if (!area && !id) return;
-    BlurContent(0, area, id, funcAr);
   };
 
   const ChangeId = (
@@ -443,7 +442,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             value={valueId}
             InputProps={{ disableUnderline: true, style: { fontSize: 12.1 } }}
             onChange={(e) => ChangeId(e, funcId, funcAr, map, addobj, AREA)}
-            onBlur={(e) => BlurId(e, valueAr, valueId, funcAr)}
+            onBlur={(e) => BlurId(e, valueAr, valueId, funcAr, funcId)}
             variant="standard"
             color="secondary"
           />
@@ -487,8 +486,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         currencies.push(maskCurrencies);
       }
     }
-
-    //if (rec === "СЗ") console.log("massFaz:", rec, shift, massFaz);
 
     const [currency, setCurrency] = React.useState(
       dat.indexOf(massFaz[mode + shift])
@@ -549,50 +546,71 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       );
     };
 
+    const funcAddKnop = (dir: string) => {
+      console.log('Открыть направлените', dir)
+    };
+
+    let openBlok = false;
+    if (rec1 === "З" || rec1 === "С" || rec1 === "В" || rec1 === "Ю")
+      openBlok = true;
+    if (rec1 === "СЗ" && valIdSZ) openBlok = true;
+    if (rec1 === "СВ" && valIdSV) openBlok = true;
+    if (rec1 === "ЮВ" && valIdUV) openBlok = true;
+    if (rec1 === "ЮЗ" && valIdUZ) openBlok = true;
+
     return (
-      <Grid container sx={{ borderBottom: 1, borderColor: "#d4d4d4" }}>
-        {/* === Направление === */}
-        {AppointDirect(rec1, hBlock)}
-        {/* === Откуда === */}
-        <Grid item xs={5.5} sx={{ fontSize: 14, height: hBlock / 2.1 }}>
-          <Grid container>
-            <Grid item xs={7.7} sx={{ paddingLeft: 0.5, height: hB }}></Grid>
-          </Grid>
-          <Grid container>
-            <Grid item xs={7.7} sx={{ paddingLeft: 0.5, height: hB }}>
-              <Box sx={styleAppSt02}>Ведите ID</Box>
+      <>
+        {openBlok && (
+          <Grid container sx={{ borderBottom: 1, borderColor: "#d4d4d4" }}>
+            {/* === Направление === */}
+            {AppointDirect(rec1, hBlock)}
+            {/* === Откуда === */}
+            <Grid item xs={5.5} sx={{ fontSize: 14, height: hBlock / 2.1 }}>
+              <Grid container>
+                <Grid
+                  item
+                  xs={7.7}
+                  sx={{ paddingLeft: 0.5, height: hB }}
+                ></Grid>
+              </Grid>
+              <Grid container>
+                <Grid item xs={7.7} sx={{ paddingLeft: 0.5, height: hB }}>
+                  <Box sx={styleAppSt02}>Ведите ID</Box>
+                </Grid>
+                <Grid item xs sx={{ fontSize: 12.1 }}>
+                  <Box sx={styleAppSt02}>
+                    {InputerId(valueId, funcId, valueAr, funcAr)}
+                  </Box>
+                </Grid>
+              </Grid>
+              {OutputKey(klushFrom.slice(SL), hBlock, "")}
+              {AdditionalButton(rec1, hBlock, funcAddKnop)}
             </Grid>
-            <Grid item xs sx={{ fontSize: 12.1 }}>
-              <Box sx={styleAppSt02}>
-                {InputerId(valueId, funcId, valueAr, funcAr)}
-              </Box>
+            {/* === Куда === */}
+            <Grid item xs={4} sx={{ fontSize: 14, height: hB }}>
+              {OutputKey(klushTo1.slice(SL), hBlock, masDirect[0])}
+              {OutputKey(klushTo2.slice(SL), hBlock, masDirect[1])}
+              {OutputKey(klushTo3.slice(SL), hBlock, masDirect[2])}
+              {OutputKey(klushTo4.slice(SL), hBlock, masDirect[3])}
+              {OutputKey(klushTo5.slice(SL), hBlock, masDirect[4])}
+              {OutputKey(klushTo6.slice(SL), hBlock, masDirect[5])}
+              {OutputKey(klushTo7.slice(SL), hBlock, masDirect[6])}
+            </Grid>
+            {/* === Фаза === */}
+            <Grid item xs={1.5} sx={{ fontSize: 14, height: hBlock / 5 }}>
+              <Grid container>
+                {InputFaza(0, klushTo1)}
+                {InputFaza(1, klushTo2)}
+                {InputFaza(2, klushTo3)}
+                {InputFaza(3, klushTo4)}
+                {InputFaza(4, klushTo5)}
+                {InputFaza(5, klushTo6)}
+                {InputFaza(6, klushTo7)}
+              </Grid>
             </Grid>
           </Grid>
-          {OutputKey(klushFrom.slice(SL), hBlock, "")}
-        </Grid>
-        {/* === Куда === */}
-        <Grid item xs={4} sx={{ fontSize: 14, height: hB }}>
-          {OutputKey(klushTo1.slice(SL), hBlock, masDirect[0])}
-          {OutputKey(klushTo2.slice(SL), hBlock, masDirect[1])}
-          {OutputKey(klushTo3.slice(SL), hBlock, masDirect[2])}
-          {OutputKey(klushTo4.slice(SL), hBlock, masDirect[3])}
-          {OutputKey(klushTo5.slice(SL), hBlock, masDirect[4])}
-          {OutputKey(klushTo6.slice(SL), hBlock, masDirect[5])}
-          {OutputKey(klushTo7.slice(SL), hBlock, masDirect[6])}
-        </Grid>
-        {/* === Фаза === */}
-        <Grid item xs={1.5} sx={{ fontSize: 14, height: hBlock / 5 }}>
-          <Grid container>
-            {InputFaza(0, klushTo1)}
-            {InputFaza(1, klushTo2)}
-            {InputFaza(2, klushTo3)}
-            {InputFaza(3, klushTo4)}
-            {InputFaza(4, klushTo5)}
-            {InputFaza(5, klushTo6)}
-            {InputFaza(6, klushTo7)}
-          </Grid>
-        </Grid>
-      </Grid>
+        )}
+      </>
     );
   };
 
@@ -608,13 +626,13 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             <b>{map.tflight[props.idx].description}</b>)
           </Box>
           <Grid container sx={{ marginTop: 2 }}>
-            {/* вывод картиноки перекрёстка */}
+            {/* вывод картиноки перекрёстка c направлениями */}
             {OutPutZZ(zz)}
-            <Grid item xs={4} sx={{ border: 0 }}>
-              {OutPutSS(ss)}
+            <Grid item xs={4}>
+              {OutTopRow(sz, ss, sv)}
               {otlOrKosyk && <>{AppIconAsdu()}</>}
               {!otlOrKosyk && <>{OutputPict(datestat.pictSvg)}</>}
-              {OutPutUU(uu)}
+              {OutBottomRow(uz, uu, uv)}
             </Grid>
             {OutPutVV(vv)}
             {/* редактор связей */}

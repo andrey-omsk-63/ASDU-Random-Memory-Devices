@@ -243,7 +243,8 @@ export const styleAppSt04 = {
 };
 
 export const styleAppSt05 = {
-  bgcolor: "#F1F5FB",
+  marginTop: -0.25,
+  bgcolor: "#F1F5FB", // светло-серый
   border: "1px solid #d4d4d4",
   borderRadius: 1,
   boxShadow: 9,
@@ -278,6 +279,7 @@ export const styleSetFazaNull = {
   maxHeight: "19px",
   minHeight: "19px",
   bgcolor: "background.paper",
+  //bgcolor: "#F1F5FB", // светло-серый
 };
 
 export const styleSetFaza = {
@@ -287,7 +289,7 @@ export const styleSetFaza = {
   width: "30px",
   maxHeight: "19px",
   minHeight: "19px",
-  bgcolor: "#FFFBE5",
+  bgcolor: "#FFFBE5", // молоко
   border: "1px solid #000",
   borderRadius: 1,
   borderColor: "#d4d4d4", // серый
