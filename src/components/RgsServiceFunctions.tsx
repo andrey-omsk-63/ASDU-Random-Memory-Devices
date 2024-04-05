@@ -509,7 +509,7 @@ export const OutputKey = (klush: string, hBlock: number, dir: string) => {
   };
 
   const styleOutputHint = {
-    fontSize: 10,
+    fontSize: 11,
     color: "#C0C0C0",
     fontWeight: 50,
     display: "inline-block",
@@ -602,13 +602,27 @@ export const MakeMasDirect = (rec1: string) => {
 export const AdditionalButton = (
   rec1: string,
   hBlock: number,
+  massFlDir: any,
   funcAddKnop: Function
 ) => {
   let dir = "";
-  if (rec1 === "З") dir = "СЗ";
-  if (rec1 === "С") dir = "СВ";
-  if (rec1 === "В") dir = "ЮВ";
-  if (rec1 === "Ю") dir = "ЮЗ";
+  let flOpen = 0;
+  if (rec1 === "З") {
+    dir = "СЗ";
+    flOpen = massFlDir[0]
+  }
+  if (rec1 === "С") {
+    dir = "СВ";
+    flOpen = massFlDir[1]
+  }
+  if (rec1 === "В") {
+    dir = "ЮВ";
+    flOpen = massFlDir[2]
+  }
+  if (rec1 === "Ю") {
+    dir = "ЮЗ";
+    flOpen = massFlDir[3]
+  }
 
   const styleAppSt06 = {
     fontSize: 12.1,
@@ -616,7 +630,6 @@ export const AdditionalButton = (
     minHeight: "21px",
     backgroundColor: "#E6F5D6",
     color: "black",
-    //marginTop: "5px",
     textTransform: "unset !important",
     textAlign: "center",
     boxShadow: 5,
@@ -624,9 +637,10 @@ export const AdditionalButton = (
 
   return (
     <>
-      {dir && (
+      {!flOpen && dir && (
         <Box sx={{ height: hBlock / 15, border: 0 }}>
           <Button sx={styleAppSt06} onClick={() => funcAddKnop(dir)}>
+            {/* Доп.направление{" "}<Box sx={{ fontWeight: 1000 }}>{dir}</Box> */}
             Доп.направление {dir}
           </Button>
         </Box>

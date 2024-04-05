@@ -106,6 +106,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const [changeFaz, setChangeFaz] = React.useState(0);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const [demoSost, setDemoSost] = React.useState(-1);
+  //const [trigger, setTrigger] = React.useState(false);
+
   const mapp = React.useRef<any>(null);
   const MyYandexKey = "65162f5f-2d15-41d1-a881-6c1acf34cfa1";
 
@@ -415,7 +417,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           xsTab = 4.3;
           widthMap = "99.9%";
           setToDoMode(true);
-          setRestartBan(BAN = true);
+          setRestartBan((BAN = true));
           setFlagPusk(!flagPusk);
           break;
         case 54: // режим Показать связи
@@ -446,7 +448,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const SetRestartBan = (mode: boolean) => {
-    setRestartBan(BAN = mode)
+    setRestartBan((BAN = mode));
   };
 
   //=== инициализация ======================================

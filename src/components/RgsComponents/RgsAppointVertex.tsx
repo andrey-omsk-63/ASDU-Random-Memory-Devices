@@ -35,6 +35,9 @@ import { TfLink } from "../../interfaceBindings.d";
 let oldIdx = -1;
 let kluchGl = "";
 let massFaz = new Array(56).fill(0);
+let massFlDir = [0, 0, 0, 0];
+let massAreaId = new Array(16).fill(0);
+
 let klushTo1 = "";
 let klushTo2 = "";
 let klushTo3 = "";
@@ -79,51 +82,16 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   const [openSet, setOpenSet] = React.useState(true);
   const [openSetErr, setOpenSetErr] = React.useState(false);
   const [badExit, setBadExit] = React.useState(false);
-
-  const [valAreaZ, setValAreaZ] = React.useState(AREA);
-  const [valAreaS, setValAreaS] = React.useState(AREA);
-  const [valAreaV, setValAreaV] = React.useState(AREA);
-  const [valAreaU, setValAreaU] = React.useState(AREA);
-  //====== new
-  const [valAreaSZ, setValAreaSZ] = React.useState(AREA);
-  const [valAreaUZ, setValAreaUZ] = React.useState(AREA);
-  const [valAreaUV, setValAreaUV] = React.useState(AREA);
-  const [valAreaSV, setValAreaSV] = React.useState(AREA);
-  //======
-  const [valIdZ, setValIdZ] = React.useState(0);
-  const [valIdS, setValIdS] = React.useState(0);
-  const [valIdV, setValIdV] = React.useState(0);
-  const [valIdU, setValIdU] = React.useState(0);
-  //====== new
-  const [valIdSZ, setValIdSZ] = React.useState(0);
-  const [valIdUZ, setValIdUZ] = React.useState(0);
-  const [valIdUV, setValIdUV] = React.useState(0);
-  const [valIdSV, setValIdSV] = React.useState(0);
-
-  let massAreaId = [
-    valAreaZ,
-    valIdZ,
-    valAreaSZ, //====== new ======
-    valIdSZ,
-    valAreaS,
-    valIdS,
-    valAreaSV, //====== new ======
-    valIdSV,
-    valAreaV,
-    valIdV,
-    valAreaUV, //====== new ======
-    valIdUV,
-    valAreaU,
-    valIdU,
-    valAreaUZ, //====== new ======
-    valIdUZ,
-  ];
+  const [trigger, setTrigger] = React.useState(false);
+  const scRef: any = React.useRef(null);
 
   let hBlock = window.innerWidth / 3.8 + 0;
   let hB = hBlock / 6;
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
     HAVE = 0;
+    massFlDir = [0, 0, 0, 0];
+    massAreaId = new Array(16).fill(0);
     kluchGl = homeRegion + "-" + map.tflight[props.idx].area.num + "-";
     kluchGl += map.tflight[props.idx].ID;
     maxFaza = map.tflight[props.idx].phases.length;
@@ -135,9 +103,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     if (bindIdx >= 0) {
       // запись существует
       let mass = bindings.tfLinks[bindIdx].tflink;
-
-      console.log("###:", mass);
-
       let kluchZ = bindings.tfLinks[bindIdx].tflink.west.id;
       let kluchS = bindings.tfLinks[bindIdx].tflink.north.id;
       let kluchV = bindings.tfLinks[bindIdx].tflink.east.id;
@@ -168,8 +133,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         massFaz[4] = GetFaza(mas, kluchSV);
         massFaz[5] = GetFaza(mas, kluchS);
         massFaz[6] = GetFaza(mas, kluchSZ);
-        setValAreaZ(TakeAreaId(kluchZ)[0]);
-        setValIdZ(TakeAreaId(kluchZ)[1]);
+        massAreaId[0] = TakeAreaId(kluchZ)[0];
+        massAreaId[1] = TakeAreaId(kluchZ)[1];
       }
       if (kluchSZ) {
         let mas = mass.add4.wayPointsArray;
@@ -180,8 +145,9 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         massFaz[11] = GetFaza(mas, kluchV);
         massFaz[12] = GetFaza(mas, kluchSV);
         massFaz[13] = GetFaza(mas, kluchS);
-        setValAreaSZ(TakeAreaId(kluchSZ)[0]);
-        setValIdSZ(TakeAreaId(kluchSZ)[1]);
+        massAreaId[2] = TakeAreaId(kluchSZ)[0];
+        massAreaId[3] = TakeAreaId(kluchSZ)[1];
+        massFlDir[0] = TakeAreaId(kluchSZ)[1];
       }
       if (kluchS) {
         let mas = mass.north.wayPointsArray;
@@ -192,8 +158,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         massFaz[18] = GetFaza(mas, kluchUV);
         massFaz[19] = GetFaza(mas, kluchV);
         massFaz[20] = GetFaza(mas, kluchSV);
-        setValAreaS(TakeAreaId(kluchS)[0]);
-        setValIdS(TakeAreaId(kluchS)[1]);
+        massAreaId[4] = TakeAreaId(kluchS)[0];
+        massAreaId[5] = TakeAreaId(kluchS)[1];
       }
       if (kluchSV) {
         let mas = mass.add1.wayPointsArray;
@@ -204,8 +170,9 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         massFaz[25] = GetFaza(mas, kluchU);
         massFaz[26] = GetFaza(mas, kluchUV);
         massFaz[27] = GetFaza(mas, kluchV);
-        setValAreaSV(TakeAreaId(kluchSV)[0]);
-        setValIdSV(TakeAreaId(kluchSV)[1]);
+        massAreaId[6] = TakeAreaId(kluchSV)[0];
+        massAreaId[7] = TakeAreaId(kluchSV)[1];
+        massFlDir[1] = TakeAreaId(kluchSV)[1];
       }
       if (kluchV) {
         let mas = mass.east.wayPointsArray;
@@ -216,8 +183,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         massFaz[32] = GetFaza(mas, kluchUZ);
         massFaz[33] = GetFaza(mas, kluchU);
         massFaz[34] = GetFaza(mas, kluchUV);
-        setValAreaV(TakeAreaId(kluchV)[0]);
-        setValIdV(TakeAreaId(kluchV)[1]);
+        massAreaId[8] = TakeAreaId(kluchV)[0];
+        massAreaId[9] = TakeAreaId(kluchV)[1];
       }
       if (kluchUV) {
         let mas = mass.add2.wayPointsArray;
@@ -228,8 +195,9 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         massFaz[39] = GetFaza(mas, kluchZ);
         massFaz[40] = GetFaza(mas, kluchUZ);
         massFaz[41] = GetFaza(mas, kluchU);
-        setValAreaUV(TakeAreaId(kluchUV)[0]);
-        setValIdUV(TakeAreaId(kluchUV)[1]);
+        massAreaId[10] = TakeAreaId(kluchUV)[0];
+        massAreaId[11] = TakeAreaId(kluchUV)[1];
+        massFlDir[2] = TakeAreaId(kluchUV)[1];
       }
       if (kluchU) {
         let mas = mass.south.wayPointsArray;
@@ -240,8 +208,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         massFaz[46] = GetFaza(mas, kluchSZ);
         massFaz[47] = GetFaza(mas, kluchZ);
         massFaz[48] = GetFaza(mas, kluchUZ);
-        setValAreaU(TakeAreaId(kluchU)[0]);
-        setValIdU(TakeAreaId(kluchU)[1]);
+        massAreaId[12] = TakeAreaId(kluchU)[0];
+        massAreaId[13] = TakeAreaId(kluchU)[1];
       }
       if (kluchUZ) {
         let mas = mass.add3.wayPointsArray;
@@ -252,20 +220,25 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         massFaz[53] = GetFaza(mas, kluchS);
         massFaz[54] = GetFaza(mas, kluchSZ);
         massFaz[55] = GetFaza(mas, kluchZ);
-        setValAreaUZ(TakeAreaId(kluchUZ)[0]);
-        setValIdUZ(TakeAreaId(kluchUZ)[1]);
+        massAreaId[14] = TakeAreaId(kluchUZ)[0];
+        massAreaId[15] = TakeAreaId(kluchUZ)[1];
+        massFlDir[3] = TakeAreaId(kluchUZ)[1];
       }
     }
     oldIdx = props.idx;
+    console.log("1massAreaId:", massFlDir, massAreaId);
   }
-  let ss = valIdS ? "С." + valIdS : "С";
-  let sv = valIdSV ? "СВ." + valIdSV : "СВ";
-  let vv = valIdV ? "В." + valIdV : "В";
-  let uv = valIdUV ? "ЮВ." + valIdUV : "ЮВ";
-  let uu = valIdU ? "Ю." + valIdU : "Ю";
-  let uz = valIdUZ ? "ЮЗ." + valIdUZ : "ЮЗ";
-  let zz = valIdZ ? "З." + valIdZ : "З";
-  let sz = valIdSZ ? "СЗ." + valIdSZ : "СЗ";
+
+  console.log("2massAreaId:", massFlDir, massAreaId);
+
+  let ss = massAreaId[5] ? "С." + massAreaId[5] : "С";
+  let sv = massAreaId[7] ? "СВ." + massAreaId[7] : "СВ";
+  let vv = massAreaId[9] ? "В." + massAreaId[9] : "В";
+  let uv = massAreaId[11] ? "ЮВ." + massAreaId[11] : "ЮВ";
+  let uu = massAreaId[13] ? "Ю." + massAreaId[13] : "Ю";
+  let uz = massAreaId[15] ? "ЮЗ." + massAreaId[15] : "ЮЗ";
+  let zz = massAreaId[1] ? "З." + massAreaId[1] : "З";
+  let sz = massAreaId[3] ? "СЗ." + massAreaId[3] : "СЗ";
   //=== Функции - обработчики ==============================
   const handleKey = (event: any) => {
     if (event.key === "Enter") event.preventDefault();
@@ -294,14 +267,16 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
 
   const handleClose = () => {
     let ch = 0;
-    if (valIdZ && valAreaZ) ch++;
-    if (valIdSZ && valAreaSZ) ch++;
-    if (valIdS && valAreaS) ch++;
-    if (valIdSV && valAreaSV) ch++;
-    if (valIdV && valAreaV) ch++;
-    if (valIdUV && valAreaUV) ch++;
-    if (valIdU && valAreaU) ch++;
-    if (valIdUZ && valAreaUZ) ch++;
+    if (massAreaId[0] && massAreaId[1]) ch++;
+    if (massAreaId[2] && massAreaId[3]) ch++;
+    if (massAreaId[4] && massAreaId[5]) ch++;
+    if (massAreaId[6] && massAreaId[7]) ch++;
+    if (massAreaId[8] && massAreaId[9]) ch++;
+    if (massAreaId[10] && massAreaId[11]) ch++;
+    if (massAreaId[12] && massAreaId[13]) ch++;
+    if (massAreaId[14] && massAreaId[15]) ch++;
+
+    console.log("handleClose:", massAreaId, massFaz);
 
     if (ch === 1) {
       soobErr = "Должно быть введено введено хотя бы два направления";
@@ -332,83 +307,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     }
   };
 
-  const BlurId = (
-    event: any,
-    area: number,
-    id: number,
-    funcAr: Function,
-    funcId: Function
-  ) => {
-    if (!area && !id) return;
-    let kluch = homeRegion + "-" + area + "-" + id;
-    let kluchOutput = area + "-" + id;
-    if (kluch === kluchGl) {
-      soobErr = "Вы пытаетесь связать перекрёсток с самим собой";
-      setOpenSetErr(true);
-      funcAr(0);
-      funcId(0);
-    } else {
-      if (!CheckKey(kluch, map, addobj)) {
-        soobErr = "Перекрёсток [";
-        if (id > 10000) soobErr = "Объект [";
-        soobErr += kluchOutput + "] не существует";
-        setOpenSetErr(true);
-        funcAr(0);
-        funcId(0);
-      } else {
-        let have = 0;
-        for (let i = 0; i < 8; i++)
-          if (massAreaId[i * 2] === area && massAreaId[i * 2 + 1] === id)
-            have++;
-        if (have > 1) {
-          soobErr = "Перекрёсток [";
-          if (id > 10000) soobErr = "Объект [";
-          soobErr += kluchOutput + "] был введён с другого направления";
-          setOpenSetErr(true);
-          funcAr(0);
-          funcId(0);
-        }
-      }
-    }
-  };
-
-  const ChangeId = (
-    event: any,
-    funcId: Function,
-    funcAr: Function,
-    map: any,
-    addobj: any,
-    AREA: number
-  ) => {
-    //let valueInp = event.target.value.replace(/^0+/, "");
-    let valueInp = event.target.value;
-    if (valueInp === "") valueInp = 1;
-    if (Number(valueInp) < 0) valueInp = 1;
-    if (Number(valueInp) < 100000) funcId(Number(valueInp));
-    let have = false;
-    HAVE++;
-    if (Number(valueInp) < 9999) {
-      // перекрёсток
-      for (let i = 0; i < map.tflight.length; i++) {
-        if (
-          map.tflight[i].ID === Number(valueInp) &&
-          Number(map.tflight[i].area.num) === AREA
-        ) {
-          funcAr(Number(map.tflight[i].area.num));
-          have = true;
-        }
-      }
-    } else {
-      // объект
-      for (let i = 0; i < addobj.addObjects.length; i++) {
-        if (addobj.addObjects[i].id === Number(valueInp)) {
-          funcAr(addobj.addObjects[i].area);
-          have = true;
-        }
-      }
-    }
-    !have && funcAr(0);
-  };
   //=== Компоненты =========================================
   const SaveСhange = () => {
     return (
@@ -423,31 +321,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
           <Box sx={{ marginTop: "10px", height: "36px" }}> </Box>
         )}
       </>
-    );
-  };
-
-  const InputerId = (
-    valueId: any,
-    funcId: Function,
-    valueAr: number,
-    funcAr: Function
-  ) => {
-    return (
-      <Box sx={styleSetAV}>
-        <Box component="form" sx={styleBoxFormAV}>
-          <TextField
-            size="small"
-            type="number"
-            onKeyPress={handleKey} //отключение Enter
-            value={valueId}
-            InputProps={{ disableUnderline: true, style: { fontSize: 12.1 } }}
-            onChange={(e) => ChangeId(e, funcId, funcAr, map, addobj, AREA)}
-            onBlur={(e) => BlurId(e, valueAr, valueId, funcAr, funcId)}
-            variant="standard"
-            color="secondary"
-          />
-        </Box>
-      </Box>
     );
   };
 
@@ -521,13 +394,15 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     );
   };
 
-  const AppointStr = (
-    rec1: string,
-    valueAr: number,
-    funcAr: Function,
-    valueId: number,
-    funcId: Function
-  ) => {
+  const funcAddKnop = (rec1: string) => {
+    if (rec1 === "СЗ") massFlDir[0] = 1;
+    if (rec1 === "СВ") massFlDir[1] = 1;
+    if (rec1 === "ЮВ") massFlDir[2] = 1;
+    if (rec1 === "ЮЗ") massFlDir[3] = 1;
+    setTrigger(!trigger);
+  };
+
+  const AppointStr = (rec1: string, valueAr: number, valueId: number) => {
     let klushFrom = MakingKey(homeRegion, valueAr, valueId);
     klushTo1 = MakingKluch(rec1, homeRegion, massAreaId)[0];
     klushTo2 = MakingKluch(rec1, homeRegion, massAreaId)[1];
@@ -546,17 +421,119 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       );
     };
 
-    const funcAddKnop = (dir: string) => {
-      console.log('Открыть направлените', dir)
+    const InputerId = (rec1: string) => {
+      let nomInMass = 0;
+      if (rec1 === "СЗ") nomInMass = 1;
+      if (rec1 === "С") nomInMass = 2;
+      if (rec1 === "СВ") nomInMass = 3;
+      if (rec1 === "В") nomInMass = 4;
+      if (rec1 === "ЮВ") nomInMass = 5;
+      if (rec1 === "Ю") nomInMass = 6;
+      if (rec1 === "ЮЗ") nomInMass = 7;
+      const [valueId, setValId] = React.useState(massAreaId[nomInMass * 2 + 1]);
+      let valueAr = massAreaId[nomInMass * 2];
+
+      const BlurId = (event: any, area: number, id: number) => {
+        if (!area && !id) return;
+        let kluch = homeRegion + "-" + area + "-" + id;
+        let kluchOutput = area + "-" + id;
+        if (kluch === kluchGl) {
+          soobErr = "Вы пытаетесь связать перекрёсток с самим собой";
+          setOpenSetErr(true);
+          massAreaId[nomInMass * 2] = 0;
+          massAreaId[nomInMass * 2 + 1] = 0;
+          setValId(0);
+        } else {
+          if (!CheckKey(kluch, map, addobj)) {
+            soobErr = "Перекрёсток [";
+            if (id > 10000) soobErr = "Объект [";
+            soobErr += kluchOutput + "] не существует";
+            setOpenSetErr(true);
+            massAreaId[nomInMass * 2] = 0;
+            massAreaId[nomInMass * 2 + 1] = 0;
+            setValId(0);
+          } else {
+            let have = 0;
+            for (let i = 0; i < 8; i++)
+              if (massAreaId[i * 2] === area && massAreaId[i * 2 + 1] === id)
+                have++;
+            if (have > 1) {
+              soobErr = "Перекрёсток [";
+              if (id > 10000) soobErr = "Объект [";
+              soobErr += kluchOutput + "] был введён с другого направления";
+              setOpenSetErr(true);
+              massAreaId[nomInMass * 2] = 0;
+              massAreaId[nomInMass * 2 + 1] = 0;
+              setValId(0);
+            } else {
+              console.log("Всё хорошо!!!");
+              console.log("3massAreaId:", massFlDir, massAreaId);
+              HAVE++;
+              setTrigger(!trigger);
+            }
+          }
+        }
+      };
+
+      const ChangeId = (event: any, map: any, addobj: any, AREA: number) => {
+        let valueInp = event.target.value;
+        if (valueInp === "") valueInp = 1;
+        if (Number(valueInp) < 0) valueInp = 1;
+        if (Number(valueInp) < 100000) {
+          massAreaId[nomInMass * 2 + 1] = Number(valueInp);
+          setValId(Number(valueInp));
+        }
+        let have = false;
+        HAVE++;
+        if (Number(valueInp) < 9999) {
+          // перекрёсток
+          for (let i = 0; i < map.tflight.length; i++) {
+            if (
+              map.tflight[i].ID === Number(valueInp) &&
+              Number(map.tflight[i].area.num) === AREA
+            ) {
+              massAreaId[nomInMass * 2] = Number(map.tflight[i].area.num);
+              have = true;
+            }
+          }
+        } else {
+          // объект
+          for (let i = 0; i < addobj.addObjects.length; i++) {
+            if (addobj.addObjects[i].id === Number(valueInp)) {
+              massAreaId[nomInMass * 2] = addobj.addObjects[i].area;
+              have = true;
+            }
+          }
+        }
+        if (!have) massAreaId[nomInMass * 2] = 0;
+      };
+
+      return (
+        <Box sx={styleSetAV}>
+          <Box component="form" sx={styleBoxFormAV}>
+            <TextField
+              size="small"
+              type="number"
+              onKeyPress={handleKey} //отключение Enter
+              value={valueId}
+              InputProps={{ disableUnderline: true, style: { fontSize: 12.1 } }}
+              onChange={(e) => ChangeId(e, map, addobj, AREA)}
+              onBlur={(e) => BlurId(e, valueAr, valueId)}
+              variant="standard"
+              color="secondary"
+            />
+          </Box>
+        </Box>
+      );
     };
 
     let openBlok = false;
     if (rec1 === "З" || rec1 === "С" || rec1 === "В" || rec1 === "Ю")
       openBlok = true;
-    if (rec1 === "СЗ" && valIdSZ) openBlok = true;
-    if (rec1 === "СВ" && valIdSV) openBlok = true;
-    if (rec1 === "ЮВ" && valIdUV) openBlok = true;
-    if (rec1 === "ЮЗ" && valIdUZ) openBlok = true;
+    if (rec1 === "СЗ" && (massAreaId[3] || massFlDir[0])) openBlok = true;
+    if (rec1 === "СВ" && (massAreaId[7] || massFlDir[1])) openBlok = true;
+    if (rec1 === "ЮВ" && (massAreaId[11] || massFlDir[2])) openBlok = true;
+    if (rec1 === "ЮЗ" && (massAreaId[15] || massFlDir[3])) openBlok = true;
 
     return (
       <>
@@ -578,13 +555,11 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
                   <Box sx={styleAppSt02}>Ведите ID</Box>
                 </Grid>
                 <Grid item xs sx={{ fontSize: 12.1 }}>
-                  <Box sx={styleAppSt02}>
-                    {InputerId(valueId, funcId, valueAr, funcAr)}
-                  </Box>
+                  <Box sx={styleAppSt02}>{InputerId(rec1)}</Box>
                 </Grid>
               </Grid>
               {OutputKey(klushFrom.slice(SL), hBlock, "")}
-              {AdditionalButton(rec1, hBlock, funcAddKnop)}
+              {AdditionalButton(rec1, hBlock, massFlDir, funcAddKnop)}
             </Grid>
             {/* === Куда === */}
             <Grid item xs={4} sx={{ fontSize: 14, height: hB }}>
@@ -614,6 +589,36 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     );
   };
 
+  const AppointVertex = (props: {}) => {
+    return (
+      <Box sx={{ overflowX: "auto", height: "80.0vh" }}>
+        {AppointStr("З", massAreaId[0], massAreaId[1])}
+        {AppointStr("СЗ", massAreaId[2], massAreaId[3])}
+        {AppointStr("С", massAreaId[4], massAreaId[5])}
+        {AppointStr("СВ", massAreaId[6], massAreaId[7])}
+        {AppointStr("В", massAreaId[8], massAreaId[9])}
+        {AppointStr("ЮВ", massAreaId[10], massAreaId[11])}
+        {AppointStr("Ю", massAreaId[12], massAreaId[13])}
+        {AppointStr("ЮЗ", massAreaId[14], massAreaId[15])}
+      </Box>
+    );
+  };
+//========================================================
+  const [scrollPosition, setScrollPosition] = React.useState(0);
+  const handleScroll = () => {
+    const position = window.pageYOffset;
+    setScrollPosition(position);
+  };
+
+  React.useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+//========================================================
+  console.log('scrollPosition:',scrollPosition)
+
   return (
     <>
       <Modal open={openSet} onClose={handleCloseEnd}>
@@ -638,16 +643,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             {/* редактор связей */}
             <Grid item xs={4} sx={styleAppSt05}>
               {AppointHeader(hBlock)}
-              <Box sx={{ overflowX: "auto", height: "80.0vh" }}>
-                {AppointStr("З", valAreaZ, setValAreaZ, valIdZ, setValIdZ)}
-                {AppointStr("СЗ", valAreaSZ, setValAreaSZ, valIdSZ, setValIdSZ)}
-                {AppointStr("С", valAreaS, setValAreaS, valIdS, setValIdS)}
-                {AppointStr("СВ", valAreaSV, setValAreaSV, valIdSV, setValIdSV)}
-                {AppointStr("В", valAreaV, setValAreaV, valIdV, setValIdV)}
-                {AppointStr("ЮВ", valAreaUV, setValAreaUV, valIdUV, setValIdUV)}
-                {AppointStr("Ю", valAreaU, setValAreaU, valIdU, setValIdU)}
-                {AppointStr("ЮЗ", valAreaUZ, setValAreaUZ, valIdUZ, setValIdUZ)}
-              </Box>
+              <AppointVertex />
             </Grid>
             {/* вывод картинок фаз */}
             <Grid item xs sx={{ border: 0 }}>
