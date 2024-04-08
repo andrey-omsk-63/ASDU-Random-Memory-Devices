@@ -278,8 +278,8 @@ export const styleSetFazaNull = {
   width: "30px",
   maxHeight: "19px",
   minHeight: "19px",
-  bgcolor: "background.paper",
-  //bgcolor: "#F1F5FB", // светло-серый
+  //bgcolor: "background.paper",
+  bgcolor: "#F1F5FB", // светло-серый
 };
 
 export const styleSetFaza = {

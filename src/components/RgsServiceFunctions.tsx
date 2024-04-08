@@ -127,9 +127,15 @@ export const MakeMassRoute = (
   let mass = bindings.tfLinks[nom].tflink;
   let massKlu = [];
   if (mass.west.id) massKlu.push(mass.west.id);
+  if (mass.add4.id) massKlu.push(mass.add4.id); // северо-запад
   if (mass.north.id) massKlu.push(mass.north.id);
+  if (mass.add1.id) massKlu.push(mass.add1.id); // северо-восток
   if (mass.east.id) massKlu.push(mass.east.id);
+  if (mass.add2.id) massKlu.push(mass.add2.id); // юго-восток
   if (mass.south.id) massKlu.push(mass.south.id);
+  if (mass.add3.id) massKlu.push(mass.add3.id); // юго-запад
+
+  console.log('massKlu:',massKlu)
 
   for (let j = 0; j < massKlu.length; j++) {
     let area = TakeAreaId(massKlu[j])[0];
@@ -159,6 +165,7 @@ export const MakeMassRoute = (
       }
     }
   }
+  console.log('massRoute:',massRoute)
   return massRoute;
 };
 
@@ -218,9 +225,13 @@ export const GetPointData = (
   let cont3 = "";
   let cont4 = "";
   let contS = "";
+  let contSV = "";
   let contV = "";
+  let contUV = "";
   let contU = "";
+  let contUZ = "";
   let contZ = "";
+  let contSZ = "";
   if (index < map.tflight.length) {
     let SL = Number(map.tflight[index].region.num) < 10 ? 4 : 5;
     cont1 = map.tflight[index].description + "<br/>";
@@ -236,9 +247,13 @@ export const GetPointData = (
         let recc = bindings.tfLinks[i].tflink;
         cont4 = "<br/>Связи:";
         if (recc.north.id) contS = "<br/><b>C:</b> " + recc.north.id.slice(SL);
+        if (recc.add1.id) contSV = "<br/><b>CВ:</b> " + recc.add1.id.slice(SL);
         if (recc.east.id) contV = "<br/><b>В:</b> " + recc.east.id.slice(SL);
+        if (recc.add2.id) contUV = "<br/><b>ЮВ:</b> " + recc.add2.id.slice(SL);
         if (recc.south.id) contU = "<br/><b>Ю:</b> " + recc.south.id.slice(SL);
+        if (recc.add3.id) contUZ = "<br/><b>ЮЗ:</b> " + recc.add3.id.slice(SL);
         if (recc.west.id) contZ = "<br/><b>З:</b> " + recc.west.id.slice(SL);
+        if (recc.add4.id) contSZ = "<br/><b>СЗ:</b> " + recc.add4.id.slice(SL);
         break;
       }
     }
@@ -249,7 +264,19 @@ export const GetPointData = (
   }
 
   return {
-    hintContent: cont1 + cont3 + cont2 + cont4 + contS + contV + contU + contZ,
+    hintContent:
+      cont1 +
+      cont3 +
+      cont2 +
+      cont4 +
+      contS +
+      contSV +
+      contV +
+      contUV +
+      contU +
+      contUZ +
+      contZ +
+      contSZ,
   };
 };
 
@@ -343,12 +370,13 @@ export const getMassMultiRouteOptions = (i: number) => {
   };
 };
 
-export const getMassMultiRouteOptionsDemo = (i: number) => {
+export const getMassMultiRouteOptionsDemo = (i: number, coler: string) => {
   return {
     balloonCloseButton: false,
     routeStrokeStyle: "dot",
     //strokeColor: '#1A9165',
-    routeActiveStrokeColor: "#000000", // чёрный
+    //routeActiveStrokeColor: "#000000", // чёрный
+    routeActiveStrokeColor: coler, 
     routeActiveStrokeWidth: 3,
     routeStrokeWidth: 0,
     wayPointVisible: false,
@@ -609,19 +637,19 @@ export const AdditionalButton = (
   let flOpen = 0;
   if (rec1 === "З") {
     dir = "СЗ";
-    flOpen = massFlDir[0]
+    flOpen = massFlDir[0];
   }
   if (rec1 === "С") {
     dir = "СВ";
-    flOpen = massFlDir[1]
+    flOpen = massFlDir[1];
   }
   if (rec1 === "В") {
     dir = "ЮВ";
-    flOpen = massFlDir[2]
+    flOpen = massFlDir[2];
   }
   if (rec1 === "Ю") {
     dir = "ЮЗ";
-    flOpen = massFlDir[3]
+    flOpen = massFlDir[3];
   }
 
   const styleAppSt06 = {
@@ -1410,6 +1438,51 @@ export const OutPutVV = (vv: string) => {
         <b>{vv}</b>
       </Box>
     </Grid>
+  );
+};
+
+const StrokaMenuFooter = (soob: string, handleClose: Function) => {
+  const styleAppBind = {
+    fontSize: 14,
+    marginRight: 1,
+    border: "1px solid #d4d4d4", // серый
+    bgcolor: "#E6F5D6", // светло салатовый
+    width: (soob.length + 6) * 7,
+    maxHeight: "24px",
+    minHeight: "24px",
+    borderRadius: 1,
+    color: "black",
+    textTransform: "unset !important",
+    boxShadow: 6,
+  };
+
+  return (
+    <Box
+      sx={{
+        marginBottom: "12px",
+        display: "inline-block",
+        textAlign: "center",
+      }}
+    >
+      <Button sx={styleAppBind} onClick={() => handleClose()}>
+        <b>{soob}</b>
+      </Button>
+    </Box>
+  );
+};
+
+export const SaveСhange = (HAVE: number, func1: Function, func2: Function) => {
+  return (
+    <>
+      {HAVE > 0 ? (
+        <Box sx={{ margin: "12px 0px 0px 9.5vh", textAlign: "center" }}>
+          {StrokaMenuFooter("Отмена", func1)}
+          {StrokaMenuFooter("Сохранить изменения", func2)}
+        </Box>
+      ) : (
+        <Box sx={{ marginTop: "12px", height: "37px" }}> </Box>
+      )}
+    </>
   );
 };
 //=== ToDoMode =====================================

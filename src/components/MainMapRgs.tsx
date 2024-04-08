@@ -124,6 +124,14 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const DoDemo = (ymaps: any) => {
+    let massRouteGlob: any = [];
+    for (let i = 0; i < bindings.tfLinks.length; i++) {
+      let massRoute = MakeMassRoute(bindings, i, map, addobj);
+      massRouteGlob.push(massRoute);
+    }
+
+    console.log("massRouteGlob:", massRouteGlob);
+
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       let massCoord: any = [];
       let massRoute = MakeMassRoute(bindings, i, map, addobj);
@@ -140,9 +148,19 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       }
       let massMultiRoute: any = []; // исходящие связи
       for (let j = 0; j < massRoute.length; j++) {
+        //console.log('###:',massRoute[j][0],massRoute[j][1])
+        let have = 0;
+        for (let i = 0; i < massRouteGlob.length; i++) {
+          if (
+            massRoute[j][0] === massRouteGlob[i][1] &&
+            massRoute[j][1] === massRouteGlob[i][0]
+          )
+            have++;
+        }
+        let coler = !have ? "#FF0000" : "#000000";
         massMultiRoute[j] = new ymaps.multiRouter.MultiRoute(
           getReferencePoints(massCoord, massRoute[j]),
-          getMassMultiRouteOptionsDemo(j)
+          getMassMultiRouteOptionsDemo(j, coler)
         );
         mapp.current.geoObjects.add(massMultiRoute[j]);
       }

@@ -19,12 +19,12 @@ import { MakingKey, OutputKey, MakingKluch } from "../RgsServiceFunctions";
 import { AppointDirect, AppointHeader } from "../RgsServiceFunctions";
 import { OutputNumFaza, MakeMasDirect } from "../RgsServiceFunctions";
 import { BadExit, OutBottomRow, OutTopRow } from "../RgsServiceFunctions";
-import { AppIconAsdu, OutputPict } from "../RgsServiceFunctions";
+import { AppIconAsdu, OutputPict, SaveСhange } from "../RgsServiceFunctions";
 import { OutPutZZ, OutPutVV, AdditionalButton } from "../RgsServiceFunctions";
 
 //import { BAN } from "../MainMapRgs";
 
-import { styleModalEnd, styleModalMenu } from "../MainMapStyle";
+import { styleModalEnd } from "../MainMapStyle";
 import { styleSetAppoint, styleAppSt02 } from "../MainMapStyle";
 import { styleSetAV, styleBoxFormAV, styleAppSt04 } from "../MainMapStyle";
 import { styleSetFaza, styleBoxFormFaza } from "../MainMapStyle";
@@ -50,6 +50,7 @@ let soobErr = "";
 let bindIdx = -1;
 let maxFaza = 0;
 let HAVE = 0;
+let position = 0;
 
 const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   //== Piece of Redux ======================================
@@ -83,6 +84,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   const [openSetErr, setOpenSetErr] = React.useState(false);
   const [badExit, setBadExit] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
+  //const [scrollPosition, setScrollPosition] = React.useState(0);
   const scRef: any = React.useRef(null);
 
   let hBlock = window.innerWidth / 3.8 + 0;
@@ -90,6 +92,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
     HAVE = 0;
+    position = 0;
     massFlDir = [0, 0, 0, 0];
     massAreaId = new Array(16).fill(0);
     kluchGl = homeRegion + "-" + map.tflight[props.idx].area.num + "-";
@@ -266,62 +269,56 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   };
 
   const handleClose = () => {
-    let ch = 0;
-    if (massAreaId[0] && massAreaId[1]) ch++;
-    if (massAreaId[2] && massAreaId[3]) ch++;
-    if (massAreaId[4] && massAreaId[5]) ch++;
-    if (massAreaId[6] && massAreaId[7]) ch++;
-    if (massAreaId[8] && massAreaId[9]) ch++;
-    if (massAreaId[10] && massAreaId[11]) ch++;
-    if (massAreaId[12] && massAreaId[13]) ch++;
-    if (massAreaId[14] && massAreaId[15]) ch++;
-
-    console.log("handleClose:", massAreaId, massFaz);
-
-    if (ch === 1) {
-      soobErr = "Должно быть введено введено хотя бы два направления";
-      setOpenSetErr(true);
+    if (!HAVE) {
+      handleCloseAll(); // выход без сохранения
     } else {
-      let maskTfLinks: TfLink = {
-        id: kluchGl,
-        tflink: MakeTflink(homeRegion, massAreaId, massFaz),
-      };
-      if (!ch) {
-        if (bindIdx >= 0) {
-          let massRab = [];
-          for (let i = 0; i < bindings.tfLinks.length; i++)
-            if (i !== bindIdx) massRab.push(bindings.tfLinks[i]);
-          bindings.tfLinks = massRab;
-          SendSocketDeleteBindings(debug, ws, maskTfLinks);
-        }
+      let ch = 0;
+      if (massAreaId[0] && massAreaId[1]) ch++;
+      if (massAreaId[2] && massAreaId[3]) ch++;
+      if (massAreaId[4] && massAreaId[5]) ch++;
+      if (massAreaId[6] && massAreaId[7]) ch++;
+      if (massAreaId[8] && massAreaId[9]) ch++;
+      if (massAreaId[10] && massAreaId[11]) ch++;
+      if (massAreaId[12] && massAreaId[13]) ch++;
+      if (massAreaId[14] && massAreaId[15]) ch++;
+
+      console.log("handleClose:", massAreaId, massFaz);
+
+      if (ch === 1) {
+        soobErr = "Должно быть введено введено хотя бы два направления";
+        setOpenSetErr(true);
       } else {
-        if (bindIdx >= 0) {
-          bindings.tfLinks[bindIdx] = maskTfLinks; // редактирование
+        let maskTfLinks: TfLink = {
+          id: kluchGl,
+          tflink: MakeTflink(homeRegion, massAreaId, massFaz),
+        };
+        if (!ch) {
+          if (bindIdx >= 0) {
+            let massRab = [];
+            for (let i = 0; i < bindings.tfLinks.length; i++)
+              if (i !== bindIdx) massRab.push(bindings.tfLinks[i]);
+            bindings.tfLinks = massRab;
+            SendSocketDeleteBindings(debug, ws, maskTfLinks);
+          }
         } else {
-          bindings.tfLinks.push(maskTfLinks); // добавление новой записи
+          if (bindIdx >= 0) {
+            bindings.tfLinks[bindIdx] = maskTfLinks; // редактирование
+          } else {
+            bindings.tfLinks.push(maskTfLinks); // добавление новой записи
+          }
+          SendSocketUpdateBindings(debug, ws, maskTfLinks);
         }
-        SendSocketUpdateBindings(debug, ws, maskTfLinks);
+        dispatch(bindingsCreate(bindings));
+        handleCloseAll();
       }
-      dispatch(bindingsCreate(bindings));
-      handleCloseAll();
     }
   };
 
   //=== Компоненты =========================================
-  const SaveСhange = () => {
-    return (
-      <>
-        {HAVE > 0 ? (
-          <Box sx={{ marginTop: "12px", textAlign: "center" }}>
-            <Button sx={styleModalMenu} onClick={() => handleClose()}>
-              Сохранить изменения
-            </Button>
-          </Box>
-        ) : (
-          <Box sx={{ marginTop: "10px", height: "36px" }}> </Box>
-        )}
-      </>
-    );
+  const Scroller = () => {
+    if (scRef.current) position = scRef.current.scrollTop;
+    HAVE++;
+    setTrigger(!trigger);
   };
 
   const InputerFaza = (rec: string, shift: number, kluch: string) => {
@@ -399,6 +396,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     if (rec1 === "СВ") massFlDir[1] = 1;
     if (rec1 === "ЮВ") massFlDir[2] = 1;
     if (rec1 === "ЮЗ") massFlDir[3] = 1;
+    if (scRef.current) position = scRef.current.scrollTop;
     setTrigger(!trigger);
   };
 
@@ -434,7 +432,11 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       let valueAr = massAreaId[nomInMass * 2];
 
       const BlurId = (event: any, area: number, id: number) => {
-        if (!area && !id) return;
+        console.log("BlurId:", area, id);
+        if (!area && !id) {
+          Scroller();
+          return;
+        }
         let kluch = homeRegion + "-" + area + "-" + id;
         let kluchOutput = area + "-" + id;
         if (kluch === kluchGl) {
@@ -455,8 +457,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
           } else {
             let have = 0;
             for (let i = 0; i < 8; i++)
-              if (massAreaId[i * 2] === area && massAreaId[i * 2 + 1] === id)
-                have++;
+              // if (massAreaId[i * 2] === area && massAreaId[i * 2 + 1] === id)
+              if (massAreaId[i * 2 + 1] === id) have++;
             if (have > 1) {
               soobErr = "Перекрёсток [";
               if (id > 10000) soobErr = "Объект [";
@@ -468,8 +470,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             } else {
               console.log("Всё хорошо!!!");
               console.log("3massAreaId:", massFlDir, massAreaId);
-              HAVE++;
-              setTrigger(!trigger);
+              Scroller();
             }
           }
         }
@@ -485,6 +486,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         }
         let have = false;
         HAVE++;
+        //Scroller();
         if (Number(valueInp) < 9999) {
           // перекрёсток
           for (let i = 0; i < map.tflight.length; i++) {
@@ -544,11 +546,9 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             {/* === Откуда === */}
             <Grid item xs={5.5} sx={{ fontSize: 14, height: hBlock / 2.1 }}>
               <Grid container>
-                <Grid
-                  item
-                  xs={7.7}
-                  sx={{ paddingLeft: 0.5, height: hB }}
-                ></Grid>
+                <Grid item xs={7.7} sx={{ paddingLeft: 0.5, height: hB }}>
+                  {" "}
+                </Grid>
               </Grid>
               <Grid container>
                 <Grid item xs={7.7} sx={{ paddingLeft: 0.5, height: hB }}>
@@ -590,8 +590,12 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   };
 
   const AppointVertex = (props: {}) => {
+    React.useEffect(() => {
+      position && scRef.current.scrollTo(0, position);
+    }, []);
+
     return (
-      <Box sx={{ overflowX: "auto", height: "80.0vh" }}>
+      <Box ref={scRef} sx={{ overflowX: "auto", height: "80.0vh" }}>
         {AppointStr("З", massAreaId[0], massAreaId[1])}
         {AppointStr("СЗ", massAreaId[2], massAreaId[3])}
         {AppointStr("С", massAreaId[4], massAreaId[5])}
@@ -603,21 +607,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       </Box>
     );
   };
-//========================================================
-  const [scrollPosition, setScrollPosition] = React.useState(0);
-  const handleScroll = () => {
-    const position = window.pageYOffset;
-    setScrollPosition(position);
-  };
-
-  React.useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-//========================================================
-  console.log('scrollPosition:',scrollPosition)
 
   return (
     <>
@@ -663,7 +652,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               </Grid>
             </Grid>
           </Grid>
-          {SaveСhange()}
+          {SaveСhange(HAVE, handleCloseBad, handleClose)}
           {openSetErr && (
             <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />
           )}
