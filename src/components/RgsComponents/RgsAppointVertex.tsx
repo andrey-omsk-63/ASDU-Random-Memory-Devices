@@ -117,6 +117,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       let kluchUZ = bindings.tfLinks[bindIdx].tflink.add3.id;
       //======
 
+      console.log('111:',kluchGl,kluchZ,kluchV,mass)
+
       const GetFaza = (mas: any, kluch: string) => {
         let faza = 0;
         if (mass) {
@@ -229,10 +231,10 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       }
     }
     oldIdx = props.idx;
-    console.log("1massAreaId:", massFlDir, massAreaId);
+    console.log("1massAreaId:", massFlDir, massAreaId, massFaz);
   }
 
-  console.log("2massAreaId:", massFlDir, massAreaId);
+  //console.log("2massAreaId:", massFlDir, massAreaId);
 
   let ss = massAreaId[5] ? "С." + massAreaId[5] : "С";
   let sv = massAreaId[7] ? "СВ." + massAreaId[7] : "СВ";
@@ -330,6 +332,9 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
 
     let mode = 0;
     let dat = map.tflight[props.idx].phases;
+
+    //console.log("DAT:", dat, massFaz);
+
     if (!dat.length) dat = [1, 2, 3];
     let massKey = [];
     let massDat: any[] = [];
@@ -360,6 +365,11 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     const [currency, setCurrency] = React.useState(
       dat.indexOf(massFaz[mode + shift])
     );
+
+    if (kluch) {
+      console.log("0!!!:", kluch, currency, currencies);
+      console.log("1!!!:", mode, shift, massFaz[mode + shift]);
+    }
 
     return (
       <Box sx={kluch ? styleSetFaza : styleSetFazaNull}>
@@ -486,7 +496,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         }
         let have = false;
         HAVE++;
-        //Scroller();
+        HAVE === 1 && Scroller(); // первый ввод
         if (Number(valueInp) < 9999) {
           // перекрёсток
           for (let i = 0; i < map.tflight.length; i++) {

@@ -111,9 +111,13 @@ export const CheckHaveLink = (klu: string, kluLast: string, bindings: any) => {
   let mass: any = bindings.tfLinks[hv].tflink;
   let haveLink = false;
   if (mass.west.id === klu) haveLink = true;
+  if (mass.add4.id === klu) haveLink = true; // северо-запад
   if (mass.north.id === klu) haveLink = true;
+  if (mass.add1.id === klu) haveLink = true; // северо-восток
   if (mass.east.id === klu) haveLink = true;
+  if (mass.add2.id === klu) haveLink = true; // юго-восток
   if (mass.south.id === klu) haveLink = true;
+  if (mass.add3.id === klu) haveLink = true; // юго-запад
   return haveLink;
 };
 
@@ -134,8 +138,6 @@ export const MakeMassRoute = (
   if (mass.add2.id) massKlu.push(mass.add2.id); // юго-восток
   if (mass.south.id) massKlu.push(mass.south.id);
   if (mass.add3.id) massKlu.push(mass.add3.id); // юго-запад
-
-  console.log('massKlu:',massKlu)
 
   for (let j = 0; j < massKlu.length; j++) {
     let area = TakeAreaId(massKlu[j])[0];
@@ -165,8 +167,7 @@ export const MakeMassRoute = (
       }
     }
   }
-  console.log('massRoute:',massRoute)
-  return massRoute;
+  return [massRoute, massKlu];
 };
 
 export const MakeMassRouteFirst = (klu: string, bindings: any, map: any) => {
@@ -245,6 +246,9 @@ export const GetPointData = (
       let klu = MakingKey(rec.region.num, rec.area.num, rec.ID);
       if (bindings.tfLinks[i].id === klu) {
         let recc = bindings.tfLinks[i].tflink;
+        //===
+        //console.log("!!!:", bindings.tfLinks[i].id, recc);
+        //===
         cont4 = "<br/>Связи:";
         if (recc.north.id) contS = "<br/><b>C:</b> " + recc.north.id.slice(SL);
         if (recc.add1.id) contSV = "<br/><b>CВ:</b> " + recc.add1.id.slice(SL);
@@ -375,8 +379,7 @@ export const getMassMultiRouteOptionsDemo = (i: number, coler: string) => {
     balloonCloseButton: false,
     routeStrokeStyle: "dot",
     //strokeColor: '#1A9165',
-    //routeActiveStrokeColor: "#000000", // чёрный
-    routeActiveStrokeColor: coler, 
+    routeActiveStrokeColor: coler,
     routeActiveStrokeWidth: 3,
     routeStrokeWidth: 0,
     wayPointVisible: false,
@@ -594,6 +597,7 @@ export const CheckKey = (kluch: string, map: any, addobj: any) => {
         have = true;
     }
   }
+  console.log('KLU:',have,klArea,klId)
   return have;
 };
 
@@ -1201,6 +1205,7 @@ export const MakingKluch = (
         klushTo7 = MakingKey(homeRegion, valAreaZ, valIdZ);
       }
   }
+  //console.log('@@@:',klushTo1, klushTo2, klushTo3, klushTo4, klushTo5, klushTo6, klushTo7)
   return [klushTo1, klushTo2, klushTo3, klushTo4, klushTo5, klushTo6, klushTo7];
 };
 

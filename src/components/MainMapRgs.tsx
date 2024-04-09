@@ -124,17 +124,18 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const DoDemo = (ymaps: any) => {
-    let massRouteGlob: any = [];
+    let massKluGlob: any = [];
     for (let i = 0; i < bindings.tfLinks.length; i++) {
-      let massRoute = MakeMassRoute(bindings, i, map, addobj);
-      massRouteGlob.push(massRoute);
+      let massklu = MakeMassRoute(bindings, i, map, addobj)[1];
+      for (let j = 0; j < massklu.length; j++) {
+        massKluGlob.push(bindings.tfLinks[i].id + massklu[j]);
+      }
     }
-
-    console.log("massRouteGlob:", massRouteGlob);
-
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       let massCoord: any = [];
-      let massRoute = MakeMassRoute(bindings, i, map, addobj);
+      let massRab = MakeMassRoute(bindings, i, map, addobj);
+      let massRoute = massRab[0];
+      let massKlu = massRab[1];
       for (let j = 0; j < map.tflight.length; j++) {
         massCoord = [];
         let rec = map.tflight[j];
@@ -148,16 +149,12 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       }
       let massMultiRoute: any = []; // исходящие связи
       for (let j = 0; j < massRoute.length; j++) {
-        //console.log('###:',massRoute[j][0],massRoute[j][1])
         let have = 0;
-        for (let i = 0; i < massRouteGlob.length; i++) {
-          if (
-            massRoute[j][0] === massRouteGlob[i][1] &&
-            massRoute[j][1] === massRouteGlob[i][0]
-          )
-            have++;
+        for (let ii = 0; ii < massKluGlob.length; ii++) {
+          let klu = massKlu[j] + bindings.tfLinks[i].id;
+          if (massKluGlob[ii] === klu) have++;
         }
-        let coler = !have ? "#FF0000" : "#000000";
+        let coler = !have ? "#ff0000" : "#000000"; // красный/чёрный
         massMultiRoute[j] = new ymaps.multiRouter.MultiRoute(
           getReferencePoints(massCoord, massRoute[j]),
           getMassMultiRouteOptionsDemo(j, coler)
@@ -216,7 +213,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     if (massNomBind.length === 1)
       massRoute = MakeMassRouteFirst(klu, bindings, map);
     if (massNomBind.length > 1 && klu.length < 9)
-      massRoute = MakeMassRoute(bindings, nom, map, addobj);
+      massRoute = MakeMassRoute(bindings, nom, map, addobj)[0];
     ymaps && addRoute(ymaps, false); // перерисовка связей
     if (massMem.length === 3) {
       PressButton(53);
@@ -286,6 +283,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           } else {
             if (massMem.length > 1) {
               let kluLast = massKlu[massKlu.length - 1];
+
+              console.log('kluLast:',kluLast)
+              
               if (!CheckHaveLink(klu, kluLast, bindings)) {
                 SoobErr(MakeSoobErr(5, klu.slice(SL), kluLast.slice(SL))); // нет связи
               } else {
