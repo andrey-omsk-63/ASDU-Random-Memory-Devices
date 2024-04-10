@@ -22,8 +22,6 @@ import { BadExit, OutBottomRow, OutTopRow } from "../RgsServiceFunctions";
 import { AppIconAsdu, OutputPict, SaveСhange } from "../RgsServiceFunctions";
 import { OutPutZZ, OutPutVV, AdditionalButton } from "../RgsServiceFunctions";
 
-//import { BAN } from "../MainMapRgs";
-
 import { styleModalEnd } from "../MainMapStyle";
 import { styleSetAppoint, styleAppSt02 } from "../MainMapStyle";
 import { styleSetAV, styleBoxFormAV, styleAppSt04 } from "../MainMapStyle";
@@ -84,11 +82,10 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   const [openSetErr, setOpenSetErr] = React.useState(false);
   const [badExit, setBadExit] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
-  //const [scrollPosition, setScrollPosition] = React.useState(0);
   const scRef: any = React.useRef(null);
 
-  let hBlock = window.innerWidth / 3.8 + 0;
-  let hB = hBlock / 6;
+  let hBlock = window.innerWidth / 4.6 + 0;
+  let hB = hBlock / 6.0;
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
     HAVE = 0;
@@ -116,9 +113,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       let kluchUV = bindings.tfLinks[bindIdx].tflink.add2.id;
       let kluchUZ = bindings.tfLinks[bindIdx].tflink.add3.id;
       //======
-
-      console.log('111:',kluchGl,kluchZ,kluchV,mass)
-
       const GetFaza = (mas: any, kluch: string) => {
         let faza = 0;
         if (mass) {
@@ -233,9 +227,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     oldIdx = props.idx;
     console.log("1massAreaId:", massFlDir, massAreaId, massFaz);
   }
-
-  //console.log("2massAreaId:", massFlDir, massAreaId);
-
   let ss = massAreaId[5] ? "С." + massAreaId[5] : "С";
   let sv = massAreaId[7] ? "СВ." + massAreaId[7] : "СВ";
   let vv = massAreaId[9] ? "В." + massAreaId[9] : "В";
@@ -283,9 +274,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       if (massAreaId[10] && massAreaId[11]) ch++;
       if (massAreaId[12] && massAreaId[13]) ch++;
       if (massAreaId[14] && massAreaId[15]) ch++;
-
-      console.log("handleClose:", massAreaId, massFaz);
-
       if (ch === 1) {
         soobErr = "Должно быть введено введено хотя бы два направления";
         setOpenSetErr(true);
@@ -328,13 +316,11 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       setCurrency(Number(event.target.value));
       massFaz[mode + shift] = massDat[Number(event.target.value)];
       HAVE++;
+      HAVE === 1 && Scroller(); // первый ввод
     };
 
     let mode = 0;
     let dat = map.tflight[props.idx].phases;
-
-    //console.log("DAT:", dat, massFaz);
-
     if (!dat.length) dat = [1, 2, 3];
     let massKey = [];
     let massDat: any[] = [];
@@ -365,11 +351,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     const [currency, setCurrency] = React.useState(
       dat.indexOf(massFaz[mode + shift])
     );
-
-    if (kluch) {
-      console.log("0!!!:", kluch, currency, currencies);
-      console.log("1!!!:", mode, shift, massFaz[mode + shift]);
-    }
 
     return (
       <Box sx={kluch ? styleSetFaza : styleSetFazaNull}>
@@ -605,7 +586,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     }, []);
 
     return (
-      <Box ref={scRef} sx={{ overflowX: "auto", height: "80.0vh" }}>
+      <Box ref={scRef} sx={{ overflowX: "auto", height: "83.0vh" }}>
         {AppointStr("З", massAreaId[0], massAreaId[1])}
         {AppointStr("СЗ", massAreaId[2], massAreaId[3])}
         {AppointStr("С", massAreaId[4], massAreaId[5])}

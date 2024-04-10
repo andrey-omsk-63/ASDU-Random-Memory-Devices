@@ -491,7 +491,7 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
 export const AppointHeader = (hBlock: number) => {
   const RecHeader = (xss: number, rec: string) => {
     return (
-      <Grid item xs={xss} sx={{ height: hBlock / 10, paddingTop: 3 }}>
+      <Grid item xs={xss} sx={{ height: hBlock / 10, paddingTop: 2 }}>
         <Box sx={styleAppSt03}>
           <b>{rec}</b>
         </Box>
@@ -536,12 +536,12 @@ export const OutputKey = (klush: string, hBlock: number, dir: string) => {
   const styleOutputKey = {
     textAlign: "center",
     height: hBlock / 15,
-    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+    //textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
   };
 
   const styleOutputHint = {
-    fontSize: 11,
-    color: "#C0C0C0",
+    fontSize: 11.2,
+    color: "#A8A8A8", // серый
     fontWeight: 50,
     display: "inline-block",
   };
@@ -550,9 +550,16 @@ export const OutputKey = (klush: string, hBlock: number, dir: string) => {
     <Grid container>
       <Grid item xs={12} sx={styleOutputKey}>
         <Box sx={styleAppSt02}>
-          <Box sx={{ fontWeight: 600, display: "inline-block" }}>{klush}</Box>{" "}
+          <Box
+            sx={{
+              fontWeight: 600,
+              display: "inline-block",
+              textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+            }}
+          >
+            {klush}
+          </Box>{" "}
           {klush && <Box sx={styleOutputHint}>{dir}</Box>}
-          {/* <Box sx={styleOutputHint}>{dir}</Box> */}
         </Box>
       </Grid>
     </Grid>
@@ -597,7 +604,7 @@ export const CheckKey = (kluch: string, map: any, addobj: any) => {
         have = true;
     }
   }
-  console.log('KLU:',have,klArea,klId)
+  console.log("KLU:", have, klArea, klId);
   return have;
 };
 
@@ -1458,6 +1465,7 @@ const StrokaMenuFooter = (soob: string, handleClose: Function) => {
     borderRadius: 1,
     color: "black",
     textTransform: "unset !important",
+    padding: "3px 0px 0px 0px",
     boxShadow: 6,
   };
 
