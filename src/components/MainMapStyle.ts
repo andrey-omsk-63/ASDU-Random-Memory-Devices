@@ -273,22 +273,24 @@ export const styleBoxFormAV = {
 
 export const styleSetFazaNull = {
   position: "relative",
-  marginTop: "1px",
+  marginTop: "-1px",
   left: "27%",
   width: "30px",
   maxHeight: "19px",
   minHeight: "19px",
   //bgcolor: "background.paper",
-  bgcolor: "#F1F5FB", // светло-серый
+  //bgcolor: "#F1F5FB", // светло-серый
 };
 
 export const styleSetFaza = {
   position: "relative",
-  marginTop: "1px",
+  marginTop: "-1px",
   left: "27%",
   width: "30px",
   maxHeight: "19px",
   minHeight: "19px",
+  //maxHeight: "17px",
+  //minHeight: "17x",
   bgcolor: "#FFFBE5", // молоко
   border: "1px solid #000",
   borderRadius: 1,
@@ -298,7 +300,7 @@ export const styleSetFaza = {
 
 export const styleBoxFormFaza = {
   "& > :not(style)": {
-    marginTop: "-0px",
+    marginTop: "0px",
     marginLeft: "-1px",
     width: "32px",
   },

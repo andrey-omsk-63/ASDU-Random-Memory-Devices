@@ -48,6 +48,7 @@ let soobErr = "";
 let bindIdx = -1;
 let maxFaza = 0;
 let HAVE = 0;
+let haveDop = 0;
 let position = 0;
 
 const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
@@ -88,8 +89,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   let hB = hBlock / 6.0;
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
-    HAVE = 0;
-    position = 0;
+    HAVE = haveDop = position = 0;
     massFlDir = [0, 0, 0, 0];
     massAreaId = new Array(16).fill(0);
     kluchGl = homeRegion + "-" + map.tflight[props.idx].area.num + "-";
@@ -225,7 +225,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       }
     }
     oldIdx = props.idx;
-    console.log("1massAreaId:", massFlDir, massAreaId, massFaz);
+    //console.log("1massAreaId:", massFlDir, massAreaId, massFaz);
   }
   let ss = massAreaId[5] ? "С." + massAreaId[5] : "С";
   let sv = massAreaId[7] ? "СВ." + massAreaId[7] : "СВ";
@@ -388,6 +388,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     if (rec1 === "ЮВ") massFlDir[2] = 1;
     if (rec1 === "ЮЗ") massFlDir[3] = 1;
     if (scRef.current) position = scRef.current.scrollTop;
+    haveDop++;
     setTrigger(!trigger);
   };
 
@@ -423,7 +424,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       let valueAr = massAreaId[nomInMass * 2];
 
       const BlurId = (event: any, area: number, id: number) => {
-        console.log("BlurId:", area, id);
+        console.log("!!!!!!BlurId:", area, id);
         if (!area && !id) {
           Scroller();
           return;
@@ -448,7 +449,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
           } else {
             let have = 0;
             for (let i = 0; i < 8; i++)
-              // if (massAreaId[i * 2] === area && massAreaId[i * 2 + 1] === id)
               if (massAreaId[i * 2 + 1] === id) have++;
             if (have > 1) {
               soobErr = "Перекрёсток [";
@@ -459,8 +459,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               massAreaId[nomInMass * 2 + 1] = 0;
               setValId(0);
             } else {
-              console.log("Всё хорошо!!!");
-              console.log("3massAreaId:", massFlDir, massAreaId);
+              console.log("Всё хорошо!!! записано");
+              //console.log("3massAreaId:", massFlDir, massAreaId);
               Scroller();
             }
           }
@@ -477,7 +477,19 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         }
         let have = false;
         HAVE++;
-        HAVE === 1 && Scroller(); // первый ввод
+        if (!Number(valueInp)) {
+          // обнуление
+          if (rec1 === "СЗ") massFlDir[0] = 0;
+          if (rec1 === "СВ") massFlDir[1] = 0;
+          if (rec1 === "ЮВ") massFlDir[2] = 0;
+          if (rec1 === "ЮЗ") massFlDir[3] = 0;
+          Scroller();
+        }
+        if (HAVE === 1) {
+          if (scRef.current) position = scRef.current.scrollTop; // первый ввод
+          //console.log("position:", position);
+          setTrigger(!trigger);
+        }
         if (Number(valueInp) < 9999) {
           // перекрёсток
           for (let i = 0; i < map.tflight.length; i++) {
@@ -542,14 +554,18 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
                 </Grid>
               </Grid>
               <Grid container>
-                <Grid item xs={7.7} sx={{ paddingLeft: 0.5, height: hB }}>
+                <Grid item xs={4.7} sx={{ paddingLeft: 0.5, height: hB }}>
                   <Box sx={styleAppSt02}>Ведите ID</Box>
+                </Grid>
+                <Grid item xs={3.6} sx={{ paddingLeft: 0.5, height: hB }}>
+                  <Box sx={styleAppSt02}>
+                    {OutputKey(klushFrom.slice(SL), hBlock, "")}
+                  </Box>
                 </Grid>
                 <Grid item xs sx={{ fontSize: 12.1 }}>
                   <Box sx={styleAppSt02}>{InputerId(rec1)}</Box>
                 </Grid>
               </Grid>
-              {OutputKey(klushFrom.slice(SL), hBlock, "")}
               {AdditionalButton(rec1, hBlock, massFlDir, funcAddKnop)}
             </Grid>
             {/* === Куда === */}
@@ -582,6 +598,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
 
   const AppointVertex = (props: {}) => {
     React.useEffect(() => {
+      //console.log("###position:", position);
       position && scRef.current.scrollTo(0, position);
     }, []);
 
@@ -643,7 +660,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               </Grid>
             </Grid>
           </Grid>
-          {SaveСhange(HAVE, handleCloseBad, handleClose)}
+          {SaveСhange(HAVE, haveDop, handleCloseBad, handleClose)}
           {openSetErr && (
             <GsErrorMessage setOpen={setOpenSetErr} sErr={soobErr} />
           )}

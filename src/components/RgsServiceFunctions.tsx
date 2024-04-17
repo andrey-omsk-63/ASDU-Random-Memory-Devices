@@ -535,25 +535,26 @@ export const AppointDirect = (rec1: string, hBlock: number) => {
 export const OutputKey = (klush: string, hBlock: number, dir: string) => {
   const styleOutputKey = {
     textAlign: "center",
-    height: hBlock / 15,
-    //textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+    height: hBlock / 15.5,
   };
 
   const styleOutputHint = {
-    fontSize: 11.2,
+    fontSize: 11.5,
     color: "#A8A8A8", // серый
     fontWeight: 50,
     display: "inline-block",
   };
 
   return (
-    <Grid container>
+    <Grid container sx={{ border: 0 }}>
       <Grid item xs={12} sx={styleOutputKey}>
         <Box sx={styleAppSt02}>
           <Box
             sx={{
-              fontWeight: 600,
+              fontWeight: 700,
               display: "inline-block",
+              //color: "#7620a2", // сиреневый
+              color: "#661C8E", // сиреневый
               textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
             }}
           >
@@ -604,7 +605,7 @@ export const CheckKey = (kluch: string, map: any, addobj: any) => {
         have = true;
     }
   }
-  console.log("KLU:", have, klArea, klId);
+  //console.log("KLU:", have, klArea, klId);
   return have;
 };
 
@@ -677,7 +678,7 @@ export const AdditionalButton = (
   return (
     <>
       {!flOpen && dir && (
-        <Box sx={{ height: hBlock / 15, border: 0 }}>
+        <Box sx={{ height: hBlock / 15, marginTop: "12px", border: 0 }}>
           <Button sx={styleAppSt06} onClick={() => funcAddKnop(dir)}>
             {/* Доп.направление{" "}<Box sx={{ fontWeight: 1000 }}>{dir}</Box> */}
             Доп.направление {dir}
@@ -1484,10 +1485,15 @@ const StrokaMenuFooter = (soob: string, handleClose: Function) => {
   );
 };
 
-export const SaveСhange = (HAVE: number, func1: Function, func2: Function) => {
+export const SaveСhange = (
+  HAVE: number,
+  have: number,
+  func1: Function,
+  func2: Function
+) => {
   return (
     <>
-      {HAVE > 0 ? (
+      {HAVE > 0 || have > 0 ? (
         <Box sx={{ margin: "12px 0px 0px 9.5vh", textAlign: "center" }}>
           {StrokaMenuFooter("Отмена", func1)}
           {StrokaMenuFooter("Сохранить изменения", func2)}
