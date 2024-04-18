@@ -1521,7 +1521,7 @@ export const CircleObj = () => {
 //=== Разное =======================================
 export const InputDirect = (func: any) => {
   const styleSetNapr = {
-    width: "165px",
+    width: "175px",
     maxHeight: "1px",
     minHeight: "1px",
     bgcolor: "#BAE186",
@@ -1536,7 +1536,7 @@ export const InputDirect = (func: any) => {
   const styleBoxFormNapr = {
     "& > :not(style)": {
       marginTop: "-12px",
-      width: "165px",
+      width: "175px",
     },
   };
   const handleKey = (event: any) => {
@@ -1627,8 +1627,8 @@ export const StrokaMenuGlob = (func: any) => {
   const styleApp01 = {
     fontSize: 14,
     marginRight: 0.1,
-    marginLeft: 0.5,
-    width: 165,
+    marginLeft: 0.2,
+    width: 175,
   };
 
   return <Box sx={styleApp01}>{InputDirect(func)}</Box>;
