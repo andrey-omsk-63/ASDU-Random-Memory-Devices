@@ -88,9 +88,13 @@ const RgsDoPlacemarkDo = (props: {
   //debug && (fazaImg = imgFaza); // для отладки
 
   const Hoster = React.useCallback(() => {
-    let host = "https://localhost:3000/18.svg";
+    let hostt =
+      window.location.origin.slice(0, 22) === "https://localhost:3000"
+        ? "https://localhost:3000/"
+        : "./";
+    let host = hostt + "18.svg";
     let linked = props.vert.indexOf(idx);
-    if (linked >= 0) host = "https://localhost:3000/77.svg";
+    if (linked >= 0) host = hostt + "77.svg";
     if (!debug) {
       let mpp = mapp;
       if (DEMO) {
@@ -101,7 +105,7 @@ const RgsDoPlacemarkDo = (props: {
       }
       host = window.location.origin + "/free/img/trafficLights/" + mpp + ".svg";
     } else {
-      if (DEMO) host = "https://localhost:3000/1.svg";
+      if (DEMO) host = hostt + "1.svg";
     }
     return host;
   }, [mapp, nomSvg, idx, props.vert, debug, DEMO]);
@@ -201,8 +205,12 @@ const RgsDoPlacemarkDo = (props: {
       if (Hoster) imger = "data:image/png;base64," + Hoster;
       if (!Hoster) {
         if (FZSIST > 0) {
+          let hostt =
+            window.location.origin.slice(0, 22) === "https://localhost:3000"
+              ? "https://localhost:3000/"
+              : "./";
           imger = debug
-            ? "https://localhost:3000/" + FZSIST + ".jpg"
+            ? hostt + FZSIST + ".jpg"
             : window.location.origin + "/free/img/" + FZSIST + ".jpg";
         }
       }
