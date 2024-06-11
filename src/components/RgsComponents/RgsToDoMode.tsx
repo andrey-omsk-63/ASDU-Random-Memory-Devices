@@ -336,13 +336,15 @@ const RgsToDoMode = (props: {
     for (let i = 0; i < massfaz.length; i++) {
       let runREC = massfaz[i].runRec;
       let bull = runREC === 2 || runREC === 4 ? " •" : " ";
-      let host = "https://localhost:3000/18.svg";
+      let hostt =
+        window.location.origin.slice(0, 22) === "https://localhost:3000"
+          ? "https://localhost:3000/"
+          : "./";
+      let host = hostt + "18.svg";
       if (DEMO && debug) {
-        host = "https://localhost:3000/1.svg";
-        if (bull === " •" && runREC === 2)
-          host = "https://localhost:3000/2.svg";
-        if (bull !== " •" && runREC === 5)
-          host = "https://localhost:3000/2.svg";
+        host = hostt + "1.svg";
+        if (bull === " •" && runREC === 2) host = hostt + "2.svg";
+        if (bull !== " •" && runREC === 5) host = hostt + "2.svg";
       }
       if (!debug && massfaz[i].id <= 10000) {
         let num = map.tflight[massfaz[i].idx].tlsost.num.toString();
