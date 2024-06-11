@@ -284,8 +284,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
             if (massMem.length > 1) {
               let kluLast = massKlu[massKlu.length - 1];
 
-              console.log('kluLast:',kluLast)
-              
+              console.log("kluLast:", kluLast);
+
               if (!CheckHaveLink(klu, kluLast, bindings)) {
                 SoobErr(MakeSoobErr(5, klu.slice(SL), kluLast.slice(SL))); // нет связи
               } else {
@@ -495,7 +495,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       soobHelpFiest =
         "Добавьте перекрёстки в маршруте [" +
         massMem.length +
-        "🔆]  Конец работы - ввод точки выхода";
+        "🔆]" +
+        "\xa0\xa0\xa0\xa0\xa0\xa0" +
+        "Конец работы - ввод точки выхода";
 
     return (
       <Box sx={styleMenuGl}>

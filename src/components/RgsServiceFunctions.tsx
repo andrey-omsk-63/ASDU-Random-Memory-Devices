@@ -1637,22 +1637,27 @@ export const StrokaMenuGlob = (func: any) => {
 export const StrokaHelp = (soobInfo: string) => {
   let dlSoob = (soobInfo.length + 12) * 8;
   const styleInfoSoob = {
-    fontSize: 15,
-    marginRight: 0.1,
+    // fontSize: 15,
+    // marginRight: 0.1,
+    // width: dlSoob,
+    // maxHeight: "21px",
+    // minHeight: "21px",
+    // backgroundColor: "#E9F5D8",
+    // color: "#E6761B",
+    // textAlign: "center",
+    // marginLeft: "6px",
+    // p: 0.2,
+    //marginTop: "-1px",
+    //width: 530,
     width: dlSoob,
-    maxHeight: "21px",
-    minHeight: "21px",
-    backgroundColor: "#E9F5D8",
-    color: "#E6761B",
+    color: "#E6761B", // оранж
     textAlign: "center",
-    marginLeft: "6px",
-    p: 0.2,
+    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+    fontWeight: 500,
   };
   return (
     <Box sx={styleInfoSoob}>
-      <b>
-        <em>{soobInfo}</em>
-      </b>
+      <em>{soobInfo}</em>
     </Box>
   );
 };
