@@ -258,6 +258,7 @@ const RgsDoPlacemarkDo = (props: {
       //preset: 'islands#greenDotIconWithCaption',
       iconColor: "#A05AD4",
       iconCaptionMaxWidth: '50',
+      
       //fillOpacity: 1,
       //iconFillOpacity: 1,
       //iconOpacity: 50,
