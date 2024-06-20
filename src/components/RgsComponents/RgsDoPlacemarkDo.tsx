@@ -252,16 +252,19 @@ const RgsDoPlacemarkDo = (props: {
     //let colorBalloon = "islands#violetCircleIcon";
     return {
       // preset: colorBalloon,
-      // fillOpacity: 1,
-      // opacity: 50,
-      preset: "islands#circleIcon",
-      //preset: 'islands#greenDotIconWithCaption',
+      //======
+      //preset: "islands#circleDotIcon",
+      preset: 'islands#blueAutoCircleIcon',
+      //======
       iconColor: "#A05AD4",
-      iconCaptionMaxWidth: '50',
-      
+      // iconOffset: [0, 0],
+      // iconSize: [10, 10],
+      iconImageSize: [100, 100]
       //fillOpacity: 1,
       //iconFillOpacity: 1,
       //iconOpacity: 50,
+      
+      
     };
   };
 
