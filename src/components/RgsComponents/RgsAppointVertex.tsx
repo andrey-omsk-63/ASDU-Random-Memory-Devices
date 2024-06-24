@@ -21,8 +21,9 @@ import { OutputNumFaza, MakeMasDirect } from "../RgsServiceFunctions";
 import { BadExit, OutBottomRow, OutTopRow } from "../RgsServiceFunctions";
 import { AppIconAsdu, OutputPict, SaveСhange } from "../RgsServiceFunctions";
 import { OutPutZZ, OutPutVV, AdditionalButton } from "../RgsServiceFunctions";
+import { ReplaceInSvg } from "../RgsServiceFunctions";
 
-import { styleModalEnd } from "../MainMapStyle";
+import { styleModalEnd, StyleAppSt06 } from "../MainMapStyle";
 import { styleSetAppoint, styleAppSt02 } from "../MainMapStyle";
 import { styleSetAV, styleBoxFormAV, styleAppSt04 } from "../MainMapStyle";
 import { styleSetFaza, styleBoxFormFaza } from "../MainMapStyle";
@@ -50,6 +51,7 @@ let maxFaza = 0;
 let HAVE = 0;
 let haveDop = 0;
 let position = 0;
+let heightImg = 0;
 
 const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   //== Piece of Redux ======================================
@@ -82,14 +84,17 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   const [openSet, setOpenSet] = React.useState(true);
   const [openSetErr, setOpenSetErr] = React.useState(false);
   const [badExit, setBadExit] = React.useState(false);
+  const [openSvg, setOpenSvg] = React.useState(false);
+  const [comment, setComment] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
+  const ref: any = React.useRef(null);
   const scRef: any = React.useRef(null);
 
   let hBlock = window.innerWidth / 4.6 + 0;
   let hB = hBlock / 6.0;
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
-    HAVE = haveDop = position = 0;
+    HAVE = haveDop = position = heightImg = 0;
     massFlDir = [0, 0, 0, 0];
     massAreaId = new Array(16).fill(0);
     kluchGl = homeRegion + "-" + map.tflight[props.idx].area.num + "-";
@@ -616,6 +621,64 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     );
   };
 
+  
+
+  const ViewSvg = () => {
+    const handleClose = () => {
+      setOpenSvg(false);
+    };
+
+    const CloseEnd = (event: any, reason: string) => {
+      if (reason === "escapeKeyDown") handleClose();
+    };
+
+    const stylePKForm01 = {
+      outline: "none",
+      position: "absolute",
+      left: "50%",
+      top: "50%",
+      transform: "translate(-50%, -50%)",
+      width: window.innerHeight * 0.8 + 5,
+      bgcolor: "background.paper",
+      border: "1px solid #FFFFFF",
+      borderRadius: 1,
+      boxShadow: 24,
+      textAlign: "center",
+      padding: "10px 5px 5px 5px",
+    };
+
+    const styleWindPK04 = {
+      border: "1px solid #d4d4d4",
+      marginTop: 1,
+      bgcolor: "#F1F5FB",
+      height: window.innerHeight * 0.8 + 4,
+      borderRadius: 1,
+      overflowX: "auto",
+      boxShadow: 6,
+    };
+
+    let lngth = Math.round(window.innerHeight * 0.8).toString();
+    let expSvg = ReplaceInSvg(datestat.pictSvg, lngth);
+
+    return (
+      <Modal open={openSvg} onClose={CloseEnd} hideBackdrop={false}>
+        <Box sx={stylePKForm01}>
+          <Button sx={styleModalEnd} onClick={() => handleClose()}>
+            <b>&#10006;</b>
+          </Button>
+          <Box sx={styleWindPK04}>
+            <div dangerouslySetInnerHTML={{ __html: expSvg }} />
+          </Box>
+        </Box>
+      </Modal>
+    );
+  };
+
+  if (ref.current) heightImg = ref.current.clientWidth;
+
+  let soobComment =
+    "Для более детального просмотра изображения перекрёстка нажмите левую кнопку мыши";
+
   return (
     <>
       <Modal open={openSet} onClose={handleCloseEnd}>
@@ -632,8 +695,23 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             {OutPutZZ(zz)}
             <Grid item xs={4}>
               {OutTopRow(sz, ss, sv)}
-              {otlOrKosyk && <>{AppIconAsdu()}</>}
-              {!otlOrKosyk && <>{OutputPict(datestat.pictSvg)}</>}
+              <Box
+                onMouseEnter={() => setComment(true)}
+                onClick={() => setOpenSvg(true)}
+                onMouseLeave={() => setComment(false)}
+              >
+                {comment ? (
+                  <Box sx={StyleAppSt06(121, heightImg)}>{soobComment}</Box>
+                ) : (
+                  <Box
+                    ref={ref}
+                    sx={{ textAlign: "center", cursor: "pointer" }}
+                  >
+                    {otlOrKosyk && <>{AppIconAsdu()}</>}
+                    {!otlOrKosyk && <>{OutputPict(datestat.pictSvg)}</>}
+                  </Box>
+                )}
+              </Box>
               {OutBottomRow(uz, uu, uv)}
             </Grid>
             {OutPutVV(vv)}
@@ -667,6 +745,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         </Box>
       </Modal>
       {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
+      {openSvg && <>{ViewSvg()}</>}
     </>
   );
 };

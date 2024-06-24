@@ -1274,13 +1274,19 @@ export const OutputNumFaza = (
   );
 };
 
-export const ReplaceInSvg = (svgPict: any) => {
+export const ReplaceInSvg = (svgPict: any, wh: string) => {
   let svgPipa = svgPict;
   if (svgPict) {
-    let heightImg = window.innerWidth / 3.333;
-    let aa = (heightImg / 100) * 9.5;
-    heightImg = heightImg + aa;
-    let widthHeight = heightImg.toString();
+    let widthHeight = "";
+    if (wh) {
+      widthHeight = wh;
+    } else {
+      let heightImg = window.innerWidth / 3.333;
+      let aa = (heightImg / 100) * 9.5;
+      heightImg = heightImg + aa;
+      widthHeight = heightImg.toString();
+    }
+
     let ch = "";
     let vxod = svgPict.indexOf("width=");
     for (let i = 0; i < 100; i++) {
@@ -1297,7 +1303,7 @@ export const ReplaceInSvg = (svgPict: any) => {
 export const OutputPict = (pict: any) => {
   return (
     <Box sx={{ border: 0, boxShadow: 24 }}>
-      <div dangerouslySetInnerHTML={{ __html: ReplaceInSvg(pict) }} />
+      <div dangerouslySetInnerHTML={{ __html: ReplaceInSvg(pict,'') }} />
     </Box>
   );
 };

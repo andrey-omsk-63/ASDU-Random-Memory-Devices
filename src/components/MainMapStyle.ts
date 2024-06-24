@@ -250,6 +250,21 @@ export const styleAppSt05 = {
   boxShadow: 9,
 };
 
+export const StyleAppSt06 = (top: number, heightImg: number) => {
+  const styleBind09 = {
+    fontSize: 18,
+    cursor: "pointer",
+    padding: top + "px 0px 5px 10px",
+    textIndent: "20px", // с красной строки
+    height: heightImg - 123,
+    bgcolor: "background.paper",
+    border: "1px solid #fff",
+    borderRadius: 1,
+    boxShadow: 24,
+  };
+  return styleBind09;
+};
+
 export const styleSetAV = {
   width: "52px",
   maxHeight: "21px",
