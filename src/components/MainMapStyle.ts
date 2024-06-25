@@ -20,7 +20,7 @@ export const styleModalEnd = {
   height: "21px",
   maxWidth: "2%",
   minWidth: "2%",
-  color: "black",
+  color: "#7620a2", // сиреневый
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
 
@@ -253,7 +253,7 @@ export const styleAppSt05 = {
 export const StyleAppSt06 = (top: number, heightImg: number) => {
   const styleBind09 = {
     fontSize: 18,
-    cursor: "pointer",
+    cursor: "help",
     padding: top + "px 0px 5px 10px",
     textIndent: "20px", // с красной строки
     height: heightImg - 123,
@@ -263,6 +263,11 @@ export const StyleAppSt06 = (top: number, heightImg: number) => {
     boxShadow: 24,
   };
   return styleBind09;
+};
+
+export const styleAppSt07 = {
+  textAlign: "center",
+  cursor: "pointer",
 };
 
 export const styleSetAV = {

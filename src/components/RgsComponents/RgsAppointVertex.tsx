@@ -21,9 +21,9 @@ import { OutputNumFaza, MakeMasDirect } from "../RgsServiceFunctions";
 import { BadExit, OutBottomRow, OutTopRow } from "../RgsServiceFunctions";
 import { AppIconAsdu, OutputPict, SaveСhange } from "../RgsServiceFunctions";
 import { OutPutZZ, OutPutVV, AdditionalButton } from "../RgsServiceFunctions";
-import { ReplaceInSvg } from "../RgsServiceFunctions";
+import { ViewSvg } from "../RgsServiceFunctions";
 
-import { styleModalEnd, StyleAppSt06 } from "../MainMapStyle";
+import { styleModalEnd, StyleAppSt06, styleAppSt07 } from "../MainMapStyle";
 import { styleSetAppoint, styleAppSt02 } from "../MainMapStyle";
 import { styleSetAV, styleBoxFormAV, styleAppSt04 } from "../MainMapStyle";
 import { styleSetFaza, styleBoxFormFaza } from "../MainMapStyle";
@@ -230,7 +230,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       }
     }
     oldIdx = props.idx;
-    //console.log("1massAreaId:", massFlDir, massAreaId, massFaz);
   }
   let ss = massAreaId[5] ? "С." + massAreaId[5] : "С";
   let sv = massAreaId[7] ? "СВ." + massAreaId[7] : "СВ";
@@ -429,7 +428,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       let valueAr = massAreaId[nomInMass * 2];
 
       const BlurId = (event: any, area: number, id: number) => {
-        console.log("!!!!!!BlurId:", area, id);
         if (!area && !id) {
           Scroller();
           return;
@@ -463,11 +461,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               massAreaId[nomInMass * 2] = 0;
               massAreaId[nomInMass * 2 + 1] = 0;
               setValId(0);
-            } else {
-              console.log("Всё хорошо!!! записано");
-              //console.log("3massAreaId:", massFlDir, massAreaId);
-              Scroller();
-            }
+            } else Scroller();
           }
         }
       };
@@ -603,7 +597,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
 
   const AppointVertex = (props: {}) => {
     React.useEffect(() => {
-      //console.log("###position:", position);
       position && scRef.current.scrollTo(0, position);
     }, []);
 
@@ -621,61 +614,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     );
   };
 
-  
-
-  const ViewSvg = () => {
-    const handleClose = () => {
-      setOpenSvg(false);
-    };
-
-    const CloseEnd = (event: any, reason: string) => {
-      if (reason === "escapeKeyDown") handleClose();
-    };
-
-    const stylePKForm01 = {
-      outline: "none",
-      position: "absolute",
-      left: "50%",
-      top: "50%",
-      transform: "translate(-50%, -50%)",
-      width: window.innerHeight * 0.8 + 5,
-      bgcolor: "background.paper",
-      border: "1px solid #FFFFFF",
-      borderRadius: 1,
-      boxShadow: 24,
-      textAlign: "center",
-      padding: "10px 5px 5px 5px",
-    };
-
-    const styleWindPK04 = {
-      border: "1px solid #d4d4d4",
-      marginTop: 1,
-      bgcolor: "#F1F5FB",
-      height: window.innerHeight * 0.8 + 4,
-      borderRadius: 1,
-      overflowX: "auto",
-      boxShadow: 6,
-    };
-
-    let lngth = Math.round(window.innerHeight * 0.8).toString();
-    let expSvg = ReplaceInSvg(datestat.pictSvg, lngth);
-
-    return (
-      <Modal open={openSvg} onClose={CloseEnd} hideBackdrop={false}>
-        <Box sx={stylePKForm01}>
-          <Button sx={styleModalEnd} onClick={() => handleClose()}>
-            <b>&#10006;</b>
-          </Button>
-          <Box sx={styleWindPK04}>
-            <div dangerouslySetInnerHTML={{ __html: expSvg }} />
-          </Box>
-        </Box>
-      </Modal>
-    );
-  };
-
   if (ref.current) heightImg = ref.current.clientWidth;
-
   let soobComment =
     "Для более детального просмотра изображения перекрёстка нажмите левую кнопку мыши";
 
@@ -703,10 +642,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
                 {comment ? (
                   <Box sx={StyleAppSt06(121, heightImg)}>{soobComment}</Box>
                 ) : (
-                  <Box
-                    ref={ref}
-                    sx={{ textAlign: "center", cursor: "pointer" }}
-                  >
+                  <Box ref={ref} sx={styleAppSt07}>
                     {otlOrKosyk && <>{AppIconAsdu()}</>}
                     {!otlOrKosyk && <>{OutputPict(datestat.pictSvg)}</>}
                   </Box>
@@ -745,7 +681,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         </Box>
       </Modal>
       {badExit && <>{BadExit(badExit, handleCloseBadExit)}</>}
-      {openSvg && <>{ViewSvg()}</>}
+      {openSvg && <>{ViewSvg(setOpenSvg, datestat.pictSvg)}</>}
     </>
   );
 };

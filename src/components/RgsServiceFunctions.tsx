@@ -1303,7 +1303,7 @@ export const ReplaceInSvg = (svgPict: any, wh: string) => {
 export const OutputPict = (pict: any) => {
   return (
     <Box sx={{ border: 0, boxShadow: 24 }}>
-      <div dangerouslySetInnerHTML={{ __html: ReplaceInSvg(pict,'') }} />
+      <div dangerouslySetInnerHTML={{ __html: ReplaceInSvg(pict, "") }} />
     </Box>
   );
 };
@@ -1510,6 +1510,70 @@ export const SaveСhange = (
     </>
   );
 };
+
+export const ViewSvg = (setOpenSvg: Function, pictSvg: any) => {
+  const handleClose = () => {
+    setOpenSvg(false);
+  };
+
+  const CloseEnd = (event: any, reason: string) => {
+    if (reason === "escapeKeyDown") handleClose();
+  };
+
+  const stylePKForm01 = {
+    outline: "none",
+    position: "absolute",
+    left: "50%",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
+    width: window.innerHeight * 0.9 + 10,
+    bgcolor: "background.paper",
+    border: "1px solid #FFFFFF",
+    borderRadius: 1,
+    boxShadow: 24,
+    textAlign: "center",
+    padding: "10px 5px 5px 5px",
+  };
+
+  const styleWindPK04 = {
+    border: "1px solid #d4d4d4",
+    marginTop: 1,
+    bgcolor: "#F1F5FB",
+    height: window.innerHeight * 0.9 + 4,
+    borderRadius: 1,
+    overflowX: "auto",
+    boxShadow: 6,
+  };
+
+  const styleModalEnd = {
+    position: "absolute",
+    top: "0%",
+    left: "auto",
+    right: "-0.0%",
+    height: "21px",
+    maxWidth: "2%",
+    minWidth: "2%",
+    color: "#7620a2", // сиреневый
+    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  };
+
+  let lngth = Math.round(window.innerHeight * 0.9).toString();
+  let expSvg = ReplaceInSvg(pictSvg, lngth);
+
+  return (
+    <Modal open={true} onClose={CloseEnd} hideBackdrop={false}>
+      <Box sx={stylePKForm01}>
+        <Button sx={styleModalEnd} onClick={() => handleClose()}>
+          <b>&#10006;</b>
+        </Button>
+        <Box sx={styleWindPK04}>
+          <div dangerouslySetInnerHTML={{ __html: expSvg }} />
+        </Box>
+      </Box>
+    </Modal>
+  );
+};
+
 //=== ToDoMode =====================================
 export const CircleObj = () => {
   const circle = {
