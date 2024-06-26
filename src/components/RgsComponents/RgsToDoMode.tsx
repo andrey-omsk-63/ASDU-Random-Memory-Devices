@@ -502,7 +502,15 @@ const RgsToDoMode = (props: {
             {StrokaHeader(1.9, "Фаза")}
             {StrokaHeader(5.5, "ДК")}
           </Grid>
-          <Box sx={{ overflowX: "auto", height: hTabl }}>{StrokaTabl()}</Box>
+          <Box
+            sx={{
+              overflowX: "auto",
+              height: hTabl,
+              textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+            }}
+          >
+            {StrokaTabl()}
+          </Box>
         </Box>
         <Box sx={{ marginTop: 0.5, textAlign: "center" }}>
           <Button sx={styleModalMenu} onClick={() => ToDoMode(0)}>

@@ -1591,7 +1591,7 @@ export const CircleObj = () => {
 //=== Разное =======================================
 export const InputDirect = (func: any) => {
   const styleSetNapr = {
-    width: "175px",
+    width: "185px",
     maxHeight: "1px",
     minHeight: "1px",
     bgcolor: "#BAE186",
@@ -1606,7 +1606,7 @@ export const InputDirect = (func: any) => {
   const styleBoxFormNapr = {
     "& > :not(style)": {
       marginTop: "-12px",
-      width: "175px",
+      width: "185px",
     },
   };
   const handleKey = (event: any) => {
@@ -1618,23 +1618,28 @@ export const InputDirect = (func: any) => {
     switch (Number(event.target.value)) {
       case 0: // режим управления
         func(51);
+        setCurrency(1);
         break;
-      case 1: // режим назначения
+      case 1: // режим управления
+        func(51);
+        break;
+      case 2: // режим назначения
         func(52);
         break;
-      case 2: // режим Показать связи
+      case 3: // режим Показать связи
         func(54);
         break;
-      case 3: // режим Demo
+      case 4: // режим Demo
         func(55);
     }
   };
 
   let dat = [
-    "Режим управления",
-    "Режим назначения",
-    "Показать связи",
-    "Режим Демо",
+    "Режимы работы:",
+    "● Режим управления",
+    "● Режим назначения",
+    "● Показать связи",
+    "● Режим Демо",
   ];
   let massKey = [];
   let massDat: any[] = [];
@@ -1653,7 +1658,7 @@ export const InputDirect = (func: any) => {
     currencies.push(maskCurrencies);
   }
 
-  const [currency, setCurrency] = React.useState(0);
+  const [currency, setCurrency] = React.useState(1);
 
   return (
     <Box sx={styleSetNapr}>
@@ -1668,8 +1673,8 @@ export const InputDirect = (func: any) => {
             disableUnderline: true,
             style: {
               fontSize: 15,
-              fontWeight: 700,
-              color: currency === 3 ? "red" : "black",
+              fontWeight: 500,
+              color: currency === 4 ? "red" : "black",
             },
           }}
           variant="standard"
@@ -1681,7 +1686,14 @@ export const InputDirect = (func: any) => {
               value={option.value}
               sx={{
                 fontSize: 15,
-                color: option.label === "Режим Демо" ? "red" : "black",
+                color:
+                  option.label === "● Режим Демо"
+                    ? "red"
+                    : option.label === "Режимы работы:"
+                    ? "blue"
+                    : "black",
+                cursor: option.label === "Режимы работы:" ? "none" : "pointer",
+                fontWeight: option.label === "Режимы работы:" ? 800 : 300,
               }}
             >
               {option.label}
@@ -1698,7 +1710,7 @@ export const StrokaMenuGlob = (func: any) => {
     fontSize: 14,
     marginRight: 0.1,
     marginLeft: 0.2,
-    width: 175,
+    width: 185,
   };
 
   return <Box sx={styleApp01}>{InputDirect(func)}</Box>;

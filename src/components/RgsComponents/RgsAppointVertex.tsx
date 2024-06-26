@@ -520,7 +520,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               type="number"
               onKeyPress={handleKey} //отключение Enter
               value={valueId}
-              InputProps={{ disableUnderline: true, style: { fontSize: 12.1 } }}
+              InputProps={{ disableUnderline: true }}
+              inputProps={{ style: { cursor: "pointer", fontSize: 12.1 } }}
               onChange={(e) => ChangeId(e, map, addobj, AREA)}
               onBlur={(e) => BlurId(e, valueAr, valueId)}
               variant="standard"
