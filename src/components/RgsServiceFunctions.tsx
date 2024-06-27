@@ -1616,7 +1616,7 @@ export const InputDirect = (func: any) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     !BAN && setCurrency(Number(event.target.value));
     switch (Number(event.target.value)) {
-      case 0: // режим управления
+      case 0: // заголовок
         func(51);
         setCurrency(1);
         break;
