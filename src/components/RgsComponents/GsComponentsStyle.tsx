@@ -1,18 +1,4 @@
 //=== GsSetPhase =========================================
-// export const styleSetInf = {
-//   position: "relative",
-//   marginTop: 4,
-//   marginLeft: "auto",
-//   marginRight: 69,
-//   width: 777,
-//   bgcolor: "background.paper",
-//   border: "3px solid #000",
-//   borderColor: "primary.main",
-//   borderRadius: 2,
-//   boxShadow: 24,
-//   p: 1.5,
-// };
-
 export const styleModalMenu = {
   marginTop: 0.5,
   marginRight: 1,
@@ -148,3 +134,4 @@ export const styleToDo02 = {
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 //========================================================
+//⬆ ↗ ➡  ↘ ⬇ ↙ ⬅ ↖

@@ -646,22 +646,27 @@ export const AdditionalButton = (
   funcAddKnop: Function
 ) => {
   let dir = "";
+  let find = "";
   let flOpen = 0;
   if (rec1 === "З") {
     dir = "СЗ";
     flOpen = massFlDir[0];
+    find = "↖";
   }
   if (rec1 === "С") {
     dir = "СВ";
     flOpen = massFlDir[1];
+    find = "↗";
   }
   if (rec1 === "В") {
     dir = "ЮВ";
     flOpen = massFlDir[2];
+    find = "↘";
   }
   if (rec1 === "Ю") {
     dir = "ЮЗ";
     flOpen = massFlDir[3];
+    find = "↙";
   }
 
   const styleAppSt06 = {
@@ -681,7 +686,7 @@ export const AdditionalButton = (
         <Box sx={{ height: hBlock / 15, marginTop: "12px", border: 0 }}>
           <Button sx={styleAppSt06} onClick={() => funcAddKnop(dir)}>
             {/* Доп.направление{" "}<Box sx={{ fontWeight: 1000 }}>{dir}</Box> */}
-            Доп.направление {dir}
+            Доп.направление {dir} &nbsp; <b>{find}</b>
           </Button>
         </Box>
       )}
@@ -1583,7 +1588,7 @@ export const CircleObj = () => {
     marginTop: 1.2,
     marginLeft: 2.5,
     borderRadius: 9,
-    borderColor: "#B51EFF", // сереневый
+    borderColor: "#7620A2", // сереневый
   };
 
   return <Box sx={circle}></Box>;
@@ -1716,27 +1721,18 @@ export const StrokaMenuGlob = (func: any) => {
   return <Box sx={styleApp01}>{InputDirect(func)}</Box>;
 };
 
-export const StrokaHelp = (soobInfo: string) => {
-  let dlSoob = (soobInfo.length + 12) * 8;
+export const StrokaHelp = (soobInfo: string, mode: number) => {
+  let dlSoob = (soobInfo.length + 9) * 8;
+  let moder = mode ? "left" : "right";
+
   const styleInfoSoob = {
-    // fontSize: 15,
-    // marginRight: 0.1,
-    // width: dlSoob,
-    // maxHeight: "21px",
-    // minHeight: "21px",
-    // backgroundColor: "#E9F5D8",
-    // color: "#E6761B",
-    // textAlign: "center",
-    // marginLeft: "6px",
-    // p: 0.2,
-    //marginTop: "-1px",
-    //width: 530,
     width: dlSoob,
     color: "#E6761B", // оранж
-    textAlign: "center",
+    textAlign: moder,
     textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
     fontWeight: 500,
   };
+
   return (
     <Box sx={styleInfoSoob}>
       <em>{soobInfo}</em>

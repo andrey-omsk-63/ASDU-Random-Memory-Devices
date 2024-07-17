@@ -5,6 +5,7 @@ import { massfazCreate } from "../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import { BiExpand } from "react-icons/bi";
 
 import { YMaps, Map, YMapsApi } from "react-yandex-maps";
 
@@ -56,6 +57,7 @@ let massRoute: any = [];
 let helper = true;
 let funcContex: any = null;
 let funcBound: any = null;
+let modeHelp = 0;
 
 const MainMapRgs = (props: { trigger: boolean }) => {
   //== Piece of Redux =======================================
@@ -165,6 +167,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const StatusQuo = () => {
+    modeHelp = 0;
     massMem = [];
     massCoord = [];
     massKlu = [];
@@ -490,39 +493,56 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const MenuGl = () => {
-    let soobHelpFiest = "Маршрут сформирован";
-    if (!datestat.finish)
-      soobHelpFiest =
-        "Добавьте перекрёстки в маршруте [" +
-        massMem.length +
-        "🔆]" +
-        "\xa0\xa0\xa0\xa0\xa0\xa0" +
-        "Конец работы - ввод точки выхода";
+    let soobHelpFiest1 = "Маршрут сформирован\xa0";
+    let soobHelpFiest2 = "";
+    if (!datestat.finish) {
+      soobHelpFiest1 = "Добавьте перекрёстки в маршруте [" + massMem.length;
+      soobHelpFiest2 =
+        "]\xa0\xa0\xa0\xa0\xa0\xa0Конец работы - ввод точки выхода";
+    }
 
     return (
       <Box sx={styleMenuGl}>
         {StrokaMenuGlob(PressButton)}
-        {modeToDo === 1 && (
-          <>{StrokaHelp("Введите реквизиты доп.объекта (<Esc> - сброс)")}</>
+        {modeToDo === 1 && modeHelp && (
+          <>{StrokaHelp("Введите реквизиты доп.объекта (<Esc> - сброс)", 0)}</>
         )}
-        {modeToDo === 3 && <>{StrokaHelp("Происходит выполнение режима")}</>}
-        {modeToDo === 0 && (
+        {modeToDo === 3 && datestat.finish && (
+          <>{StrokaHelp("Происходит выполнение режима", 0)}</>
+        )}
+        {(modeToDo === 0 || modeHelp === 0) && (
           <>
             {!inTarget && !inDemo && (
               <>
                 {massMem.length === 0 && (
-                  <>{StrokaHelp("Начала работы - выбор точки вхождения")}</>
+                  <>{StrokaHelp("Начала работы - выбор точки вхождения", 0)}</>
                 )}
                 {massMem.length > 0 && helper && (
-                  <>{StrokaHelp(soobHelpFiest)}</>
+                  <>
+                    {StrokaHelp(soobHelpFiest1, 0)}
+                    {!datestat.finish && (
+                      <Box sx={{ padding: "4px 0px 10px 0px" }}>
+                        <BiExpand />
+                      </Box>
+                    )}
+                    {StrokaHelp(soobHelpFiest2, 1)}
+                  </>
                 )}
                 {massMem.length > 0 && !helper && (
-                  <>{StrokaHelp(soobHelpFiest)}</>
+                  <>
+                    {StrokaHelp(soobHelpFiest1, 0)}
+                    {!datestat.finish && (
+                      <Box sx={{ padding: "4px 0px 10px 0px" }}>
+                        <BiExpand />
+                      </Box>
+                    )}
+                    {StrokaHelp(soobHelpFiest2, 1)}
+                  </>
                 )}
               </>
             )}
-            {inTarget && !inDemo && (
-              <>{StrokaHelp("Выберите перекрёсток или объект")}</>
+            {inTarget && !inDemo && modeToDo !== 1 && (
+              <>{StrokaHelp("Выберите перекрёсток или объект", 0)}</>
             )}
           </>
         )}
