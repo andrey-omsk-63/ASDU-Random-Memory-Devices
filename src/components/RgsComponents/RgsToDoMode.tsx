@@ -16,7 +16,7 @@ import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
 import { styleStrokaTabl01, styleStrokaTakt } from "./GsComponentsStyle";
 import { styleStrokaTabl02, StyleToDoMode } from "./GsComponentsStyle";
-import { styleToDo01, styleToDo02 } from "./GsComponentsStyle";
+import { styleToDo01, styleToDo02, styleToDo03 } from "./GsComponentsStyle";
 
 let init = true;
 let lengthMassMem = 0;
@@ -386,7 +386,7 @@ const RgsToDoMode = (props: {
               </Button>
             )}
           </Grid>
-          <Grid item xs={0.4} sx={{ fontSize: 30, marginLeft: 1 }}>
+          <Grid item xs={0.4} sx={styleToDo03}>
             {bull}
           </Grid>
           <Grid item xs={1.1} sx={styleStrokaTakt}>

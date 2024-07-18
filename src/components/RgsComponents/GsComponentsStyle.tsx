@@ -133,5 +133,11 @@ export const styleToDo02 = {
   color: "#7620a2", // сиреневый
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
+
+export const styleToDo03 = {
+  fontSize: 30,
+  color: "#B51EFF",
+  marginLeft: 1,
+};
 //========================================================
-//⬆ ↗ ➡  ↘ ⬇ ↙ ⬅ ↖
+//⬆⬆ ↗⬈ ➡⮕  ↘⬊ ⬇⬇ ↙⬋ ⬅⬅ ↖⬉

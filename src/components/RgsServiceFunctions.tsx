@@ -8,6 +8,7 @@ import CardMedia from "@mui/material/CardMedia";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
+import { BiExpand } from "react-icons/bi";
 
 import { Pointer } from "../App";
 import { Tflink, WayPointsArray } from "../interfaceBindings";
@@ -213,6 +214,18 @@ export const MakeFazer = (klu: string, bind: any) => {
       fazer = "Ю";
   }
   return fazer;
+};
+
+export const Сrossroad = (datestatFinish: boolean) => {
+  return (
+    <>
+      {!datestatFinish && (
+        <Box sx={{ padding: "4px 0px 10px 0px" }}>
+          <BiExpand />
+        </Box>
+      )}
+    </>
+  );
 };
 //=== Placemark =====================================
 export const GetPointData = (
@@ -510,12 +523,30 @@ export const AppointHeader = (hBlock: number) => {
 
 export const AppointDirect = (rec1: string, hBlock: number) => {
   let hB = hBlock / 6;
+  let rec2 = "";
+  let thick = 800;
+  if (rec1 === "З") rec2 = "⬅";
+  if (rec1 === "С") rec2 = "⬆";
+  if (rec1 === "В") rec2 = "➡";
+  if (rec1 === "Ю") rec2 = "⬇";
+  if (rec1 === "СЗ") rec2 = "⬉";
+  if (rec1 === "СВ") rec2 = "⬈";
+  if (rec1 === "ЮВ") rec2 = "⬊";
+  if (rec1 === "ЮЗ") rec2 = "⬋";
+  if (rec1 === "З" || rec1 === "С" || rec1 === "В" || rec1 === "Ю") thick = 200;
+
   const styleAppointDirect = {
-    fontSize: 21,
+    fontSize: 18,
     textAlign: "center",
     height: hB,
     color: "#7620a2", // сиреневый
     textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  };
+
+  const styleAppointRec2 = {
+    fontWeight: thick,
+    paddingTop: "2px",
+    fontSize: 14.0,
   };
 
   return (
@@ -524,7 +555,10 @@ export const AppointDirect = (rec1: string, hBlock: number) => {
         <Grid item xs={12} sx={{ height: hBlock / 6 }}></Grid>
         <Grid item xs={12} sx={styleAppointDirect}>
           <Box sx={styleAppSt02}>
-            <b>{rec1}</b>
+            <Box sx={{ display: "flex", paddingLeft: "5px" }}>
+              <b>{rec1}</b>
+              <Box sx={styleAppointRec2}>{rec2}</Box>
+            </Box>
           </Box>
         </Grid>
       </Grid>
@@ -533,9 +567,21 @@ export const AppointDirect = (rec1: string, hBlock: number) => {
 };
 
 export const OutputKey = (klush: string, hBlock: number, dir: string) => {
+  // let rec1 = dir.slice(0, -1);
+  // let rec2 = dir.slice(-1);
+  // let thick = 50; // 800
+  // if (rec1 === "З" || rec1 === "С" || rec1 === "В" || rec1 === "Ю") thick = 50;
+
   const styleOutputKey = {
     textAlign: "center",
     height: hBlock / 15.5,
+  };
+
+  const styleOutputKlush = {
+    fontWeight: 700,
+    display: "inline-block",
+    color: "#661C8E", // сиреневый
+    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
   };
 
   const styleOutputHint = {
@@ -549,18 +595,19 @@ export const OutputKey = (klush: string, hBlock: number, dir: string) => {
     <Grid container sx={{ border: 0 }}>
       <Grid item xs={12} sx={styleOutputKey}>
         <Box sx={styleAppSt02}>
-          <Box
-            sx={{
-              fontWeight: 700,
-              display: "inline-block",
-              //color: "#7620a2", // сиреневый
-              color: "#661C8E", // сиреневый
-              textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
-            }}
-          >
-            {klush}
-          </Box>{" "}
+          <Box sx={styleOutputKlush}>{klush}</Box>{" "}
           {klush && <Box sx={styleOutputHint}>{dir}</Box>}
+          {/* <Box sx={styleOutputHint}>{rec1}</Box>
+              <Box
+                sx={{
+                  fontSize: 13.0,
+                  color: "#A8A8A8",
+                  display: "inline-block",
+                  fontWeight: thick,
+                }}
+              >
+                {rec2}
+              </Box> */}
         </Box>
       </Grid>
     </Grid>
@@ -613,28 +660,28 @@ export const MakeMasDirect = (rec1: string) => {
   let masDirect: Array<string> = [];
   switch (rec1) {
     case "З":
-      masDirect = ["ЮЗ", "Ю", "ЮВ", "В", "СВ", "С", "СЗ"];
+      masDirect = ["ЮЗ⬋", "Ю⬇", "ЮВ⬊", "В➡", "СВ⬈", "С⬆", "СЗ⬉"];
       break;
     case "СЗ":
-      masDirect = ["З", "ЮЗ", "Ю", "ЮВ", "В", "СВ", "С"];
+      masDirect = ["З⬅", "ЮЗ⬋", "Ю⬇", "ЮВ⬊", "В➡", "СВ⬈", "С⬆"];
       break;
     case "С":
-      masDirect = ["СЗ", "З", "ЮЗ", "Ю", "ЮВ", "В", "СВ"];
+      masDirect = ["СЗ⬉", "З⬅", "ЮЗ⬋", "Ю⬇", "ЮВ⬊", "В➡", "СВ⬈"];
       break;
     case "СВ":
-      masDirect = ["С", "СЗ", "З", "ЮЗ", "Ю", "ЮВ", "В"];
+      masDirect = ["С⬆", "СЗ⬉", "З⬅", "ЮЗ⬋", "Ю⬇", "ЮВ⬊", "В➡"];
       break;
     case "В":
-      masDirect = ["СВ", "С", "СЗ", "З", "ЮЗ", "Ю", "ЮВ"];
+      masDirect = ["СВ⬈", "С⬆", "СЗ⬉", "З⬅", "ЮЗ⬋", "Ю⬇", "ЮВ⬊"];
       break;
     case "ЮВ":
-      masDirect = ["В", "СВ", "С", "СЗ", "З", "ЮЗ", "Ю"];
+      masDirect = ["В➡", "СВ⬈", "С⬆", "СЗ⬉", "З⬅", "ЮЗ⬋", "Ю⬇"];
       break;
     case "Ю":
-      masDirect = ["ЮВ", "В", "СВ", "С", "СЗ", "З", "ЮЗ"];
+      masDirect = ["ЮВ⬊", "В➡", "СВ⬈", "С⬆", "СЗ⬉", "З⬅", "ЮЗ⬋"];
       break;
     case "ЮЗ":
-      masDirect = ["Ю", "ЮВ", "В", "СВ", "С", "СЗ", "З"];
+      masDirect = ["Ю⬇", "ЮВ⬊", "В➡", "СВ⬈", "С⬆", "СЗ⬉", "З⬅"];
   }
   return masDirect;
 };
@@ -651,22 +698,22 @@ export const AdditionalButton = (
   if (rec1 === "З") {
     dir = "СЗ";
     flOpen = massFlDir[0];
-    find = "↖";
+    find = "⬉";
   }
   if (rec1 === "С") {
     dir = "СВ";
     flOpen = massFlDir[1];
-    find = "↗";
+    find = "⬈";
   }
   if (rec1 === "В") {
     dir = "ЮВ";
     flOpen = massFlDir[2];
-    find = "↘";
+    find = "⬊";
   }
   if (rec1 === "Ю") {
     dir = "ЮЗ";
     flOpen = massFlDir[3];
-    find = "↙";
+    find = "⬋";
   }
 
   const styleAppSt06 = {
@@ -685,7 +732,6 @@ export const AdditionalButton = (
       {!flOpen && dir && (
         <Box sx={{ height: hBlock / 15, marginTop: "12px", border: 0 }}>
           <Button sx={styleAppSt06} onClick={() => funcAddKnop(dir)}>
-            {/* Доп.направление{" "}<Box sx={{ fontWeight: 1000 }}>{dir}</Box> */}
             Доп.направление {dir} &nbsp; <b>{find}</b>
           </Button>
         </Box>

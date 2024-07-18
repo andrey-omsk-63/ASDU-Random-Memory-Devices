@@ -5,7 +5,7 @@ import { massfazCreate } from "../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import { BiExpand } from "react-icons/bi";
+//import { BiExpand } from "react-icons/bi";
 
 import { YMaps, Map, YMapsApi } from "react-yandex-maps";
 
@@ -21,7 +21,7 @@ import { getMassMultiRouteOptions, Distance } from "./RgsServiceFunctions";
 import { getMassMultiRouteOptionsDemo } from "./RgsServiceFunctions";
 import { getReferencePoints, CenterCoord } from "./RgsServiceFunctions";
 import { MakeMassRouteFirst, StrokaHelp } from "./RgsServiceFunctions";
-import { StrokaMenuGlob, MakingKey } from "./RgsServiceFunctions";
+import { StrokaMenuGlob, MakingKey, Сrossroad } from "./RgsServiceFunctions";
 import { MakeSoobErr, MakeMassRoute } from "./RgsServiceFunctions";
 import { CheckHaveLink, MakeFazer } from "./RgsServiceFunctions";
 import { YandexServices } from "./RgsServiceFunctions";
@@ -520,22 +520,14 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                 {massMem.length > 0 && helper && (
                   <>
                     {StrokaHelp(soobHelpFiest1, 0)}
-                    {!datestat.finish && (
-                      <Box sx={{ padding: "4px 0px 10px 0px" }}>
-                        <BiExpand />
-                      </Box>
-                    )}
+                    {Сrossroad(datestat.finish)}
                     {StrokaHelp(soobHelpFiest2, 1)}
                   </>
                 )}
                 {massMem.length > 0 && !helper && (
                   <>
                     {StrokaHelp(soobHelpFiest1, 0)}
-                    {!datestat.finish && (
-                      <Box sx={{ padding: "4px 0px 10px 0px" }}>
-                        <BiExpand />
-                      </Box>
-                    )}
+                    {Сrossroad(datestat.finish)}
                     {StrokaHelp(soobHelpFiest2, 1)}
                   </>
                 )}

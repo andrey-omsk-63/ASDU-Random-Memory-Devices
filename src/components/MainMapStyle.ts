@@ -224,6 +224,7 @@ export const styleAppSt02 = {
   position: "relative",
   top: "50%",
   left: "50%",
+  //display: "flex",
 };
 
 export const styleAppSt03 = {
@@ -247,7 +248,7 @@ export const styleAppSt05 = {
   bgcolor: "#F1F5FB", // светло-серый
   border: "1px solid #d4d4d4",
   borderRadius: 1,
-  boxShadow: 9,
+  boxShadow: 24,
 };
 
 export const StyleAppSt06 = (top: number, heightImg: number) => {
