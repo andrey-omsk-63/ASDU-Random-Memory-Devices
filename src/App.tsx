@@ -185,7 +185,7 @@ const App = () => {
     WS.onmessage = function (event: any) {
       let allData = JSON.parse(event.data);
       let data = allData.data;
-      //console.log("пришло:", data.error, allData.type, data);
+
       switch (allData.type) {
         case "phases":
           let flagChange = false;
@@ -210,9 +210,8 @@ const App = () => {
           dateMapGl = JSON.parse(JSON.stringify(data));
           dispatch(mapCreate(dateMapGl));
           let massRegion = [];
-          for (let key in dateMapGl.regionInfo) {
+          for (let key in dateMapGl.regionInfo)
             if (!isNaN(Number(key))) massRegion.push(Number(key));
-          }
           homeRegion = massRegion[0].toString();
           dateStat.region = homeRegion;
           dispatch(statsaveCreate(dateStat));
@@ -240,9 +239,8 @@ const App = () => {
             ) {
               if (data.phases) {
                 if (data.phases.length) {
-                  for (let j = 0; j < data.phases.length; j++) {
+                  for (let j = 0; j < data.phases.length; j++)
                     massdk[i].phSvg[j] = data.phases[j].phase;
-                  }
                   dispatch(massdkCreate(massdk));
                 }
                 break;

@@ -2,12 +2,8 @@ export const styleAppMenu = {
   border: 0,
   borderRadius: 1,
   borderColor: '#F1F5FB',
-  //marginLeft: 0.5,
-  //marginTop: 0.7,
-  //height: '92vh',
   backgroundColor: '#F1F5FB',
   opacity: 0.88,
-  //padding: 0.1,
 };
 
 export const styleAppPodv = {

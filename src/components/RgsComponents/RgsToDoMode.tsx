@@ -363,7 +363,7 @@ const RgsToDoMode = (props: {
       fazaImg = massfaz[i].img[takt - 1];
       let pictImg: any = "";
       if (massfaz[i].faza) pictImg = OutputFazaImg(fazaImg, massfaz[i].faza);
-      if (massfaz[i].id > 10000) pictImg = CircleObj();
+      //if (massfaz[i].id > 10000) pictImg = CircleObj();
       let illum = nomIllum === i ? styleStrokaTabl01 : styleStrokaTabl02;
 
       resStr.push(
@@ -380,6 +380,7 @@ const RgsToDoMode = (props: {
             {massfaz[i].runRec === 1 && massfaz[i].id <= 10000 && (
               <>{OutputVertexImg(host)}</>
             )}
+            {massfaz[i].id > 10000 && <>{CircleObj()}</>}
             {massfaz[i].runRec !== 1 && massfaz[i].id <= 10000 && (
               <Button sx={styleStrokaTablImg} onClick={() => ClickVertex(i)}>
                 {OutputVertexImg(host)}
@@ -395,7 +396,7 @@ const RgsToDoMode = (props: {
           <Grid item xs={2} sx={{ textAlign: "center" }}>
             {pictImg}
           </Grid>
-          <Grid item xs sx={{ fontSize: 14 }}>
+          <Grid item xs sx={{ fontSize: 14, padding: "6px 0px 0px 0px" }}>
             {massfaz[i].name}
           </Grid>
         </Grid>

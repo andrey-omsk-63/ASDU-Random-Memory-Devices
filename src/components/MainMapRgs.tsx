@@ -504,7 +504,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     return (
       <Box sx={styleMenuGl}>
         {StrokaMenuGlob(PressButton)}
-        {modeToDo === 1 && modeHelp && (
+        {modeToDo === 1 && !!modeHelp && (
           <>{StrokaHelp("Введите реквизиты доп.объекта (<Esc> - сброс)", 0)}</>
         )}
         {modeToDo === 3 && datestat.finish && (

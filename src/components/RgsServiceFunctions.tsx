@@ -8,7 +8,8 @@ import CardMedia from "@mui/material/CardMedia";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
-import { BiExpand } from "react-icons/bi";
+//import { BiExpand } from "react-icons/bi";
+import { MdOpenWith } from "react-icons/md";
 
 import { Pointer } from "../App";
 import { Tflink, WayPointsArray } from "../interfaceBindings";
@@ -220,8 +221,9 @@ export const Сrossroad = (datestatFinish: boolean) => {
   return (
     <>
       {!datestatFinish && (
-        <Box sx={{ padding: "4px 0px 10px 0px" }}>
-          <BiExpand />
+        <Box sx={{ fontSize: 15, padding: "4px 0px 10px 0px" }}>
+          {/* <BiExpand /> */}
+          <MdOpenWith />
         </Box>
       )}
     </>
@@ -250,8 +252,6 @@ export const GetPointData = (
     let SL = Number(map.tflight[index].region.num) < 10 ? 4 : 5;
     cont1 = map.tflight[index].description + "<br/>";
     cont3 = map.tflight[index].tlsost.description + "<br/>";
-    //cont2 = "[" + map.tflight[index].region.num + ", ";
-    //cont2 = "[" + map.tflight[index].area.num + ", ";
     cont2 =
       "[" + map.tflight[index].ID + ", " + map.tflight[index].idevice + "]";
     for (let i = 0; i < bindings.tfLinks.length; i++) {
@@ -259,9 +259,6 @@ export const GetPointData = (
       let klu = MakingKey(rec.region.num, rec.area.num, rec.ID);
       if (bindings.tfLinks[i].id === klu) {
         let recc = bindings.tfLinks[i].tflink;
-        //===
-        //console.log("!!!:", bindings.tfLinks[i].id, recc);
-        //===
         cont4 = "<br/>Связи:";
         if (recc.north.id) contS = "<br/><b>C:</b> " + recc.north.id.slice(SL);
         if (recc.add1.id) contSV = "<br/><b>CВ:</b> " + recc.add1.id.slice(SL);
@@ -452,7 +449,7 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     transform: "translate(-50%, -50%)",
     width: 400,
     bgcolor: "background.paper",
-    border: "1px solid #fff",
+    border: "1px solid #fff", // белый
     borderRadius: 1,
     boxShadow: 24,
     textAlign: "center",
@@ -567,8 +564,8 @@ export const AppointDirect = (rec1: string, hBlock: number) => {
 };
 
 export const OutputKey = (klush: string, hBlock: number, dir: string) => {
-  // let rec1 = dir.slice(0, -1);
-  // let rec2 = dir.slice(-1);
+  // let rec1 = dir.slice(0, -1); // без последнего символа
+  // let rec2 = dir.slice(-1); // последний символ
   // let thick = 50; // 800
   // if (rec1 === "З" || rec1 === "С" || rec1 === "В" || rec1 === "Ю") thick = 50;
 
@@ -1264,7 +1261,7 @@ export const MakingKluch = (
         klushTo7 = MakingKey(homeRegion, valAreaZ, valIdZ);
       }
   }
-  //console.log('@@@:',klushTo1, klushTo2, klushTo3, klushTo4, klushTo5, klushTo6, klushTo7)
+
   return [klushTo1, klushTo2, klushTo3, klushTo4, klushTo5, klushTo6, klushTo7];
 };
 
@@ -1631,10 +1628,13 @@ export const CircleObj = () => {
     width: 18,
     height: 18,
     border: 3,
-    marginTop: 1.2,
-    marginLeft: 2.5,
+    justifyContent: "center",
+    marginTop: 1.0,
+    marginLeft: 0.6,
     borderRadius: 9,
     borderColor: "#7620A2", // сереневый
+    boxShadow: 5,
+    //textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
   };
 
   return <Box sx={circle}></Box>;

@@ -112,7 +112,6 @@ export const StyleToDoMode = (DEMO: boolean) => {
     border: "1px solid #FFF",
     borderRadius: 1,
     boxShadow: 24,
-    //textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
     p: 1.0,
   };
   return styleToDoMode;
@@ -136,7 +135,9 @@ export const styleToDo02 = {
 
 export const styleToDo03 = {
   fontSize: 30,
-  color: "#B51EFF",
+  //color: "#B51EFF", // светло-сиреневый
+  color: "#7620A2", // тёмно-сиреневый
+  //color: "blue",
   marginLeft: 1,
 };
 //========================================================
