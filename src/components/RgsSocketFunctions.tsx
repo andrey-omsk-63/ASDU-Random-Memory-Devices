@@ -73,7 +73,7 @@ export const SendSocketRoute = (
   devicesProps: Array<number>,
   turnOnProps: boolean,
 ) => {
-  console.log('Route:', turnOnProps, devicesProps);
+  //console.log('Route:', turnOnProps, devicesProps);
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
@@ -101,7 +101,7 @@ export const SendSocketDispatch = (
   cmdd: number,
   faza: number,
 ) => {
-  console.log('Dispatch:', idevice, cmdd, faza);
+  //console.log('Dispatch:', idevice, cmdd, faza);
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
@@ -124,7 +124,7 @@ export const SendSocketDispatch = (
 };
 //=== App ==========================================
 export const SendSocketGetBindings = (debug: boolean, ws: WebSocket) => {
-  console.log('GetBindings');
+  //console.log('GetBindings');
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {

@@ -179,9 +179,9 @@ export const styleSetProcess = {
   marginRight: "auto",
   width: 333,
   bgcolor: "background.paper",
-  border: "1px solid #000",
-  borderColor: "primary.main",
-  borderRadius: 2,
+  border: "1px solid #fff",
+  //borderColor: "primary.main",
+  borderRadius: 1,
   boxShadow: 24,
   p: 1.5,
 };

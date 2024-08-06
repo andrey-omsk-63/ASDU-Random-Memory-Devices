@@ -28,6 +28,8 @@ import { YandexServices } from "./RgsServiceFunctions";
 
 import { SendSocketGetSvg } from "./RgsSocketFunctions";
 
+import { YMapsModul, MyYandexKey } from "./MapConst";
+
 import { styleMenuGl } from "./MainMapStyle";
 
 export let BAN = false;
@@ -108,10 +110,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const [changeFaz, setChangeFaz] = React.useState(0);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const [demoSost, setDemoSost] = React.useState(-1);
-  //const [trigger, setTrigger] = React.useState(false);
-
   const mapp = React.useRef<any>(null);
-  const MyYandexKey = "65162f5f-2d15-41d1-a881-6c1acf34cfa1";
 
   const addRoute = (ymaps: any, bound: boolean) => {
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
@@ -129,9 +128,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     let massKluGlob: any = [];
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       let massklu = MakeMassRoute(bindings, i, map, addobj)[1];
-      for (let j = 0; j < massklu.length; j++) {
+      for (let j = 0; j < massklu.length; j++)
         massKluGlob.push(bindings.tfLinks[i].id + massklu[j]);
-      }
     }
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       let massCoord: any = [];
@@ -220,9 +218,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     ymaps && addRoute(ymaps, false); // перерисовка связей
     if (massMem.length === 3) {
       PressButton(53);
-    } else {
-      setFlagPusk(!flagPusk);
-    }
+    } else setFlagPusk(!flagPusk);
   };
 
   const SoobErr = (soob: string) => {
@@ -248,9 +244,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           if (!MakeFazer(massKlu[massMem.length - 1], bindings.tfLinks[nom])) {
             let soob = massKlu[massMem.length - 1].slice(SL);
             SoobErr(MakeSoobErr(1, klu.slice(SL), soob));
-          } else {
-            Added(klu, index, nom); // вторая точка и далее
-          }
+          } else Added(klu, index, nom); // вторая точка и далее
         }
       }
     }
@@ -271,9 +265,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       if (!massMem.length) {
         if (index < map.tflight.length) {
           SoobErr("Входящая точка маршрута должна быть объектом");
-        } else {
-          AddVertex(klu, index, -1);
-        }
+        } else AddVertex(klu, index, -1);
       } else {
         if (massMem.length === 1 && klu.length > 8) {
           SoobErr("Объекты могут задаваться только в начале и конце маршрута");
@@ -286,17 +278,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           } else {
             if (massMem.length > 1) {
               let kluLast = massKlu[massKlu.length - 1];
-
-              console.log("kluLast:", kluLast);
-
               if (!CheckHaveLink(klu, kluLast, bindings)) {
                 SoobErr(MakeSoobErr(5, klu.slice(SL), kluLast.slice(SL))); // нет связи
-              } else {
-                AddVertex(klu, index, have);
-              }
-            } else {
-              AddVertex(klu, index, have);
-            }
+              } else AddVertex(klu, index, have);
+            } else AddVertex(klu, index, have);
           }
         }
       }
@@ -483,7 +468,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       map.boxPoint.point1.Y,
       map.boxPoint.point1.X
     );
-    //pointCenterEt = pointCenter;
     flagOpen = true;
   }
   //========================================================
@@ -558,11 +542,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
             {Object.keys(map.tflight).length && (
               <YMaps query={{ apikey: MyYandexKey, lang: "ru_RU" }}>
                 <Map
-                  modules={[
-                    "multiRouter.MultiRoute",
-                    "Polyline",
-                    "templateLayoutFactory",
-                  ]}
+                  modules={YMapsModul}
                   state={mapState}
                   instanceRef={(ref) => InstanceRefDo(ref)}
                   onLoad={(ref) => {
@@ -572,7 +552,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                   height={"99.9%"}
                 >
                   {YandexServices()}
-                  {/* служебные компоненты */}
                   {Pererisovka()}
                   <PlacemarkDo />
                   {createObject && (
@@ -595,7 +574,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
               </YMaps>
             )}
           </Grid>
-
           <Grid item xs={xsTab} sx={{ height: "97.0vh" }}>
             {toDoMode && (
               <RgsToDoMode

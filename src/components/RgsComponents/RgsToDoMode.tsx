@@ -363,7 +363,7 @@ const RgsToDoMode = (props: {
       fazaImg = massfaz[i].img[takt - 1];
       let pictImg: any = "";
       if (massfaz[i].faza) pictImg = OutputFazaImg(fazaImg, massfaz[i].faza);
-      //if (massfaz[i].id > 10000) pictImg = CircleObj();
+
       let illum = nomIllum === i ? styleStrokaTabl01 : styleStrokaTabl02;
 
       resStr.push(
@@ -497,7 +497,7 @@ const RgsToDoMode = (props: {
           </Grid>
         </Grid>
         <Box sx={styleToDo01}>
-          <Grid container sx={{ bgcolor: "#C0E2C3" }}>
+          <Grid container sx={{ bgcolor: "#B8CBB9" }}>
             {StrokaHeader(1, "Номер")}
             {StrokaHeader(3.6, "Состояние")}
             {StrokaHeader(1.9, "Фаза")}

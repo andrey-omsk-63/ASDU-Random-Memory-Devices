@@ -509,7 +509,7 @@ export const AppointHeader = (hBlock: number) => {
     );
   };
   return (
-    <Grid container sx={{ bgcolor: "#C0E2C3" }}>
+    <Grid container sx={{ bgcolor: "#B8CBB9" }}>
       <Grid item xs={1}></Grid>
       {RecHeader(5.5, "Откуда")}
       {RecHeader(4.0, "Куда")}
@@ -1397,7 +1397,7 @@ export const OutPutZZ = (zz: string) => {
     position: "relative",
     top: "33%",
     color: "blue",
-    marginLeft: -0.5,
+    //marginLeft: -0.5,
   };
 
   return (
@@ -1496,7 +1496,8 @@ export const OutPutVV = (vv: string) => {
     position: "relative",
     top: "33%",
     color: "blue",
-    marginLeft: 0.7,
+    //marginLeft: 0.3,
+    //border: 1
   };
 
   return (
