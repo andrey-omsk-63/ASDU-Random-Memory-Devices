@@ -1497,7 +1497,6 @@ export const OutPutVV = (vv: string) => {
     top: "33%",
     color: "blue",
     //marginLeft: 0.3,
-    //border: 1
   };
 
   return (
@@ -1521,7 +1520,7 @@ const StrokaMenuFooter = (soob: string, handleClose: Function) => {
     borderRadius: 1,
     color: "black",
     textTransform: "unset !important",
-    padding: "3px 0px 0px 0px",
+    //padding: "3px 0px 0px 0px",
     boxShadow: 6,
   };
 
@@ -1635,10 +1634,13 @@ export const CircleObj = () => {
     borderRadius: 9,
     borderColor: "#7620A2", // сереневый
     boxShadow: 5,
-    //textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
   };
 
-  return <Box sx={circle}></Box>;
+  return (
+    <Box sx={{ height: 36 }}>
+      <Box sx={circle}></Box>
+    </Box>
+  );
 };
 //=== Разное =======================================
 export const InputDirect = (func: any) => {

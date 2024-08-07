@@ -331,10 +331,81 @@ const RgsToDoMode = (props: {
       FindEnd();
       setTrigger(!trigger);
     };
+    //=====================
+    // let resStr = [];
+    // for (let i = 0; i < massfaz.length; i++) {
+    //   let runREC = massfaz[i].runRec;
+    //   let bull = runREC === 2 || runREC === 4 ? " •" : " ";
+    //   let hostt =
+    //     window.location.origin.slice(0, 22) === "https://localhost:3000"
+    //       ? "https://localhost:3000/"
+    //       : "./";
+    //   let host = hostt + "18.svg";
+    //   if (DEMO && debug) {
+    //     host = hostt + "1.svg";
+    //     if (bull === " •" && runREC === 2) host = hostt + "2.svg";
+    //     if (bull !== " •" && runREC === 5) host = hostt + "2.svg";
+    //   }
+    //   if (!debug && massfaz[i].id <= 10000) {
+    //     let num = map.tflight[massfaz[i].idx].tlsost.num.toString();
+    //     if (DEMO) {
+    //       num = "1";
+    //       if (bull === " •" && runREC === 2) num = "2";
+    //       if (bull !== " •" && runREC === 5) num = "2";
+    //     }
+    //     host =
+    //       window.location.origin + "/free/img/trafficLights/" + num + ".svg";
+    //   }
+    //   let star = "";
+    //   let takt = massfaz[i].faza;
+    //   if (!massfaz[i].faza) takt = "";
+    //   let fazaImg: null | string = null;
+    //   fazaImg = massfaz[i].img[takt - 1];
+    //   let pictImg: any = "";
+    //   if (massfaz[i].faza) pictImg = OutputFazaImg(fazaImg, massfaz[i].faza);
 
-    let resStr = [];
-    for (let i = 0; i < massfaz.length; i++) {
-      let runREC = massfaz[i].runRec;
+    //   let illum = nomIllum === i ? styleStrokaTabl01 : styleStrokaTabl02;
+
+    //   resStr.push(
+    //     <Grid key={i} container sx={{ marginTop: 1 }}>
+    //       <Grid item xs={1} sx={{ paddingTop: 0.7, textAlign: "center" }}>
+    //         <Button sx={illum} onClick={() => ClickKnop(i)}>
+    //           {i + 1}
+    //         </Button>
+    //       </Grid>
+    //       <Grid item xs={1.2} sx={{ fontSize: 27, textAlign: "right" }}>
+    //         {star}
+    //       </Grid>
+    //       <Grid item xs={1.0} sx={{}}>
+    //         {massfaz[i].runRec === 1 && massfaz[i].id <= 10000 && (
+    //           <>{OutputVertexImg(host)}</>
+    //         )}
+    //         {massfaz[i].id > 10000 && <>{CircleObj()}</>}
+    //         {massfaz[i].runRec !== 1 && massfaz[i].id <= 10000 && (
+    //           <Button sx={styleStrokaTablImg} onClick={() => ClickVertex(i)}>
+    //             {OutputVertexImg(host)}
+    //           </Button>
+    //         )}
+    //       </Grid>
+    //       <Grid item xs={0.4} sx={styleToDo03}>
+    //         {bull}
+    //       </Grid>
+    //       <Grid item xs={1.1} sx={styleStrokaTakt}>
+    //         {takt}
+    //       </Grid>
+    //       <Grid item xs={2} sx={{ textAlign: "center" }}>
+    //         {pictImg}
+    //       </Grid>
+    //       <Grid item xs sx={{ fontSize: 14, padding: "6px 0px 0px 0px" }}>
+    //         {massfaz[i].name}
+    //       </Grid>
+    //     </Grid>
+    //   );
+    // }
+    // return resStr;
+    //=====================
+    return massfaz.map((massf: any, idx: number) => {
+      let runREC = massf.runRec;
       let bull = runREC === 2 || runREC === 4 ? " •" : " ";
       let hostt =
         window.location.origin.slice(0, 22) === "https://localhost:3000"
@@ -346,8 +417,8 @@ const RgsToDoMode = (props: {
         if (bull === " •" && runREC === 2) host = hostt + "2.svg";
         if (bull !== " •" && runREC === 5) host = hostt + "2.svg";
       }
-      if (!debug && massfaz[i].id <= 10000) {
-        let num = map.tflight[massfaz[i].idx].tlsost.num.toString();
+      if (!debug && massf.id <= 10000) {
+        let num = map.tflight[massf.idx].tlsost.num.toString();
         if (DEMO) {
           num = "1";
           if (bull === " •" && runREC === 2) num = "2";
@@ -357,32 +428,32 @@ const RgsToDoMode = (props: {
           window.location.origin + "/free/img/trafficLights/" + num + ".svg";
       }
       let star = "";
-      let takt = massfaz[i].faza;
-      if (!massfaz[i].faza) takt = "";
+      let takt = massf.faza;
+      if (!massf.faza) takt = "";
       let fazaImg: null | string = null;
-      fazaImg = massfaz[i].img[takt - 1];
+      fazaImg = massf.img[takt - 1];
       let pictImg: any = "";
-      if (massfaz[i].faza) pictImg = OutputFazaImg(fazaImg, massfaz[i].faza);
+      if (massf.faza) pictImg = OutputFazaImg(fazaImg, massf.faza);
 
-      let illum = nomIllum === i ? styleStrokaTabl01 : styleStrokaTabl02;
+      let illum = nomIllum === idx ? styleStrokaTabl01 : styleStrokaTabl02;
 
-      resStr.push(
-        <Grid key={i} container sx={{ marginTop: 1 }}>
+      return (
+        <Grid key={idx} container sx={{ marginTop: 1 }}>
           <Grid item xs={1} sx={{ paddingTop: 0.7, textAlign: "center" }}>
-            <Button sx={illum} onClick={() => ClickKnop(i)}>
-              {i + 1}
+            <Button sx={illum} onClick={() => ClickKnop(idx)}>
+              {idx + 1}
             </Button>
           </Grid>
           <Grid item xs={1.2} sx={{ fontSize: 27, textAlign: "right" }}>
             {star}
           </Grid>
           <Grid item xs={1.0} sx={{}}>
-            {massfaz[i].runRec === 1 && massfaz[i].id <= 10000 && (
+            {massf.runRec === 1 && massf.id <= 10000 && (
               <>{OutputVertexImg(host)}</>
             )}
-            {massfaz[i].id > 10000 && <>{CircleObj()}</>}
-            {massfaz[i].runRec !== 1 && massfaz[i].id <= 10000 && (
-              <Button sx={styleStrokaTablImg} onClick={() => ClickVertex(i)}>
+            {massf.id > 10000 && <>{CircleObj()}</>}
+            {massf.runRec !== 1 && massf.id <= 10000 && (
+              <Button sx={styleStrokaTablImg} onClick={() => ClickVertex(idx)}>
                 {OutputVertexImg(host)}
               </Button>
             )}
@@ -397,12 +468,12 @@ const RgsToDoMode = (props: {
             {pictImg}
           </Grid>
           <Grid item xs sx={{ fontSize: 14, padding: "6px 0px 0px 0px" }}>
-            {massfaz[i].name}
+            {massf.name}
           </Grid>
         </Grid>
       );
-    }
-    return resStr;
+    });
+    //=====================
   };
   //=== инициализация ======================================
   if (init) {
@@ -524,4 +595,3 @@ const RgsToDoMode = (props: {
 };
 
 export default RgsToDoMode;
-//Нет связи

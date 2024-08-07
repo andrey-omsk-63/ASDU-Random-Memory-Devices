@@ -486,7 +486,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         }
         if (HAVE === 1) {
           if (scRef.current) position = scRef.current.scrollTop; // первый ввод
-          //console.log("position:", position);
           setTrigger(!trigger);
         }
         if (Number(valueInp) < 9999) {

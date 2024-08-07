@@ -4,6 +4,7 @@ export const styleModalMenu = {
   marginRight: 1,
   maxHeight: "24px",
   minHeight: "24px",
+  padding: "3px 3px 0px 3px",
   backgroundColor: "#E6F5D6",
   textTransform: "unset !important",
   color: "black",
