@@ -451,6 +451,7 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     bgcolor: "background.paper",
     border: "1px solid #fff", // белый
     borderRadius: 1,
+    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
     boxShadow: 24,
     textAlign: "center",
     p: 1,
@@ -479,7 +480,7 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
           <b>&#10006;</b>
         </Button>
         <Typography variant="h6" sx={{ color: "red" }}>
-          Предупреждение
+          ⚠️Предупреждение
         </Typography>
         <Box sx={{ marginTop: 0.5 }}>
           <Box sx={{ marginBottom: 1.2 }}>
