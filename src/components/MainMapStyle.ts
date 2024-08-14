@@ -245,7 +245,8 @@ export const styleAppSt04 = {
 
 export const styleAppSt05 = {
   marginTop: -0.25,
-  bgcolor: "#F1F5FB", // светло-серый
+  //bgcolor: "#F1F5FB", // светло-серый
+  background: 'linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )',
   border: "1px solid #d4d4d4",
   borderRadius: 1,
   boxShadow: 24,

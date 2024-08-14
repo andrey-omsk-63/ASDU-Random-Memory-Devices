@@ -119,12 +119,13 @@ export const StyleToDoMode = (DEMO: boolean) => {
 };
 
 export const styleToDo01 = {
-  bgcolor: "#F1F5FB",
+  //bgcolor: "#F1F5FB",
+  background: 'linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )',
   border: "1px solid #d4d4d4",
   borderRadius: 1,
   marginTop: 1,
   boxShadow: 6,
-  padding: "5px",
+  //padding: "5px",
 };
 
 export const styleToDo02 = {
@@ -138,7 +139,6 @@ export const styleToDo03 = {
   fontSize: 30,
   //color: "#B51EFF", // светло-сиреневый
   color: "#7620A2", // тёмно-сиреневый
-  //color: "blue",
   marginLeft: 1,
 };
 //========================================================
