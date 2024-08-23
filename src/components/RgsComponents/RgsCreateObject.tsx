@@ -130,9 +130,7 @@ const RgsCreateObject = (props: {
         let val = event.target.value.trimStart(); // удаление пробелов в начале строки
         setValue(val);
         valueName = val;
-      } else {
-        valueName = value;
-      }
+      } else valueName = value;
     };
 
     return (
@@ -185,9 +183,6 @@ const RgsCreateObject = (props: {
     const handleChangeID = (event: any) => {
       setCurrencyID(event.target.value);
       let valueInp = event.target.value;
-      //let valueInp = event.target.value.replace(/^0+/, "");
-      //if (Number(valueInp) < freeId) valueInp = freeId;
-      //if (valueInp === "") valueInp = 0;
       valueInp = Math.trunc(Number(valueInp)).toString();
       valueID = valueInp;
       setValueId(valueInp);

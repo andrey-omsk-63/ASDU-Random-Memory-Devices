@@ -7,7 +7,6 @@ const intialState = {
 };
 
 export const bindingsReducer = (state = intialState, action: any) => {
-  //console.log('bindingsReducer:', action);
   switch (action.type) {
     case BINDINGS_CREATE:
       return {

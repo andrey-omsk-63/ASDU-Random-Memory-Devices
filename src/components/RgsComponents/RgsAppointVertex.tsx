@@ -21,7 +21,7 @@ import { OutputNumFaza, MakeMasDirect } from "../RgsServiceFunctions";
 import { BadExit, OutBottomRow, OutTopRow } from "../RgsServiceFunctions";
 import { AppIconAsdu, OutputPict, SaveСhange } from "../RgsServiceFunctions";
 import { OutPutZZ, OutPutVV, AdditionalButton } from "../RgsServiceFunctions";
-import { ViewSvg } from "../RgsServiceFunctions";
+import { ViewSvg, GetFaza } from "../RgsServiceFunctions";
 
 import { styleModalEnd, StyleAppSt06, styleAppSt07 } from "../MainMapStyle";
 import { styleSetAppoint, styleAppSt02 } from "../MainMapStyle";
@@ -117,113 +117,103 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       let kluchSV = bindings.tfLinks[bindIdx].tflink.add1.id;
       let kluchUV = bindings.tfLinks[bindIdx].tflink.add2.id;
       let kluchUZ = bindings.tfLinks[bindIdx].tflink.add3.id;
-      //======
-      const GetFaza = (mas: any, kluch: string) => {
-        let faza = 0;
-        if (mass) {
-          for (let i = 0; i < mas.length; i++)
-            if (mas[i].id === kluch) faza = Number(mas[i].phase);
-        }
-        if (faza > maxFaza || !faza) faza = 1;
-        return faza;
-      };
 
       if (kluchZ) {
         let mas = mass.west.wayPointsArray;
-        massFaz[0] = GetFaza(mas, kluchUZ);
-        massFaz[1] = GetFaza(mas, kluchU);
-        massFaz[2] = GetFaza(mas, kluchUV);
-        massFaz[3] = GetFaza(mas, kluchV);
-        massFaz[4] = GetFaza(mas, kluchSV);
-        massFaz[5] = GetFaza(mas, kluchS);
-        massFaz[6] = GetFaza(mas, kluchSZ);
+        massFaz[0] = GetFaza(mass, mas, maxFaza, kluchUZ);
+        massFaz[1] = GetFaza(mass, mas, maxFaza, kluchU);
+        massFaz[2] = GetFaza(mass, mas, maxFaza, kluchUV);
+        massFaz[3] = GetFaza(mass, mas, maxFaza, kluchV);
+        massFaz[4] = GetFaza(mass, mas, maxFaza, kluchSV);
+        massFaz[5] = GetFaza(mass, mas, maxFaza, kluchS);
+        massFaz[6] = GetFaza(mass, mas, maxFaza, kluchSZ);
         massAreaId[0] = TakeAreaId(kluchZ)[0];
         massAreaId[1] = TakeAreaId(kluchZ)[1];
       }
       if (kluchSZ) {
         let mas = mass.add4.wayPointsArray;
-        massFaz[7] = GetFaza(mas, kluchZ);
-        massFaz[8] = GetFaza(mas, kluchUZ);
-        massFaz[9] = GetFaza(mas, kluchU);
-        massFaz[10] = GetFaza(mas, kluchUV);
-        massFaz[11] = GetFaza(mas, kluchV);
-        massFaz[12] = GetFaza(mas, kluchSV);
-        massFaz[13] = GetFaza(mas, kluchS);
+        massFaz[7] = GetFaza(mass, mas, maxFaza, kluchZ);
+        massFaz[8] = GetFaza(mass, mas, maxFaza, kluchUZ);
+        massFaz[9] = GetFaza(mass, mas, maxFaza, kluchU);
+        massFaz[10] = GetFaza(mass, mas, maxFaza, kluchUV);
+        massFaz[11] = GetFaza(mass, mas, maxFaza, kluchV);
+        massFaz[12] = GetFaza(mass, mas, maxFaza, kluchSV);
+        massFaz[13] = GetFaza(mass, mas, maxFaza, kluchS);
         massAreaId[2] = TakeAreaId(kluchSZ)[0];
         massAreaId[3] = TakeAreaId(kluchSZ)[1];
         massFlDir[0] = TakeAreaId(kluchSZ)[1];
       }
       if (kluchS) {
         let mas = mass.north.wayPointsArray;
-        massFaz[14] = GetFaza(mas, kluchSZ);
-        massFaz[15] = GetFaza(mas, kluchZ);
-        massFaz[16] = GetFaza(mas, kluchUZ);
-        massFaz[17] = GetFaza(mas, kluchU);
-        massFaz[18] = GetFaza(mas, kluchUV);
-        massFaz[19] = GetFaza(mas, kluchV);
-        massFaz[20] = GetFaza(mas, kluchSV);
+        massFaz[14] = GetFaza(mass, mas, maxFaza, kluchSZ);
+        massFaz[15] = GetFaza(mass, mas, maxFaza, kluchZ);
+        massFaz[16] = GetFaza(mass, mas, maxFaza, kluchUZ);
+        massFaz[17] = GetFaza(mass, mas, maxFaza, kluchU);
+        massFaz[18] = GetFaza(mass, mas, maxFaza, kluchUV);
+        massFaz[19] = GetFaza(mass, mas, maxFaza, kluchV);
+        massFaz[20] = GetFaza(mass, mas, maxFaza, kluchSV);
         massAreaId[4] = TakeAreaId(kluchS)[0];
         massAreaId[5] = TakeAreaId(kluchS)[1];
       }
       if (kluchSV) {
         let mas = mass.add1.wayPointsArray;
-        massFaz[21] = GetFaza(mas, kluchS);
-        massFaz[22] = GetFaza(mas, kluchSZ);
-        massFaz[23] = GetFaza(mas, kluchZ);
-        massFaz[24] = GetFaza(mas, kluchUZ);
-        massFaz[25] = GetFaza(mas, kluchU);
-        massFaz[26] = GetFaza(mas, kluchUV);
-        massFaz[27] = GetFaza(mas, kluchV);
+        massFaz[21] = GetFaza(mass, mas, maxFaza, kluchS);
+        massFaz[22] = GetFaza(mass, mas, maxFaza, kluchSZ);
+        massFaz[23] = GetFaza(mass, mas, maxFaza, kluchZ);
+        massFaz[24] = GetFaza(mass, mas, maxFaza, kluchUZ);
+        massFaz[25] = GetFaza(mass, mas, maxFaza, kluchU);
+        massFaz[26] = GetFaza(mass, mas, maxFaza, kluchUV);
+        massFaz[27] = GetFaza(mass, mas, maxFaza, kluchV);
         massAreaId[6] = TakeAreaId(kluchSV)[0];
         massAreaId[7] = TakeAreaId(kluchSV)[1];
         massFlDir[1] = TakeAreaId(kluchSV)[1];
       }
       if (kluchV) {
         let mas = mass.east.wayPointsArray;
-        massFaz[28] = GetFaza(mas, kluchSV);
-        massFaz[29] = GetFaza(mas, kluchS);
-        massFaz[30] = GetFaza(mas, kluchSZ);
-        massFaz[31] = GetFaza(mas, kluchZ);
-        massFaz[32] = GetFaza(mas, kluchUZ);
-        massFaz[33] = GetFaza(mas, kluchU);
-        massFaz[34] = GetFaza(mas, kluchUV);
+        massFaz[28] = GetFaza(mass, mas, maxFaza, kluchSV);
+        massFaz[29] = GetFaza(mass, mas, maxFaza, kluchS);
+        massFaz[30] = GetFaza(mass, mas, maxFaza, kluchSZ);
+        massFaz[31] = GetFaza(mass, mas, maxFaza, kluchZ);
+        massFaz[32] = GetFaza(mass, mas, maxFaza, kluchUZ);
+        massFaz[33] = GetFaza(mass, mas, maxFaza, kluchU);
+        massFaz[34] = GetFaza(mass, mas, maxFaza, kluchUV);
         massAreaId[8] = TakeAreaId(kluchV)[0];
         massAreaId[9] = TakeAreaId(kluchV)[1];
       }
       if (kluchUV) {
         let mas = mass.add2.wayPointsArray;
-        massFaz[35] = GetFaza(mas, kluchV);
-        massFaz[36] = GetFaza(mas, kluchSV);
-        massFaz[37] = GetFaza(mas, kluchS);
-        massFaz[38] = GetFaza(mas, kluchSZ);
-        massFaz[39] = GetFaza(mas, kluchZ);
-        massFaz[40] = GetFaza(mas, kluchUZ);
-        massFaz[41] = GetFaza(mas, kluchU);
+        massFaz[35] = GetFaza(mass, mas, maxFaza, kluchV);
+        massFaz[36] = GetFaza(mass, mas, maxFaza, kluchSV);
+        massFaz[37] = GetFaza(mass, mas, maxFaza, kluchS);
+        massFaz[38] = GetFaza(mass, mas, maxFaza, kluchSZ);
+        massFaz[39] = GetFaza(mass, mas, maxFaza, kluchZ);
+        massFaz[40] = GetFaza(mass, mas, maxFaza, kluchUZ);
+        massFaz[41] = GetFaza(mass, mas, maxFaza, kluchU);
         massAreaId[10] = TakeAreaId(kluchUV)[0];
         massAreaId[11] = TakeAreaId(kluchUV)[1];
         massFlDir[2] = TakeAreaId(kluchUV)[1];
       }
       if (kluchU) {
         let mas = mass.south.wayPointsArray;
-        massFaz[42] = GetFaza(mas, kluchUV);
-        massFaz[43] = GetFaza(mas, kluchV);
-        massFaz[44] = GetFaza(mas, kluchSV);
-        massFaz[45] = GetFaza(mas, kluchS);
-        massFaz[46] = GetFaza(mas, kluchSZ);
-        massFaz[47] = GetFaza(mas, kluchZ);
-        massFaz[48] = GetFaza(mas, kluchUZ);
+        massFaz[42] = GetFaza(mass, mas, maxFaza, kluchUV);
+        massFaz[43] = GetFaza(mass, mas, maxFaza, kluchV);
+        massFaz[44] = GetFaza(mass, mas, maxFaza, kluchSV);
+        massFaz[45] = GetFaza(mass, mas, maxFaza, kluchS);
+        massFaz[46] = GetFaza(mass, mas, maxFaza, kluchSZ);
+        massFaz[47] = GetFaza(mass, mas, maxFaza, kluchZ);
+        massFaz[48] = GetFaza(mass, mas, maxFaza, kluchUZ);
         massAreaId[12] = TakeAreaId(kluchU)[0];
         massAreaId[13] = TakeAreaId(kluchU)[1];
       }
       if (kluchUZ) {
         let mas = mass.add3.wayPointsArray;
-        massFaz[49] = GetFaza(mas, kluchU);
-        massFaz[50] = GetFaza(mas, kluchUV);
-        massFaz[51] = GetFaza(mas, kluchV);
-        massFaz[52] = GetFaza(mas, kluchSV);
-        massFaz[53] = GetFaza(mas, kluchS);
-        massFaz[54] = GetFaza(mas, kluchSZ);
-        massFaz[55] = GetFaza(mas, kluchZ);
+        massFaz[49] = GetFaza(mass, mas, maxFaza, kluchU);
+        massFaz[50] = GetFaza(mass, mas, maxFaza, kluchUV);
+        massFaz[51] = GetFaza(mass, mas, maxFaza, kluchV);
+        massFaz[52] = GetFaza(mass, mas, maxFaza, kluchSV);
+        massFaz[53] = GetFaza(mass, mas, maxFaza, kluchS);
+        massFaz[54] = GetFaza(mass, mas, maxFaza, kluchSZ);
+        massFaz[55] = GetFaza(mass, mas, maxFaza, kluchZ);
         massAreaId[14] = TakeAreaId(kluchUZ)[0];
         massAreaId[15] = TakeAreaId(kluchUZ)[1];
         massFlDir[3] = TakeAreaId(kluchUZ)[1];
@@ -297,9 +287,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         } else {
           if (bindIdx >= 0) {
             bindings.tfLinks[bindIdx] = maskTfLinks; // редактирование
-          } else {
-            bindings.tfLinks.push(maskTfLinks); // добавление новой записи
-          }
+          } else bindings.tfLinks.push(maskTfLinks); // добавление новой записи
           SendSocketUpdateBindings(debug, ws, maskTfLinks);
         }
         dispatch(bindingsCreate(bindings));
@@ -341,15 +329,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
         massKey.push(key);
         massDat.push(dat[key]);
       }
-      for (let i = 0; i < massKey.length; i++) {
-        let maskCurrencies = {
-          value: "",
-          label: "",
-        };
-        maskCurrencies.value = massKey[i];
-        maskCurrencies.label = massDat[i];
-        currencies.push(maskCurrencies);
-      }
+      for (let i = 0; i < massKey.length; i++)
+        currencies.push({ value: massKey[i], label: massDat[i] });
     }
 
     const [currency, setCurrency] = React.useState(

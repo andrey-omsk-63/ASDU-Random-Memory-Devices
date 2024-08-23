@@ -4,12 +4,12 @@ export const styleModalMenu = {
   marginRight: 1,
   maxHeight: "24px",
   minHeight: "24px",
-  padding: "3px 3px 0px 3px",
+  padding: "3px 8px 0px 8px",
   backgroundColor: "#E6F5D6",
   textTransform: "unset !important",
   color: "black",
   boxShadow: 2,
-  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  //textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
 
 export const styleBoxFormFaza = {
@@ -119,13 +119,11 @@ export const StyleToDoMode = (DEMO: boolean) => {
 };
 
 export const styleToDo01 = {
-  //bgcolor: "#F1F5FB",
   background: 'linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )',
   border: "1px solid #d4d4d4",
   borderRadius: 1,
   marginTop: 1,
   boxShadow: 6,
-  //padding: "5px",
 };
 
 export const styleToDo02 = {
@@ -137,8 +135,8 @@ export const styleToDo02 = {
 
 export const styleToDo03 = {
   fontSize: 30,
-  //color: "#B51EFF", // светло-сиреневый
-  color: "#7620A2", // тёмно-сиреневый
+  //color: "#B51EFF", // светло-сереневый
+  color: "#7620A2", // тёмно-сереневый
   marginLeft: 1,
 };
 //========================================================

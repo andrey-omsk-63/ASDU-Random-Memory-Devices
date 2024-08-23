@@ -185,7 +185,6 @@ const App = () => {
     WS.onmessage = function (event: any) {
       let allData = JSON.parse(event.data);
       let data = allData.data;
-
       switch (allData.type) {
         case "phases":
           let flagChange = false;
@@ -269,9 +268,8 @@ const App = () => {
     dateBindingsGl = JSON.parse(JSON.stringify(dataBindings.data));
     dispatch(bindingsCreate(dateBindingsGl));
     let massRegion = [];
-    for (let key in dateMapGl.regionInfo) {
+    for (let key in dateMapGl.regionInfo)
       if (!isNaN(Number(key))) massRegion.push(Number(key));
-    }
     homeRegion = massRegion[0].toString();
     dateStat.region = homeRegion;
     dateStat.phSvg[0] = imgFaza;

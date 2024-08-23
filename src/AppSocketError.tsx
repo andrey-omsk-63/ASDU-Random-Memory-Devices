@@ -5,34 +5,31 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 
-//import { styleModalEnd, styleSetInf } from "./components/MainMapStyle";
-
 const AppSocketError = (props: { sErr: string; setOpen: any }) => {
   const [openSet, setOpenSet] = React.useState(true);
 
   const styleSetInf = {
     outline: "none",
-    position: 'absolute',
-    marginTop: '15vh',
-    marginLeft: '24vh',
+    position: "absolute",
+    marginTop: "15vh",
+    marginLeft: "24vh",
     width: 380,
-    bgcolor: 'background.paper',
-    border: '3px solid #000',
-    borderColor: 'red',
-    borderRadius: 2,
+    bgcolor: "background.paper",
+    border: "3px solid #fff",
+    borderRadius: 1,
     boxShadow: 24,
     p: 1.5,
   };
 
   const styleModalEnd = {
-    position: 'absolute',
-    top: '0%',
-    left: 'auto',
-    right: '-0%',
-    height: '21px',
-    maxWidth: '2%',
-    minWidth: '2%',
-    color: 'red',
+    position: "absolute",
+    top: "0%",
+    left: "auto",
+    right: "-0%",
+    height: "21px",
+    maxWidth: "2%",
+    minWidth: "2%",
+    color: "red",
   };
 
   const handleClose = () => {

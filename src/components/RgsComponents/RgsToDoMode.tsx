@@ -21,11 +21,12 @@ import { styleToDo01, styleToDo02, styleToDo03 } from "./GsComponentsStyle";
 let init = true;
 let lengthMassMem = 0;
 let timerId: any[] = [];
-let massInt: any[][] = []; //null
+let massInt: any[][] = []; // null
 
 let oldFaz = -1;
 let needRend = false;
 let nomIllum = -1;
+const tShadow = "2px 2px 3px rgba(0,0,0,0.3)";
 
 const RgsToDoMode = (props: {
   massMem: Array<number>;
@@ -171,23 +172,18 @@ const RgsToDoMode = (props: {
 
   const RunVertex = (mode: number) => {
     let fazer = massfaz[mode];
-    console.log(mode + 1 + "-й светофор пошёл", DEMO, timerId[mode]);
     timerId[mode] = setInterval(() => DoTimerId(mode), timer); // 60000
     massInt[mode].push(JSON.parse(JSON.stringify(timerId[mode])));
     ToDoMode(mode);
     //=========================================================================
     console.log(mode + 1 + "-й светофор АКТИВИРОВАН", timerId[mode]);
-    if (!DEMO) {
-      SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
-    } else {
+    if (DEMO) {
       massfaz[mode].fazaSist = fazer.faza;
       dispatch(massfazCreate(massfaz));
-      //setTrigger(!trigger);
-    }
+    } else SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
     massfaz[mode].runRec = DEMO ? 4 : 2;
-
-    console.log(mode + 1 + "-й светофор!!!", DEMO, massfaz[mode].runRec);
-
+    //=========================================================================
+    console.log(mode + 1 + "-й светофор", DEMO, massfaz[mode].runRec);
     if (DEMO) massfaz[mode].faza = massfaz[mode].fazaBegin;
     setTrigger(!trigger);
   };
@@ -252,12 +248,8 @@ const RgsToDoMode = (props: {
       if (!fazer.runRec || fazer.runRec === 5 || fazer.runRec === 1) {
         if (fazer.fazaSist < 0) {
           massfaz[mode].fazaSist = 1;
-        } else {
-          massfaz[mode].fazaSist = fazer.fazaSist === 2 ? 1 : 2;
-        }
-      } else {
-        massfaz[mode].fazaSist = fazer.faza;
-      }
+        } else massfaz[mode].fazaSist = fazer.fazaSist === 2 ? 1 : 2;
+      } else massfaz[mode].fazaSist = fazer.faza;
 
       dispatch(massfazCreate(massfaz));
       props.changeDemo(mode);
@@ -331,79 +323,7 @@ const RgsToDoMode = (props: {
       FindEnd();
       setTrigger(!trigger);
     };
-    //=====================
-    // let resStr = [];
-    // for (let i = 0; i < massfaz.length; i++) {
-    //   let runREC = massfaz[i].runRec;
-    //   let bull = runREC === 2 || runREC === 4 ? " •" : " ";
-    //   let hostt =
-    //     window.location.origin.slice(0, 22) === "https://localhost:3000"
-    //       ? "https://localhost:3000/"
-    //       : "./";
-    //   let host = hostt + "18.svg";
-    //   if (DEMO && debug) {
-    //     host = hostt + "1.svg";
-    //     if (bull === " •" && runREC === 2) host = hostt + "2.svg";
-    //     if (bull !== " •" && runREC === 5) host = hostt + "2.svg";
-    //   }
-    //   if (!debug && massfaz[i].id <= 10000) {
-    //     let num = map.tflight[massfaz[i].idx].tlsost.num.toString();
-    //     if (DEMO) {
-    //       num = "1";
-    //       if (bull === " •" && runREC === 2) num = "2";
-    //       if (bull !== " •" && runREC === 5) num = "2";
-    //     }
-    //     host =
-    //       window.location.origin + "/free/img/trafficLights/" + num + ".svg";
-    //   }
-    //   let star = "";
-    //   let takt = massfaz[i].faza;
-    //   if (!massfaz[i].faza) takt = "";
-    //   let fazaImg: null | string = null;
-    //   fazaImg = massfaz[i].img[takt - 1];
-    //   let pictImg: any = "";
-    //   if (massfaz[i].faza) pictImg = OutputFazaImg(fazaImg, massfaz[i].faza);
 
-    //   let illum = nomIllum === i ? styleStrokaTabl01 : styleStrokaTabl02;
-
-    //   resStr.push(
-    //     <Grid key={i} container sx={{ marginTop: 1 }}>
-    //       <Grid item xs={1} sx={{ paddingTop: 0.7, textAlign: "center" }}>
-    //         <Button sx={illum} onClick={() => ClickKnop(i)}>
-    //           {i + 1}
-    //         </Button>
-    //       </Grid>
-    //       <Grid item xs={1.2} sx={{ fontSize: 27, textAlign: "right" }}>
-    //         {star}
-    //       </Grid>
-    //       <Grid item xs={1.0} sx={{}}>
-    //         {massfaz[i].runRec === 1 && massfaz[i].id <= 10000 && (
-    //           <>{OutputVertexImg(host)}</>
-    //         )}
-    //         {massfaz[i].id > 10000 && <>{CircleObj()}</>}
-    //         {massfaz[i].runRec !== 1 && massfaz[i].id <= 10000 && (
-    //           <Button sx={styleStrokaTablImg} onClick={() => ClickVertex(i)}>
-    //             {OutputVertexImg(host)}
-    //           </Button>
-    //         )}
-    //       </Grid>
-    //       <Grid item xs={0.4} sx={styleToDo03}>
-    //         {bull}
-    //       </Grid>
-    //       <Grid item xs={1.1} sx={styleStrokaTakt}>
-    //         {takt}
-    //       </Grid>
-    //       <Grid item xs={2} sx={{ textAlign: "center" }}>
-    //         {pictImg}
-    //       </Grid>
-    //       <Grid item xs sx={{ fontSize: 14, padding: "6px 0px 0px 0px" }}>
-    //         {massfaz[i].name}
-    //       </Grid>
-    //     </Grid>
-    //   );
-    // }
-    // return resStr;
-    //=====================
     return massfaz.map((massf: any, idx: number) => {
       let runREC = massf.runRec;
       let bull = runREC === 2 || runREC === 4 ? " •" : " ";
@@ -473,7 +393,6 @@ const RgsToDoMode = (props: {
         </Grid>
       );
     });
-    //=====================
   };
   //=== инициализация ======================================
   if (init) {
@@ -574,13 +493,7 @@ const RgsToDoMode = (props: {
             {StrokaHeader(1.9, "Фаза")}
             {StrokaHeader(5.5, "ДК")}
           </Grid>
-          <Box
-            sx={{
-              overflowX: "auto",
-              height: hTabl,
-              textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
-            }}
-          >
+          <Box sx={{ overflowX: "auto", height: hTabl, textShadow: tShadow }}>
             {StrokaTabl()}
           </Box>
         </Box>

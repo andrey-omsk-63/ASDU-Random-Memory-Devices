@@ -27,7 +27,6 @@ export function massdkCreate(massDka: Pointer[] = []) {
 }
 
 export function massfazCreate(massFaza: Fazer[] = []) {
-  //console.log('action_massfazReducer:', massFaza);
   return {
     type: MASSFAZ_CREATE,
     data: massFaza,

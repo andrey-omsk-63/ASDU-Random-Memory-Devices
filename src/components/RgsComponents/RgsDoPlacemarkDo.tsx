@@ -6,7 +6,6 @@ import { massfazCreate } from "../../redux/actions";
 import { Placemark, YMapsApi } from "react-yandex-maps";
 
 import { GetPointData } from "../RgsServiceFunctions";
-//import { imgFaza } from "./otladkaPicFaza";
 
 let FAZASIST = -1;
 let nomInMassfaz = -1;
@@ -85,7 +84,6 @@ const RgsDoPlacemarkDo = (props: {
       }
     }
   }
-  //debug && (fazaImg = imgFaza); // для отладки
 
   const Hoster = React.useCallback(() => {
     let hostt =
@@ -104,9 +102,8 @@ const RgsDoPlacemarkDo = (props: {
         if (linked >= 0) mpp = "4";
       }
       host = window.location.origin + "/free/img/trafficLights/" + mpp + ".svg";
-    } else {
-      if (DEMO) host = hostt + "1.svg";
-    }
+    } else if (DEMO) host = hostt + "1.svg";
+
     return host;
   }, [mapp, nomSvg, idx, props.vert, debug, DEMO]);
 
@@ -249,13 +246,9 @@ const RgsDoPlacemarkDo = (props: {
   ]);
 
   const getPointOptions2 = () => {
-    //let colorBalloon = "islands#violetCircleIcon";
     return {
-      // preset: colorBalloon,
-      //======
       preset: "islands#circleDotIcon",
       //preset: "islands#blueAutoCircleIcon",
-      //======
       iconColor: "#A05AD4",
       // iconOffset: [0, 0],
       // iconSize: [10, 10],

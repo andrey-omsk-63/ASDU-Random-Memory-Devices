@@ -81,8 +81,8 @@ export const styleSet = {
 };
 
 export const styleInpKnop = {
-  border: 1,
-  borderColor: "#FFDB4D",
+  border: "1px solid #FFDB4D", // жёлтый
+  borderRadius: 1,
   fontSize: 13.3,
   color: "black",
   maxHeight: "27px",
@@ -180,7 +180,6 @@ export const styleSetProcess = {
   width: 333,
   bgcolor: "background.paper",
   border: "1px solid #fff",
-  //borderColor: "primary.main",
   borderRadius: 1,
   boxShadow: 24,
   p: 1.5,
@@ -192,11 +191,10 @@ export const styleEditName = {
   height: "60px",
   marginTop: "9vh",
   marginLeft: "48px",
-  border: "3px solid #000",
-  borderColor: "#FFFEF7",
-  borderRadius: 2,
+  bgcolor: "#FFFEF7", // молоко
+  border: "3px solid #FFFEF7", // молоко
+  borderRadius: 1,
   boxShadow: 24,
-  bgcolor: "#FFFEF7",
   opacity: 0.9,
 };
 //=== AppointVertex ===================================================
@@ -245,8 +243,7 @@ export const styleAppSt04 = {
 
 export const styleAppSt05 = {
   marginTop: -0.25,
-  //bgcolor: "#F1F5FB", // светло-серый
-  background: 'linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )',
+  background: "linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )",
   border: "1px solid #d4d4d4",
   borderRadius: 1,
   boxShadow: 24,

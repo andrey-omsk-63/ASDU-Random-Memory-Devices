@@ -1,4 +1,3 @@
-// export const COMM_CREATE = 'COMM_CREATE';
 export const MASSDK_CREATE = 'MASSDK_CREATE';
 export const MASSFAZ_CREATE = 'MASSFAZ_CREATE';
 export const MASSMODE_CREATE = 'MASSMODE_CREATE';

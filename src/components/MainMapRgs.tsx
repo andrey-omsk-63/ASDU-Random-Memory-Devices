@@ -16,7 +16,6 @@ import RgsProcessObject from "./RgsComponents/RgsProcessObject";
 import RgsAppointVertex from "./RgsComponents/RgsAppointVertex";
 import RgsToDoMode from "./RgsComponents/RgsToDoMode";
 
-//import { getReferenceLine, getMultiRouteOptions } from "./RgsServiceFunctions";
 import { getMassMultiRouteOptions, Distance } from "./RgsServiceFunctions";
 import { getMassMultiRouteOptionsDemo } from "./RgsServiceFunctions";
 import { getReferencePoints, CenterCoord } from "./RgsServiceFunctions";
@@ -404,18 +403,15 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     } else {
       switch (mode) {
         case 51: // режим управления
-          datestat.finish = false;
-          datestat.demo = false;
+          datestat.finish = datestat.demo = false;
           dispatch(statsaveCreate(datestat));
           inTarget = true;
           SetHelper(1);
           break;
         case 52: // режим назначения
-          datestat.finish = false;
-          datestat.demo = false;
+          datestat.finish = datestat.demo = false;
           dispatch(statsaveCreate(datestat));
-          setToDoMode(false);
-          inTarget = false;
+          setToDoMode(inTarget = false);
           SetHelper(1);
           break;
         case 53: // выполнить режим
@@ -427,17 +423,15 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           setFlagPusk(!flagPusk);
           break;
         case 54: // режим Показать связи
-          datestat.finish = false;
-          datestat.demo = false;
+          datestat.finish = datestat.demo = false;
           dispatch(statsaveCreate(datestat));
           SetHelper(0);
           ymaps && DoDemo(ymaps);
           break;
         case 55: // режим Демо
           datestat.finish = false;
-          datestat.demo = true;
+          datestat.demo = inTarget = true;
           dispatch(statsaveCreate(datestat));
-          inTarget = true;
           SetHelper(1);
       }
     }

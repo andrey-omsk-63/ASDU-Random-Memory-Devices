@@ -68,9 +68,7 @@ const RgsEditName = (props: { setOpen: Function; idx: number }) => {
         let val = event.target.value.trimStart(); // удаление пробелов в начале строки
         setValue(val);
         valueName = val;
-      } else {
-        valueName = value;
-      }
+      } else valueName = value;
     };
 
     return (
@@ -79,7 +77,7 @@ const RgsEditName = (props: { setOpen: Function; idx: number }) => {
           <TextField
             size="small"
             onKeyPress={handleKey} //отключение Enter
-            InputProps={{disableUnderline: true, style: { fontSize: 13.3 } }}
+            InputProps={{ disableUnderline: true, style: { fontSize: 13.3 } }}
             value={value}
             onChange={handleChangeName}
             variant="standard"
@@ -94,7 +92,7 @@ const RgsEditName = (props: { setOpen: Function; idx: number }) => {
   return (
     <Modal open={openSetAdress} onClose={handleCloseSet}>
       <Grid item container sx={styleEditName}>
-        <Grid item xs={9.5} sx={{ border: 0 }}>
+        <Grid item xs={9.7}>
           <InputName />
         </Grid>
         <Grid item xs={2.3}>

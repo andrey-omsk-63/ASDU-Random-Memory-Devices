@@ -499,6 +499,21 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
   );
 };
 
+export const GetFaza = (
+  mass: any,
+  mas: any,
+  maxFaza: number,
+  kluch: string
+) => {
+  let faza = 0;
+  if (mass) {
+    for (let i = 0; i < mas.length; i++)
+      if (mas[i].id === kluch) faza = Number(mas[i].phase);
+  }
+  if (faza > maxFaza || !faza) faza = 1;
+  return faza;
+};
+
 export const AppointHeader = (hBlock: number) => {
   const RecHeader = (xss: number, rec: string) => {
     return (
@@ -650,7 +665,6 @@ export const CheckKey = (kluch: string, map: any, addobj: any) => {
         have = true;
     }
   }
-  //console.log("KLU:", have, klArea, klId);
   return have;
 };
 
@@ -1398,7 +1412,6 @@ export const OutPutZZ = (zz: string) => {
     position: "relative",
     top: "33%",
     color: "blue",
-    //marginLeft: -0.5,
   };
 
   return (
@@ -1497,7 +1510,6 @@ export const OutPutVV = (vv: string) => {
     position: "relative",
     top: "33%",
     color: "blue",
-    //marginLeft: 0.3,
   };
 
   return (
@@ -1703,15 +1715,8 @@ export const InputDirect = (func: any) => {
     massKey.push(key);
     massDat.push(dat[key]);
   }
-  for (let i = 0; i < massKey.length; i++) {
-    let maskCurrencies = {
-      value: "",
-      label: "",
-    };
-    maskCurrencies.value = massKey[i];
-    maskCurrencies.label = massDat[i];
-    currencies.push(maskCurrencies);
-  }
+  for (let i = 0; i < massKey.length; i++)
+    currencies.push({ value: massKey[i], label: massDat[i] });
 
   const [currency, setCurrency] = React.useState(1);
 
