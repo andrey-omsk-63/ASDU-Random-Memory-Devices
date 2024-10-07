@@ -16,11 +16,8 @@ const GsErrorMessage = (props: { sErr: string; setOpen: any }) => {
     marginTop: "15vh",
     marginLeft: "24vh",
     width: 380,
-    //bgcolor: "background.paper",
-    //bgcolor: "#fcebfb", // бледно-розовый
-    bgcolor: "#fff", // бледно-розовый
-    border: "1px solid #fcebfb", // бледно-розовый
-    //borderColor: "red",
+    bgcolor: 'background.paper',
+    border: '1px solid #fff',
     borderRadius: 1,
     boxShadow: 24,
     p: 1.5,

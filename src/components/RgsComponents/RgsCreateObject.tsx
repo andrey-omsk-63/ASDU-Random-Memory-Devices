@@ -42,7 +42,6 @@ const RgsCreateObject = (props: {
     const { addobjReducer } = state;
     return addobjReducer.addobj.dateAdd;
   });
-  //console.log("RgsCreateObject", addobj);
   let coordinates = useSelector((state: any) => {
     const { coordinatesReducer } = state;
     return coordinatesReducer.coordinates;
@@ -55,20 +54,15 @@ const RgsCreateObject = (props: {
   let dat = map.areaInfo[homeRegion];
   let massKey = [];
   let massDat = [];
+  // список районов
   const currencies: any = [];
   for (let key in dat) {
     massKey.push(key);
     massDat.push(dat[key]);
   }
-  for (let i = 0; i < massKey.length; i++) {
-    let maskCurrencies = {
-      value: "",
-      label: "",
-    };
-    maskCurrencies.value = massKey[i];
-    maskCurrencies.label = massDat[i];
-    currencies.push(maskCurrencies);
-  }
+  for (let i = 0; i < massKey.length; i++)
+    currencies.push({ value: massKey[i], label: massDat[i] });
+
   let datID: Array<number> = []; // подготовка ввода ID
   let massKeyID = [];
   let massDatID = [];
@@ -81,20 +75,14 @@ const RgsCreateObject = (props: {
     if (!have) datID.push(freeID);
     if (datID.length > 76) break;
   }
+  // список свободных ID
   const currenciesID: any = [];
   for (let key in datID) {
     massKeyID.push(datID[key].toString());
     massDatID.push(datID[key]);
   }
-  for (let i = 0; i < massKeyID.length; i++) {
-    let maskCurrencies = {
-      value: "",
-      label: 0,
-    };
-    maskCurrencies.value = massKeyID[i];
-    maskCurrencies.label = massDatID[i];
-    currenciesID.push(maskCurrencies);
-  }
+  for (let i = 0; i < massKeyID.length; i++)
+    currenciesID.push({ value: massKeyID[i], label: massDatID[i] });
   //========================================================
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
   const [currency, setCurrency] = React.useState(massKey[0]);
@@ -215,7 +203,6 @@ const RgsCreateObject = (props: {
 
   const handleClose = () => {
     let have = false;
-    console.log("@@@:", valueID, typeof valueID);
     for (let i = 0; i < addobj.addObjects.length; i++) {
       if (
         addobj.addObjects[i].region === Number(datestat.region) &&

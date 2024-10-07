@@ -45,8 +45,7 @@ export const styleToDoMode = {
   marginRight: 1,
   width: "96%",
   bgcolor: "background.paper",
-  border: "3px solid #000",
-  borderColor: "primary.main",
+  border: "3px solid #fff",
   borderRadius: 1,
   boxShadow: 24,
   p: 1.0,
@@ -58,8 +57,7 @@ export const styleStrokaTabl01 = {
   maxHeight: "24px",
   minHeight: "24px",
   bgcolor: "#BAE186", // тёмно-салатовый
-  border: "1px solid #000",
-  borderColor: "#93D145", // ярко-салатовый
+  border: "1px solid #93D145", // ярко-салатовый
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
@@ -110,7 +108,7 @@ export const StyleToDoMode = (DEMO: boolean) => {
     marginRight: 1,
     width: "96%",
     bgcolor: "background.paper",
-    border: "1px solid #FFF",
+    border: "1px solid #fff",
     borderRadius: 1,
     boxShadow: 24,
     p: 1.0,

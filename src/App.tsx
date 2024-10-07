@@ -281,8 +281,7 @@ const App = () => {
       window.location.origin.slice(0, 22) === "https://localhost:3000"
         ? "https://localhost:3000/"
         : "./";
-    const ipAdress: string = road + "cross.svg";
-    axios.get(ipAdress).then(({ data }) => {
+    axios.get(road + "cross.svg").then(({ data }) => {
       dateStat.pictSvg = data;
     });
     dispatch(statsaveCreate(dateStat));

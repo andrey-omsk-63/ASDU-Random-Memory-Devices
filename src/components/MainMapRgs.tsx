@@ -411,7 +411,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         case 52: // режим назначения
           datestat.finish = datestat.demo = false;
           dispatch(statsaveCreate(datestat));
-          setToDoMode(inTarget = false);
+          setToDoMode((inTarget = false));
           SetHelper(1);
           break;
         case 53: // выполнить режим
@@ -447,9 +447,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     setFlagPusk(!flagPusk);
   };
 
-  const SetRestartBan = (mode: boolean) => {
-    setRestartBan((BAN = mode));
-  };
+  const SetRestartBan = (mode: boolean) => setRestartBan((BAN = mode));
 
   //=== инициализация ======================================
   if (!flagOpen && Object.keys(map.tflight).length) {

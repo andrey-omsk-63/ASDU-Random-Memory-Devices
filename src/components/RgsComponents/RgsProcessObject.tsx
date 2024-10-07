@@ -27,7 +27,6 @@ const RgsProcessObject = (props: { setOpen: Function; idx: number }) => {
     const { addobjReducer } = state;
     return addobjReducer.addobj.dateAdd;
   });
-  console.log("RgsProcessObject", addobj);
   let coordinates = useSelector((state: any) => {
     const { coordinatesReducer } = state;
     return coordinatesReducer.coordinates;
@@ -54,10 +53,7 @@ const RgsProcessObject = (props: { setOpen: Function; idx: number }) => {
       dispatch(addobjCreate(addobj));
       SendSocketDeleteAddObj(debug, ws, dater);
       handleCloseSet();
-    } else {
-      //console.log("Здесь будет редактирование имени");
-      setOpenProcess(true);
-    }
+    } else setOpenProcess(true); // редактирование имени
   };
 
   const StrokaBalloon = (soob: string, mode: number) => {

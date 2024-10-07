@@ -107,9 +107,8 @@ export const Distance = (coord1: Array<number>, coord2: Array<number>) => {
 
 export const CheckHaveLink = (klu: string, kluLast: string, bindings: any) => {
   let hv = -1;
-  for (let i = 0; i < bindings.tfLinks.length; i++) {
+  for (let i = 0; i < bindings.tfLinks.length; i++)
     if (bindings.tfLinks[i].id === kluLast) hv = i;
-  }
   let mass: any = bindings.tfLinks[hv].tflink;
   let haveLink = false;
   if (mass.west.id === klu) haveLink = true;
@@ -342,9 +341,7 @@ export const MakeSoobErr = (mode: number, klu: string, klu2: string) => {
 
 //=== addRoute =====================================
 export const getReferencePoints = (pointA: any, pointB: any) => {
-  return {
-    referencePoints: [pointA, pointB],
-  };
+  return { referencePoints: [pointA, pointB] };
 };
 
 export const getReferenceLine = (massCoord: any, between: any) => {
@@ -469,9 +466,7 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     color: "black",
   };
 
-  const handleClose = (mode: boolean) => {
-    handleCloseEnd(mode);
-  };
+  const handleClose = (mode: boolean) => handleCloseEnd(mode);
 
   return (
     <Modal open={badExit} onClose={() => handleClose(false)}>
@@ -1356,9 +1351,7 @@ export const ReplaceInSvg = (svgPict: any, wh: string) => {
       if (isNaN(Number(svgPipa[vxod + 7 + i]))) break;
       ch = ch + svgPipa[vxod + 7 + i];
     }
-    for (let i = 0; i < 6; i++) {
-      svgPipa = svgPipa.replace(ch, widthHeight);
-    }
+    for (let i = 0; i < 6; i++) svgPipa = svgPipa.replace(ch, widthHeight);
   }
   return svgPipa;
 };
@@ -1415,7 +1408,7 @@ export const OutPutZZ = (zz: string) => {
   };
 
   return (
-    <Grid item xs={0.15} sx={{ border: 0 }}>
+    <Grid item xs={0.15}>
       <Box sx={styleZId}>
         <b>{zz}</b>
       </Box>
@@ -1425,7 +1418,7 @@ export const OutPutZZ = (zz: string) => {
 
 export const OutPutSZ = (sz: string) => {
   return (
-    <Grid item xs={4} sx={{ border: 0 }}>
+    <Grid item xs={4}>
       <Box sx={{ textAlign: "left" }}>
         <b>{sz}</b>
       </Box>
@@ -1435,7 +1428,7 @@ export const OutPutSZ = (sz: string) => {
 
 export const OutPutSS = (ss: string) => {
   return (
-    <Grid item xs={4} sx={{ border: 0 }}>
+    <Grid item xs={4}>
       <Box sx={{ textAlign: "center" }}>
         <b>{ss}</b>
       </Box>
@@ -1445,7 +1438,7 @@ export const OutPutSS = (ss: string) => {
 
 export const OutPutSV = (sv: string) => {
   return (
-    <Grid item xs={4} sx={{ border: 0 }}>
+    <Grid item xs={4}>
       <Box sx={{ textAlign: "right" }}>
         <b>{sv}</b>
       </Box>
@@ -1465,7 +1458,7 @@ export const OutTopRow = (sz: string, ss: string, sv: string) => {
 
 export const OutPutUZ = (uz: string) => {
   return (
-    <Grid item xs={4} sx={{ border: 0 }}>
+    <Grid item xs={4}>
       <Box sx={{ textAlign: "left" }}>
         <b>{uz}</b>
       </Box>
@@ -1475,7 +1468,7 @@ export const OutPutUZ = (uz: string) => {
 
 export const OutPutUU = (uu: string) => {
   return (
-    <Grid item xs={4} sx={{ border: 0 }}>
+    <Grid item xs={4}>
       <Box sx={{ textAlign: "center" }}>
         <b>{uu}</b>
       </Box>
@@ -1485,7 +1478,7 @@ export const OutPutUU = (uu: string) => {
 
 export const OutPutUV = (uv: string) => {
   return (
-    <Grid item xs={4} sx={{ border: 0 }}>
+    <Grid item xs={4}>
       <Box sx={{ textAlign: "right" }}>
         <b>{uv}</b>
       </Box>
@@ -1513,7 +1506,7 @@ export const OutPutVV = (vv: string) => {
   };
 
   return (
-    <Grid item xs={0.15} sx={{ border: 0 }}>
+    <Grid item xs={0.15}>
       <Box sx={styleVId}>
         <b>{vv}</b>
       </Box>
@@ -1573,9 +1566,7 @@ export const SaveСhange = (
 };
 
 export const ViewSvg = (setOpenSvg: Function, pictSvg: any) => {
-  const handleClose = () => {
-    setOpenSvg(false);
-  };
+  const handleClose = () => setOpenSvg(false);
 
   const CloseEnd = (event: any, reason: string) => {
     if (reason === "escapeKeyDown") handleClose();
