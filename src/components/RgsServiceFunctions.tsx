@@ -353,10 +353,10 @@ export const getReferenceLine = (massCoord: any, between: any) => {
 
 export const getMultiRouteOptions = () => {
   return {
-    routeActiveStrokeWidth: 4,
+    routeActiveStrokeWidth: 4, // толщина линии
     //routeActiveStrokeColor: "#224E1F",
-    routeStrokeWidth: 0,
-    wayPointVisible: false,
+    routeStrokeWidth: 0, // толщина линии альтернативного маршрута
+    wayPointVisible: false, // отметки "начало - конец"
   };
 };
 
@@ -375,9 +375,9 @@ export const getMassMultiRouteOptions = (i: number) => {
     //routeActiveStrokeColor: '#547A25', // зелёный
     //routeActiveStrokeColor: '#000000', // чёрный
     routeActiveStrokeColor: col,
-    routeActiveStrokeWidth: 4,
-    routeStrokeWidth: 0,
-    wayPointVisible: false,
+    routeActiveStrokeWidth: 4, // толщина линии
+    routeStrokeWidth: 0, // толщина линии альтернативного маршрута
+    wayPointVisible: false, // отметки "начало - конец"
   };
 };
 
@@ -389,7 +389,7 @@ export const getMassMultiRouteOptionsDemo = (i: number, coler: string) => {
     routeActiveStrokeColor: coler,
     routeActiveStrokeWidth: 3,
     routeStrokeWidth: 0,
-    wayPointVisible: false,
+    wayPointVisible: false, // отметки "начало - конец"
   };
 };
 
@@ -501,10 +501,9 @@ export const GetFaza = (
   kluch: string
 ) => {
   let faza = 0;
-  if (mass) {
+  if (mass)
     for (let i = 0; i < mas.length; i++)
       if (mas[i].id === kluch) faza = Number(mas[i].phase);
-  }
   if (faza > maxFaza || !faza) faza = 1;
   return faza;
 };
@@ -605,17 +604,6 @@ export const OutputKey = (klush: string, hBlock: number, dir: string) => {
         <Box sx={styleAppSt02}>
           <Box sx={styleOutputKlush}>{klush}</Box>{" "}
           {klush && <Box sx={styleOutputHint}>{dir}</Box>}
-          {/* <Box sx={styleOutputHint}>{rec1}</Box>
-              <Box
-                sx={{
-                  fontSize: 13.0,
-                  color: "#A8A8A8",
-                  display: "inline-block",
-                  fontWeight: thick,
-                }}
-              >
-                {rec2}
-              </Box> */}
         </Box>
       </Grid>
     </Grid>
@@ -737,7 +725,7 @@ export const AdditionalButton = (
   return (
     <>
       {!flOpen && dir && (
-        <Box sx={{ height: hBlock / 15, marginTop: "12px", border: 0 }}>
+        <Box sx={{ height: hBlock / 15, marginTop: "12px" }}>
           <Button sx={styleAppSt06} onClick={() => funcAddKnop(dir)}>
             Доп.направление {dir} &nbsp; <b>{find}</b>
           </Button>

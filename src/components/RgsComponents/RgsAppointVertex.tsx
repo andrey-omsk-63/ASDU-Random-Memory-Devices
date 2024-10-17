@@ -52,6 +52,7 @@ let HAVE = 0;
 let haveDop = 0;
 let position = 0;
 let heightImg = 0;
+//let comment = false;
 
 const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   //== Piece of Redux ======================================
@@ -95,6 +96,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
     HAVE = haveDop = position = heightImg = 0;
+    //comment = false;
     massFlDir = [0, 0, 0, 0];
     massAreaId = new Array(16).fill(0);
     kluchGl = homeRegion + "-" + map.tflight[props.idx].area.num + "-";
@@ -594,6 +596,11 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       </Box>
     );
   };
+
+  // const SetComment = (mode: boolean) => {
+  //   comment = mode;
+  //   setTrigger(!trigger);
+  // };
 
   if (ref.current) heightImg = ref.current.clientWidth;
   let soobComment =
