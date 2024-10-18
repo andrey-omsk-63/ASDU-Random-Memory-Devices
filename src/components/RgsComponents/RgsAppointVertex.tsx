@@ -52,7 +52,6 @@ let HAVE = 0;
 let haveDop = 0;
 let position = 0;
 let heightImg = 0;
-//let comment = false;
 
 const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   //== Piece of Redux ======================================
@@ -596,11 +595,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       </Box>
     );
   };
-
-  // const SetComment = (mode: boolean) => {
-  //   comment = mode;
-  //   setTrigger(!trigger);
-  // };
 
   if (ref.current) heightImg = ref.current.clientWidth;
   let soobComment =
