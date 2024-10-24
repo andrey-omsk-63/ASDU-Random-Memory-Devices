@@ -101,9 +101,10 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     kluchGl = homeRegion + "-" + map.tflight[props.idx].area.num + "-";
     kluchGl += map.tflight[props.idx].ID;
     maxFaza = map.tflight[props.idx].phases.length;
-    for (let i = 0; i < 12; i++) massFaz[i] = map.tflight[props.idx].phases[0];
+    //for (let i = 0; i < 12; i++) massFaz[i] = map.tflight[props.idx].phases[0]; // зачем?
     bindIdx = -1;
     massFaz = new Array(56).fill(1);
+
     for (let i = 0; i < bindings.tfLinks.length; i++)
       if (bindings.tfLinks[i].id === kluchGl) bindIdx = i;
     if (bindIdx >= 0) {
@@ -119,6 +120,43 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       let kluchUV = bindings.tfLinks[bindIdx].tflink.add2.id;
       let kluchUZ = bindings.tfLinks[bindIdx].tflink.add3.id;
 
+      // console.log("1###:", mass);
+      // console.log(
+      //   "2###:",
+      //   kluchZ,
+      //   kluchS,
+      //   kluchV,
+      //   kluchU,
+      //   kluchSZ,
+      //   kluchSV,
+      //   kluchUV,
+      //   kluchUZ
+      // );
+
+      //=== проверка наличия используюмых светофоров ===========
+      let nety = true;
+      const Checker = (kluch: string) => {
+        if (kluch && nety) {
+          let idd = TakeAreaId(kluch)[1].toString();
+          if (!CheckKey(idd, map, addobj)) {
+            console.log("нету ", idd);
+            soobErr = "⚠️Предупреждение! Перекрёсток №";
+            if (Number(idd) > 10000) soobErr = "⚠️Предупреждение! Объект №";
+            soobErr += idd + " не существует";
+            nety = false;
+            setOpenSetErr(true);
+          }
+        }
+      };
+      Checker(kluchZ);
+      Checker(kluchS);
+      Checker(kluchV);
+      Checker(kluchU);
+      Checker(kluchSZ);
+      Checker(kluchSV);
+      Checker(kluchUV);
+      Checker(kluchUZ);
+      //========================================================
       if (kluchZ) {
         let mas = mass.west.wayPointsArray;
         massFaz[0] = GetFaza(mass, mas, maxFaza, kluchUZ);
@@ -415,7 +453,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
           return;
         }
         let kluch = homeRegion + "-" + area + "-" + id;
-        let kluchOutput = area + "-" + id;
+        //let kluchOutput = area + "-" + id;
+        let kluchOutput = id;
         if (kluch === kluchGl) {
           soobErr = "Вы пытаетесь связать перекрёсток с самим собой";
           setOpenSetErr(true);
@@ -424,9 +463,9 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
           setValId(0);
         } else {
           if (!CheckKey(kluch, map, addobj)) {
-            soobErr = "Перекрёсток [";
-            if (id > 10000) soobErr = "Объект [";
-            soobErr += kluchOutput + "] не существует";
+            soobErr = "Перекрёсток ";
+            if (id > 10000) soobErr = "Объект ";
+            soobErr += kluchOutput + " не существует";
             setOpenSetErr(true);
             massAreaId[nomInMass * 2] = 0;
             massAreaId[nomInMass * 2 + 1] = 0;
@@ -436,9 +475,9 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             for (let i = 0; i < 8; i++)
               if (massAreaId[i * 2 + 1] === id) have++;
             if (have > 1) {
-              soobErr = "Перекрёсток [";
-              if (id > 10000) soobErr = "Объект [";
-              soobErr += kluchOutput + "] был введён с другого направления";
+              soobErr = "Перекрёсток ";
+              if (id > 10000) soobErr = "Объект ";
+              soobErr += kluchOutput + " был введён с другого направления";
               setOpenSetErr(true);
               massAreaId[nomInMass * 2] = 0;
               massAreaId[nomInMass * 2 + 1] = 0;
@@ -608,7 +647,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             &#10006;
           </Button>
           <Box sx={styleAppSt04}>
-            <b>Массив связности перекрёстка {kluchGl.slice(2)}</b> (
+            {/* <b>Массив связности перекрёстка {kluchGl.slice(2)}</b> ( */}
+            <b>Массив связности перекрёстка №{map.tflight[props.idx].ID}</b> (
             <b>{map.tflight[props.idx].description}</b>)
           </Box>
           <Grid container sx={{ marginTop: 2 }}>

@@ -170,7 +170,7 @@ export const SendSocketGetSvg = (
   area: string,
   id: number,
 ) => {
-  console.log('getSvg:', region, area, id);
+  //console.log('getSvg:', region, area, id);
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {

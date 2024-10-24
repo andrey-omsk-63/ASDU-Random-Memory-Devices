@@ -70,6 +70,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     const { bindingsReducer } = state;
     return bindingsReducer.bindings.dateBindings;
   });
+  //console.log('GLBindings:', bindings);
   let addobj = useSelector((state: any) => {
     const { addobjReducer } = state;
     return addobjReducer.addobj.dateAdd;
@@ -90,7 +91,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
-  console.log('datestat:', datestat);
+  //console.log('datestat:', datestat);
   const debug = datestat.debug;
   const ws = datestat.ws;
   const homeRegion = datestat.region;
