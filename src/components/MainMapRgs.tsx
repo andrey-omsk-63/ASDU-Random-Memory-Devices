@@ -116,6 +116,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const addRoute = (ymaps: any, bound: boolean) => {
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
     let massMultiRoute: any = []; // исходящие связи
+
+    //console.log('addRoute:', massRoute.length, massRoute);
+
     for (let i = 0; i < massRoute.length; i++) {
       massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
         getReferencePoints(massCoord[massCoord.length - 1], massRoute[i]),
@@ -215,6 +218,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     if (massNomBind.length === 1) massRoute = MakeMassRouteFirst(klu, bindings, map);
     if (massNomBind.length > 1 && klu.length < 9)
       massRoute = MakeMassRoute(bindings, nom, map, addobj)[0];
+
+    //console.log('addMassRoute:', massRoute);
+
     ymaps && addRoute(ymaps, false); // перерисовка связей
     if (massMem.length === 3) {
       PressButton(53);

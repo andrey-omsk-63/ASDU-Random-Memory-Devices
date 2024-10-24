@@ -207,7 +207,8 @@ const App = () => {
           let massRegion = [];
           for (let key in dateMapGl.regionInfo)
             if (!isNaN(Number(key))) massRegion.push(Number(key));
-          homeRegion = massRegion[1].toString();
+          homeRegion = massRegion[0].toString();
+          if (dateMapGl.tflight.length) homeRegion = dateMapGl.tflight[0].region.num;
           dateStat.region = homeRegion;
           dispatch(statsaveCreate(dateStat));
           flagMap = true;
