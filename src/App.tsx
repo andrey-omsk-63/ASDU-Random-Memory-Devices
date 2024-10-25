@@ -1,27 +1,27 @@
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { mapCreate, statsaveCreate } from './redux/actions';
-import { coordinatesCreate, bindingsCreate } from './redux/actions';
-import { addobjCreate, massfazCreate } from './redux/actions';
-import { massdkCreate } from './redux/actions';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { mapCreate, statsaveCreate } from "./redux/actions";
+import { coordinatesCreate, bindingsCreate } from "./redux/actions";
+import { addobjCreate, massfazCreate } from "./redux/actions";
+import { massdkCreate } from "./redux/actions";
 
-import Grid from '@mui/material/Grid';
+import Grid from "@mui/material/Grid";
 
-import axios from 'axios';
+import axios from "axios";
 
-import MainMapRgs from './components/MainMapRgs';
-import AppSocketError from './AppSocketError';
+import MainMapRgs from "./components/MainMapRgs";
+import AppSocketError from "./AppSocketError";
 
-import { MasskPoint } from './components/RgsServiceFunctions';
+import { MasskPoint } from "./components/RgsServiceFunctions";
 
-import { SendSocketGetBindings } from './components/RgsSocketFunctions';
-import { SendSocketGetAddObjects } from './components/RgsSocketFunctions';
-import { SendSocketGetPhases } from './components/RgsSocketFunctions';
+import { SendSocketGetBindings } from "./components/RgsSocketFunctions";
+import { SendSocketGetAddObjects } from "./components/RgsSocketFunctions";
+import { SendSocketGetPhases } from "./components/RgsSocketFunctions";
 
-import { dataMap } from './otladkaMaps';
-import { imgFaza } from './otladkaPicFaza';
-import { dataBindings } from './otladkaBindings';
-import { dataAddObjects } from './otladkaAddObjects';
+import { dataMap } from "./otladkaMaps";
+import { imgFaza } from "./otladkaPicFaza";
+import { dataBindings } from "./otladkaBindings";
+import { dataAddObjects } from "./otladkaAddObjects";
 
 export let dateMapGl: any;
 export let dateBindingsGl: any;
@@ -48,9 +48,9 @@ export let dateStat: Stater = {
   demo: false,
   readyPict: true,
   readyFaza: true,
-  region: '0',
-  area: '0',
-  id: '0',
+  region: "0",
+  area: "0",
+  id: "0",
   phSvg: [null, null, null, null, null, null, null, null],
   pictSvg: null,
 };
@@ -95,8 +95,8 @@ export let Coordinates: Array<Array<number>> = []; // массив коорди�
 let flagOpenDebug = true;
 let flagOpenWS = true;
 let WS: any = null;
-let homeRegion: string = '0';
-let soob = '';
+let homeRegion: string = "0";
+let soob = "";
 let flagMap = false;
 let flagBindings = false;
 let flagAddObjects = false;
@@ -119,9 +119,9 @@ const App = () => {
   //========================================================
   const Initialisation = () => {
     let deb = dateStat.debug;
-    console.log('dateMapGl:', dateMapGl);
-    console.log('dateBindingsGl:', dateBindingsGl);
-    console.log('dateAddObjectsGl:', dateAddObjectsGl);
+    console.log("dateMapGl:", dateMapGl);
+    console.log("dateBindingsGl:", dateBindingsGl);
+    console.log("dateAddObjectsGl:", dateAddObjectsGl);
     for (let i = 0; i < dateMapGl.tflight.length; i++) {
       let coord = [];
       coord[0] = dateMapGl.tflight[i].points.Y;
@@ -145,7 +145,11 @@ const App = () => {
   };
 
   const host =
-    'wss://' + window.location.host + window.location.pathname + 'W' + window.location.search;
+    "wss://" +
+    window.location.host +
+    window.location.pathname +
+    "W" +
+    window.location.search;
 
   const [openSetErr, setOpenSetErr] = React.useState(false);
   const [openMapInfo, setOpenMapInfo] = React.useState(false);
@@ -155,8 +159,8 @@ const App = () => {
     WS = new WebSocket(host);
     dateStat.ws = WS;
     if (
-      WS.url.slice(0, 20) === 'wss://localhost:3000' ||
-      WS.url.slice(0, 27) === 'wss://andrey-omsk-63.github'
+      WS.url.slice(0, 20) === "wss://localhost:3000" ||
+      WS.url.slice(0, 27) === "wss://andrey-omsk-63.github"
     )
       dateStat.debug = true;
     dispatch(statsaveCreate(dateStat));
@@ -167,22 +171,23 @@ const App = () => {
 
   React.useEffect(() => {
     WS.onopen = function (event: any) {
-      console.log('WS.current.onopen:', event);
+      console.log("WS.current.onopen:", event);
     };
 
     WS.onclose = function (event: any) {
-      console.log('WS.current.onclose:', event);
+      console.log("WS.current.onclose:", event);
     };
 
     WS.onerror = function (event: any) {
-      console.log('WS.current.onerror:', event);
+      console.log("WS.current.onerror:", event);
     };
 
     WS.onmessage = function (event: any) {
       let allData = JSON.parse(event.data);
       let data = allData.data;
+      //console.log("Пришло:", allData.type);
       switch (allData.type) {
-        case 'phases':
+        case "phases":
           let flagChange = false;
           for (let i = 0; i < data.phases.length; i++) {
             for (let j = 0; j < massfaz.length; j++) {
@@ -196,37 +201,36 @@ const App = () => {
               }
             }
           }
-          if (flagChange) {
-            dispatch(massfazCreate(massfaz));
-            setTrigger(!trigger);
-          }
+          if (flagChange) dispatch(massfazCreate(massfaz));
+          //setTrigger(!trigger);
           break;
-        case 'mapInfo':
+        case "mapInfo":
           dateMapGl = JSON.parse(JSON.stringify(data));
           dispatch(mapCreate(dateMapGl));
           let massRegion = [];
           for (let key in dateMapGl.regionInfo)
             if (!isNaN(Number(key))) massRegion.push(Number(key));
           homeRegion = massRegion[0].toString();
-          if (dateMapGl.tflight.length) homeRegion = dateMapGl.tflight[0].region.num;
+          if (dateMapGl.tflight.length)
+            homeRegion = dateMapGl.tflight[0].region.num;
           dateStat.region = homeRegion;
           dispatch(statsaveCreate(dateStat));
           flagMap = true;
           setTrigger(!trigger);
           break;
-        case 'getBindings':
+        case "getBindings":
           dateBindingsGl = JSON.parse(JSON.stringify(data));
           dispatch(bindingsCreate(dateBindingsGl));
           flagBindings = true;
           setTrigger(!trigger);
           break;
-        case 'getAddObjects':
+        case "getAddObjects":
           dateAddObjectsGl = JSON.parse(JSON.stringify(data));
           dispatch(addobjCreate(dateAddObjectsGl));
           flagAddObjects = true;
           setTrigger(!trigger);
           break;
-        case 'getPhases':
+        case "getPhases":
           for (let i = 0; i < massdk.length; i++) {
             if (
               massdk[i].region.toString() === data.pos.region &&
@@ -244,20 +248,20 @@ const App = () => {
             }
           }
           break;
-        case 'getSvg':
+        case "getSvg":
           dateStat.pictSvg = data.svg;
           dateStat.readyPict = true;
           dispatch(statsaveCreate(dateStat));
           setTrigger(!trigger);
           break;
         default:
-          console.log('data_default:', data);
+          console.log("data_default:", data);
       }
     };
   }, [dispatch, massfaz, trigger, massdk]);
 
   if (dateStat.debug && flagOpenDebug) {
-    console.log('РЕЖИМ ОТЛАДКИ!!!');
+    console.log("РЕЖИМ ОТЛАДКИ!!!");
     dateMapGl = JSON.parse(JSON.stringify(dataMap));
     dispatch(mapCreate(dateMapGl));
     dateAddObjectsGl = JSON.parse(JSON.stringify(dataAddObjects.data));
@@ -265,7 +269,8 @@ const App = () => {
     dateBindingsGl = JSON.parse(JSON.stringify(dataBindings.data));
     dispatch(bindingsCreate(dateBindingsGl));
     let massRegion = [];
-    for (let key in dateMapGl.regionInfo) if (!isNaN(Number(key))) massRegion.push(Number(key));
+    for (let key in dateMapGl.regionInfo)
+      if (!isNaN(Number(key))) massRegion.push(Number(key));
     homeRegion = massRegion[0].toString();
     dateStat.region = homeRegion;
     dateStat.phSvg[0] = imgFaza;
@@ -274,23 +279,25 @@ const App = () => {
     dateStat.phSvg[3] = null;
     dateStat.phSvg[4] = imgFaza;
     let road =
-      window.location.origin.slice(0, 22) === 'https://localhost:3000'
-        ? 'https://localhost:3000/'
-        : './';
-    axios.get(road + 'cross.svg').then(({ data }) => {
+      window.location.origin.slice(0, 22) === "https://localhost:3000"
+        ? "https://localhost:3000/"
+        : "./";
+    axios.get(road + "cross.svg").then(({ data }) => {
       dateStat.pictSvg = data;
     });
     dispatch(statsaveCreate(dateStat));
     flagMap = true;
-    flagBindings = true;
     flagAddObjects = true;
     flagOpenDebug = false;
   }
 
-  if (flagMap && flagBindings && flagAddObjects && !flagOpenWS) Initialisation();
+  if (flagMap && flagBindings && flagAddObjects && !flagOpenWS)
+    Initialisation();
+
+  
 
   return (
-    <Grid container sx={{ height: '100vh', width: '100%', bgcolor: '#E9F5D8' }}>
+    <Grid container sx={{ height: "100vh", width: "100%", bgcolor: "#E9F5D8" }}>
       <Grid item xs>
         {openSetErr && <AppSocketError sErr={soob} setOpen={setOpenSetErr} />}
         {openMapInfo && <MainMapRgs trigger={trigger} />}

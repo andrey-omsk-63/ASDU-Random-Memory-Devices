@@ -272,7 +272,15 @@ const RgsDoPlacemarkDo = (props: {
         onClick={() => props.OnPlacemarkClickPoint(idx)}
       />
     ),
-    [idx, map, addobj, getPointOptions1, bindings, props]
+    [
+      idx,
+      map,
+      addobj,
+      getPointOptions1,
+      //getPointOptions2,
+      bindings,
+      props,
+    ]
   );
   return MemoPlacemarkDo;
 };
