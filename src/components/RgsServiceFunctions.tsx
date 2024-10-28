@@ -288,9 +288,6 @@ export const GetPointData = (
     let sl = Number(map.tflight[index].region.num) < 10 ? 4 : 5;
     let SL = Number(map.tflight[index].area.num) < 10 ? sl : sl + 1; //============================
     cont1 = map.tflight[index].description + "<br/>";
-
-    //if (map.tflight[index].ID === 216) console.log("ЕСТЬ!!!", index);
-
     cont3 = map.tflight[index].tlsost.description + "<br/>";
     cont2 =
       "[" + map.tflight[index].ID + ", " + map.tflight[index].idevice + "]";
@@ -300,9 +297,6 @@ export const GetPointData = (
 
       if (bindings.tfLinks[i].id === klu) {
         let recc = JSON.parse(JSON.stringify(bindings.tfLinks[i].tflink));
-
-        //if (index === 127) console.log("!!!!!!", i, bindings.tfLinks[i], klu);
-
         cont4 = "<br/>Связи:";
         if (recc.north.id)
           contS = "<br/><b>C:</b> " + ExtrId(recc.north.id, SL);
@@ -357,35 +351,49 @@ export const GetPointOptions1 = (Hoster: any) => {
   };
 };
 
-export const MakeSoobErr = (mode: number, klu: string, klu2: string) => {
+export const MakeSoobErr = (mode: number, Klu: string, Klu2: string) => {
   let soobErr = "";
   let vert = ";";
+  let klu = -1;
+  let klu2 = -1;
+  let aa = Klu.indexOf("-");
+  if (aa >= 0) {
+    klu = TakeAreaId("1-" + Klu)[1];
+    klu2 = TakeAreaId("1-" + Klu2)[1];
+  } else {
+    klu = Number(Klu);
+    klu2 = Number(Klu2);
+  }
+
   switch (mode) {
     case 1:
-      soobErr = "Перекрёсток [";
-      if (klu.length > 6) soobErr = "Объект [";
-      vert = "перекрёстком [";
-      if (klu2.length > 6) vert = "объектом [";
-      soobErr += klu + "] не связан с " + vert;
-      soobErr += klu2 + "]";
+      soobErr = "Перекрёсток #";
+      if (klu > 10000) soobErr = "Объект #";
+      vert = "перекрёстком #";
+      if (klu2 > 10000) vert = "объектом #";
+      soobErr += klu + " не связан с " + vert;
+      soobErr += klu2;
       break;
     case 2:
       soobErr = "Перекрёсток";
-      if (klu.length > 6) soobErr = "Объект";
+      if (klu > 10000) soobErr = "Объект";
       soobErr += " уже используется";
       break;
     case 3:
-      vert = "перекрёстка [";
-      if (klu.length > 6) vert = "объекта [";
-      soobErr = "Нет массива связности " + vert + klu + "]";
+      vert = "перекрёстка #";
+      if (klu > 10000) vert = "объекта #";
+      soobErr = "Нет массива связности " + vert + klu;
       break;
     case 4:
       soobErr =
         "В радиусе 100м от указанной точки управляемые перекрёстки отсутствуют";
       break;
     case 5:
-      soobErr = "Нет связи с [" + klu + "] в массиве связности перекрёстка [";
-      soobErr += klu2 + "]";
+      vert = "перекрёстком #";
+      if (klu > 10000) vert = "объектом #";
+      soobErr =
+        "Нет связи с " + vert + klu + " в массиве связности перекрёстка #";
+      soobErr += klu2;
   }
   return soobErr;
 };
@@ -1673,6 +1681,7 @@ export const ViewSvg = (setOpenSvg: Function, pictSvg: any) => {
 //=== ToDoMode =====================================
 export const CircleObj = () => {
   const circle = {
+    bgcolor: "#C585E7", // светло-сиреневый
     width: 18,
     height: 18,
     border: 3,

@@ -210,6 +210,7 @@ const RgsDoPlacemarkDo = (props: {
             ? hostt + FZSIST + ".jpg"
             : window.location.origin + "/free/img/" + FZSIST + ".jpg";
         }
+        //console.log("imger:", debug, FZSIST, imger);
       }
 
       return {
@@ -228,6 +229,9 @@ const RgsDoPlacemarkDo = (props: {
 
   const getPointOptions1 = React.useCallback(() => {
     let numSost = DEMO ? 18 : mappp.tlsost.num;
+
+    //console.log("getPointOptions1:", pC, FAZASIST, massfaz, nomInMassfaz);
+
     return pC < 0 ||
       FAZASIST < 0 ||
       (FAZASIST === 9 && massfaz[nomInMassfaz].fazaSistOld < 0)

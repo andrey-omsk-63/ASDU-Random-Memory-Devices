@@ -289,12 +289,13 @@ const App = () => {
     flagMap = true;
     flagAddObjects = true;
     flagOpenDebug = false;
+    flagBindings = true;
+
+    console.log("!!!!!!", flagMap, flagBindings, flagAddObjects, !flagOpenWS);
   }
 
   if (flagMap && flagBindings && flagAddObjects && !flagOpenWS)
     Initialisation();
-
-  
 
   return (
     <Grid container sx={{ height: "100vh", width: "100%", bgcolor: "#E9F5D8" }}>

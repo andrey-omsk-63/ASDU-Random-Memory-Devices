@@ -30,7 +30,6 @@ import { SendSocketGetSvg } from "./RgsSocketFunctions";
 import { YMapsModul, MyYandexKey } from "./MapConst";
 
 import { styleMenuGl } from "./MainMapStyle";
-import { NoMealsOutlined } from "@mui/icons-material";
 
 export let BAN = false;
 let flagOpen = false;
@@ -60,6 +59,7 @@ let helper = true;
 let funcContex: any = null;
 let funcBound: any = null;
 let modeHelp = 0;
+let mayEsc = false; // можно воспользоваться Esc при построении маршрута
 
 const MainMapRgs = (props: { trigger: boolean }) => {
   //== Piece of Redux =======================================
@@ -168,15 +168,17 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     }
   };
 
-  const StatusQuo = () => {
+  const StatusQuo = React.useCallback(() => {
     modeHelp = 0;
     massMem = [];
     massCoord = [];
     massKlu = [];
     massNomBind = [];
     zoom = zoom - 0.01;
+    //setMayEsc(false);
+    mayEsc = false;
     ymaps && addRoute(ymaps, false); // перерисовка связей
-  };
+  }, [ymaps]);
 
   const ClickPointInTarget = (index: number) => {
     setIdxObj(index);
@@ -221,8 +223,12 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       massRoute = MakeMassRoute(bindings, nom, map, addobj)[0];
     ymaps && addRoute(ymaps, false); // перерисовка связей
     if (massMem.length === 3) {
+      mayEsc = false;
       PressButton(53);
-    } else setFlagPusk(!flagPusk);
+    } else {
+      mayEsc = true;
+      setFlagPusk(!flagPusk);
+    }
   };
 
   const SoobErr = (soob: string) => {
@@ -390,12 +396,15 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     setFlagCenter(true);
   };
 
-  const SetHelper = (mode: number) => {
-    if (mode) inTarget = !inTarget;
-    inDemo = mode ? false : true;
-    StatusQuo();
-    setFlagPusk(!flagPusk);
-  };
+  const SetHelper = React.useCallback(
+    (mode: number) => {
+      if (mode) inTarget = !inTarget;
+      inDemo = mode ? false : true;
+      StatusQuo();
+      setFlagPusk(!flagPusk);
+    },
+    [StatusQuo, flagPusk]
+  );
 
   const ModeToDo = (mod: number) => {
     modeToDo = mod;
@@ -419,7 +428,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           dispatch(statsaveCreate(datestat));
           setToDoMode((inTarget = false));
           SetHelper(1);
-          ymaps && DoDemo(ymaps, 0); 
+          ymaps && DoDemo(ymaps, 0);
           break;
         case 53: // выполнить режим
           xsMap = 7.7;
@@ -531,7 +540,23 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     needRend = false;
     setFlagPusk(!flagPusk);
   }
+  //=== обработка Esc ======================================
+  const escFunction = React.useCallback(
+    (event) => {
+      if (event.keyCode === 27 && mayEsc) {
+        //console.log("ESC:", mayEsc);
+        inTarget = true;
+        SetHelper(1);
+      }
+    },
+    [SetHelper]
+  );
 
+  React.useEffect(() => {
+    document.addEventListener("keydown", escFunction);
+    return () => document.removeEventListener("keydown", escFunction);
+  }, [escFunction]);
+  //========================================================
   return (
     <Grid container sx={{ height: "99.9vh" }}>
       <Grid item xs={12}>
