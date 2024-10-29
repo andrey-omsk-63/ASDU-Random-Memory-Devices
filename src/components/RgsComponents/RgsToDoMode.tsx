@@ -74,7 +74,7 @@ const RgsToDoMode = (props: {
   let timer = debug || DEMO ? 20000 : 60000;
   let hTabl = DEMO ? "78vh" : "81vh";
 
-  console.log("MASSFAZ:", DEMO, massfaz);
+  //console.log("MASSFAZ:", DEMO, massfaz);
   //========================================================
   const [trigger, setTrigger] = React.useState(true);
   const [flagPusk, setFlagPusk] = React.useState(false);
@@ -193,14 +193,9 @@ const RgsToDoMode = (props: {
   const FindFaza = () => {
     let mode = lengthMassMem - 2;
     let faz = massfaz[mode];
-    let fazIn = massfaz[lengthMassMem - 3];
-    let fazOn = massfaz[lengthMassMem - 1];
-    // let klu = homeRegion + "-" + faz.area + "-" + faz.id;
-    // let kluIn = homeRegion + "-" + fazIn.area + "-" + fazIn.id;
-    // let kluOn = homeRegion + "-" + fazOn.area + "-" + fazOn.id;
     let klu = faz.id;
-    let kluIn = fazIn.id;
-    let kluOn = fazOn.id;
+    let kluIn = massfaz[lengthMassMem - 3].id;
+    let kluOn = massfaz[lengthMassMem - 1].id;
 
     let numRec = -1;
     for (let i = 0; i < bindings.tfLinks.length; i++) {
@@ -218,17 +213,12 @@ const RgsToDoMode = (props: {
     if (TakeAreaId(mass.east.id)[1] === kluIn) inFaz = mass.east.wayPointsArray;
     if (TakeAreaId(mass.south.id)[1] === kluIn)
       inFaz = mass.south.wayPointsArray;
-
     if (TakeAreaId(mass.add1.id)[1] === kluIn) inFaz = mass.add1.wayPointsArray;
     if (TakeAreaId(mass.add2.id)[1] === kluIn) inFaz = mass.add2.wayPointsArray;
     if (TakeAreaId(mass.add3.id)[1] === kluIn) inFaz = mass.add3.wayPointsArray;
     if (TakeAreaId(mass.add4.id)[1] === kluIn) inFaz = mass.add4.wayPointsArray;
 
-    console.log("1FindFaza:", inFaz, mass, klu, kluIn, kluOn);
-
     for (let i = 0; i < inFaz.length; i++) {
-      console.log("2FindFaza:", inFaz[i].id, kluOn);
-
       if (TakeAreaId(inFaz[i].id)[1] === kluOn) {
         faz.faza = Number(inFaz[i].phase);
         faz.fazaBegin = faz.faza;

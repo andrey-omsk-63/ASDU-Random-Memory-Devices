@@ -290,8 +290,6 @@ const App = () => {
     flagAddObjects = true;
     flagOpenDebug = false;
     flagBindings = true;
-
-    console.log("!!!!!!", flagMap, flagBindings, flagAddObjects, !flagOpenWS);
   }
 
   if (flagMap && flagBindings && flagAddObjects && !flagOpenWS)

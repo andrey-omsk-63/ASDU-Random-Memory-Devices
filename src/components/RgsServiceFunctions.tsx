@@ -420,7 +420,7 @@ export const getMultiRouteOptions = () => {
 };
 
 export const getMassMultiRouteOptions = (i: number) => {
-  let massColor = ["#FF2626", "#0078D7", "#E6762D", "#EB3941"];
+  let massColor = ["#FF2626", "#0078D7", "#E6762D", "#547A25"];
   let col = "#000000";
   if (i < 4) col = massColor[i];
 
@@ -428,13 +428,15 @@ export const getMassMultiRouteOptions = (i: number) => {
     balloonCloseButton: false,
     routeStrokeStyle: "dot",
     //strokeColor: '#1A9165',
-    //routeActiveStrokeColor: '#EB3941', // красный
+    //routeActiveStrokeColor: '#FF2626', // красный
     //routeActiveStrokeColor: '#E6762D', // оранж
     //routeActiveStrokeColor: '#0078D7', // синий
     //routeActiveStrokeColor: '#547A25', // зелёный
     //routeActiveStrokeColor: '#000000', // чёрный
-    routeActiveStrokeColor: col,
+    routeActiveStrokeColor: col, // цвет линии
+    strokeColor: col, // цвет линии Polyline
     routeActiveStrokeWidth: 4, // толщина линии
+    strokeWidth: 3, // толщина линии Polyline
     routeStrokeWidth: 0, // толщина линии альтернативного маршрута
     wayPointVisible: false, // отметки "начало - конец"
   };
@@ -444,9 +446,10 @@ export const getMassMultiRouteOptionsDemo = (i: number, coler: string) => {
   return {
     balloonCloseButton: false,
     routeStrokeStyle: "dot",
-    //strokeColor: '#1A9165',
-    routeActiveStrokeColor: coler,
+    routeActiveStrokeColor: coler, // цвет линии
+    strokeColor: coler, // цвет линии Polyline
     routeActiveStrokeWidth: 3,
+    strokeWidth: 2, // толщина линии Polyline
     routeStrokeWidth: 0,
     wayPointVisible: false, // отметки "начало - конец"
   };
@@ -1725,6 +1728,7 @@ export const InputDirect = (func: any) => {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let oldCurrency = currency;
     !BAN && setCurrency(Number(event.target.value));
     switch (Number(event.target.value)) {
       case 0: // заголовок
@@ -1742,6 +1746,11 @@ export const InputDirect = (func: any) => {
         break;
       case 4: // режим Demo
         func(55);
+        break;
+      case 5: // Настройки
+        func(1);
+        setCurrency(oldCurrency);
+        console.log("1Настройки", oldCurrency);
     }
   };
 
@@ -1751,6 +1760,7 @@ export const InputDirect = (func: any) => {
     "● Режим назначения",
     "● Показать связи",
     "● Режим Демо",
+    "● Настройки",
   ];
   let massKey = [];
   let massDat: any[] = [];

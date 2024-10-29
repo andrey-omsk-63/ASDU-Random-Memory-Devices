@@ -5,7 +5,7 @@ import { massfazCreate } from "../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-//import { BiExpand } from "react-icons/bi";
+import Button from "@mui/material/Button";
 
 import { YMaps, Map, YMapsApi } from "react-yandex-maps";
 
@@ -15,6 +15,7 @@ import RgsCreateObject from "./RgsComponents/RgsCreateObject";
 import RgsProcessObject from "./RgsComponents/RgsProcessObject";
 import RgsAppointVertex from "./RgsComponents/RgsAppointVertex";
 import RgsToDoMode from "./RgsComponents/RgsToDoMode";
+import GsSetup from "./RgsComponents/GsSetup";
 
 import { getMassMultiRouteOptions, Distance } from "./RgsServiceFunctions";
 import { getMassMultiRouteOptionsDemo } from "./RgsServiceFunctions";
@@ -60,6 +61,7 @@ let funcContex: any = null;
 let funcBound: any = null;
 let modeHelp = 0;
 let mayEsc = false; // можно воспользоваться Esc при построении маршрута
+let demoRoute = false; // нахождение в режиме "Показать связи"
 
 const MainMapRgs = (props: { trigger: boolean }) => {
   //== Piece of Redux =======================================
@@ -100,6 +102,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const dispatch = useDispatch();
   //===========================================================
   const [flagPusk, setFlagPusk] = React.useState(false);
+  const [needSetup, setNeedSetup] = React.useState(false);
   const [createObject, setCreateObject] = React.useState(false);
   const [processObject, setProcessObject] = React.useState(false);
   const [appoint, setAppoint] = React.useState(false);
@@ -112,21 +115,34 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const [changeFaz, setChangeFaz] = React.useState(0);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const [demoSost, setDemoSost] = React.useState(-1);
+  const [typeRoute, setTypeRoute] = React.useState(true); // тип отображаемых связей
   const mapp = React.useRef<any>(null);
 
-  const addRoute = (ymaps: any, bound: boolean) => {
-    mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
-    let massMultiRoute: any = []; // исходящие связи
-    for (let i = 0; i < massRoute.length; i++) {
-      massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
-        getReferencePoints(massCoord[massCoord.length - 1], massRoute[i]),
-        getMassMultiRouteOptions(i)
-      );
-      mapp.current.geoObjects.add(massMultiRoute[i]);
-    }
-  };
+  const addRoute = React.useCallback(
+    (ymaps: any, bound: boolean) => {
+      mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
+      let massMultiRoute: any = []; // исходящие связи
+      for (let i = 0; i < massRoute.length; i++) {
+        if (typeRoute) {
+          massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
+            getReferencePoints(massCoord[massCoord.length - 1], massRoute[i]),
+            getMassMultiRouteOptions(i)
+          );
+        } else {
+          massMultiRoute[i] = new ymaps.Polyline(
+            [massCoord[massCoord.length - 1], massRoute[i]],
+            {},
+            getMassMultiRouteOptions(i)
+          );
+        }
+        mapp.current.geoObjects.add(massMultiRoute[i]);
+      }
+    },
+    [typeRoute]
+  );
 
   const DoDemo = (ymaps: any, mode: number) => {
+    mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
     let massKluGlob: any = [];
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       let massklu = MakeMassRoute(bindings, i, map, addobj)[1];
@@ -158,10 +174,18 @@ const MainMapRgs = (props: { trigger: boolean }) => {
             if (massKluGlob[ii] === klu) have++;
           }
           let coler = !have ? "#ff0000" : "#000000"; // красный/чёрный
-          massMultiRoute[j] = new ymaps.multiRouter.MultiRoute(
-            getReferencePoints(massCoord, massRoute[j]),
-            getMassMultiRouteOptionsDemo(j, coler)
-          );
+          if (typeRoute) {
+            massMultiRoute[j] = new ymaps.multiRouter.MultiRoute(
+              getReferencePoints(massCoord, massRoute[j]),
+              getMassMultiRouteOptionsDemo(j, coler)
+            );
+          } else {
+            massMultiRoute[j] = new ymaps.Polyline(
+              [massCoord, massRoute[j]],
+              {},
+              getMassMultiRouteOptionsDemo(j, coler)
+            );
+          }
           mapp.current.geoObjects.add(massMultiRoute[j]);
         }
       }
@@ -176,9 +200,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     massNomBind = [];
     zoom = zoom - 0.01;
     //setMayEsc(false);
-    mayEsc = false;
+    mayEsc = demoRoute = false;
     ymaps && addRoute(ymaps, false); // перерисовка связей
-  }, [ymaps]);
+  }, [ymaps, addRoute]);
 
   const ClickPointInTarget = (index: number) => {
     setIdxObj(index);
@@ -222,11 +246,14 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     if (massNomBind.length > 1 && klu.length < 9)
       massRoute = MakeMassRoute(bindings, nom, map, addobj)[0];
     ymaps && addRoute(ymaps, false); // перерисовка связей
+
+    console.log("Added:", mayEsc, massMem.length, massMem);
+    mayEsc = true;
     if (massMem.length === 3) {
-      mayEsc = false;
+      //mayEsc = false;
       PressButton(53);
     } else {
-      mayEsc = true;
+      //mayEsc = true;
       setFlagPusk(!flagPusk);
     }
   };
@@ -331,6 +358,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
   //=== обработка instanceRef ==============================
   const FindNearVertex = (coord: Array<number>) => {
+    console.log("FindNearVertex:");
     let minDist = 999999;
     let nomInMass = -1;
     if (massMem.length > 2) {
@@ -370,10 +398,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const InstanceRefDo = (ref: React.Ref<any>) => {
     if (ref) {
       mapp.current = ref;
-      mapp.current.events.remove("contextmenu", funcContex);
+      mapp.current.events.remove("contextmenu", funcContex); // нажата правая кнопка мыши
       funcContex = function (e: any) {
         if (mapp.current.hint) {
-          if (inTarget && !inDemo) InputerObject(e.get("coords")); // нажата правая кнопка мыши
+          if (inTarget && !inDemo) InputerObject(e.get("coords"));
           if (!inTarget && !inDemo) FindNearVertex(e.get("coords"));
         }
       };
@@ -413,10 +441,22 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   const PressButton = (mode: number) => {
     massVert = [];
-    if (restartBan) {
+    if (restartBan && mode > 50) {
       SoobErr("Завершите режим управления нормальным образом");
     } else {
+      console.log("MODE:", mode);
+
       switch (mode) {
+        case 1: // настройки
+          console.log("2Настройки");
+          setNeedSetup(true)
+          break;
+        case 3: // вкл формальных связей
+          setTypeRoute(false);
+          break;
+        case 6: // выкл формальных связей
+          setTypeRoute(true);
+          break;
         case 51: // режим управления
           datestat.finish = datestat.demo = false;
           dispatch(statsaveCreate(datestat));
@@ -442,6 +482,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           datestat.finish = datestat.demo = false;
           dispatch(statsaveCreate(datestat));
           SetHelper(0);
+          demoRoute = true;
           ymaps && DoDemo(ymaps, 1);
           break;
         case 55: // режим Демо
@@ -484,6 +525,29 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     zoom,
   };
 
+  const StrokaMenu = (soob: string, func: Function, mode: number) => {
+    const styleApp01 = {
+      fontSize: 14,
+      marginLeft: 0.4,
+      width: 133,
+      maxHeight: "21px",
+      minHeight: "21px",
+      backgroundColor: "#BAE186", // салатовый
+      border: "1px solid #93D145",
+      borderRadius: 1,
+      color: "#676767", // тёмно-серый
+      textTransform: "unset !important",
+      padding: "12px 0px 11px 0px",
+      boxShadow: 6,
+    };
+
+    return (
+      <Button sx={styleApp01} onClick={() => func(mode)}>
+        {soob}
+      </Button>
+    );
+  };
+
   const MenuGl = () => {
     let soobHelpFiest1 = "Маршрут сформирован\xa0";
     let soobHelpFiest2 = "";
@@ -496,6 +560,12 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     return (
       <Box sx={styleMenuGl}>
         {StrokaMenuGlob(PressButton)}
+        {!demoRoute && (
+          <>
+            {typeRoute && <>{StrokaMenu("Формальн.связи", PressButton, 3)}</>}
+            {!typeRoute && <>{StrokaMenu("Отключить Фс", PressButton, 6)}</>}
+          </>
+        )}
         {modeToDo === 1 && !!modeHelp && (
           <>{StrokaHelp("Введите реквизиты доп.объекта (<Esc> - сброс)", 0)}</>
         )}
@@ -544,9 +614,13 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const escFunction = React.useCallback(
     (event) => {
       if (event.keyCode === 27 && mayEsc) {
-        //console.log("ESC:", mayEsc);
-        inTarget = true;
-        SetHelper(1);
+        if (massMem.length < 3) {
+          console.log("1ESC:", mayEsc, massMem);
+          inTarget = true;
+          SetHelper(1);
+        } else {
+          console.log("21ESC:", mayEsc, massMem);
+        }
       }
     },
     [SetHelper]
@@ -615,6 +689,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
             )}
           </Grid>
         </Grid>
+        {needSetup && <GsSetup close={setNeedSetup} />}
       </Grid>
     </Grid>
   );
