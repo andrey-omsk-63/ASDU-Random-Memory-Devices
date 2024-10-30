@@ -16,7 +16,7 @@ export const styleModalEnd = {
   position: "absolute",
   top: "0%",
   left: "auto",
-  right: "-0.5%",
+  right: "-0%",
   height: "21px",
   maxWidth: "2%",
   minWidth: "2%",
@@ -341,3 +341,48 @@ export const styleBoxFormFaza = {
 //   color: 'blue',
 // };
 //=====================================================================
+export const styleSetPK01 = (wdth: number, hdth: number) => {
+  const styleSetPK01 = {
+    outline: "none",
+    position: "absolute",
+    left: "50%",
+    top: "45%",
+    transform: "translate(-50%, -50%)",
+    width: wdth,
+    height: hdth,
+    bgcolor: "background.paper",
+    border: "1px solid #FFFFFF",
+    borderRadius: 1,
+    boxShadow: 24,
+    textAlign: "center",
+    padding: "1px 10px 10px 10px",
+  };
+  return styleSetPK01;
+};
+
+export const styleSetPK02 = {
+  fontSize: 20,
+  textAlign: "center",
+  color: "#5B1080", // сиреневый
+  margin: "15px 0 10px 0",
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+};
+
+export const styleSetPK03 = {
+  fontSize: 15,
+  textAlign: "left",
+  background: "linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )",
+  border: "1px solid #d4d4d4",
+  borderRadius: 1,
+  color: "black",
+  boxShadow: 3,
+  margin: "3px 0 1px 0",
+  padding: "12px 5px 20px 5px",
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+};
+
+export const styleSetPK04 = {
+  marginTop: 1.2,
+  display: "flex",
+  justifyContent: "center",
+};

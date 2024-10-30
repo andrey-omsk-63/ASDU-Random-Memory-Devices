@@ -20,8 +20,9 @@ import { TrafficControl, TypeSelector, ZoomControl } from "react-yandex-maps";
 
 import { BAN } from "./MainMapRgs";
 
-import { styleAppSt02, styleAppSt03 } from "./MainMapStyle";
+import { styleAppSt02, styleAppSt03, styleModalEnd } from "./MainMapStyle";
 import { styleModalEndAttent, searchControl } from "./MainMapStyle";
+import { styleSetPK04 } from "./MainMapStyle";
 
 export const YandexServices = () => {
   return (
@@ -34,6 +35,111 @@ export const YandexServices = () => {
       <TypeSelector options={{ float: "right" }} />
       <ZoomControl options={{ float: "right" }} />
     </>
+  );
+};
+
+export const ExitCross = (func: any) => {
+  return (
+    <Button sx={styleModalEnd} onClick={() => func()}>
+      <b>&#10006;</b>
+    </Button>
+  );
+};
+
+export const FooterContent = (SaveForm: Function) => {
+  const styleFormPK03 = {
+    maxHeight: "24px",
+    minHeight: "24px",
+    backgroundColor: "#E6F5D6", // светло салатовый
+    border: "1px solid #d4d4d4", // серый
+    borderRadius: 1,
+    textTransform: "unset !important",
+    boxShadow: 6,
+    textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+    color: "black",
+    padding: "2px 8px 0px 8px",
+  };
+
+  return (
+    <Box sx={styleSetPK04}>
+      <Box sx={{ display: "inline-block", margin: "0px 5px 0px 0px" }}>
+        <Button sx={styleFormPK03} onClick={() => SaveForm(0)}>
+          Выйти без сохранения
+        </Button>
+      </Box>
+      <Box sx={{ display: "inline-block", margin: "0px 5px 0px 5px" }}>
+        <Button sx={styleFormPK03} onClick={() => SaveForm(1)}>
+          Сохранить изменения
+        </Button>
+      </Box>
+    </Box>
+  );
+};
+
+export const StrTablVert = (xss: number, recLeft: string, recRight: any) => {
+  return (
+    <>
+      <Grid container sx={{ marginTop: 1 }}>
+        <Grid item xs={0.25}></Grid>
+        <Grid item xs={xss} sx={{ border: 0 }}>
+          <b>{recLeft}</b>
+        </Grid>
+        {typeof recRight === "object" ? (
+          <Grid item xs>
+            {recRight}
+          </Grid>
+        ) : (
+          <Grid item xs sx={{ fontSize: 15, color: "#5B1080", border: 0 }}>
+            <b>{recRight}</b>
+          </Grid>
+        )}
+      </Grid>
+    </>
+  );
+};
+
+export const ShiftOptimal = (
+  mode: boolean,
+  ChangeOptimal: Function,
+  shift: number
+) => {
+  const styleOptimalNo = {
+    marginTop: shift,
+    marginRight: 1,
+    maxHeight: "27px",
+    minHeight: "27px",
+    maxWidth: 58,
+    minWidth: 58,
+    backgroundColor: "#E6F5D6", // светло салатовый
+    border: "1px solid #d4d4d4", // серый
+    borderRadius: 1,
+    textTransform: "unset !important",
+    boxShadow: 2,
+    color: "black",
+  };
+
+  const styleOptimalYes = {
+    marginTop: shift,
+    marginRight: 1,
+    maxHeight: "27px",
+    minHeight: "27px",
+    maxWidth: 58,
+    minWidth: 58,
+    backgroundColor: "#bae186", // тёмно салатовый
+    border: "1px solid #bae186", // тёмно салатовый
+    borderRadius: 1,
+    textTransform: "unset !important",
+    boxShadow: 6,
+    color: "black",
+  };
+
+  let illum = mode ? styleOptimalYes : styleOptimalNo;
+  let soob = mode ? "Да" : "Нет";
+
+  return (
+    <Button sx={illum} onClick={() => ChangeOptimal()}>
+      {soob}
+    </Button>
   );
 };
 
@@ -683,6 +789,24 @@ export const TakeAreaId = (kluch: string) => {
     bbb = kluch.slice(aaa + 1);
   }
   return [Number(bb), Number(bbb)];
+};
+
+export const TakeAreaIdd = (kluch: string) => {
+  console.log("1!!!:", kluch);
+  let bb = "1";
+  let bbb = kluch;
+  let bbbb = "";
+  let aa = kluch.indexOf("-");
+  if (aa >= 0) {
+    // сложный ключ хх-хх-ххх-XXX
+    let aaa = kluch.indexOf("-", aa + 1);
+    let aaaa = kluch.indexOf("-", aaa + 1);
+    bb = kluch.slice(aa + 1, aaa);
+    bbb = kluch.slice(aaa + 1, aaaa);
+    bbbb = kluch.slice(aaaa + 1);
+    //console.log("2!!!:", kluch, aaa, aaaa, bb, bbb, bbbb);
+  }
+  return [Number(bb), Number(bbb), Number(bbbb)];
 };
 
 export const MakingKey = (homeRegion: any, valueAr: any, valueId: any) => {
@@ -1728,7 +1852,6 @@ export const InputDirect = (func: any) => {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let oldCurrency = currency;
     !BAN && setCurrency(Number(event.target.value));
     switch (Number(event.target.value)) {
       case 0: // заголовок
@@ -1749,8 +1872,7 @@ export const InputDirect = (func: any) => {
         break;
       case 5: // Настройки
         func(1);
-        setCurrency(oldCurrency);
-        console.log("1Настройки", oldCurrency);
+        setCurrency(0);
     }
   };
 
@@ -1788,7 +1910,7 @@ export const InputDirect = (func: any) => {
             style: {
               fontSize: 15,
               fontWeight: 500,
-              color: currency === 4 ? "red" : "black",
+              color: currency === 4 ? "red" : currency === 0 ? "blue" : "black",
             },
           }}
           variant="standard"

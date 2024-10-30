@@ -5,7 +5,6 @@ import { massfazCreate } from "../redux/actions";
 
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 
 import { YMaps, Map, YMapsApi } from "react-yandex-maps";
 
@@ -24,7 +23,7 @@ import { MakeMassRouteFirst, StrokaHelp } from "./RgsServiceFunctions";
 import { StrokaMenuGlob, MakingKey, Сrossroad } from "./RgsServiceFunctions";
 import { MakeSoobErr, MakeMassRoute } from "./RgsServiceFunctions";
 import { CheckHaveLink, MakeFazer } from "./RgsServiceFunctions";
-import { YandexServices } from "./RgsServiceFunctions";
+import { YandexServices, TakeAreaId, TakeAreaIdd } from "./RgsServiceFunctions";
 
 import { SendSocketGetSvg } from "./RgsSocketFunctions";
 
@@ -61,7 +60,7 @@ let funcContex: any = null;
 let funcBound: any = null;
 let modeHelp = 0;
 let mayEsc = false; // можно воспользоваться Esc при построении маршрута
-let demoRoute = false; // нахождение в режиме "Показать связи"
+let typeRoute = false; // тип отображаемых связей
 
 const MainMapRgs = (props: { trigger: boolean }) => {
   //== Piece of Redux =======================================
@@ -73,7 +72,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     const { bindingsReducer } = state;
     return bindingsReducer.bindings.dateBindings;
   });
-  //console.log("GLBindings:", bindings);
   let addobj = useSelector((state: any) => {
     const { addobjReducer } = state;
     return addobjReducer.addobj.dateAdd;
@@ -94,7 +92,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
-  //console.log('datestat:', datestat);
+  typeRoute = datestat.typeRoute;
   const debug = datestat.debug;
   const ws = datestat.ws;
   const homeRegion = datestat.region;
@@ -115,40 +113,44 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const [changeFaz, setChangeFaz] = React.useState(0);
   const [ymaps, setYmaps] = React.useState<YMapsApi | null>(null);
   const [demoSost, setDemoSost] = React.useState(-1);
-  const [typeRoute, setTypeRoute] = React.useState(true); // тип отображаемых связей
   const mapp = React.useRef<any>(null);
 
-  const addRoute = React.useCallback(
-    (ymaps: any, bound: boolean) => {
-      mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
-      let massMultiRoute: any = []; // исходящие связи
-      for (let i = 0; i < massRoute.length; i++) {
-        if (typeRoute) {
-          massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
-            getReferencePoints(massCoord[massCoord.length - 1], massRoute[i]),
-            getMassMultiRouteOptions(i)
-          );
-        } else {
-          massMultiRoute[i] = new ymaps.Polyline(
-            [massCoord[massCoord.length - 1], massRoute[i]],
-            {},
-            getMassMultiRouteOptions(i)
-          );
-        }
-        mapp.current.geoObjects.add(massMultiRoute[i]);
+  const addRoute = React.useCallback((ymaps: any, bound: boolean) => {
+    mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
+    let massMultiRoute: any = []; // исходящие связи
+    for (let i = 0; i < massRoute.length; i++) {
+      if (typeRoute) {
+        massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
+          getReferencePoints(massCoord[massCoord.length - 1], massRoute[i]),
+          getMassMultiRouteOptions(i)
+        );
+      } else {
+        massMultiRoute[i] = new ymaps.Polyline(
+          [massCoord[massCoord.length - 1], massRoute[i]],
+          {},
+          getMassMultiRouteOptions(i)
+        );
       }
-    },
-    [typeRoute]
-  );
+      mapp.current.geoObjects.add(massMultiRoute[i]);
+    }
+  }, []);
 
   const DoDemo = (ymaps: any, mode: number) => {
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
     let massKluGlob: any = [];
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       let massklu = MakeMassRoute(bindings, i, map, addobj)[1];
+
+      //console.log("massKlu:", bindings.tfLinks[i], massklu);
+
       for (let j = 0; j < massklu.length; j++)
-        massKluGlob.push(bindings.tfLinks[i].id + massklu[j]);
+        massKluGlob.push(
+          bindings.tfLinks[i].id + "-" + TakeAreaId(massklu[j])[1]
+        );
     }
+
+    console.log("massKluGlob:", massKluGlob);
+
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       let massCoord: any = [];
       let massRab = MakeMassRoute(bindings, i, map, addobj);
@@ -165,14 +167,27 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           break;
         }
       }
+      
       if (mode) {
         let massMultiRoute: any = []; // исходящие связи
         for (let j = 0; j < massRoute.length; j++) {
           let have = 0;
+          // for (let ii = 0; ii < massKluGlob.length; ii++) {
+          //   let klu = bindings.tfLinks[i].id + "-" + TakeAreaId(massKlu[j])[1];
+          //   if (massKluGlob[ii] === klu) {
+          //     have++;
+          //     console.log("@@@:", have, klu, massKluGlob[ii]);
+          //   }
+          // }
+
+          console.log("2massKlu:", massKlu,massRoute);
+
           for (let ii = 0; ii < massKluGlob.length; ii++) {
-            let klu = massKlu[j] + bindings.tfLinks[i].id;
-            if (massKluGlob[ii] === klu) have++;
+            let aa = TakeAreaIdd(massKluGlob[ii]);
+            let bb = "1-" + aa[0] + "-" + aa[2] + "-" + aa[1];
+            console.log("@@@:", massKluGlob[ii], bb);
           }
+
           let coler = !have ? "#ff0000" : "#000000"; // красный/чёрный
           if (typeRoute) {
             massMultiRoute[j] = new ymaps.multiRouter.MultiRoute(
@@ -199,8 +214,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     massKlu = [];
     massNomBind = [];
     zoom = zoom - 0.01;
-    //setMayEsc(false);
-    mayEsc = demoRoute = false;
+    mayEsc = false;
     ymaps && addRoute(ymaps, false); // перерисовка связей
   }, [ymaps, addRoute]);
 
@@ -246,16 +260,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     if (massNomBind.length > 1 && klu.length < 9)
       massRoute = MakeMassRoute(bindings, nom, map, addobj)[0];
     ymaps && addRoute(ymaps, false); // перерисовка связей
-
-    console.log("Added:", mayEsc, massMem.length, massMem);
     mayEsc = true;
     if (massMem.length === 3) {
-      //mayEsc = false;
       PressButton(53);
-    } else {
-      //mayEsc = true;
-      setFlagPusk(!flagPusk);
-    }
+    } else setFlagPusk(!flagPusk);
   };
 
   const SoobErr = (soob: string) => {
@@ -358,7 +366,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
   //=== обработка instanceRef ==============================
   const FindNearVertex = (coord: Array<number>) => {
-    console.log("FindNearVertex:");
+    //console.log("FindNearVertex:");
     let minDist = 999999;
     let nomInMass = -1;
     if (massMem.length > 2) {
@@ -444,24 +452,19 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     if (restartBan && mode > 50) {
       SoobErr("Завершите режим управления нормальным образом");
     } else {
-      console.log("MODE:", mode);
-
+      const GoTo51 = () => {
+        datestat.finish = datestat.demo = false;
+        dispatch(statsaveCreate(datestat));
+        inTarget = true;
+        SetHelper(1);
+      };
       switch (mode) {
         case 1: // настройки
-          console.log("2Настройки");
-          setNeedSetup(true)
-          break;
-        case 3: // вкл формальных связей
-          setTypeRoute(false);
-          break;
-        case 6: // выкл формальных связей
-          setTypeRoute(true);
+          setNeedSetup(true);
+          GoTo51();
           break;
         case 51: // режим управления
-          datestat.finish = datestat.demo = false;
-          dispatch(statsaveCreate(datestat));
-          inTarget = true;
-          SetHelper(1);
+          GoTo51();
           break;
         case 52: // режим назначения
           datestat.finish = datestat.demo = false;
@@ -482,7 +485,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           datestat.finish = datestat.demo = false;
           dispatch(statsaveCreate(datestat));
           SetHelper(0);
-          demoRoute = true;
           ymaps && DoDemo(ymaps, 1);
           break;
         case 55: // режим Демо
@@ -525,29 +527,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     zoom,
   };
 
-  const StrokaMenu = (soob: string, func: Function, mode: number) => {
-    const styleApp01 = {
-      fontSize: 14,
-      marginLeft: 0.4,
-      width: 133,
-      maxHeight: "21px",
-      minHeight: "21px",
-      backgroundColor: "#BAE186", // салатовый
-      border: "1px solid #93D145",
-      borderRadius: 1,
-      color: "#676767", // тёмно-серый
-      textTransform: "unset !important",
-      padding: "12px 0px 11px 0px",
-      boxShadow: 6,
-    };
-
-    return (
-      <Button sx={styleApp01} onClick={() => func(mode)}>
-        {soob}
-      </Button>
-    );
-  };
-
   const MenuGl = () => {
     let soobHelpFiest1 = "Маршрут сформирован\xa0";
     let soobHelpFiest2 = "";
@@ -560,12 +539,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     return (
       <Box sx={styleMenuGl}>
         {StrokaMenuGlob(PressButton)}
-        {!demoRoute && (
-          <>
-            {typeRoute && <>{StrokaMenu("Формальн.связи", PressButton, 3)}</>}
-            {!typeRoute && <>{StrokaMenu("Отключить Фс", PressButton, 6)}</>}
-          </>
-        )}
         {modeToDo === 1 && !!modeHelp && (
           <>{StrokaHelp("Введите реквизиты доп.объекта (<Esc> - сброс)", 0)}</>
         )}
@@ -696,3 +669,26 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 };
 
 export default MainMapRgs;
+
+// const StrokaMenu = (soob: string, func: Function, mode: number) => {
+//   const styleApp01 = {
+//     fontSize: 14,
+//     marginLeft: 0.4,
+//     width: 133,
+//     maxHeight: "21px",
+//     minHeight: "21px",
+//     backgroundColor: "#BAE186", // салатовый
+//     border: "1px solid #93D145",
+//     borderRadius: 1,
+//     color: "#676767", // тёмно-серый
+//     textTransform: "unset !important",
+//     padding: "12px 0px 11px 0px",
+//     boxShadow: 6,
+//   };
+
+//   return (
+//     <Button sx={styleApp01} onClick={() => func(mode)}>
+//       {soob}
+//     </Button>
+//   );
+// };
