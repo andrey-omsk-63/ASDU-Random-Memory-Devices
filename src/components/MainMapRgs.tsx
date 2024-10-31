@@ -140,22 +140,17 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     let massKluGlob: any = [];
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       let massklu = MakeMassRoute(bindings, i, map, addobj)[1];
-
-      //console.log("massKlu:", bindings.tfLinks[i], massklu);
-
       for (let j = 0; j < massklu.length; j++)
         massKluGlob.push(
           bindings.tfLinks[i].id + "-" + TakeAreaId(massklu[j])[1]
         );
     }
-
-    console.log("massKluGlob:", massKluGlob);
-
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       let massCoord: any = [];
       let massRab = MakeMassRoute(bindings, i, map, addobj);
       let massRoute = massRab[0];
       let massKlu = massRab[1];
+      let KLUCH = "";
       for (let j = 0; j < map.tflight.length; j++) {
         massCoord = [];
         let rec = map.tflight[j];
@@ -164,30 +159,20 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           massCoord[0] = map.tflight[j].points.Y; // перекрёсток
           massCoord[1] = map.tflight[j].points.X;
           massVert.push(j);
+          KLUCH = klu;
           break;
         }
       }
-      
       if (mode) {
         let massMultiRoute: any = []; // исходящие связи
         for (let j = 0; j < massRoute.length; j++) {
           let have = 0;
-          // for (let ii = 0; ii < massKluGlob.length; ii++) {
-          //   let klu = bindings.tfLinks[i].id + "-" + TakeAreaId(massKlu[j])[1];
-          //   if (massKluGlob[ii] === klu) {
-          //     have++;
-          //     console.log("@@@:", have, klu, massKluGlob[ii]);
-          //   }
-          // }
-
-          console.log("2massKlu:", massKlu,massRoute);
-
+          let KLU = TakeAreaId(massKlu[j])[1] + "-" + TakeAreaId(KLUCH)[1];
           for (let ii = 0; ii < massKluGlob.length; ii++) {
-            let aa = TakeAreaIdd(massKluGlob[ii]);
-            let bb = "1-" + aa[0] + "-" + aa[2] + "-" + aa[1];
-            console.log("@@@:", massKluGlob[ii], bb);
+            let a = TakeAreaIdd(massKluGlob[ii]);
+            let kll = a[1] + "-" + a[2];
+            if (kll === KLU) have++;
           }
-
           let coler = !have ? "#ff0000" : "#000000"; // красный/чёрный
           if (typeRoute) {
             massMultiRoute[j] = new ymaps.multiRouter.MultiRoute(
@@ -215,6 +200,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     massNomBind = [];
     zoom = zoom - 0.01;
     mayEsc = false;
+    massRoute = [];
     ymaps && addRoute(ymaps, false); // перерисовка связей
   }, [ymaps, addRoute]);
 
@@ -366,7 +352,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
   //=== обработка instanceRef ==============================
   const FindNearVertex = (coord: Array<number>) => {
-    //console.log("FindNearVertex:");
     let minDist = 999999;
     let nomInMass = -1;
     if (massMem.length > 2) {
@@ -669,26 +654,3 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 };
 
 export default MainMapRgs;
-
-// const StrokaMenu = (soob: string, func: Function, mode: number) => {
-//   const styleApp01 = {
-//     fontSize: 14,
-//     marginLeft: 0.4,
-//     width: 133,
-//     maxHeight: "21px",
-//     minHeight: "21px",
-//     backgroundColor: "#BAE186", // салатовый
-//     border: "1px solid #93D145",
-//     borderRadius: 1,
-//     color: "#676767", // тёмно-серый
-//     textTransform: "unset !important",
-//     padding: "12px 0px 11px 0px",
-//     boxShadow: 6,
-//   };
-
-//   return (
-//     <Button sx={styleApp01} onClick={() => func(mode)}>
-//       {soob}
-//     </Button>
-//   );
-// };

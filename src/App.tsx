@@ -55,8 +55,8 @@ export let dateStat: Stater = {
   id: "0",
   phSvg: [null, null, null, null, null, null, null, null],
   pictSvg: null,
-  typeRoute:  true,
-  typeFaza:  true,
+  typeRoute: true,
+  typeFaza: true,
 };
 
 export interface Pointer {

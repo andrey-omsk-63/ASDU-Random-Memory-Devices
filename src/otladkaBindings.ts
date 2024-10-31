@@ -9,7 +9,7 @@ export const dataBindings = {
             wayPointsArray: [],
           },
           north: {
-            id: "1-1-10005",
+            id: "1-1-10003",
             wayPointsArray: [
               {
                 id: "1-1-37",
@@ -25,7 +25,7 @@ export const dataBindings = {
             id: "1-1-37",
             wayPointsArray: [
               {
-                id: "1-1-10005",
+                id: "1-1-10003",
                 phase: "1",
               },
             ],

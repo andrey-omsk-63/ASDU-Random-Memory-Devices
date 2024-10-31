@@ -94,7 +94,6 @@ const RgsToDoMode = (props: {
   };
 
   const handleCloseSetEnd = () => {
-    console.log("Финиш");
     datestat.finish = false; // закончить исполнение
     dispatch(statsaveCreate(datestat));
     props.funcSize(11.99);

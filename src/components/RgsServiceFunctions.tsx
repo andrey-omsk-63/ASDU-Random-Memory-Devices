@@ -792,7 +792,7 @@ export const TakeAreaId = (kluch: string) => {
 };
 
 export const TakeAreaIdd = (kluch: string) => {
-  console.log("1!!!:", kluch);
+  //console.log("1!!!:", kluch);
   let bb = "1";
   let bbb = kluch;
   let bbbb = "";
@@ -804,7 +804,6 @@ export const TakeAreaIdd = (kluch: string) => {
     bb = kluch.slice(aa + 1, aaa);
     bbb = kluch.slice(aaa + 1, aaaa);
     bbbb = kluch.slice(aaaa + 1);
-    //console.log("2!!!:", kluch, aaa, aaaa, bb, bbb, bbbb);
   }
   return [Number(bb), Number(bbb), Number(bbbb)];
 };
@@ -1867,12 +1866,12 @@ export const InputDirect = (func: any) => {
       case 3: // режим Показать связи
         func(54);
         break;
-      case 4: // режим Demo
-        func(55);
-        break;
-      case 5: // Настройки
+      case 4: // Настройки
         func(1);
         setCurrency(0);
+        break;
+      case 5: // режим Demo
+        func(55);
     }
   };
 
@@ -1881,8 +1880,8 @@ export const InputDirect = (func: any) => {
     "● Режим управления",
     "● Режим назначения",
     "● Показать связи",
-    "● Режим Демо",
     "● Настройки",
+    "● Режим Демо",
   ];
   let massKey = [];
   let massDat: any[] = [];
@@ -1910,7 +1909,7 @@ export const InputDirect = (func: any) => {
             style: {
               fontSize: 15,
               fontWeight: 500,
-              color: currency === 4 ? "red" : currency === 0 ? "blue" : "black",
+              color: currency === 5 ? "red" : currency === 0 ? "blue" : "black",
             },
           }}
           variant="standard"

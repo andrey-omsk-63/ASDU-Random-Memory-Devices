@@ -30,6 +30,7 @@ const GsSetup = (props: { close: Function }) => {
   if (flagInput) {
     HAVE = 0;
     massForm = JSON.parse(JSON.stringify(datestat));
+    massForm.ws = datestat.ws;
     flagInput = false;
   }
   //========================================================
@@ -55,7 +56,8 @@ const GsSetup = (props: { close: Function }) => {
   //=== Функции - обработчики ==============================
   const SaveForm = (mode: number) => {
     if (mode) {
-      dispatch(statsaveCreate(massForm));
+      datestat = massForm;
+      dispatch(statsaveCreate(datestat));
       handleClose();
     } else handleCloseBad();
   };
