@@ -32,6 +32,7 @@ import { YMapsModul, MyYandexKey } from "./MapConst";
 import { styleMenuGl } from "./MainMapStyle";
 
 export let BAN = false;
+export let PressESC = false; // был нажат Esc при вводе маршрута
 let flagOpen = false;
 let needRend = false;
 
@@ -260,7 +261,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const AddVertex = (klu: string, index: number, nom: number) => {
     let nomInMass = massMem.indexOf(index);
     if (nomInMass >= 0) {
-      SoobErr(MakeSoobErr(2, klu.slice(SL), ""));
+      SoobErr(MakeSoobErr(2, klu.slice(SL), "")); // перекрёсток уже используется
     } else {
       if (!massMem.length) {
         Added(klu, index, nom); // первая точка
@@ -295,9 +296,11 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         klu = MakingKey(homeRegion, mass.area.num, mass.ID);
       }
       if (!massMem.length) {
+        //=========================================================================
         if (index < map.tflight.length) {
           SoobErr("Входящая точка маршрута должна быть объектом");
         } else AddVertex(klu, index, -1);
+        //=========================================================================
       } else {
         if (massMem.length === 1 && klu.length > 8) {
           SoobErr("Объекты могут задаваться только в начале и конце маршрута");
@@ -430,6 +433,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const ModeToDo = (mod: number) => {
     modeToDo = mod;
     if (!modeToDo) setChangeFaz(0);
+    PressESC = false; // сброс флага нажатия Esc
   };
 
   const PressButton = (mode: number) => {
@@ -573,15 +577,17 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     (event) => {
       if (event.keyCode === 27 && mayEsc) {
         if (massMem.length < 3) {
-          console.log("1ESC:", mayEsc, massMem);
+          console.log("1ESC:", mayEsc, massMem, massNomBind);
           inTarget = true;
           SetHelper(1);
         } else {
-          console.log("21ESC:", mayEsc, massMem);
+          console.log("21ESC:", mayEsc, massMem, massNomBind);
+          PressESC = true;
+          setFlagPusk(!flagPusk);
         }
       }
     },
-    [SetHelper]
+    [SetHelper, flagPusk]
   );
 
   React.useEffect(() => {

@@ -83,7 +83,7 @@ export interface Fazer {
   idevice: number;
   name: string;
   starRec: boolean;
-  runRec: number;
+  runRec: number; // 0-начало 1-финиш 2-актив 3-хз 4-активДемо 5-финишДемо
   img: Array<string | null>;
 }
 export let massFaz: Fazer[] = [];
@@ -123,9 +123,6 @@ const App = () => {
   //========================================================
   const Initialisation = () => {
     let deb = dateStat.debug;
-    console.log("dateMapGl:", dateMapGl);
-    console.log("dateBindingsGl:", dateBindingsGl);
-    console.log("dateAddObjectsGl:", dateAddObjectsGl);
     for (let i = 0; i < dateMapGl.tflight.length; i++) {
       let coord = [];
       coord[0] = dateMapGl.tflight[i].points.Y;
@@ -146,6 +143,10 @@ const App = () => {
     flagBindings = false;
     flagAddObjects = false;
     setOpenMapInfo(true);
+    console.log("dateMapGl:", dateMapGl);
+    console.log("dateBindingsGl:", dateBindingsGl);
+    console.log("dateAddObjectsGl:", dateAddObjectsGl);
+    //console.log("massdk:", massdk);
   };
 
   const host =
