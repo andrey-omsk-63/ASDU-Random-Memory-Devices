@@ -297,9 +297,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       }
       if (!massMem.length) {
         //=========================================================================
-        if (index < map.tflight.length) {
-          SoobErr("Входящая точка маршрута должна быть объектом");
-        } else AddVertex(klu, index, -1);
+        //if (index < map.tflight.length) {
+        //  SoobErr("Входящая точка маршрута должна быть объектом");
+        //} else
+        AddVertex(klu, index, -1);
         //=========================================================================
       } else {
         if (massMem.length === 1 && klu.length > 8) {
@@ -375,9 +376,19 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         }
       }
       if (nomInMass >= 0) {
-        massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
-        dispatch(massfazCreate(massfaz));
-        setChangeFaz(nomInMass);
+        console.log("%%%%%%:", nomInMass);
+
+        if (nomInMass > 1) {
+          if (massfaz[nomInMass - 1].runRec > 1) {
+            console.log("###НЕЛЬЗЯ");
+            soobErr = "Этот светофор закрывать нельзя";
+            setOpenSoobErr(true);
+          } else {
+            massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
+            dispatch(massfazCreate(massfaz));
+            setChangeFaz(nomInMass);
+          }
+        }
       }
     }
   };
@@ -576,7 +587,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const escFunction = React.useCallback(
     (event) => {
       if (event.keyCode === 27 && mayEsc) {
-        if (massMem.length < 3) {
+        if (massMem.length < 4) {
           console.log("1ESC:", mayEsc, massMem, massNomBind);
           inTarget = true;
           SetHelper(1);

@@ -6,6 +6,8 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 
+import GsErrorMessage from "./RgsErrorMessage";
+
 import { Fazer } from "../../App";
 import { PressESC } from "../MainMapRgs";
 
@@ -29,6 +31,8 @@ let needRend = false;
 let nomIllum = -1;
 const tShadow = "2px 2px 3px rgba(0,0,0,0.3)";
 
+let soobErr = "Этот светофор закрывать нельзя";
+
 const RgsToDoMode = (props: {
   massMem: Array<number>;
   massCoord: any;
@@ -41,8 +45,6 @@ const RgsToDoMode = (props: {
   ban: Function;
   changeDemo: Function;
 }) => {
-  //console.log("1RgsToDoMode:", timerId);
-
   //== Piece of Redux ======================================
   const map = useSelector((state: any) => {
     const { mapReducer } = state;
@@ -73,7 +75,10 @@ const RgsToDoMode = (props: {
   const ws = datestat.ws;
   const DEMO = datestat.demo;
   const styleToDoMode = StyleToDoMode(DEMO);
+
+  //console.log("1RgsToDoMode:", PressESC, props.massMem, massfaz);
   //========================================================
+  const [openSoobErr, setOpenSoobErr] = React.useState(false);
   const [trigger, setTrigger] = React.useState(true);
   const [flagPusk, setFlagPusk] = React.useState(false);
   let timer = debug || DEMO ? 20000 : 60000;
@@ -238,49 +243,6 @@ const RgsToDoMode = (props: {
       timerId[idx]
     );
   };
-
-  //=== инициализация ======================================
-  if (init) {
-    massfaz = [];
-    timerId = [];
-    massInt = [];
-    nomIllum = -1;
-    for (let i = 0; i < props.massMem.length; i++) {
-      massfaz.push(MakeMaskFaz(i));
-      timerId.push(null);
-    }
-    for (let i = 0; i < props.massMem.length; i++)
-      massInt.push(JSON.parse(JSON.stringify(timerId)));
-    init = false;
-    lengthMassMem = props.massMem.length;
-    FindFaza();
-    oldFaz = props.changeFaz;
-  } else {
-    // console.log(
-    //   "2RgsToDoMode::",
-    //   PressESC,
-    //   lengthMassMem,
-    //   props.massMem.length,
-    //   props.changeFaz,
-    //   oldFaz
-    // );
-
-    if (lengthMassMem !== props.massMem.length) {
-      timerId.push(null); // появился новый перекрёсток
-      massfaz.push(MakeMaskFaz(props.massMem.length - 1));
-      let mass = [];
-      for (let i = 0; i < props.massMem.length; i++) mass.push(null);
-      massInt.push(mass);
-      lengthMassMem = props.massMem.length;
-      FindFaza();
-    }
-    if (props.changeFaz !== oldFaz) {
-      CloseVertex((oldFaz = props.changeFaz));
-      setTrigger(!trigger);
-    }
-
-    dispatch(massfazCreate(massfaz));
-  }
   //========================================================
   const ForcedClearInterval = () => {
     for (let i = 0; i < timerId.length; i++) {
@@ -307,6 +269,58 @@ const RgsToDoMode = (props: {
     lengthMassMem = 0;
     DEMO && ForcedClearInterval();
   };
+  //=== инициализация ======================================
+  if (init) {
+    massfaz = [];
+    timerId = [];
+    massInt = [];
+    nomIllum = -1;
+    for (let i = 0; i < props.massMem.length; i++) {
+      massfaz.push(MakeMaskFaz(i));
+      timerId.push(null);
+    }
+    for (let i = 0; i < props.massMem.length; i++)
+      massInt.push(JSON.parse(JSON.stringify(timerId)));
+    init = false;
+    lengthMassMem = props.massMem.length;
+    FindFaza();
+    oldFaz = props.changeFaz;
+  } else {
+    console.log(
+      "2RgsToDoMode::",
+      PressESC,
+      lengthMassMem,
+      props.massMem.length,
+      props.changeFaz,
+      oldFaz
+    );
+
+    if (lengthMassMem && !props.massMem.length) {
+      ToDoMode(0); // в списке 3 светофора/объекта и нажато ESC
+    } else {
+      if (lengthMassMem !== props.massMem.length) {
+        timerId.push(null); // появился новый перекрёсток
+        massfaz.push(MakeMaskFaz(props.massMem.length - 1));
+        let mass = [];
+        for (let i = 0; i < props.massMem.length; i++) mass.push(null);
+        massInt.push(mass);
+        lengthMassMem = props.massMem.length;
+        FindFaza();
+      }
+      if (props.changeFaz !== oldFaz) {
+        console.log("!!!props.changeFaz !== oldFaz", props.changeFaz, oldFaz);
+        // if (massfaz[props.changeFaz - 1].runRec > 1) {
+        //   console.log("!!!НЕЛЬЗЯ");
+        //   setOpenSoobErr(true);
+        // } else {
+          CloseVertex((oldFaz = props.changeFaz));
+          setTrigger(!trigger);
+        //}
+      }
+
+      dispatch(massfazCreate(massfaz));
+    }
+  }
   //========================================================
   const StrokaHeader = (xss: number, soob: string) => {
     return (
@@ -319,7 +333,7 @@ const RgsToDoMode = (props: {
   const DoTimerId = (mode: number) => {
     let fazer = massfaz[mode];
 
-    console.log("Отправка с " + String(mode + 1) + "-го", DEMO, timerId);
+    //console.log("Отправка с " + String(mode + 1) + "-го", DEMO, timerId);
 
     if (!DEMO) {
       fazer.runRec === 2 &&
@@ -357,13 +371,26 @@ const RgsToDoMode = (props: {
     const ClickVertex = (mode: number) => {
       let fazer = massfaz[mode];
 
-      console.log("###:", mode, fazer.runRec);
+      console.log("1ClickVertex:", mode, fazer.runRec, props.massMem, massfaz);
 
-      if (fazer.runRec === 2) {
-        CloseVertex(mode);
-        dispatch(massfazCreate(massfaz));
-        setTrigger(!trigger);
+      if (mode > 0) {
+        console.log("2ClickVertex:", mode, mode - 1, massfaz[mode - 1].runRec);
+        if (massfaz[mode - 1].runRec > 1) {
+          console.log("НЕЛЬЗЯ");
+          setOpenSoobErr(true);
+        } else {
+          console.log("MОЖНО;");
+          CloseVertex(mode);
+          dispatch(massfazCreate(massfaz));
+          setTrigger(!trigger);
+        }
       }
+
+      // if (fazer.runRec === 2) {
+      //   CloseVertex(mode);
+      //   dispatch(massfazCreate(massfaz));
+      //   setTrigger(!trigger);
+      // }
     };
 
     return massfaz.map((massf: any, idx: number) => {
@@ -398,6 +425,8 @@ const RgsToDoMode = (props: {
       if (massf.faza) pictImg = OutputFazaImg(fazaImg, massf.faza);
       let illum = nomIllum === idx ? styleStrokaTabl01 : styleStrokaTabl02;
 
+      //console.log('###::',idx,massf.runRec,massf)
+
       return (
         <Grid key={idx} container sx={{ marginTop: 1 }}>
           <Grid item xs={1} sx={{ paddingTop: 0.7, textAlign: "center" }}>
@@ -409,11 +438,11 @@ const RgsToDoMode = (props: {
             {star}
           </Grid>
           <Grid item xs={1.0} sx={{}}>
-            {massf.runRec === 1 && massf.id <= 10000 && (
+            {massf.runRec <= 1 && massf.id <= 10000 && (
               <>{OutputVertexImg(host)}</>
             )}
             {massf.id > 10000 && <>{CircleObj()}</>}
-            {massf.runRec !== 1 && massf.id <= 10000 && (
+            {massf.runRec > 1 && massf.id <= 10000 && (
               <Button sx={styleStrokaTablImg} onClick={() => ClickVertex(idx)}>
                 {OutputVertexImg(host)}
               </Button>
@@ -494,6 +523,9 @@ const RgsToDoMode = (props: {
           </Button>
         </Box>
       </Box>
+      {openSoobErr && (
+        <GsErrorMessage setOpen={setOpenSoobErr} sErr={soobErr} />
+      )}
     </>
   );
 };
