@@ -209,7 +209,6 @@ const RgsDoPlacemarkDo = (props: {
           imger = debug
             ? hostt + FZSIST + ".svg"
             : "/file/static/img/buttons/" + FZSIST + ".svg";
-          //:  window.location.origin + "/free/img/" + FZSIST + ".svg";
         }
       }
 

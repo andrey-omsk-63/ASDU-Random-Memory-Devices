@@ -27,7 +27,7 @@ import { YandexServices, TakeAreaId, TakeAreaIdd } from "./RgsServiceFunctions";
 
 import { SendSocketGetSvg } from "./RgsSocketFunctions";
 
-import { YMapsModul, MyYandexKey } from "./MapConst";
+import { YMapsModul, MyYandexKey, NoClose } from "./MapConst";
 
 import { styleMenuGl } from "./MainMapStyle";
 
@@ -368,25 +368,50 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         }
       }
       if (nomInMass < 0) {
+        // нажата правая кнопка "в поле"
         for (let i = 0; i < massMem.length; i++) {
           if (massfaz[i].runRec === 2) {
             nomInMass = i;
             break;
           }
         }
-      }
-      if (nomInMass >= 0) {
-        console.log("%%%%%%:", nomInMass);
 
-        if (nomInMass > 1) {
-          if (massfaz[nomInMass - 1].runRec > 1) {
-            console.log("###НЕЛЬЗЯ");
-            soobErr = "Этот светофор закрывать нельзя";
-            setOpenSoobErr(true);
+        console.log("Нажали в поле", nomInMass);
+
+        if (nomInMass > 0) {
+          massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
+          dispatch(massfazCreate(massfaz));
+          setChangeFaz(nomInMass);
+        }
+      } else {
+        console.log(
+          "Нажали на:",
+          nomInMass + 1,
+          massfaz[nomInMass - 1].runRec,
+          massfaz
+        );
+        if (nomInMass > 0) {
+          let runrec = massfaz[nomInMass].runRec;
+          console.log("###", nomInMass, massfaz[nomInMass - 1].runRec, runrec);
+          if (runrec === 2 || runrec === 4) {
+            if (
+              massfaz[nomInMass - 1].runRec > 1 && // 1 - финиш
+              massfaz[nomInMass - 1].runRec !== 5 // финиш Демо
+            ) {
+              // не первый в списке незакрытых  massfaz[nomInMass - 1] - предыдущий светофор
+              console.log("###НЕЛЬЗЯ");
+              soobErr = NoClose;
+              setOpenSoobErr(true);
+            } else {
+              // первый в списке незакрытых
+              console.log("###МОЖНО");
+              massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
+              dispatch(massfazCreate(massfaz));
+              setChangeFaz(nomInMass);
+            }
           } else {
-            massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
-            dispatch(massfazCreate(massfaz));
-            setChangeFaz(nomInMass);
+            soobErr = "Этот светофор уже закрыт";
+            setOpenSoobErr(true);
           }
         }
       }

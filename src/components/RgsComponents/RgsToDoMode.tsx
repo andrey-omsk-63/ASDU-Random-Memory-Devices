@@ -10,6 +10,7 @@ import GsErrorMessage from "./RgsErrorMessage";
 
 import { Fazer } from "../../App";
 import { PressESC } from "../MainMapRgs";
+import { NoClose } from "../MapConst";
 
 import { OutputFazaImg, OutputVertexImg } from "../RgsServiceFunctions";
 import { CircleObj, TakeAreaId } from "../RgsServiceFunctions";
@@ -31,7 +32,7 @@ let needRend = false;
 let nomIllum = -1;
 const tShadow = "2px 2px 3px rgba(0,0,0,0.3)";
 
-let soobErr = "Этот светофор закрывать нельзя";
+//let soobErr = "Этот светофор закрывать нельзя";
 
 const RgsToDoMode = (props: {
   massMem: Array<number>;
@@ -76,7 +77,8 @@ const RgsToDoMode = (props: {
   const DEMO = datestat.demo;
   const styleToDoMode = StyleToDoMode(DEMO);
 
-  //console.log("1RgsToDoMode:", PressESC, props.massMem, massfaz);
+  //console.log("1RgsToDoMode:", props.changeFaz, PressESC, props.massMem);
+
   //========================================================
   const [openSoobErr, setOpenSoobErr] = React.useState(false);
   const [trigger, setTrigger] = React.useState(true);
@@ -269,7 +271,7 @@ const RgsToDoMode = (props: {
     lengthMassMem = 0;
     DEMO && ForcedClearInterval();
   };
-  //=== инициализация ======================================
+  //=== ИНИЦИАЛИЗАЦИЯ ======================================
   if (init) {
     massfaz = [];
     timerId = [];
@@ -286,14 +288,14 @@ const RgsToDoMode = (props: {
     FindFaza();
     oldFaz = props.changeFaz;
   } else {
-    console.log(
-      "2RgsToDoMode::",
-      PressESC,
-      lengthMassMem,
-      props.massMem.length,
-      props.changeFaz,
-      oldFaz
-    );
+    // console.log(
+    //   "2RgsToDoMode:",
+    //   props.changeFaz,
+    //   PressESC,
+    //   lengthMassMem,
+    //   props.massMem.length,
+    //   oldFaz
+    // );
 
     if (lengthMassMem && !props.massMem.length) {
       ToDoMode(0); // в списке 3 светофора/объекта и нажато ESC
@@ -307,14 +309,18 @@ const RgsToDoMode = (props: {
         lengthMassMem = props.massMem.length;
         FindFaza();
       }
+
+      console.log("3RgsToDoMode:", props.changeFaz, oldFaz);
+
       if (props.changeFaz !== oldFaz) {
-        console.log("!!!props.changeFaz !== oldFaz", props.changeFaz, oldFaz);
+        let runrec = massfaz[props.changeFaz - 1].runRec;
+        console.log("!!!Закрыть", props.changeFaz, oldFaz, runrec);
         // if (massfaz[props.changeFaz - 1].runRec > 1) {
         //   console.log("!!!НЕЛЬЗЯ");
         //   setOpenSoobErr(true);
         // } else {
-          CloseVertex((oldFaz = props.changeFaz));
-          setTrigger(!trigger);
+        CloseVertex((oldFaz = props.changeFaz));
+        setTrigger(!trigger);
         //}
       }
 
@@ -333,17 +339,33 @@ const RgsToDoMode = (props: {
   const DoTimerId = (mode: number) => {
     let fazer = massfaz[mode];
 
-    //console.log("Отправка с " + String(mode + 1) + "-го", DEMO, timerId);
+    //console.log("Отправка с " + String(mode + 1) + "-го", DEMO, timerId,fazer.fazaSist);
 
     if (!DEMO) {
       fazer.runRec === 2 &&
         SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
     } else {
+      // if (!fazer.runRec || fazer.runRec === 5 || fazer.runRec === 1) {
+      //   if (fazer.fazaSist < 0) {
+      //     massfaz[mode].fazaSist = 1;
+      //   } else {
+      //     console.log('переворот фазы:',fazer.fazaSist)
+      //     fazer.fazaSist = fazer.fazaSist === 2 ? 1 : 2;
+      //   }
+      // } else massfaz[mode].fazaSist = fazer.faza;
+
       if (!fazer.runRec || fazer.runRec === 5 || fazer.runRec === 1) {
+        fazer.fazaSist = fazer.faza;
+      } else {
         if (fazer.fazaSist < 0) {
           massfaz[mode].fazaSist = 1;
-        } else massfaz[mode].fazaSist = fazer.fazaSist === 2 ? 1 : 2;
-      } else massfaz[mode].fazaSist = fazer.faza;
+        } else {
+          //console.log("переворот фазы:", fazer.fazaSist);
+          fazer.fazaSist = fazer.fazaSist === 2 ? 1 : 2;
+        }
+      }
+
+      console.log("fazaSist:", fazer.fazaSist, fazer.runRec, fazer.faza);
 
       dispatch(massfazCreate(massfaz));
       props.changeDemo(mode);
@@ -524,7 +546,7 @@ const RgsToDoMode = (props: {
         </Box>
       </Box>
       {openSoobErr && (
-        <GsErrorMessage setOpen={setOpenSoobErr} sErr={soobErr} />
+        <GsErrorMessage setOpen={setOpenSoobErr} sErr={NoClose} />
       )}
     </>
   );
