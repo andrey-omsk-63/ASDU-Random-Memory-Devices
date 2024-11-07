@@ -41,6 +41,7 @@ export interface Stater {
   pictSvg: string | null;
   typeRoute: boolean; // тип отображаемых связей
   typeFaza: boolean; // отображение фаз на карте
+  massPath: any; // точки рабочего маршрута
 }
 
 export let dateStat: Stater = {
@@ -55,8 +56,9 @@ export let dateStat: Stater = {
   id: "0",
   phSvg: [null, null, null, null, null, null, null, null],
   pictSvg: null,
-  typeRoute: true,
-  typeFaza: true,
+  typeRoute: true, // тип отображаемых связей true - mаршрутизированные  false - неформальные
+  typeFaza: true, // отображение фаз на карте
+  massPath: null, // точки рабочего маршрута
 };
 
 export interface Pointer {

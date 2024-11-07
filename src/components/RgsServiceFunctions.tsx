@@ -518,10 +518,12 @@ export const getReferenceLine = (massCoord: any, between: any) => {
 
 export const getMultiRouteOptions = () => {
   return {
-    routeActiveStrokeWidth: 4, // толщина линии
+    routeActiveStrokeWidth: 5, // толщина линии
     //routeActiveStrokeColor: "#224E1F",
     routeStrokeWidth: 0, // толщина линии альтернативного маршрута
     wayPointVisible: false, // отметки "начало - конец"
+    strokeWidth: 5, // толщина линии Polyline
+    strokeColor: '#9B59DA', // цвет линии Polyline - сиреневый
   };
 };
 
@@ -533,6 +535,7 @@ export const getMassMultiRouteOptions = (i: number) => {
   return {
     balloonCloseButton: false,
     routeStrokeStyle: "dot",
+    strokeStyle: "dot",
     //strokeColor: '#1A9165',
     //routeActiveStrokeColor: '#FF2626', // красный
     //routeActiveStrokeColor: '#E6762D', // оранж

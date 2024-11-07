@@ -18,6 +18,7 @@ import GsSetup from "./RgsComponents/GsSetup";
 
 import { getMassMultiRouteOptions, Distance } from "./RgsServiceFunctions";
 import { getMassMultiRouteOptionsDemo } from "./RgsServiceFunctions";
+import { getMultiRouteOptions } from "./RgsServiceFunctions";
 import { getReferencePoints, CenterCoord } from "./RgsServiceFunctions";
 import { MakeMassRouteFirst, StrokaHelp } from "./RgsServiceFunctions";
 import { StrokaMenuGlob, MakingKey, Сrossroad } from "./RgsServiceFunctions";
@@ -116,25 +117,49 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const [demoSost, setDemoSost] = React.useState(-1);
   const mapp = React.useRef<any>(null);
 
-  const addRoute = React.useCallback((ymaps: any, bound: boolean) => {
-    mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
-    let massMultiRoute: any = []; // исходящие связи
-    for (let i = 0; i < massRoute.length; i++) {
-      if (typeRoute) {
-        massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
-          getReferencePoints(massCoord[massCoord.length - 1], massRoute[i]),
-          getMassMultiRouteOptions(i)
-        );
-      } else {
-        massMultiRoute[i] = new ymaps.Polyline(
-          [massCoord[massCoord.length - 1], massRoute[i]],
-          {},
-          getMassMultiRouteOptions(i)
-        );
+  const addRoute = React.useCallback(
+    (ymaps: any, bound: boolean) => {
+      console.log("addRoute:", datestat.massPath);
+
+      mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
+      let massMultiRoute: any = []; // исходящие связи
+      for (let i = 0; i < massRoute.length; i++) {
+        if (typeRoute) {
+          massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
+            getReferencePoints(massCoord[massCoord.length - 1], massRoute[i]),
+            getMassMultiRouteOptions(i)
+          );
+        } else {
+          massMultiRoute[i] = new ymaps.Polyline(
+            [massCoord[massCoord.length - 1], massRoute[i]],
+            {},
+            getMassMultiRouteOptions(i)
+          );
+        }
+        mapp.current.geoObjects.add(massMultiRoute[i]);
       }
-      mapp.current.geoObjects.add(massMultiRoute[i]);
-    }
-  }, []);
+      if (datestat.massPath) {
+        let MassPath = datestat.massPath; // рабочий маршрут
+        let massMultiPath: any = []; // исходящие связи
+        for (let i = 0; i < MassPath.length - 1; i++) {
+          if (typeRoute) {
+            massMultiPath[i] = new ymaps.multiRouter.MultiRoute(
+              getReferencePoints(MassPath[i], MassPath[i + 1]),
+              getMultiRouteOptions()
+            );
+          } else {
+            massMultiPath[i] = new ymaps.Polyline(
+              [MassPath[i], MassPath[i + 1]],
+              {},
+              getMultiRouteOptions()
+            );
+          }
+          mapp.current.geoObjects.add(massMultiPath[i]);
+        }
+      }
+    },
+    [datestat.massPath]
+  );
 
   const DoDemo = (ymaps: any, mode: number) => {
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
@@ -202,8 +227,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     zoom = zoom - 0.01;
     mayEsc = false;
     massRoute = [];
+    datestat.massPath = null; // точки рабочего маршрута
+    dispatch(statsaveCreate(datestat));
     ymaps && addRoute(ymaps, false); // перерисовка связей
-  }, [ymaps, addRoute]);
+  }, [ymaps, addRoute, datestat, dispatch]);
 
   const ClickPointInTarget = (index: number) => {
     setIdxObj(index);
@@ -264,6 +291,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       SoobErr(MakeSoobErr(2, klu.slice(SL), "")); // перекрёсток уже используется
     } else {
       if (!massMem.length) {
+        //============
+        datestat.massPath = null; // точки рабочего маршрута
+        dispatch(statsaveCreate(datestat));
+        //============
         Added(klu, index, nom); // первая точка
       } else {
         if (nom < 0) {
@@ -350,6 +381,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   const Pererisovka = () => {
     if (risovka) {
+      console.log("П Е Р Е Р И С О В К А", datestat.massPath);
+
       ymaps && addRoute(ymaps, false); // перерисовка связей
       setRisovka(false);
     }
@@ -358,6 +391,26 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const FindNearVertex = (coord: Array<number>) => {
     let minDist = 999999;
     let nomInMass = -1;
+
+    const TakeOffVertex = () => {
+      massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
+      dispatch(massfazCreate(massfaz));
+
+      console.log("1###МОЖНО", JSON.parse(JSON.stringify(datestat.massPath)));
+
+      if (datestat.massPath) {
+        if (datestat.massPath.length) {
+          datestat.massPath.splice(0, 1); // удалить первый элемент
+          dispatch(statsaveCreate(datestat));
+        }
+      }
+
+      console.log("2###МОЖНО", datestat.massPath);
+
+      setRisovka(true);
+      setChangeFaz(nomInMass);
+    };
+
     if (massMem.length > 2) {
       for (let i = 0; i < massMem.length; i++) {
         let corFromMap = [massfaz[i].coordinates[0], massfaz[i].coordinates[1]];
@@ -376,12 +429,13 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           }
         }
 
-        console.log("Нажали в поле", nomInMass);
+        console.log("++++++++++++  Нажали в поле  ++++++++++++", nomInMass);
 
         if (nomInMass > 0) {
-          massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
-          dispatch(massfazCreate(massfaz));
-          setChangeFaz(nomInMass);
+          TakeOffVertex();
+          // massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
+          // dispatch(massfazCreate(massfaz));
+          // setChangeFaz(nomInMass);
         }
       } else {
         console.log(
@@ -390,6 +444,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           massfaz[nomInMass - 1].runRec,
           massfaz
         );
+
         if (nomInMass > 0) {
           let runrec = massfaz[nomInMass].runRec;
           console.log("###", nomInMass, massfaz[nomInMass - 1].runRec, runrec);
@@ -403,11 +458,17 @@ const MainMapRgs = (props: { trigger: boolean }) => {
               soobErr = NoClose;
               setOpenSoobErr(true);
             } else {
-              // первый в списке незакрытых
-              console.log("###МОЖНО");
-              massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
-              dispatch(massfazCreate(massfaz));
-              setChangeFaz(nomInMass);
+              TakeOffVertex(); // первый в списке незакрытых
+              // console.log("###МОЖНО");
+              // massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
+              // dispatch(massfazCreate(massfaz));
+              // setChangeFaz(nomInMass);
+              // if (datestat.massPath) {
+              //   if (datestat.massPath.length){
+              //     datestat.massPath.splice(0, 1) // удалить первый элемент
+              //     dispatch(statsaveCreate(datestat));
+              //   }
+              // }
             }
           } else {
             soobErr = "Этот светофор уже закрыт";
@@ -522,6 +583,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const OldSizeWind = (size: number) => {
+    console.log("КОНЕЦ!!!");
+
     xsMap = size;
     xsTab = 0.01;
     widthMap = "99.9%";
@@ -685,6 +748,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                 changeFaz={changeFaz}
                 ban={SetRestartBan}
                 changeDemo={ChangeDemoSost}
+                pererisovka={setRisovka}
               />
             )}
           </Grid>
