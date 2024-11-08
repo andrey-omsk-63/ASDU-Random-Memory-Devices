@@ -87,7 +87,6 @@ const RgsToDoMode = (props: {
 
   const MakeMaskFaz = (i: number) => {
     let maskFaz: Fazer = JSON.parse(JSON.stringify(MaskFaz));
-
     maskFaz.idx = props.massMem[i];
     if (maskFaz.idx >= map.tflight.length) {
       let index = maskFaz.idx - map.tflight.length; // объект
@@ -102,7 +101,9 @@ const RgsToDoMode = (props: {
       maskFaz.coordinates[0] = map.tflight[maskFaz.idx].points.Y;
       maskFaz.coordinates[1] = map.tflight[maskFaz.idx].points.X;
       if (i) {
-        datestat.massPath.push(maskFaz.coordinates); // не начало маршрута
+        let aa = JSON.parse(JSON.stringify(datestat.massPath));
+        aa.push(maskFaz.coordinates); // не начало маршрута
+        datestat.massPath = aa;
         dispatch(statsaveCreate(datestat));
       }
     }
@@ -132,7 +133,9 @@ const RgsToDoMode = (props: {
   };
 
   const handleCloseSetEnd = () => {
+    DEMO && ForcedClearInterval();
     datestat.finish = false; // закончить исполнение
+    //datestat.finish = true; // начать исполнение
     datestat.massPath = null; // точки рабочего маршрута
     dispatch(statsaveCreate(datestat));
     props.funcSize(11.99);
@@ -141,7 +144,6 @@ const RgsToDoMode = (props: {
     init = true;
     oldFaz = -1;
     lengthMassMem = 0;
-    DEMO && ForcedClearInterval();
   };
   //========================================================
   const ToDoMode = (mode: number) => {
@@ -153,10 +155,8 @@ const RgsToDoMode = (props: {
       setTrigger(!trigger);
     } else {
       // принудительное закрытие
-      ForcedClearInterval();
-
       console.log("Принудительный Финиш:", timerId, massInt);
-
+      ForcedClearInterval();
       for (let i = 0; i < massfaz.length; i++) {
         if (massfaz[i].runRec === 2) {
           !DEMO && SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
@@ -231,12 +231,15 @@ const RgsToDoMode = (props: {
   const FindEnd = () => {
     let ch = 0;
     for (let i = 0; i < massfaz.length; i++) {
-      if (massfaz[i].id <= 10000) {
+      if (i && massfaz[i].id <= 10000) {
         let runREC = massfaz[i].runRec;
-        if (runREC === 0 || runREC === 2 || runREC === 4) ch++;
+        if (runREC === 0 || runREC === 2 || runREC === 4) {
+          ch++;
+        }
       }
     }
-    !ch && handleCloseSetEnd();
+    console.log("FindEnd:", massfaz[0].runRec, ch, massfaz);
+    if (!ch) handleCloseSetEnd();
   };
 
   const CloseVertex = (idx: number) => {
@@ -254,45 +257,37 @@ const RgsToDoMode = (props: {
     }
     timerId[idx] = null;
     massfaz[idx].runRec = DEMO ? 5 : 1;
-    FindEnd();
 
-    console.log(
-      idx + 1 + "-й светофор закрыт!!!",
-      props.changeFaz,
-      massfaz[idx].runRec,
-      timerId[idx]
-    );
+    console.log(idx + 1 + "-й светофор закрыт!!!", timerId[idx]);
+
+    FindEnd();
   };
 
   //===========================================================================================
-  //=== ИНИЦИАЛИЗАЦИЯ ======================================
+  //=== ИНИЦИАЛИЗАЦИЯ =====================================
   if (init) {
-    massfaz = [];
-    timerId = [];
-    massInt = [];
-    nomIllum = -1;
-    datestat.massPath = []; // точки рабочего маршрута
-    dispatch(statsaveCreate(datestat));
-    for (let i = 0; i < props.massMem.length; i++) {
-      massfaz.push(MakeMaskFaz(i));
-      timerId.push(null);
-    }
-    for (let i = 0; i < props.massMem.length; i++)
-      massInt.push(JSON.parse(JSON.stringify(timerId)));
-    init = false;
-    lengthMassMem = props.massMem.length;
-    FindFaza();
-    oldFaz = props.changeFaz;
-  } else {
-    // console.log(
-    //   "2RgsToDoMode:",
-    //   props.changeFaz,
-    //   PressESC,
-    //   lengthMassMem,
-    //   props.massMem.length,
-    //   oldFaz
-    // );
+    if (datestat.start) {
+      massfaz = [];
+      timerId = [];
+      massInt = [];
+      nomIllum = -1;
+      datestat.start = false; // первая точка маршрута
+      datestat.massPath = []; // точки рабочего маршрута
+      dispatch(statsaveCreate(datestat));
+      for (let i = 0; i < props.massMem.length; i++) {
+        massfaz.push(MakeMaskFaz(i));
+        timerId.push(null);
+      }
+      for (let i = 0; i < props.massMem.length; i++)
+        massInt.push(JSON.parse(JSON.stringify(timerId)));
+      init = false;
+      lengthMassMem = props.massMem.length;
+      FindFaza();
+      oldFaz = props.changeFaz;
 
+      console.log("ИНИЦИАЛИЗАЦИЯ:", datestat.start, datestat.massPath);
+    }
+  } else {
     if (lengthMassMem && !props.massMem.length) {
       ToDoMode(0); // в списке 3 светофора/объекта и нажато ESC
     } else {
@@ -305,24 +300,18 @@ const RgsToDoMode = (props: {
         lengthMassMem = props.massMem.length;
         FindFaza();
       }
-
-      //console.log("3RgsToDoMode:", props.changeFaz, oldFaz);
-
       if (props.changeFaz !== oldFaz) {
         let runrec = massfaz[props.changeFaz - 1].runRec;
+
         console.log("!!!Закрыть", props.changeFaz, oldFaz, runrec);
-        // if (massfaz[props.changeFaz - 1].runRec > 1) {
-        //   console.log("!!!НЕЛЬЗЯ");
-        //   setOpenSoobErr(true);
-        // } else {
+
         CloseVertex((oldFaz = props.changeFaz));
         setTrigger(!trigger);
-        //}
       }
-
       dispatch(massfazCreate(massfaz));
     }
   }
+
   //========================================================
   const StrokaHeader = (xss: number, soob: string) => {
     return (
@@ -341,17 +330,8 @@ const RgsToDoMode = (props: {
       fazer.runRec === 2 &&
         SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
     } else {
-      // if (!fazer.runRec || fazer.runRec === 5 || fazer.runRec === 1) {
-      //   if (fazer.fazaSist < 0) {
-      //     massfaz[mode].fazaSist = 1;
-      //   } else {
-      //     console.log('переворот фазы:',fazer.fazaSist)
-      //     fazer.fazaSist = fazer.fazaSist === 2 ? 1 : 2;
-      //   }
-      // } else massfaz[mode].fazaSist = fazer.faza;
-
       if (!fazer.runRec || fazer.runRec === 5 || fazer.runRec === 1) {
-        fazer.fazaSist = fazer.faza;
+        fazer.fazaSist = fazer.faza; // начало или финиш
       } else {
         if (fazer.fazaSist < 0) {
           massfaz[mode].fazaSist = 1;
@@ -381,36 +361,26 @@ const RgsToDoMode = (props: {
     };
 
     const ClickVertex = (mode: number) => {
-      let fazer = massfaz[mode];
-
-      console.log("1ClickVertex:", mode, fazer.runRec, props.massMem, massfaz);
-
       if (mode > 0) {
-        console.log("2ClickVertex:", mode, mode - 1, massfaz[mode - 1].runRec);
-        if (massfaz[mode - 1].runRec > 1) {
-          console.log("НЕЛЬЗЯ");
+        console.log("000МОЖНО закрыть", massfaz[mode - 1].runRec);
+        if (
+          massfaz[mode - 1].runRec !== 0 && // 0 -начало
+          massfaz[mode - 1].runRec !== 1 && // 1 - финиш
+          massfaz[mode - 1].runRec !== 5 // 5 - финиш Демо
+          // massfaz[mode - 1].runRec === 2 || // 2 - активирован
+          // massfaz[mode - 1].runRec === 4 // 4 - активирован Демо
+        ) {
           setOpenSoobErr(true);
         } else {
-          console.log(
-            "3###МОЖНО",
-            JSON.parse(JSON.stringify(datestat.massPath))
-          );
+          console.log("МОЖНО закрыть", datestat.massPath);
+
           if (datestat.massPath) {
             if (datestat.massPath.length) {
               datestat.massPath.splice(0, 1); // удалить первый элемент
-              console.log(
-                "5###МОЖНО",
-                JSON.parse(JSON.stringify(datestat.massPath))
-              );
               dispatch(statsaveCreate(datestat));
             }
           }
-          console.log(
-            "4###МОЖНО",
-            JSON.parse(JSON.stringify(datestat.massPath))
-          );
           props.pererisovka(true);
-
           CloseVertex(mode);
           dispatch(massfazCreate(massfaz));
           setTrigger(!trigger);
@@ -449,8 +419,6 @@ const RgsToDoMode = (props: {
       let pictImg: any = "";
       if (massf.faza) pictImg = OutputFazaImg(fazaImg, massf.faza);
       let illum = nomIllum === idx ? styleStrokaTabl01 : styleStrokaTabl02;
-
-      //console.log('###::',idx,massf.runRec,massf)
 
       return (
         <Grid key={idx} container sx={{ marginTop: 1 }}>
@@ -506,7 +474,7 @@ const RgsToDoMode = (props: {
 
   React.useEffect(() => {
     DEMO && CheckRun();
-  }, [DEMO, CheckRun,datestat]);
+  }, [DEMO, CheckRun, datestat]);
 
   if (needRend) {
     needRend = false;

@@ -119,8 +119,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   const addRoute = React.useCallback(
     (ymaps: any, bound: boolean) => {
-      console.log("addRoute:", datestat.massPath);
-
       mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
       let massMultiRoute: any = []; // исходящие связи
       for (let i = 0; i < massRoute.length; i++) {
@@ -227,6 +225,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     zoom = zoom - 0.01;
     mayEsc = false;
     massRoute = [];
+    datestat.start = false; // первая точка маршрута
+    datestat.finish = false; // закончить исполнение
     datestat.massPath = null; // точки рабочего маршрута
     dispatch(statsaveCreate(datestat));
     ymaps && addRoute(ymaps, false); // перерисовка связей
@@ -291,23 +291,24 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       SoobErr(MakeSoobErr(2, klu.slice(SL), "")); // перекрёсток уже используется
     } else {
       if (!massMem.length) {
-        //============
-        datestat.massPath = null; // точки рабочего маршрута
-        dispatch(statsaveCreate(datestat));
-        //============
         Added(klu, index, nom); // первая точка
+        datestat.start = true;
+        dispatch(statsaveCreate(datestat));
       } else {
         if (nom < 0) {
-          Added(klu, index, nom); // последняя точка
-          datestat.finish = true;
-          dispatch(statsaveCreate(datestat));
-          needRend = true;
-          setFlagPusk(!flagPusk);
+          console.log("AddVertex:", nom, massMem);
+
+          if (massMem.length > 1) {
+            Added(klu, index, nom); // последняя точка
+            datestat.finish = true;
+            dispatch(statsaveCreate(datestat));
+            needRend = true;
+            setFlagPusk(!flagPusk);
+          } else SoobErr("Ошибочка вышла!!!")
         } else {
-          //console.log("Вторая точка и далее", massKlu, nom);
           if (!MakeFazer(massKlu[massMem.length - 1], bindings.tfLinks[nom])) {
             let soob = massKlu[massMem.length - 1].slice(SL);
-            SoobErr(MakeSoobErr(1, klu.slice(SL), soob));
+            SoobErr(MakeSoobErr(1, klu.slice(SL), soob)); // нет связ мкжду перекрёстками
           } else Added(klu, index, nom); // вторая точка и далее
         }
       }
@@ -327,29 +328,20 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         klu = MakingKey(homeRegion, mass.area.num, mass.ID);
       }
       if (!massMem.length) {
-        //=========================================================================
-        //if (index < map.tflight.length) {
-        //  SoobErr("Входящая точка маршрута должна быть объектом");
-        //} else
-        AddVertex(klu, index, -1);
-        //=========================================================================
+        AddVertex(klu, index, -1); // Входящая точка маршрута
       } else {
-        if (massMem.length === 1 && klu.length > 8) {
-          SoobErr("Объекты могут задаваться только в начале и конце маршрута");
+        let have = -1;
+        for (let i = 0; i < bindings.tfLinks.length; i++)
+          if (bindings.tfLinks[i].id === klu) have = i;
+        if (have < 0 && klu.length < 9) {
+          SoobErr(MakeSoobErr(3, klu.slice(SL), "")); // нет массива связности
         } else {
-          let have = -1;
-          for (let i = 0; i < bindings.tfLinks.length; i++)
-            if (bindings.tfLinks[i].id === klu) have = i;
-          if (have < 0 && klu.length < 9) {
-            SoobErr(MakeSoobErr(3, klu.slice(SL), "")); // нет массива связности
-          } else {
-            if (massMem.length > 1) {
-              let kluLast = massKlu[massKlu.length - 1];
-              if (!CheckHaveLink(klu, kluLast, bindings)) {
-                SoobErr(MakeSoobErr(5, klu.slice(SL), kluLast.slice(SL))); // нет связи
-              } else AddVertex(klu, index, have);
+          if (massMem.length > 1) {
+            let kluLast = massKlu[massKlu.length - 1];
+            if (!CheckHaveLink(klu, kluLast, bindings)) {
+              SoobErr(MakeSoobErr(5, klu.slice(SL), kluLast.slice(SL))); // нет связи
             } else AddVertex(klu, index, have);
-          }
+          } else AddVertex(klu, index, have);
         }
       }
     }
@@ -381,8 +373,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   const Pererisovka = () => {
     if (risovka) {
-      console.log("П Е Р Е Р И С О В К А", datestat.massPath);
-
+      //console.log("П Е Р Е Р И С О В К А", datestat.massPath);
       ymaps && addRoute(ymaps, false); // перерисовка связей
       setRisovka(false);
     }
@@ -395,18 +386,14 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     const TakeOffVertex = () => {
       massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
       dispatch(massfazCreate(massfaz));
-
-      console.log("1###МОЖНО", JSON.parse(JSON.stringify(datestat.massPath)));
-
       if (datestat.massPath) {
         if (datestat.massPath.length) {
-          datestat.massPath.splice(0, 1); // удалить первый элемент
+          let aa = JSON.parse(JSON.stringify(datestat.massPath));
+          aa.shift();
+          datestat.massPath = aa; // удалить первый элемент
           dispatch(statsaveCreate(datestat));
         }
       }
-
-      console.log("2###МОЖНО", datestat.massPath);
-
       setRisovka(true);
       setChangeFaz(nomInMass);
     };
@@ -428,48 +415,20 @@ const MainMapRgs = (props: { trigger: boolean }) => {
             break;
           }
         }
-
-        console.log("++++++++++++  Нажали в поле  ++++++++++++", nomInMass);
-
-        if (nomInMass > 0) {
-          TakeOffVertex();
-          // massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
-          // dispatch(massfazCreate(massfaz));
-          // setChangeFaz(nomInMass);
-        }
+        //console.log("++++++++++++  Нажали в поле  ++++++++++++", nomInMass);
+        if (nomInMass > 0) TakeOffVertex();
       } else {
-        console.log(
-          "Нажали на:",
-          nomInMass + 1,
-          massfaz[nomInMass - 1].runRec,
-          massfaz
-        );
-
         if (nomInMass > 0) {
           let runrec = massfaz[nomInMass].runRec;
-          console.log("###", nomInMass, massfaz[nomInMass - 1].runRec, runrec);
           if (runrec === 2 || runrec === 4) {
             if (
               massfaz[nomInMass - 1].runRec > 1 && // 1 - финиш
               massfaz[nomInMass - 1].runRec !== 5 // финиш Демо
             ) {
               // не первый в списке незакрытых  massfaz[nomInMass - 1] - предыдущий светофор
-              console.log("###НЕЛЬЗЯ");
-              soobErr = NoClose;
+              soobErr = NoClose; // НЕЛЬЗЯ
               setOpenSoobErr(true);
-            } else {
-              TakeOffVertex(); // первый в списке незакрытых
-              // console.log("###МОЖНО");
-              // massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
-              // dispatch(massfazCreate(massfaz));
-              // setChangeFaz(nomInMass);
-              // if (datestat.massPath) {
-              //   if (datestat.massPath.length){
-              //     datestat.massPath.splice(0, 1) // удалить первый элемент
-              //     dispatch(statsaveCreate(datestat));
-              //   }
-              // }
-            }
+            } else TakeOffVertex(); // первый в списке незакрытых
           } else {
             soobErr = "Этот светофор уже закрыт";
             setOpenSoobErr(true);
@@ -529,7 +488,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   const ModeToDo = (mod: number) => {
     modeToDo = mod;
-    if (!modeToDo) setChangeFaz(0);
+    if (!modeToDo) {
+      setChangeFaz(0);
+      setToDoMode(false); // на всякий случай
+    }
     PressESC = false; // сброс флага нажатия Esc
   };
 

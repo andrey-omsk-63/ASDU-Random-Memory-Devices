@@ -30,6 +30,7 @@ export let dateAddObjectsGl: any;
 export interface Stater {
   ws: any;
   debug: boolean;
+  start: boolean; // первая точка маршрута
   finish: boolean;
   demo: boolean;
   readyPict: boolean;
@@ -47,6 +48,7 @@ export interface Stater {
 export let dateStat: Stater = {
   ws: null,
   debug: false,
+  start: false, // первая точка маршрута
   finish: false,
   demo: false,
   readyPict: true,
