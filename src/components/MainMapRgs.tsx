@@ -304,7 +304,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
             dispatch(statsaveCreate(datestat));
             needRend = true;
             setFlagPusk(!flagPusk);
-          } else SoobErr("Ошибочка вышла!!!")
+          } else SoobErr("Ошибочка вышла!!!");
         } else {
           if (!MakeFazer(massKlu[massMem.length - 1], bindings.tfLinks[nom])) {
             let soob = massKlu[massMem.length - 1].slice(SL);
@@ -328,7 +328,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         klu = MakingKey(homeRegion, mass.area.num, mass.ID);
       }
       if (!massMem.length) {
-        AddVertex(klu, index, -1); // Входящая точка маршрута
+        AddVertex(klu, index, -1); // входящая точка маршрута
       } else {
         let have = -1;
         for (let i = 0; i < bindings.tfLinks.length; i++)
@@ -379,25 +379,24 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     }
   };
   //=== обработка instanceRef ==============================
+  const TakeOffVertex = (nomInMass: number) => {
+    massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
+    dispatch(massfazCreate(massfaz));
+    if (datestat.massPath) {
+      if (datestat.massPath.length) {
+        let aa = JSON.parse(JSON.stringify(datestat.massPath));
+        aa.shift(); // удалить первый элемент
+        datestat.massPath = aa;
+        dispatch(statsaveCreate(datestat));
+      }
+    }
+    setRisovka(true);
+    setChangeFaz(nomInMass);
+  };
+
   const FindNearVertex = (coord: Array<number>) => {
     let minDist = 999999;
     let nomInMass = -1;
-
-    const TakeOffVertex = () => {
-      massfaz[nomInMass].runRec = datestat.demo ? 5 : 1;
-      dispatch(massfazCreate(massfaz));
-      if (datestat.massPath) {
-        if (datestat.massPath.length) {
-          let aa = JSON.parse(JSON.stringify(datestat.massPath));
-          aa.shift();
-          datestat.massPath = aa; // удалить первый элемент
-          dispatch(statsaveCreate(datestat));
-        }
-      }
-      setRisovka(true);
-      setChangeFaz(nomInMass);
-    };
-
     if (massMem.length > 2) {
       for (let i = 0; i < massMem.length; i++) {
         let corFromMap = [massfaz[i].coordinates[0], massfaz[i].coordinates[1]];
@@ -416,7 +415,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           }
         }
         //console.log("++++++++++++  Нажали в поле  ++++++++++++", nomInMass);
-        if (nomInMass > 0) TakeOffVertex();
+        if (nomInMass > 0) TakeOffVertex(nomInMass);
       } else {
         if (nomInMass > 0) {
           let runrec = massfaz[nomInMass].runRec;
@@ -428,7 +427,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
               // не первый в списке незакрытых  massfaz[nomInMass - 1] - предыдущий светофор
               soobErr = NoClose; // НЕЛЬЗЯ
               setOpenSoobErr(true);
-            } else TakeOffVertex(); // первый в списке незакрытых
+            } else TakeOffVertex(nomInMass); // первый в списке незакрытых
           } else {
             soobErr = "Этот светофор уже закрыт";
             setOpenSoobErr(true);
@@ -643,6 +642,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           SetHelper(1);
         } else {
           console.log("21ESC:", mayEsc, massMem, massNomBind);
+          massMem.pop(); // удалим из массива последний элемент
           PressESC = true;
           setFlagPusk(!flagPusk);
         }
