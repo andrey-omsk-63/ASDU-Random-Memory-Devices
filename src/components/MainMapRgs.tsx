@@ -42,10 +42,11 @@ let zoom = zoomStart;
 let pointCenter: any = 0;
 
 let massMem: Array<number> = [];
+//let massNom: Array<number> = []; // массив номеров светофоров в bindings
 let massVert: Array<number> = [];
-let massCoord: any = [];
-let massKlu: Array<string> = [];
-let massNomBind: Array<number> = [];
+let massCoord: any = []; // массив координат светофоров
+let massKlu: Array<string> = []; // массив ключей
+let massNomBind: Array<number> = []; // массив номеров светофоров в bindings
 let soobErr = "";
 let xsMap = 11.99;
 let xsTab = 0.01;
@@ -56,7 +57,7 @@ let inTarget = false;
 let inDemo = false;
 let newCenter: any = [];
 let leftCoord: Array<number> = [0, 0];
-let massRoute: any = [];
+let massRoute: any = []; // массив предлагаемых связей
 let helper = true;
 let funcContex: any = null;
 let funcBound: any = null;
@@ -172,7 +173,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       let massCoord: any = [];
       let massRab = MakeMassRoute(bindings, i, map, addobj);
-      let massRoute = massRab[0];
+      let massRoute = massRab[0]; // массив предлагаемых связей
       let massKlu = massRab[1];
       let KLUCH = "";
       for (let j = 0; j < map.tflight.length; j++) {
@@ -221,7 +222,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     massMem = [];
     massCoord = [];
     massKlu = [];
-    massNomBind = [];
+    massNomBind = []; // массив номеров светофоров в bindings
     zoom = zoom - 0.01;
     mayEsc = false;
     massRoute = [];
@@ -266,8 +267,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     }
     massMem.push(index);
     massCoord.push(masscoord);
-    massKlu.push(klu);
-    massNomBind.push(nom);
+    massKlu.push(klu); // массив ключей
+    massNomBind.push(nom); // массив номеров светофоров в bindings
     massRoute = [];
     if (massNomBind.length === 1)
       massRoute = MakeMassRouteFirst(klu, bindings, map);
@@ -286,8 +287,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const AddVertex = (klu: string, index: number, nom: number) => {
-    let nomInMass = massMem.indexOf(index);
-    if (nomInMass >= 0) {
+    if (massMem.indexOf(index) >= 0) {
       SoobErr(MakeSoobErr(2, klu.slice(SL), "")); // перекрёсток уже используется
     } else {
       if (!massMem.length) {
@@ -296,10 +296,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         dispatch(statsaveCreate(datestat));
       } else {
         if (nom < 0) {
-          console.log("AddVertex:", nom, massMem);
-
           if (massMem.length > 1) {
-            Added(klu, index, nom); // последняя точка
+            Added(klu, index, nom); // последняя точка - объект
             datestat.finish = true;
             dispatch(statsaveCreate(datestat));
             needRend = true;
@@ -491,7 +489,18 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       setChangeFaz(0);
       setToDoMode(false); // на всякий случай
     }
-    PressESC = false; // сброс флага нажатия Esc
+    if (PressESC) {
+      let dl = datestat.massPath.length;
+      datestat.massPath.pop(); // удалим из массива последний элемент
+      if (massMem.length === dl) datestat.massPath.pop(); // удалим из массива последний элемент
+      dispatch(statsaveCreate(datestat));
+      massKlu.pop(); // удалим из массива последний элемент
+      massNomBind.pop(); // удалим из массива последний элемент
+      let nom = massNomBind[massNomBind.length - 1];
+      massRoute = MakeMassRoute(bindings, nom, map, addobj)[0]; // массив предлагаемых связей
+      ymaps && addRoute(ymaps, false); // перерисовка связей
+      PressESC = false; // сброс флага нажатия Esc
+    }
   };
 
   const PressButton = (mode: number) => {
@@ -635,7 +644,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   //=== обработка Esc ======================================
   const escFunction = React.useCallback(
     (event) => {
-      if (event.keyCode === 27 && mayEsc) {
+      if (event.keyCode === 27 && mayEsc && !datestat.finish) {
         if (massMem.length < 4) {
           console.log("1ESC:", mayEsc, massMem, massNomBind);
           inTarget = true;
@@ -643,12 +652,13 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         } else {
           console.log("21ESC:", mayEsc, massMem, massNomBind);
           massMem.pop(); // удалим из массива последний элемент
+          massCoord.pop(); // удалим из массива последний элемент
           PressESC = true;
           setFlagPusk(!flagPusk);
         }
       }
     },
-    [SetHelper, flagPusk]
+    [SetHelper, flagPusk, datestat.finish]
   );
 
   React.useEffect(() => {
