@@ -87,11 +87,22 @@ export const styleStrokaTablImg = {
   minWidth: "33px",
   maxHeight: "45px",
   minHeight: "45px",
-  borderColor: "#EFF9E6",
+  borderColor: "#E6F5D6", // светло-салатовый
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
-  boxShadow: 6,
+  boxShadow: 9,
+};
+
+export const styleStrokaBoxlImg = {
+  border: "1px solid #DFDFDF", // светло-серый
+  boxShadow: 1,
+  cursor: "pointer",
+  maxWidth: "30.5px",
+  minWidth: "30.5px",
+  maxHeight: "42px",
+  minHeight: "42px",
+  padding: "3px 0px 0px 1px",
 };
 
 export const styleStrokaTakt = {
@@ -117,7 +128,7 @@ export const StyleToDoMode = (DEMO: boolean) => {
 };
 
 export const styleToDo01 = {
-  background: 'linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )',
+  background: "linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )",
   border: "1px solid #d4d4d4",
   borderRadius: 1,
   marginTop: 1,

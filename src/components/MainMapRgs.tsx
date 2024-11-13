@@ -138,22 +138,24 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         mapp.current.geoObjects.add(massMultiRoute[i]);
       }
       if (datestat.massPath) {
-        let MassPath = datestat.massPath; // рабочий маршрут
-        let massMultiPath: any = []; // исходящие связи
-        for (let i = 0; i < MassPath.length - 1; i++) {
-          if (typeRoute) {
-            massMultiPath[i] = new ymaps.multiRouter.MultiRoute(
-              getReferencePoints(MassPath[i], MassPath[i + 1]),
-              getMultiRouteOptions()
-            );
-          } else {
-            massMultiPath[i] = new ymaps.Polyline(
-              [MassPath[i], MassPath[i + 1]],
-              {},
-              getMultiRouteOptions()
-            );
+        if (datestat.massPath.length > 2) {
+          let MassPath = datestat.massPath; // рабочий маршрут
+          let massMultiPath: any = []; // исходящие связи
+          for (let i = 0; i < MassPath.length - 2; i++) {
+            if (typeRoute) {
+              massMultiPath[i] = new ymaps.multiRouter.MultiRoute(
+                getReferencePoints(MassPath[i], MassPath[i + 1]),
+                getMultiRouteOptions()
+              );
+            } else {
+              massMultiPath[i] = new ymaps.Polyline(
+                [MassPath[i], MassPath[i + 1]],
+                {},
+                getMultiRouteOptions()
+              );
+            }
+            mapp.current.geoObjects.add(massMultiPath[i]);
           }
-          mapp.current.geoObjects.add(massMultiPath[i]);
         }
       }
     },
@@ -385,6 +387,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         let aa = JSON.parse(JSON.stringify(datestat.massPath));
         aa.shift(); // удалить первый элемент
         datestat.massPath = aa;
+
+        console.log("TakeOffVertex:", aa);
+
         dispatch(statsaveCreate(datestat));
       }
     }
@@ -415,20 +420,26 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         //console.log("++++++++++++  Нажали в поле  ++++++++++++", nomInMass);
         if (nomInMass > 0) TakeOffVertex(nomInMass);
       } else {
+        console.log("0FindNearVertex:", nomInMass, massMem);
         if (nomInMass > 0) {
-          let runrec = massfaz[nomInMass].runRec;
-          if (runrec === 2 || runrec === 4) {
-            if (
-              massfaz[nomInMass - 1].runRec > 1 && // 1 - финиш
-              massfaz[nomInMass - 1].runRec !== 5 // финиш Демо
-            ) {
-              // не первый в списке незакрытых  massfaz[nomInMass - 1] - предыдущий светофор
-              soobErr = NoClose; // НЕЛЬЗЯ
-              setOpenSoobErr(true);
-            } else TakeOffVertex(nomInMass); // первый в списке незакрытых
+          if (massMem.length - 1 === nomInMass) {
+            console.log("1FindNearVertex: нужно сократить", nomInMass);
+            RemoveTail();
           } else {
-            soobErr = "Этот светофор уже закрыт";
-            setOpenSoobErr(true);
+            let runrec = massfaz[nomInMass].runRec;
+            if (runrec === 2 || runrec === 4) {
+              if (
+                massfaz[nomInMass - 1].runRec > 1 && // 1 - финиш
+                massfaz[nomInMass - 1].runRec !== 5 // финиш Демо
+              ) {
+                // не первый в списке незакрытых  massfaz[nomInMass - 1] - предыдущий светофор
+                soobErr = NoClose; // НЕЛЬЗЯ
+                setOpenSoobErr(true);
+              } else TakeOffVertex(nomInMass); // первый в списке незакрытых
+            } else {
+              soobErr = "Этот светофор уже закрыт";
+              setOpenSoobErr(true);
+            }
           }
         }
       }
@@ -484,23 +495,29 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   );
 
   const ModeToDo = (mod: number) => {
+    console.log("0ModeToDo:", mod);
+    if (mod < 0) {
+      RemoveTail();
+      return
+    }
+    console.log("1ModeToDo:", mod);
+    
     modeToDo = mod;
     if (!modeToDo) {
       setChangeFaz(0);
       setToDoMode(false); // на всякий случай
+    } else {
+      if (PressESC && datestat.massPath) {
+        datestat.massPath && datestat.massPath.pop(); // удалим из массива последний элемент
+        dispatch(statsaveCreate(datestat));
+        massKlu.pop(); // удалим из массива последний элемент
+        massNomBind.pop(); // удалим из массива последний элемент
+        let nom = massNomBind[massNomBind.length - 1];
+        massRoute = MakeMassRoute(bindings, nom, map, addobj)[0]; // массив предлагаемых связей
+        ymaps && addRoute(ymaps, false); // перерисовка связей
+      }
     }
-    if (PressESC) {
-      let dl = datestat.massPath.length;
-      datestat.massPath.pop(); // удалим из массива последний элемент
-      if (massMem.length === dl) datestat.massPath.pop(); // удалим из массива последний элемент
-      dispatch(statsaveCreate(datestat));
-      massKlu.pop(); // удалим из массива последний элемент
-      massNomBind.pop(); // удалим из массива последний элемент
-      let nom = massNomBind[massNomBind.length - 1];
-      massRoute = MakeMassRoute(bindings, nom, map, addobj)[0]; // массив предлагаемых связей
-      ymaps && addRoute(ymaps, false); // перерисовка связей
-      PressESC = false; // сброс флага нажатия Esc
-    }
+    PressESC = false; // сброс флага нажатия Esc
   };
 
   const PressButton = (mode: number) => {
@@ -642,6 +659,14 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     setFlagPusk(!flagPusk);
   }
   //=== обработка Esc ======================================
+  const RemoveTail = React.useCallback(() => {
+    console.log("21ESC:", mayEsc, massMem, massNomBind);
+    massMem.pop(); // удалим из массива последний элемент
+    massCoord.pop(); // удалим из массива последний элемент
+    PressESC = true;
+    setFlagPusk(!flagPusk);
+  }, [flagPusk]);
+
   const escFunction = React.useCallback(
     (event) => {
       if (event.keyCode === 27 && mayEsc && !datestat.finish) {
@@ -649,16 +674,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           console.log("1ESC:", mayEsc, massMem, massNomBind);
           inTarget = true;
           SetHelper(1);
-        } else {
-          console.log("21ESC:", mayEsc, massMem, massNomBind);
-          massMem.pop(); // удалим из массива последний элемент
-          massCoord.pop(); // удалим из массива последний элемент
-          PressESC = true;
-          setFlagPusk(!flagPusk);
-        }
+        } else RemoveTail();
       }
     },
-    [SetHelper, flagPusk, datestat.finish]
+    [SetHelper, datestat.finish, RemoveTail]
   );
 
   React.useEffect(() => {

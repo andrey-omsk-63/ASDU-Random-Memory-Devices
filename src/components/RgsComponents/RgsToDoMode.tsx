@@ -18,6 +18,7 @@ import { CircleObj, TakeAreaId } from "../RgsServiceFunctions";
 import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 
 import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
+import { styleStrokaBoxlImg } from "./GsComponentsStyle";
 import { styleStrokaTabl01, styleStrokaTakt } from "./GsComponentsStyle";
 import { styleStrokaTabl02, StyleToDoMode } from "./GsComponentsStyle";
 import { styleToDo01, styleToDo02, styleToDo03 } from "./GsComponentsStyle";
@@ -31,6 +32,7 @@ let oldFaz = -1;
 let needRend = false;
 let nomIllum = -1;
 const tShadow = "2px 2px 3px rgba(0,0,0,0.3)";
+let soobError = "";
 
 const RgsToDoMode = (props: {
   massMem: Array<number>;
@@ -134,8 +136,8 @@ const RgsToDoMode = (props: {
     datestat.finish = false; // закончить исполнение
     datestat.massPath = null; // точки рабочего маршрута
     dispatch(statsaveCreate(datestat));
-    props.funcSize(11.99);
     props.funcMode(0);
+    props.funcSize(11.99);
     props.ban(false);
     init = true;
     oldFaz = -1;
@@ -147,6 +149,9 @@ const RgsToDoMode = (props: {
     if (mode) {
       massIdevice.push(massfaz[mode].idevice);
       !DEMO && SendSocketRoute(debug, ws, massIdevice, true); // выполнение режима
+
+      console.log("ToDoMode сбросить PressESC", mode);
+
       props.funcMode(mode);
       setTrigger(!trigger);
     } else {
@@ -180,7 +185,7 @@ const RgsToDoMode = (props: {
     massfaz[mode].runRec = DEMO ? 4 : 2;
     dispatch(massfazCreate(massfaz));
     //=========================================================================
-    //console.log(mode + 1 + "-й светофор", DEMO, massfaz[mode].runRec);
+    console.log(mode + 1 + "-й светофор", DEMO, massfaz[mode].runRec);
     if (DEMO) massfaz[mode].faza = massfaz[mode].fazaBegin;
     setTrigger(!trigger);
   };
@@ -225,15 +230,18 @@ const RgsToDoMode = (props: {
 
   const FindEnd = () => {
     let ch = 0;
-    for (let i = 0; i < massfaz.length; i++) {
-      if (i && massfaz[i].id <= 10000) {
-        let runREC = massfaz[i].runRec;
-        //if (runREC === 0 || runREC === 2 || runREC === 4) {
-        if (runREC === 2 || runREC === 4) {
-          ch++;
+    if (massfaz.length > 2) {
+      for (let i = 0; i < massfaz.length; i++) {
+        if (i && massfaz[i].id <= 10000) {
+          let runREC = massfaz[i].runRec;
+          //if (runREC === 0 || runREC === 2 || runREC === 4) {
+          if (runREC === 2 || runREC === 4) {
+            ch++;
+          }
         }
       }
     }
+    //console.log("FindEnd:", ch, JSON.parse(JSON.stringify(massfaz)));
     !ch && handleCloseSetEnd();
   };
 
@@ -255,7 +263,6 @@ const RgsToDoMode = (props: {
       massfaz[idx].runRec = DEMO ? 5 : 1;
       dispatch(massfazCreate(massfaz));
     }
-
     console.log(idx + 1 + "-й светофор закрыт!!!", timerId);
     FindEnd();
   };
@@ -292,6 +299,9 @@ const RgsToDoMode = (props: {
         massfaz[idx].runRec = massfaz[idx].faza = massfaz[idx].fazaBegin = 0;
         massfaz[idx].fazaSist = massfaz[idx].fazaSistOld = -1;
         dispatch(massfazCreate(massfaz));
+
+        console.log("сбросить PressESC", lengthMassMem, props.massMem);
+
         props.funcMode(lengthMassMem - 2); // сбросить PressESC
         lengthMassMem--;
         setTrigger(!trigger);
@@ -299,7 +309,6 @@ const RgsToDoMode = (props: {
         timerId.push(null); // появился новый перекрёсток
         massfaz.push(MakeMaskFaz(props.massMem.length - 1));
         let mass = Array(props.massMem.length).fill(null);
-        //for (let i = 0; i < props.massMem.length; i++) mass.push(null);
         massInt.push(mass);
         lengthMassMem = props.massMem.length;
         FindFaza();
@@ -365,6 +374,7 @@ const RgsToDoMode = (props: {
           massfaz[mode - 1].runRec !== 1 && // 1 - финиш
           massfaz[mode - 1].runRec !== 5 // 5 - финиш Демо
         ) {
+          soobError = NoClose;
           setOpenSoobErr(true);
         } else {
           // МОЖНО закрыть
@@ -379,6 +389,16 @@ const RgsToDoMode = (props: {
           dispatch(massfazCreate(massfaz));
           setTrigger(!trigger);
         }
+      }
+    };
+
+    const ClickBox = (idx: number) => {
+      console.log("ClickBox:", idx, props.massMem);
+      if (props.massMem.length - 1 === idx) {
+        props.funcMode(-1); // удалить "хвост" маршрута
+      } else {
+        soobError = "Данный светофор из маршрута удалять нельзя";
+        setOpenSoobErr(true);
       }
     };
 
@@ -426,7 +446,11 @@ const RgsToDoMode = (props: {
             {star}
           </Grid>
           <Grid item xs={1.0} sx={{}}>
-            {!finish && massf.id <= 10000 && <>{OutputVertexImg(host)}</>}
+            {!finish && massf.id <= 10000 && (
+              <Box sx={styleStrokaBoxlImg} onClick={() => ClickBox(idx)}>
+                {OutputVertexImg(host)}
+              </Box>
+            )}
 
             {massf.id > 10000 && <>{CircleObj()}</>}
 
@@ -515,7 +539,7 @@ const RgsToDoMode = (props: {
         </Box>
       </Box>
       {openSoobErr && (
-        <GsErrorMessage setOpen={setOpenSoobErr} sErr={NoClose} />
+        <GsErrorMessage setOpen={setOpenSoobErr} sErr={soobError} />
       )}
     </>
   );
