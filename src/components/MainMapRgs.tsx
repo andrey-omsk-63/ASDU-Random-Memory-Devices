@@ -42,7 +42,6 @@ let zoom = zoomStart;
 let pointCenter: any = 0;
 
 let massMem: Array<number> = [];
-//let massNom: Array<number> = []; // массив номеров светофоров в bindings
 let massVert: Array<number> = [];
 let massCoord: any = []; // массив координат светофоров
 let massKlu: Array<string> = []; // массив ключей
@@ -119,17 +118,18 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const mapp = React.useRef<any>(null);
 
   const addRoute = React.useCallback(
-    (ymaps: any, bound: boolean) => {
+    (ymaps: any) => {
       mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
+      // отрисовка предлагаемых доступных связей светофора
       let massMultiRoute: any = []; // исходящие связи
       for (let i = 0; i < massRoute.length; i++) {
         if (typeRoute) {
-          massMultiRoute[i] = new ymaps.multiRouter.MultiRoute(
+          massMultiRoute[i] = new ymaps.multiRouter.MultiRoute( // маршрутизированные связи
             getReferencePoints(massCoord[massCoord.length - 1], massRoute[i]),
             getMassMultiRouteOptions(i)
           );
         } else {
-          massMultiRoute[i] = new ymaps.Polyline(
+          massMultiRoute[i] = new ymaps.Polyline( // формальные связи
             [massCoord[massCoord.length - 1], massRoute[i]],
             {},
             getMassMultiRouteOptions(i)
@@ -137,18 +137,19 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         }
         mapp.current.geoObjects.add(massMultiRoute[i]);
       }
+      // отрисовка рабочего маршрута
       if (datestat.massPath) {
         if (datestat.massPath.length > 2) {
           let MassPath = datestat.massPath; // рабочий маршрут
           let massMultiPath: any = []; // исходящие связи
           for (let i = 0; i < MassPath.length - 2; i++) {
             if (typeRoute) {
-              massMultiPath[i] = new ymaps.multiRouter.MultiRoute(
+              massMultiPath[i] = new ymaps.multiRouter.MultiRoute( // маршрутизированные связи
                 getReferencePoints(MassPath[i], MassPath[i + 1]),
                 getMultiRouteOptions()
               );
             } else {
-              massMultiPath[i] = new ymaps.Polyline(
+              massMultiPath[i] = new ymaps.Polyline( // формальные связи
                 [MassPath[i], MassPath[i + 1]],
                 {},
                 getMultiRouteOptions()
@@ -202,12 +203,12 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           }
           let coler = !have ? "#ff0000" : "#000000"; // красный/чёрный
           if (typeRoute) {
-            massMultiRoute[j] = new ymaps.multiRouter.MultiRoute(
+            massMultiRoute[j] = new ymaps.multiRouter.MultiRoute( // маршрутизированные связи
               getReferencePoints(massCoord, massRoute[j]),
               getMassMultiRouteOptionsDemo(j, coler)
             );
           } else {
-            massMultiRoute[j] = new ymaps.Polyline(
+            massMultiRoute[j] = new ymaps.Polyline( // формальные связи
               [massCoord, massRoute[j]],
               {},
               getMassMultiRouteOptionsDemo(j, coler)
@@ -232,7 +233,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     datestat.finish = false; // закончить исполнение
     datestat.massPath = null; // точки рабочего маршрута
     dispatch(statsaveCreate(datestat));
-    ymaps && addRoute(ymaps, false); // перерисовка связей
+    ymaps && addRoute(ymaps); // перерисовка связей
   }, [ymaps, addRoute, datestat, dispatch]);
 
   const ClickPointInTarget = (index: number) => {
@@ -276,7 +277,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       massRoute = MakeMassRouteFirst(klu, bindings, map);
     if (massNomBind.length > 1 && klu.length < 9)
       massRoute = MakeMassRoute(bindings, nom, map, addobj)[0];
-    ymaps && addRoute(ymaps, false); // перерисовка связей
+    ymaps && addRoute(ymaps); // перерисовка связей
     mayEsc = true;
     if (massMem.length === 3) {
       PressButton(53);
@@ -373,8 +374,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   const Pererisovka = () => {
     if (risovka) {
-      //console.log("П Е Р Е Р И С О В К А", datestat.massPath);
-      ymaps && addRoute(ymaps, false); // перерисовка связей
+      ymaps && addRoute(ymaps); // перерисовка связей
       setRisovka(false);
     }
   };
@@ -387,9 +387,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         let aa = JSON.parse(JSON.stringify(datestat.massPath));
         aa.shift(); // удалить первый элемент
         datestat.massPath = aa;
-
-        console.log("TakeOffVertex:", aa);
-
         dispatch(statsaveCreate(datestat));
       }
     }
@@ -495,13 +492,11 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   );
 
   const ModeToDo = (mod: number) => {
-    console.log("0ModeToDo:", mod);
     if (mod < 0) {
-      RemoveTail();
-      return
+      RemoveTail(); // нажали на последний в списке светофор
+      return;
     }
-    console.log("1ModeToDo:", mod);
-    
+
     modeToDo = mod;
     if (!modeToDo) {
       setChangeFaz(0);
@@ -514,7 +509,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         massNomBind.pop(); // удалим из массива последний элемент
         let nom = massNomBind[massNomBind.length - 1];
         massRoute = MakeMassRoute(bindings, nom, map, addobj)[0]; // массив предлагаемых связей
-        ymaps && addRoute(ymaps, false); // перерисовка связей
+        ymaps && addRoute(ymaps); // перерисовка связей
       }
     }
     PressESC = false; // сброс флага нажатия Esc
@@ -571,7 +566,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   const OldSizeWind = (size: number) => {
     console.log("КОНЕЦ!!!");
-
     xsMap = size;
     xsTab = 0.01;
     widthMap = "99.9%";
@@ -602,7 +596,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     zoom,
   };
 
-  const MenuGl = () => {
+  const CommentGl = () => {
     let soobHelpFiest1 = "Маршрут сформирован\xa0";
     let soobHelpFiest2 = "";
     if (!datestat.finish) {
@@ -610,6 +604,15 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       soobHelpFiest2 =
         "]\xa0\xa0\xa0\xa0\xa0\xa0Конец работы - ввод точки выхода";
     }
+    const Duplet = () => {
+      return (
+        <>
+          {StrokaHelp(soobHelpFiest1, 0)}
+          {Сrossroad(datestat.finish)}
+          {StrokaHelp(soobHelpFiest2, 1)}
+        </>
+      );
+    };
 
     return (
       <Box sx={styleMenuGl}>
@@ -627,20 +630,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                 {massMem.length === 0 && (
                   <>{StrokaHelp("Начала работы - выбор точки вхождения", 0)}</>
                 )}
-                {massMem.length > 0 && helper && (
-                  <>
-                    {StrokaHelp(soobHelpFiest1, 0)}
-                    {Сrossroad(datestat.finish)}
-                    {StrokaHelp(soobHelpFiest2, 1)}
-                  </>
-                )}
-                {massMem.length > 0 && !helper && (
-                  <>
-                    {StrokaHelp(soobHelpFiest1, 0)}
-                    {Сrossroad(datestat.finish)}
-                    {StrokaHelp(soobHelpFiest2, 1)}
-                  </>
-                )}
+                {massMem.length > 0 && helper && <>{Duplet()}</>}
+                {massMem.length > 0 && !helper && <>{Duplet()}</>}
               </>
             )}
             {inTarget && !inDemo && modeToDo !== 1 && (
@@ -671,7 +662,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     (event) => {
       if (event.keyCode === 27 && mayEsc && !datestat.finish) {
         if (massMem.length < 4) {
-          console.log("1ESC:", mayEsc, massMem, massNomBind);
+          console.log("ESC:", mayEsc, massMem, massNomBind);
           inTarget = true;
           SetHelper(1);
         } else RemoveTail();
@@ -688,7 +679,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   return (
     <Grid container sx={{ height: "99.9vh" }}>
       <Grid item xs={12}>
-        {MenuGl()}
+        {CommentGl()}
         <Grid container>
           <Grid item xs={xsMap} sx={{ height: "96.9vh" }}>
             {Object.keys(map.tflight).length && flagOpen && (

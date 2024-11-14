@@ -23,6 +23,8 @@ import { BAN } from "./MainMapRgs";
 import { styleAppSt02, styleAppSt03, styleModalEnd } from "./MainMapStyle";
 import { styleModalEndAttent, searchControl } from "./MainMapStyle";
 import { styleSetPK04 } from "./MainMapStyle";
+import { styleToDo02 } from "./RgsComponents/GsComponentsStyle";
+
 
 export const YandexServices = () => {
   return (
@@ -605,6 +607,66 @@ export const OutputVertexImg = (host: string) => {
       sx={{ textAlign: "center", height: 40, width: 30 }}
       image={host}
     />
+  );
+};
+
+export const HeadingTabl = (DEMO: boolean) => {
+  return (
+    <Grid container>
+      <Grid item xs sx={styleToDo02}>
+        <em>
+          Режим:{" "}
+          <b>
+            произвольная {'"'}зелёная улица{'"'}
+          </b>
+        </em>
+        {DEMO && (
+          <Box sx={{ fontSize: 15, color: "red" }}>
+            {"( "}демонстрационный{" )"}
+          </Box>
+        )}
+      </Grid>
+    </Grid>
+  );
+};
+
+export const StrokaHeader = (xss: number, soob: string) => {
+  return (
+    <Grid item xs={xss} sx={{ fontSize: 14, textAlign: "center" }}>
+      <b>{soob}</b>
+    </Grid>
+  );
+};
+
+export const HeaderTabl = () => {
+  return (
+    <Grid container sx={{ bgcolor: "#B8CBB9" }}>
+      {StrokaHeader(1, "Номер")}
+      {StrokaHeader(3.6, "Состояние")}
+      {StrokaHeader(1.9, "Фаза")}
+      {StrokaHeader(5.5, "ДК")}
+    </Grid>
+  );
+};
+
+export const CircleObj = () => {
+  const circle = {
+    bgcolor: "#C585E7", // светло-сиреневый
+    width: 18,
+    height: 18,
+    border: 3,
+    justifyContent: "center",
+    marginTop: 1.0,
+    marginLeft: 0.6,
+    borderRadius: 9,
+    borderColor: "#7620A2", // сереневый
+    boxShadow: 5,
+  };
+
+  return (
+    <Box sx={{ height: 36 }}>
+      <Box sx={circle}></Box>
+    </Box>
   );
 };
 //=== AppointVertex ================================
@@ -1804,28 +1866,6 @@ export const ViewSvg = (setOpenSvg: Function, pictSvg: any) => {
         </Box>
       </Box>
     </Modal>
-  );
-};
-
-//=== ToDoMode =====================================
-export const CircleObj = () => {
-  const circle = {
-    bgcolor: "#C585E7", // светло-сиреневый
-    width: 18,
-    height: 18,
-    border: 3,
-    justifyContent: "center",
-    marginTop: 1.0,
-    marginLeft: 0.6,
-    borderRadius: 9,
-    borderColor: "#7620A2", // сереневый
-    boxShadow: 5,
-  };
-
-  return (
-    <Box sx={{ height: 36 }}>
-      <Box sx={circle}></Box>
-    </Box>
   );
 };
 //=== Разное =======================================

@@ -13,7 +13,8 @@ import { PressESC } from "../MainMapRgs";
 import { NoClose, MaskFaz } from "../MapConst";
 
 import { OutputFazaImg, OutputVertexImg } from "../RgsServiceFunctions";
-import { CircleObj, TakeAreaId } from "../RgsServiceFunctions";
+import { HeaderTabl, CircleObj, TakeAreaId } from "../RgsServiceFunctions";
+import { HeadingTabl } from "../RgsServiceFunctions";
 
 import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 
@@ -21,7 +22,7 @@ import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
 import { styleStrokaBoxlImg } from "./GsComponentsStyle";
 import { styleStrokaTabl01, styleStrokaTakt } from "./GsComponentsStyle";
 import { styleStrokaTabl02, StyleToDoMode } from "./GsComponentsStyle";
-import { styleToDo01, styleToDo02, styleToDo03 } from "./GsComponentsStyle";
+import { styleToDo01, styleToDo03 } from "./GsComponentsStyle";
 
 let init = true;
 let lengthMassMem = 0;
@@ -149,10 +150,7 @@ const RgsToDoMode = (props: {
     if (mode) {
       massIdevice.push(massfaz[mode].idevice);
       !DEMO && SendSocketRoute(debug, ws, massIdevice, true); // выполнение режима
-
-      console.log("ToDoMode сбросить PressESC", mode);
-
-      props.funcMode(mode);
+      props.funcMode(mode); // сбросить PressESC
       setTrigger(!trigger);
     } else {
       // принудительное закрытие
@@ -186,6 +184,7 @@ const RgsToDoMode = (props: {
     dispatch(massfazCreate(massfaz));
     //=========================================================================
     console.log(mode + 1 + "-й светофор", DEMO, massfaz[mode].runRec);
+
     if (DEMO) massfaz[mode].faza = massfaz[mode].fazaBegin;
     setTrigger(!trigger);
   };
@@ -241,7 +240,6 @@ const RgsToDoMode = (props: {
         }
       }
     }
-    //console.log("FindEnd:", ch, JSON.parse(JSON.stringify(massfaz)));
     !ch && handleCloseSetEnd();
   };
 
@@ -299,9 +297,6 @@ const RgsToDoMode = (props: {
         massfaz[idx].runRec = massfaz[idx].faza = massfaz[idx].fazaBegin = 0;
         massfaz[idx].fazaSist = massfaz[idx].fazaSistOld = -1;
         dispatch(massfazCreate(massfaz));
-
-        console.log("сбросить PressESC", lengthMassMem, props.massMem);
-
         props.funcMode(lengthMassMem - 2); // сбросить PressESC
         lengthMassMem--;
         setTrigger(!trigger);
@@ -321,16 +316,7 @@ const RgsToDoMode = (props: {
       dispatch(massfazCreate(massfaz));
     }
   }
-
-  //========================================================
-  const StrokaHeader = (xss: number, soob: string) => {
-    return (
-      <Grid item xs={xss} sx={{ fontSize: 14, textAlign: "center" }}>
-        <b>{soob}</b>
-      </Grid>
-    );
-  };
-
+  //=======================================================
   const DoTimerId = (mode: number) => {
     let fazer = massfaz[mode];
     if (!DEMO) {
@@ -393,7 +379,6 @@ const RgsToDoMode = (props: {
     };
 
     const ClickBox = (idx: number) => {
-      console.log("ClickBox:", idx, props.massMem);
       if (props.massMem.length - 1 === idx) {
         props.funcMode(-1); // удалить "хвост" маршрута
       } else {
@@ -425,8 +410,8 @@ const RgsToDoMode = (props: {
         host =
           window.location.origin + "/free/img/trafficLights/" + num + ".svg";
       }
-      let star = "";
-      let takt = massf.faza;
+      let star = ""; // пока заглушка
+      let takt: any = massf.faza;
       if (!massf.faza) takt = "";
       let fazaImg: null | string = null;
       fazaImg = massf.img[takt - 1];
@@ -452,7 +437,7 @@ const RgsToDoMode = (props: {
               </Box>
             )}
 
-            {massf.id > 10000 && <>{CircleObj()}</>}
+            {massf.id > 10000 && <>{CircleObj()}</>} 
 
             {finish && massf.id <= 10000 && (
               <Button sx={styleStrokaTablImg} onClick={() => ClickVertex(idx)}>
@@ -506,28 +491,9 @@ const RgsToDoMode = (props: {
   return (
     <>
       <Box sx={styleToDoMode}>
-        <Grid container sx={{ marginTop: 0 }}>
-          <Grid item xs sx={styleToDo02}>
-            <em>
-              Режим:{" "}
-              <b>
-                произвольная {'"'}зелёная улица{'"'}
-              </b>
-            </em>
-            {DEMO && (
-              <Box sx={{ fontSize: 15, color: "red" }}>
-                {"( "}демонстрационный{" )"}
-              </Box>
-            )}
-          </Grid>
-        </Grid>
+        {HeadingTabl(DEMO)}
         <Box sx={styleToDo01}>
-          <Grid container sx={{ bgcolor: "#B8CBB9" }}>
-            {StrokaHeader(1, "Номер")}
-            {StrokaHeader(3.6, "Состояние")}
-            {StrokaHeader(1.9, "Фаза")}
-            {StrokaHeader(5.5, "ДК")}
-          </Grid>
+          {HeaderTabl()}
           <Box sx={{ overflowX: "auto", height: hTabl, textShadow: tShadow }}>
             {StrokaTabl()}
           </Box>

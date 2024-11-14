@@ -4,6 +4,7 @@ import { statsaveCreate } from "../../redux/actions";
 
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
 
 import { BadExit, ExitCross, FooterContent } from "../RgsServiceFunctions";
 import { StrTablVert, ShiftOptimal } from "../RgsServiceFunctions";
@@ -14,6 +15,7 @@ import { styleSetPK01, styleSetPK02 } from "./../MainMapStyle";
 let massForm: any = null;
 let flagInput = true;
 let HAVE = 0;
+let Interval = 0;
 
 const GsSetup = (props: { close: Function }) => {
   //== Piece of Redux =======================================
@@ -31,6 +33,7 @@ const GsSetup = (props: { close: Function }) => {
     HAVE = 0;
     massForm = JSON.parse(JSON.stringify(datestat));
     massForm.ws = datestat.ws;
+    Interval = datestat.intervalFaza;
     flagInput = false;
   }
   //========================================================
@@ -76,7 +79,84 @@ const GsSetup = (props: { close: Function }) => {
     massForm.typeFaza = !massForm.typeFaza;
     Haver();
   };
+
+  const SetInterval = (valueInp: number) => {
+    massForm.intervalFaza = Interval = valueInp; // интервал фазы ДУ (сек)
+    window.localStorage.intervalFaza = Interval;
+    Haver();
+  };
   //========================================================
+  const WaysInput = (
+    idx: number,
+    VALUE: any,
+    SetValue: Function,
+    MIN: number,
+    MAX: number
+  ) => {
+    let value = VALUE;
+
+    const styleSetID = {
+      width: "33px",
+      maxHeight: "1px",
+      minHeight: "1px",
+      border: "1px solid #d4d4d4", // серый
+      borderRadius: 1,
+      bgcolor: "#FFFBE5", // топлёное молоко
+      boxShadow: 6,
+      textAlign: "center",
+      p: 1.5,
+    };
+
+    const styleBoxFormID = {
+      "& > :not(style)": {
+        marginTop: "3px",
+        marginLeft: "-9px",
+        width: "53px",
+      },
+    };
+
+    const handleKey = (event: any) => {
+      if (event.key === "Enter") event.preventDefault();
+    };
+
+    const handleChange = (event: any) => {
+      let valueInp = event.target.value.replace(/^0+/, "");
+      if (Number(valueInp) < MIN) valueInp = MIN;
+      if (valueInp === "") valueInp = MIN;
+      valueInp = Math.trunc(Number(valueInp));
+      if (valueInp <= MAX) {
+        value = valueInp.toString();
+        SetValue(valueInp, idx);
+      }
+    };
+
+    return (
+      <Box sx={styleSetID}>
+        <Box component="form" sx={styleBoxFormID}>
+          <TextField
+            size="small"
+            onKeyPress={handleKey} //отключение Enter
+            type="number"
+            InputProps={{ disableUnderline: true }}
+            inputProps={{
+              style: {
+                marginTop: "-16px",
+                padding: "4px 0px 0px 0px",
+                fontSize: 14,
+                backgroundColor: "#FFFBE5", // топлёное молоко
+                cursor: "pointer",
+              },
+            }}
+            value={value}
+            onChange={handleChange}
+            variant="standard"
+            color="secondary"
+          />
+        </Box>
+      </Box>
+    );
+  };
+
   const SetupContent = () => {
     return (
       <>
@@ -96,6 +176,14 @@ const GsSetup = (props: { close: Function }) => {
           "Фазы отображаются номерами (цифрами)",
           ShiftOptimal(massForm.typeFaza, ChangeTypeFaza, -0.1)
         )}
+        <Box sx={{ fontSize: 12, marginTop: 0.5, color: "#5B1080" }}>
+          Параметры перекрёстков
+        </Box>
+        {StrTablVert(
+          9,
+          "Интервал фазы ДУ (сек)",
+          WaysInput(0, massForm.intervalFaza, SetInterval, 0, 1000)
+        )}
       </>
     );
   };
@@ -103,7 +191,7 @@ const GsSetup = (props: { close: Function }) => {
   return (
     <>
       <Modal open={open} onClose={CloseEnd} hideBackdrop={false}>
-        <Box sx={styleSetPK01(500, 224)}>
+        <Box sx={styleSetPK01(500, 278)}>
           {ExitCross(handleCloseBad)}
           <Box sx={styleSetPK02}>
             <b>Системные параметры по умолчанию</b>
