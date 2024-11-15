@@ -60,7 +60,7 @@ export let dateStat: Stater = {
   phSvg: [null, null, null, null, null, null, null, null],
   pictSvg: null,
   typeRoute: true, // тип отображаемых связей true - mаршрутизированные  false - неформальные
-  typeFaza: true, // отображение фаз на карте
+  typeFaza: true, // тип отображаемых фаз на карте
   intervalFaza: 0, // интервал фазы ДУ (сек)
   massPath: null, // точки рабочего маршрута
 };
@@ -149,13 +149,29 @@ const App = () => {
     flagBindings = false;
     flagAddObjects = false;
     setOpenMapInfo(true);
+
+    // достать тип отображаемых связей из LocalStorage
+    if (window.localStorage.typeRoute === undefined)
+      window.localStorage.typeRoute = 0;
+    dateStat.typeRoute = Number(window.localStorage.typeRoute)
+      ? true
+      : false;
+
+    // достать тип отображаемых фаз на карте из LocalStorage
+    if (window.localStorage.typeFaza === undefined)
+      window.localStorage.typeFaza = 0;
+    dateStat.typeFaza = Number(window.localStorage.typeFaza)
+      ? true
+      : false;
+
     // достать интервал из LocalStorage
     if (window.localStorage.intervalFaza === undefined)
       window.localStorage.intervalFaza = 0;
     dateStat.intervalFaza = Number(window.localStorage.intervalFaza);
     dispatch(statsaveCreate(dateStat));
 
-    console.log("dateMapGl:",dateStat.intervalFaza, dateMapGl);
+    console.log("dateStat:", dateStat);
+    console.log("dateMapGl:", dateMapGl);
     console.log("dateBindingsGl:", dateBindingsGl);
     console.log("dateAddObjectsGl:", dateAddObjectsGl);
     //console.log("massdk:", massdk);

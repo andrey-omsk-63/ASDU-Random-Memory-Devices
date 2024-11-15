@@ -62,7 +62,10 @@ let funcContex: any = null;
 let funcBound: any = null;
 let modeHelp = 0;
 let mayEsc = false; // можно воспользоваться Esc при построении маршрута
+
 let typeRoute = false; // тип отображаемых связей
+// let typeFaza = false; // тип отображаемых фаз на карте
+// let intervalFaza = 0; // интервал фазы ДУ (сек)
 
 const MainMapRgs = (props: { trigger: boolean }) => {
   //== Piece of Redux =======================================
@@ -94,7 +97,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     const { statsaveReducer } = state;
     return statsaveReducer.datestat;
   });
-  typeRoute = datestat.typeRoute;
+  typeRoute = datestat.typeRoute; // тип отображаемых связей
+  // typeFaza = datestat.typeFaza; // тип отображаемых фаз на карте
+  // intervalFaza = datestat.intervalFaza; // интервал фазы ДУ (сек)
   const debug = datestat.debug;
   const ws = datestat.ws;
   const homeRegion = datestat.region;
@@ -417,11 +422,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         //console.log("++++++++++++  Нажали в поле  ++++++++++++", nomInMass);
         if (nomInMass > 0) TakeOffVertex(nomInMass);
       } else {
-        console.log("0FindNearVertex:", nomInMass, massMem);
         if (nomInMass > 0) {
           if (massMem.length - 1 === nomInMass) {
-            console.log("1FindNearVertex: нужно сократить", nomInMass);
-            RemoveTail();
+            RemoveTail(); // последний светофор в маршруте - удалить
           } else {
             let runrec = massfaz[nomInMass].runRec;
             if (runrec === 2 || runrec === 4) {
@@ -494,25 +497,24 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const ModeToDo = (mod: number) => {
     if (mod < 0) {
       RemoveTail(); // нажали на последний в списке светофор
-      return;
-    }
-
-    modeToDo = mod;
-    if (!modeToDo) {
-      setChangeFaz(0);
-      setToDoMode(false); // на всякий случай
     } else {
-      if (PressESC && datestat.massPath) {
-        datestat.massPath && datestat.massPath.pop(); // удалим из массива последний элемент
-        dispatch(statsaveCreate(datestat));
-        massKlu.pop(); // удалим из массива последний элемент
-        massNomBind.pop(); // удалим из массива последний элемент
-        let nom = massNomBind[massNomBind.length - 1];
-        massRoute = MakeMassRoute(bindings, nom, map, addobj)[0]; // массив предлагаемых связей
-        ymaps && addRoute(ymaps); // перерисовка связей
+      modeToDo = mod;
+      if (!modeToDo) {
+        setChangeFaz(0);
+        setToDoMode(false); // на всякий случай
+      } else {
+        if (PressESC && datestat.massPath) {
+          datestat.massPath && datestat.massPath.pop(); // удалим из массива последний элемент
+          dispatch(statsaveCreate(datestat));
+          massKlu.pop(); // удалим из массива последний элемент
+          massNomBind.pop(); // удалим из массива последний элемент
+          let nom = massNomBind[massNomBind.length - 1];
+          massRoute = MakeMassRoute(bindings, nom, map, addobj)[0]; // массив предлагаемых связей
+          ymaps && addRoute(ymaps); // перерисовка связей
+        }
       }
+      PressESC = false; // сброс флага нажатия Esc
     }
-    PressESC = false; // сброс флага нажатия Esc
   };
 
   const PressButton = (mode: number) => {
@@ -651,7 +653,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   }
   //=== обработка Esc ======================================
   const RemoveTail = React.useCallback(() => {
-    console.log("21ESC:", mayEsc, massMem, massNomBind);
     massMem.pop(); // удалим из массива последний элемент
     massCoord.pop(); // удалим из массива последний элемент
     PressESC = true;
@@ -662,7 +663,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     (event) => {
       if (event.keyCode === 27 && mayEsc && !datestat.finish) {
         if (massMem.length < 4) {
-          console.log("ESC:", mayEsc, massMem, massNomBind);
           inTarget = true;
           SetHelper(1);
         } else RemoveTail();

@@ -93,6 +93,13 @@ const RgsToDoMode = (props: {
       maskFaz.name = addobj.addObjects[index].description;
       maskFaz.area = addobj.addObjects[index].area;
       maskFaz.id = addobj.addObjects[index].id;
+      // === вставить дополнение datestat.massPath ???
+      if (i) {
+        let aa = JSON.parse(JSON.stringify(datestat.massPath));
+        aa.push(addobj.addObjects[index].dgis);
+        datestat.massPath = aa;
+        dispatch(statsaveCreate(datestat));
+      }
     } else {
       maskFaz.name = map.tflight[maskFaz.idx].description; // перекрёсток
       maskFaz.area = Number(map.tflight[maskFaz.idx].area.num);
@@ -437,7 +444,7 @@ const RgsToDoMode = (props: {
               </Box>
             )}
 
-            {massf.id > 10000 && <>{CircleObj()}</>} 
+            {massf.id > 10000 && <>{CircleObj()}</>}
 
             {finish && massf.id <= 10000 && (
               <Button sx={styleStrokaTablImg} onClick={() => ClickVertex(idx)}>

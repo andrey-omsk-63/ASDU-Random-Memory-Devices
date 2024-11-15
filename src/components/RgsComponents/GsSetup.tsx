@@ -15,7 +15,10 @@ import { styleSetPK01, styleSetPK02 } from "./../MainMapStyle";
 let massForm: any = null;
 let flagInput = true;
 let HAVE = 0;
-let Interval = 0;
+
+let typeRoute = 0; // тип отображаемых связей 1 - mаршрутизированные  0 - неформальные
+let typeFaza = 0; // тип отображаемых фаз на карте
+let intervalFaza = 0; //интервал фазы ДУ (сек)
 
 const GsSetup = (props: { close: Function }) => {
   //== Piece of Redux =======================================
@@ -33,7 +36,7 @@ const GsSetup = (props: { close: Function }) => {
     HAVE = 0;
     massForm = JSON.parse(JSON.stringify(datestat));
     massForm.ws = datestat.ws;
-    Interval = datestat.intervalFaza;
+    intervalFaza = datestat.intervalFaza;
     flagInput = false;
   }
   //========================================================
@@ -59,6 +62,13 @@ const GsSetup = (props: { close: Function }) => {
   //=== Функции - обработчики ==============================
   const SaveForm = (mode: number) => {
     if (mode) {
+      //записать в LocalStorage
+      typeRoute = massForm.typeRoute ? 1 : 0;
+      typeFaza = massForm.typeFaza ? 1 : 0;
+      window.localStorage.typeRoute = typeRoute; // тип отображаемых связей
+      window.localStorage.typeFaza = typeFaza; // тип отображаемых фаз на карте
+      window.localStorage.intervalFaza = intervalFaza; // интервал фазы ДУ (сек)
+      //записать в datestat
       datestat = massForm;
       dispatch(statsaveCreate(datestat));
       handleClose();
@@ -81,8 +91,7 @@ const GsSetup = (props: { close: Function }) => {
   };
 
   const SetInterval = (valueInp: number) => {
-    massForm.intervalFaza = Interval = valueInp; // интервал фазы ДУ (сек)
-    window.localStorage.intervalFaza = Interval;
+    massForm.intervalFaza = intervalFaza = valueInp; // интервал фазы ДУ (сек)
     Haver();
   };
   //========================================================
