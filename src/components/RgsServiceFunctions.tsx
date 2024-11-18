@@ -25,7 +25,6 @@ import { styleModalEndAttent, searchControl } from "./MainMapStyle";
 import { styleSetPK04 } from "./MainMapStyle";
 import { styleToDo02 } from "./RgsComponents/GsComponentsStyle";
 
-
 export const YandexServices = () => {
   return (
     <>
@@ -286,24 +285,17 @@ export const MakeMassRouteFirst = (klu: string, bindings: any, map: any) => {
   let massklu = [];
   let idd = TakeAreaId(klu)[1];
   for (let i = 0; i < bindings.tfLinks.length; i++) {
+    let ID = bindings.tfLinks[i].id;
     let mass = bindings.tfLinks[i].tflink;
-    if (TakeAreaId(mass.west.id)[1] === idd)
-      massklu.push(bindings.tfLinks[i].id);
-    if (TakeAreaId(mass.north.id)[1] === idd)
-      massklu.push(bindings.tfLinks[i].id);
-    if (TakeAreaId(mass.east.id)[1] === idd)
-      massklu.push(bindings.tfLinks[i].id);
-    if (TakeAreaId(mass.south.id)[1] === idd)
-      massklu.push(bindings.tfLinks[i].id);
+    if (TakeAreaId(mass.west.id)[1] === idd) massklu.push(ID);
+    if (TakeAreaId(mass.north.id)[1] === idd) massklu.push(ID);
+    if (TakeAreaId(mass.east.id)[1] === idd) massklu.push(ID);
+    if (TakeAreaId(mass.south.id)[1] === idd) massklu.push(ID);
 
-    if (TakeAreaId(mass.add1.id)[1] === idd)
-      massklu.push(bindings.tfLinks[i].id);
-    if (TakeAreaId(mass.add2.id)[1] === idd)
-      massklu.push(bindings.tfLinks[i].id);
-    if (TakeAreaId(mass.add3.id)[1] === idd)
-      massklu.push(bindings.tfLinks[i].id);
-    if (TakeAreaId(mass.add4.id)[1] === idd)
-      massklu.push(bindings.tfLinks[i].id);
+    if (TakeAreaId(mass.add1.id)[1] === idd) massklu.push(ID); // северо-восток
+    if (TakeAreaId(mass.add2.id)[1] === idd) massklu.push(ID); // юго-восток
+    if (TakeAreaId(mass.add3.id)[1] === idd) massklu.push(ID); // юго-запад
+    if (TakeAreaId(mass.add4.id)[1] === idd) massklu.push(ID); // северо-запад
   }
 
   for (let j = 0; j < massklu.length; j++) {
@@ -525,7 +517,7 @@ export const getMultiRouteOptions = () => {
     routeStrokeWidth: 0, // толщина линии альтернативного маршрута
     wayPointVisible: false, // отметки "начало - конец"
     strokeWidth: 5, // толщина линии Polyline
-    strokeColor: '#9B59DA', // цвет линии Polyline - сиреневый
+    strokeColor: "#9B59DA", // цвет линии Polyline - сиреневый
   };
 };
 

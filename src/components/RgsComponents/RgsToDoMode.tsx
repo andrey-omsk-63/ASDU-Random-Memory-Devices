@@ -93,13 +93,7 @@ const RgsToDoMode = (props: {
       maskFaz.name = addobj.addObjects[index].description;
       maskFaz.area = addobj.addObjects[index].area;
       maskFaz.id = addobj.addObjects[index].id;
-      // === вставить дополнение datestat.massPath ???
-      if (i) {
-        let aa = JSON.parse(JSON.stringify(datestat.massPath));
-        aa.push(addobj.addObjects[index].dgis);
-        datestat.massPath = aa;
-        dispatch(statsaveCreate(datestat));
-      }
+      maskFaz.coordinates = addobj.addObjects[index].dgis;
     } else {
       maskFaz.name = map.tflight[maskFaz.idx].description; // перекрёсток
       maskFaz.area = Number(map.tflight[maskFaz.idx].area.num);
@@ -107,12 +101,10 @@ const RgsToDoMode = (props: {
       maskFaz.idevice = map.tflight[maskFaz.idx].idevice;
       maskFaz.coordinates[0] = map.tflight[maskFaz.idx].points.Y;
       maskFaz.coordinates[1] = map.tflight[maskFaz.idx].points.X;
-      if (i) {
-        let aa = JSON.parse(JSON.stringify(datestat.massPath));
-        aa.push(maskFaz.coordinates); // не начало маршрута
-        datestat.massPath = aa;
-        dispatch(statsaveCreate(datestat));
-      }
+    }
+    if (i) {
+      datestat.massPath.push(maskFaz.coordinates); // не начало маршрута
+      dispatch(statsaveCreate(datestat));
     }
     if (maskFaz.id < 10000) {
       for (let j = 0; j < massdk.length; j++) {
@@ -274,6 +266,7 @@ const RgsToDoMode = (props: {
   //====== ИНИЦИАЛИЗАЦИЯ ====================================================================
   if (init) {
     if (datestat.start) {
+      // первое вхождение
       massfaz = [];
       timerId = [];
       massInt = [];
