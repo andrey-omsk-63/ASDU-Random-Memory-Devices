@@ -25,6 +25,10 @@ import { styleModalEndAttent, searchControl } from "./MainMapStyle";
 import { styleSetPK04 } from "./MainMapStyle";
 import { styleToDo02 } from "./RgsComponents/GsComponentsStyle";
 
+const handleKey = (event: any) => {
+  if (event.key === "Enter") event.preventDefault();
+};
+
 export const YandexServices = () => {
   return (
     <>
@@ -74,73 +78,6 @@ export const FooterContent = (SaveForm: Function) => {
         </Button>
       </Box>
     </Box>
-  );
-};
-
-export const StrTablVert = (xss: number, recLeft: string, recRight: any) => {
-  return (
-    <>
-      <Grid container sx={{ marginTop: 1 }}>
-        <Grid item xs={0.25}></Grid>
-        <Grid item xs={xss} sx={{ border: 0 }}>
-          <b>{recLeft}</b>
-        </Grid>
-        {typeof recRight === "object" ? (
-          <Grid item xs>
-            {recRight}
-          </Grid>
-        ) : (
-          <Grid item xs sx={{ fontSize: 15, color: "#5B1080", border: 0 }}>
-            <b>{recRight}</b>
-          </Grid>
-        )}
-      </Grid>
-    </>
-  );
-};
-
-export const ShiftOptimal = (
-  mode: boolean,
-  ChangeOptimal: Function,
-  shift: number
-) => {
-  const styleOptimalNo = {
-    marginTop: shift,
-    marginRight: 1,
-    maxHeight: "27px",
-    minHeight: "27px",
-    maxWidth: 58,
-    minWidth: 58,
-    backgroundColor: "#E6F5D6", // светло салатовый
-    border: "1px solid #d4d4d4", // серый
-    borderRadius: 1,
-    textTransform: "unset !important",
-    boxShadow: 2,
-    color: "black",
-  };
-
-  const styleOptimalYes = {
-    marginTop: shift,
-    marginRight: 1,
-    maxHeight: "27px",
-    minHeight: "27px",
-    maxWidth: 58,
-    minWidth: 58,
-    backgroundColor: "#bae186", // тёмно салатовый
-    border: "1px solid #bae186", // тёмно салатовый
-    borderRadius: 1,
-    textTransform: "unset !important",
-    boxShadow: 6,
-    color: "black",
-  };
-
-  let illum = mode ? styleOptimalYes : styleOptimalNo;
-  let soob = mode ? "Да" : "Нет";
-
-  return (
-    <Button sx={illum} onClick={() => ChangeOptimal()}>
-      {soob}
-    </Button>
   );
 };
 
@@ -395,8 +332,11 @@ export const GetPointData = (
       let rec = map.tflight[index];
       let klu = MakingKey(rec.region.num, rec.area.num, rec.ID);
 
+      //console.log("bindings.tfLinks[i]", i, bindings.tfLinks[i].tflink);
+
       if (bindings.tfLinks[i].id === klu) {
         let recc = JSON.parse(JSON.stringify(bindings.tfLinks[i].tflink));
+        console.log("bindings.tfLinks[i]", i, recc);
         cont4 = "<br/>Связи:";
         if (recc.north.id)
           contS = "<br/><b>C:</b> " + ExtrId(recc.north.id, SL);
@@ -1860,6 +1800,200 @@ export const ViewSvg = (setOpenSvg: Function, pictSvg: any) => {
     </Modal>
   );
 };
+//=== GsSetup ======================================
+export const StrTablVert = (xss: number, recLeft: string, recRight: any) => {
+  return (
+    <>
+      <Grid container sx={{ marginTop: 1 }}>
+        <Grid item xs={0.25}></Grid>
+        <Grid item xs={xss} sx={{ border: 0 }}>
+          <b>{recLeft}</b>
+        </Grid>
+        {typeof recRight === "object" ? (
+          <Grid item xs>
+            {recRight}
+          </Grid>
+        ) : (
+          <Grid item xs sx={{ fontSize: 15, color: "#5B1080", border: 0 }}>
+            <b>{recRight}</b>
+          </Grid>
+        )}
+      </Grid>
+    </>
+  );
+};
+
+export const ShiftOptimal = (
+  mode: boolean,
+  ChangeOptimal: Function,
+  shift: number
+) => {
+  const styleOptimalNo = {
+    marginTop: shift,
+    marginRight: 1,
+    maxHeight: "27px",
+    minHeight: "27px",
+    maxWidth: 58,
+    minWidth: 58,
+    backgroundColor: "#E6F5D6", // светло салатовый
+    border: "1px solid #d4d4d4", // серый
+    borderRadius: 1,
+    textTransform: "unset !important",
+    boxShadow: 2,
+    color: "black",
+  };
+
+  const styleOptimalYes = {
+    marginTop: shift,
+    marginRight: 1,
+    maxHeight: "27px",
+    minHeight: "27px",
+    maxWidth: 58,
+    minWidth: 58,
+    backgroundColor: "#bae186", // тёмно салатовый
+    border: "1px solid #bae186", // тёмно салатовый
+    borderRadius: 1,
+    textTransform: "unset !important",
+    boxShadow: 6,
+    color: "black",
+  };
+
+  let illum = mode ? styleOptimalYes : styleOptimalNo;
+  let soob = mode ? "Да" : "Нет";
+
+  return (
+    <Button sx={illum} onClick={() => ChangeOptimal()}>
+      {soob}
+    </Button>
+  );
+};
+
+export const PreparCurrenciesDispVert = () => {
+  const currencies: any = [];
+  let dat = ["значками светофоров", "номерами фаз", "картинками фаз"];
+  let massKey: any = [];
+  let massDat: any = [];
+  for (let key in dat) {
+    massKey.push(key);
+    massDat.push(dat[key]);
+  }
+  for (let i = 0; i < massKey.length; i++)
+    currencies.push({ value: massKey[i], label: massDat[i] });
+  return currencies;
+};
+
+export const WaysInput = (
+  idx: number,
+  VALUE: any,
+  SetValue: Function,
+  MIN: number,
+  MAX: number
+) => {
+  let value = VALUE;
+
+  const styleSetID = {
+    width: "33px",
+    maxHeight: "1px",
+    minHeight: "1px",
+    border: "1px solid #d4d4d4", // серый
+    borderRadius: 1,
+    bgcolor: "#FFFBE5", // топлёное молоко
+    boxShadow: 6,
+    textAlign: "center",
+    p: 1.5,
+  };
+
+  const styleBoxFormID = {
+    "& > :not(style)": {
+      marginTop: "3px",
+      marginLeft: "-9px",
+      width: "53px",
+    },
+  };
+
+  const handleChange = (event: any) => {
+    let valueInp = event.target.value.replace(/^0+/, "");
+    if (Number(valueInp) < MIN) valueInp = MIN;
+    if (valueInp === "") valueInp = MIN;
+    valueInp = Math.trunc(Number(valueInp));
+    if (valueInp <= MAX) {
+      value = valueInp.toString();
+      SetValue(valueInp, idx);
+    }
+  };
+
+  return (
+    <Box sx={styleSetID}>
+      <Box component="form" sx={styleBoxFormID}>
+        <TextField
+          size="small"
+          onKeyPress={handleKey} //отключение Enter
+          type="number"
+          InputProps={{ disableUnderline: true }}
+          inputProps={{
+            style: {
+              marginTop: "-16px",
+              padding: "4px 0px 0px 0px",
+              fontSize: 14,
+              backgroundColor: "#FFFBE5", // топлёное молоко
+              cursor: "pointer",
+            },
+          }}
+          value={value}
+          onChange={handleChange}
+          variant="standard"
+          color="secondary"
+        />
+      </Box>
+    </Box>
+  );
+};
+
+export const InputFromList = (func: any, currency: any, currencies: any) => {
+  const styleSet = {
+    width: "165px",
+    maxHeight: "6px",
+    minHeight: "6px",
+    bgcolor: "#FFFBE5",
+    border: "1px solid #d4d4d4", // серый
+    borderRadius: 1,
+    textAlign: "left",
+    p: 1.45,
+    boxShadow: 6,
+  };
+
+  const styleBoxForm = {
+    "& > :not(style)": {
+      marginTop: "-7px",
+      marginLeft: "-12px",
+      width: "175px",
+      padding: "0px 0px 0px 5px",
+    },
+  };
+
+  return (
+    <Box sx={styleSet}>
+      <Box component="form" sx={styleBoxForm}>
+        <TextField
+          select
+          size="small"
+          onKeyPress={handleKey} //отключение Enter
+          value={currency}
+          onChange={func}
+          InputProps={{ disableUnderline: true, style: { fontSize: 14 } }}
+          variant="standard"
+          color="secondary"
+        >
+          {currencies.map((option: any) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Box>
+    </Box>
+  );
+};
 //=== Разное =======================================
 export const InputDirect = (func: any) => {
   const styleSetNapr = {
@@ -1880,9 +2014,6 @@ export const InputDirect = (func: any) => {
       marginTop: "-12px",
       width: "185px",
     },
-  };
-  const handleKey = (event: any) => {
-    if (event.key === "Enter") event.preventDefault();
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

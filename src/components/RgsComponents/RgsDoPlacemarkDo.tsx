@@ -41,6 +41,7 @@ const RgsDoPlacemarkDo = (props: {
   });
   const debug = datestat.debug;
   const DEMO = datestat.demo;
+  const typeVert = datestat.typeVert;
   const dispatch = useDispatch();
   //===========================================================
   let idx = props.idx;
@@ -191,6 +192,7 @@ const RgsDoPlacemarkDo = (props: {
     (hoster: any) => {
       let Hoster = hoster;
       let imger = "";
+      let hostt = "";
       let FZSIST = FAZASIST;
       if (FAZASIST === 9 || !FAZASIST) {
         FZSIST = massfaz[nomInMassfaz].fazaSistOld;
@@ -199,16 +201,29 @@ const RgsDoPlacemarkDo = (props: {
       }
       let iconSize = Hoster ? 50 : 25;
       let iconOffset = Hoster ? -25 : -12.5;
-      if (Hoster) imger = "data:image/png;base64," + Hoster;
-      if (!Hoster) {
+      //  typeVert - тип отображаемых CO на карте 0 - значки СО 1 - номер фаз 2 - картинка фаз
+      if (typeVert) {
+        if (Hoster) imger = "data:image/png;base64," + Hoster;
+        if (!Hoster) {
+          if (FZSIST > 0) {
+            hostt =
+              window.location.origin.slice(0, 22) === "https://localhost:3000"
+                ? "https://localhost:3000/phases/"
+                : "./phases/";
+            imger = debug
+              ? hostt + FZSIST + ".svg"
+              : "/file/static/img/buttons/" + FZSIST + ".svg";
+          }
+        }
+      } else {
         if (FZSIST > 0) {
-          let hostt =
+          hostt =
             window.location.origin.slice(0, 22) === "https://localhost:3000"
-              ? "https://localhost:3000/phases/"
-              : "./phases/";
+              ? "https://localhost:3000/"
+              : "./";
           imger = debug
-            ? hostt + FZSIST + ".svg"
-            : "/file/static/img/buttons/" + FZSIST + ".svg";
+            ? hostt + "2.svg"
+            : "/free/img/trafficLights/2.svg";
         }
       }
 
@@ -223,7 +238,7 @@ const RgsDoPlacemarkDo = (props: {
         iconImageOffset: [iconOffset, iconOffset],
       };
     },
-    [debug, massfaz]
+    [debug, massfaz, typeVert]
   );
 
   const getPointOptions1 = React.useCallback(() => {

@@ -41,8 +41,9 @@ export interface Stater {
   phSvg: Array<any>;
   pictSvg: string | null;
   typeRoute: boolean; // тип отображаемых связей
-  typeFaza: boolean; // отображение фаз на карте
-  intervalFaza: number; // интервал фазы ДУ (сек)
+  typeVert: number; //  тип отображаемых CO на карте 0 - значки СО 1 - номер фаз 2 - картинка фаз
+  intervalFaza: number; // Задаваемая длительность фазы ДУ (сек)
+  intervalFazaDop: number; // Увеличениение длительности фазы ДУ (сек)
   massPath: any; // точки рабочего маршрута
 }
 
@@ -60,8 +61,9 @@ export let dateStat: Stater = {
   phSvg: [null, null, null, null, null, null, null, null],
   pictSvg: null,
   typeRoute: true, // тип отображаемых связей true - mаршрутизированные  false - неформальные
-  typeFaza: true, // тип отображаемых фаз на карте
-  intervalFaza: 0, // интервал фазы ДУ (сек)
+  typeVert: 0, //  тип отображаемых CO на карте 0 - значки СО 1 - номер фаз 2 - картинка фаз
+  intervalFaza: 0, // Задаваемая длительность фазы ДУ (сек)
+  intervalFazaDop: 0, // Увеличениение длительности фазы ДУ (сек)
   massPath: null, // точки рабочего маршрута
 };
 
@@ -153,21 +155,23 @@ const App = () => {
     // достать тип отображаемых связей из LocalStorage
     if (window.localStorage.typeRoute === undefined)
       window.localStorage.typeRoute = 0;
-    dateStat.typeRoute = Number(window.localStorage.typeRoute)
-      ? true
-      : false;
+    dateStat.typeRoute = Number(window.localStorage.typeRoute) ? true : false;
 
     // достать тип отображаемых фаз на карте из LocalStorage
-    if (window.localStorage.typeFaza === undefined)
-      window.localStorage.typeFaza = 0;
-    dateStat.typeFaza = Number(window.localStorage.typeFaza)
-      ? true
-      : false;
+    if (window.localStorage.typeVert === undefined)
+      window.localStorage.typeVert = 0;
+    dateStat.typeVert = Number(window.localStorage.typeVert);
 
-    // достать интервал из LocalStorage
+    // достать длительность фазы ДУ из LocalStorage
     if (window.localStorage.intervalFaza === undefined)
       window.localStorage.intervalFaza = 0;
     dateStat.intervalFaza = Number(window.localStorage.intervalFaza);
+
+    // достать увеличениение длительности фазы ДУ из LocalStorage
+    if (window.localStorage.intervalFazaDop === undefined)
+      window.localStorage.intervalFazaDop = 0;
+    dateStat.intervalFazaDop = Number(window.localStorage.intervalFazaDop);
+
     dispatch(statsaveCreate(dateStat));
 
     console.log("dateStat:", dateStat);

@@ -4,10 +4,11 @@ import { statsaveCreate } from "../../redux/actions";
 
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import TextField from "@mui/material/TextField";
 
 import { BadExit, ExitCross, FooterContent } from "../RgsServiceFunctions";
 import { StrTablVert, ShiftOptimal } from "../RgsServiceFunctions";
+import { PreparCurrenciesDispVert } from "../RgsServiceFunctions";
+import { InputFromList, WaysInput } from "../RgsServiceFunctions";
 
 import { styleSetPK03 } from "./../MainMapStyle";
 import { styleSetPK01, styleSetPK02 } from "./../MainMapStyle";
@@ -17,8 +18,10 @@ let flagInput = true;
 let HAVE = 0;
 
 let typeRoute = 0; // тип отображаемых связей 1 - mаршрутизированные  0 - неформальные
-let typeFaza = 0; // тип отображаемых фаз на карте
-let intervalFaza = 0; //интервал фазы ДУ (сек)
+let typeVert = 0; // тип отображаемых CO на карте 0 - значки СО 1 - номер фаз 2 - картинка фаз
+let intervalFaza = 0; // Задаваемая длительность фазы ДУ (сек)
+let intervalFazaDop = 0; // Увеличениение длительности фазы ДУ (сек)
+let currenciesDV: any = [];
 
 const GsSetup = (props: { close: Function }) => {
   //== Piece of Redux =======================================
@@ -37,9 +40,14 @@ const GsSetup = (props: { close: Function }) => {
     massForm = JSON.parse(JSON.stringify(datestat));
     massForm.ws = datestat.ws;
     intervalFaza = datestat.intervalFaza;
+    intervalFazaDop = datestat.intervalFazaDop;
+    typeVert = datestat.typeVert;
+    currenciesDV = PreparCurrenciesDispVert();
     flagInput = false;
   }
   //========================================================
+  const [currencyDV, setCurrencyDV] = React.useState(typeVert.toString());
+
   const handleClose = () => {
     flagInput = true;
     setOpen(false);
@@ -64,10 +72,10 @@ const GsSetup = (props: { close: Function }) => {
     if (mode) {
       //записать в LocalStorage
       typeRoute = massForm.typeRoute ? 1 : 0;
-      typeFaza = massForm.typeFaza ? 1 : 0;
       window.localStorage.typeRoute = typeRoute; // тип отображаемых связей
-      window.localStorage.typeFaza = typeFaza; // тип отображаемых фаз на карте
-      window.localStorage.intervalFaza = intervalFaza; // интервал фазы ДУ (сек)
+      window.localStorage.typeVert = typeVert; // тип отображаемых CO на карте
+      window.localStorage.intervalFaza = intervalFaza; // задаваемая длительность фазы ДУ (сек)
+      window.localStorage.intervalFazaDop = intervalFazaDop; // увеличениение длительности фазы ДУ (сек)
       //записать в datestat
       datestat = massForm;
       dispatch(statsaveCreate(datestat));
@@ -85,87 +93,23 @@ const GsSetup = (props: { close: Function }) => {
     Haver();
   };
 
-  const ChangeTypeFaza = () => {
-    massForm.typeFaza = !massForm.typeFaza;
+  const handleChangeDV = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrencyDV(event.target.value);
+    massForm.typeVert = typeVert = Number(event.target.value);
     Haver();
   };
 
   const SetInterval = (valueInp: number) => {
-    massForm.intervalFaza = intervalFaza = valueInp; // интервал фазы ДУ (сек)
+    massForm.intervalFaza = intervalFaza = valueInp; // задаваемая длительность фазы ДУ (сек)
+    if(!intervalFaza) massForm.intervalFazaDop = intervalFazaDop = 0; // увеличениение длительности фазы ДУ (сек)
+    Haver();
+  };
+
+  const SetIntervalDop = (valueInp: number) => {
+    massForm.intervalFazaDop = intervalFazaDop = valueInp; // увеличениение длительности фазы ДУ (сек)
     Haver();
   };
   //========================================================
-  const WaysInput = (
-    idx: number,
-    VALUE: any,
-    SetValue: Function,
-    MIN: number,
-    MAX: number
-  ) => {
-    let value = VALUE;
-
-    const styleSetID = {
-      width: "33px",
-      maxHeight: "1px",
-      minHeight: "1px",
-      border: "1px solid #d4d4d4", // серый
-      borderRadius: 1,
-      bgcolor: "#FFFBE5", // топлёное молоко
-      boxShadow: 6,
-      textAlign: "center",
-      p: 1.5,
-    };
-
-    const styleBoxFormID = {
-      "& > :not(style)": {
-        marginTop: "3px",
-        marginLeft: "-9px",
-        width: "53px",
-      },
-    };
-
-    const handleKey = (event: any) => {
-      if (event.key === "Enter") event.preventDefault();
-    };
-
-    const handleChange = (event: any) => {
-      let valueInp = event.target.value.replace(/^0+/, "");
-      if (Number(valueInp) < MIN) valueInp = MIN;
-      if (valueInp === "") valueInp = MIN;
-      valueInp = Math.trunc(Number(valueInp));
-      if (valueInp <= MAX) {
-        value = valueInp.toString();
-        SetValue(valueInp, idx);
-      }
-    };
-
-    return (
-      <Box sx={styleSetID}>
-        <Box component="form" sx={styleBoxFormID}>
-          <TextField
-            size="small"
-            onKeyPress={handleKey} //отключение Enter
-            type="number"
-            InputProps={{ disableUnderline: true }}
-            inputProps={{
-              style: {
-                marginTop: "-16px",
-                padding: "4px 0px 0px 0px",
-                fontSize: 14,
-                backgroundColor: "#FFFBE5", // топлёное молоко
-                cursor: "pointer",
-              },
-            }}
-            value={value}
-            onChange={handleChange}
-            variant="standard"
-            color="secondary"
-          />
-        </Box>
-      </Box>
-    );
-  };
-
   const SetupContent = () => {
     return (
       <>
@@ -173,25 +117,30 @@ const GsSetup = (props: { close: Function }) => {
           Тип отображаемых связей
         </Box>
         {StrTablVert(
-          9,
+          7.7,
           "Маршрутизированные (неформальные) связи",
           ShiftOptimal(massForm.typeRoute, ChangeTypeRoute, -0.1)
         )}
         <Box sx={{ fontSize: 12, marginTop: 0.5, color: "#5B1080" }}>
-          Отображение фаз на карте
+          Отображение светофорных объектов на маршруте
         </Box>
         {StrTablVert(
-          9,
-          "Фазы отображаются номерами (цифрами)",
-          ShiftOptimal(massForm.typeFaza, ChangeTypeFaza, -0.1)
+          7.7,
+          "Светофоры отображаются",
+          InputFromList(handleChangeDV, currencyDV, currenciesDV)
         )}
         <Box sx={{ fontSize: 12, marginTop: 0.5, color: "#5B1080" }}>
           Параметры перекрёстков
         </Box>
         {StrTablVert(
-          9,
-          "Интервал фазы ДУ (сек)",
+          7.7,
+          "Задаваемая длительность фазы ДУ (сек)",
           WaysInput(0, massForm.intervalFaza, SetInterval, 0, 1000)
+        )}
+        {StrTablVert(
+          7.7,
+          "Увеличениение длительности фазы ДУ (сек)",
+          WaysInput(0, massForm.intervalFazaDop, SetIntervalDop, 0, 1000)
         )}
       </>
     );
@@ -200,7 +149,7 @@ const GsSetup = (props: { close: Function }) => {
   return (
     <>
       <Modal open={open} onClose={CloseEnd} hideBackdrop={false}>
-        <Box sx={styleSetPK01(500, 278)}>
+        <Box sx={styleSetPK01(580, 319)}>
           {ExitCross(handleCloseBad)}
           <Box sx={styleSetPK02}>
             <b>Системные параметры по умолчанию</b>
