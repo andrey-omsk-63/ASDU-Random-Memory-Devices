@@ -331,12 +331,8 @@ export const GetPointData = (
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       let rec = map.tflight[index];
       let klu = MakingKey(rec.region.num, rec.area.num, rec.ID);
-
-      //console.log("bindings.tfLinks[i]", i, bindings.tfLinks[i].tflink);
-
       if (bindings.tfLinks[i].id === klu) {
         let recc = JSON.parse(JSON.stringify(bindings.tfLinks[i].tflink));
-        console.log("bindings.tfLinks[i]", i, recc);
         cont4 = "<br/>Связи:";
         if (recc.north.id)
           contS = "<br/><b>C:</b> " + ExtrId(recc.north.id, SL);

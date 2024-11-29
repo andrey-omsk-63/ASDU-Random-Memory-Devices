@@ -7,6 +7,8 @@ import { Placemark, YMapsApi } from "react-yandex-maps";
 
 import { GetPointData } from "../RgsServiceFunctions";
 
+import { ZOOM } from "../MainMapRgs";
+
 let FAZASIST = -1;
 let nomInMassfaz = -1;
 
@@ -188,6 +190,25 @@ const RgsDoPlacemarkDo = (props: {
     }
   };
 
+  const CalcSize = () => {
+    switch (ZOOM) {
+      case 14:
+        return 30;
+      case 15:
+        return 35;
+      case 16:
+        return 40;
+      case 17:
+        return 45;
+      case 18:
+        return 50;
+      case 19:
+        return 55;
+      default:
+        return 25;
+    }
+  };
+
   const GetPointOptions0 = React.useCallback(
     (hoster: any) => {
       let Hoster = hoster;
@@ -203,6 +224,7 @@ const RgsDoPlacemarkDo = (props: {
       let iconOffset = Hoster ? -25 : -12.5;
       //  typeVert - тип отображаемых CO на карте 0 - значки СО 1 - номер фаз 2 - картинка фаз
       if (typeVert) {
+        // номер фазы или картнка фазы
         if (Hoster) imger = "data:image/png;base64," + Hoster;
         if (!Hoster) {
           if (FZSIST > 0) {
@@ -216,14 +238,15 @@ const RgsDoPlacemarkDo = (props: {
           }
         }
       } else {
+        // значёк светофоры
         if (FZSIST > 0) {
+          iconSize = CalcSize() + 6; // размер метки светофора
+          iconOffset = -iconSize / 2;
           hostt =
             window.location.origin.slice(0, 22) === "https://localhost:3000"
               ? "https://localhost:3000/"
               : "./";
-          imger = debug
-            ? hostt + "2.svg"
-            : "/free/img/trafficLights/2.svg";
+          imger = debug ? hostt + "2.svg" : "/free/img/trafficLights/2.svg";
         }
       }
 

@@ -33,6 +33,7 @@ import { YMapsModul, MyYandexKey, NoClose } from "./MapConst";
 import { styleMenuGl } from "./MainMapStyle";
 
 export let BAN = false;
+export let ZOOM = 0; // величина текущего зума
 export let PressESC = false; // был нажат Esc при вводе маршрута
 let flagOpen = false;
 let needRend = false;
@@ -470,6 +471,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       funcBound = function () {
         pointCenter = mapp.current.getCenter();
         zoom = mapp.current.getZoom(); // покрутили колёсико мыши
+        ZOOM = zoom;
       };
       mapp.current.events.add("boundschange", funcBound);
       if (flagCenter) {

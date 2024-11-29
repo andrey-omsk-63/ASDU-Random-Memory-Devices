@@ -107,7 +107,7 @@ export const styleStrokaBoxlImg = {
 
 export const styleStrokaTakt = {
   fontSize: 12,
-  paddingTop: 1.7,
+  paddingTop: 2.0,
   textAlign: "right",
 };
 

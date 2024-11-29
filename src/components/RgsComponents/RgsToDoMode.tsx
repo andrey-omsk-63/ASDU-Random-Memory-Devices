@@ -6,6 +6,8 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 
+import { AiTwotoneRightCircle } from "react-icons/ai";
+
 import GsErrorMessage from "./RgsErrorMessage";
 
 import { Fazer } from "../../App";
@@ -34,6 +36,8 @@ let needRend = false;
 let nomIllum = -1;
 const tShadow = "2px 2px 3px rgba(0,0,0,0.3)";
 let soobError = "";
+let intervalFaza = 0; // Задаваемая длительность фазы ДУ (сек)
+let intervalFazaDop = 0; // Увеличениение длительности фазы ДУ (сек)
 
 const RgsToDoMode = (props: {
   massMem: Array<number>;
@@ -271,6 +275,8 @@ const RgsToDoMode = (props: {
       timerId = [];
       massInt = [];
       nomIllum = -1;
+      intervalFaza = datestat.intervalFaza;
+      intervalFazaDop = datestat.intervalFazaDop;
       datestat.start = false; // первая точка маршрута
       datestat.massPath = []; // точки рабочего маршрута
       dispatch(statsaveCreate(datestat));
@@ -387,6 +393,33 @@ const RgsToDoMode = (props: {
       }
     };
 
+    const FieldOfMiracles = (finish: boolean, idx: number) => {
+      const styleField01 = {
+        fontSize: 12,
+        color: "#7620A2",
+        padding: "12px 0 0 0",
+      };
+
+      return (
+        <Grid item xs={1.4} sx={styleField01}>
+          {finish && massfaz[idx].id <= 10000 && intervalFaza > 0 && (
+            <Grid container>
+              <Grid item xs={4} sx={{ textAlign: "right" }}>
+                {intervalFazaDop > 0 && (
+                  <Box sx={{fontSize: 15}}>
+                    <AiTwotoneRightCircle />
+                  </Box>
+                )}
+              </Grid>
+              <Grid item xs sx={{ textAlign: "center" }}>
+                {intervalFaza}
+              </Grid>
+            </Grid>
+          )}
+        </Grid>
+      );
+    };
+
     return massfaz.map((massf: any, idx: number) => {
       let runREC = JSON.parse(JSON.stringify(massf.runRec));
       let bull = runREC === 2 || runREC === 4 ? " •" : " ";
@@ -410,7 +443,6 @@ const RgsToDoMode = (props: {
         host =
           window.location.origin + "/free/img/trafficLights/" + num + ".svg";
       }
-      let star = ""; // пока заглушка
       let takt: any = massf.faza;
       if (!massf.faza) takt = "";
       let fazaImg: null | string = null;
@@ -422,14 +454,14 @@ const RgsToDoMode = (props: {
 
       return (
         <Grid key={idx} container sx={{ marginTop: 1 }}>
-          <Grid item xs={1} sx={{ paddingTop: 0.7, textAlign: "center" }}>
+          <Grid item xs={0.8} sx={{ paddingTop: 0.7, textAlign: "center" }}>
             <Button sx={illum} onClick={() => ClickKnop(idx)}>
               {idx + 1}
             </Button>
           </Grid>
-          <Grid item xs={1.2} sx={{ fontSize: 27, textAlign: "right" }}>
-            {star}
-          </Grid>
+
+          {FieldOfMiracles(finish, idx)}
+
           <Grid item xs={1.0} sx={{}}>
             {!finish && massf.id <= 10000 && (
               <Box sx={styleStrokaBoxlImg} onClick={() => ClickBox(idx)}>

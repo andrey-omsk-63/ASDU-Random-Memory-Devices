@@ -130,6 +130,7 @@ const App = () => {
   const dispatch = useDispatch();
   //========================================================
   const Initialisation = () => {
+    console.log("0dateBindingsGl:", JSON.parse(JSON.stringify(dateBindingsGl)));
     let deb = dateStat.debug;
     for (let i = 0; i < dateMapGl.tflight.length; i++) {
       let coord = [];
@@ -176,7 +177,7 @@ const App = () => {
 
     console.log("dateStat:", dateStat);
     console.log("dateMapGl:", dateMapGl);
-    console.log("dateBindingsGl:", dateBindingsGl);
+    console.log("dateBindingsGl:", JSON.parse(JSON.stringify(dateBindingsGl)));
     console.log("dateAddObjectsGl:", dateAddObjectsGl);
     //console.log("massdk:", massdk);
   };
