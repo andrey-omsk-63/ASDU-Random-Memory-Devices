@@ -5,6 +5,8 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { AiTwotoneRightCircle } from "react-icons/ai";
 
+//import { hTabl } from "./RgsToDoMode";
+
 const GsFieldOfMiracles = (props: {
   finish: boolean;
   idx: number;
@@ -21,10 +23,13 @@ const GsFieldOfMiracles = (props: {
     return statsaveReducer.datestat;
   });
   //========================================================
+  const DEMO = datestat.demo;
+  const intervalFazaDop = datestat.intervalFazaDop; // Увеличениение длительности фазы ДУ (сек)
   const [hint, setHint] = React.useState(false);
 
   let intervalfaza = props.count[props.idx]; // Задаваемая длительность фазы ДУ (сек)
-  let intervalFazaDop = datestat.intervalFazaDop; // Увеличениение длительности фазы ДУ (сек)
+  //let hTabl = !DEMO ? "78vh" : "81vh";
+  //const hTabl = window.innerHeight;
 
   const styleField01 = {
     fontSize: 12,
@@ -34,11 +39,15 @@ const GsFieldOfMiracles = (props: {
 
   const styleField02 = {
     position: "absolute",
-    left: "5px",
-    top: "-2px",
+    left: "14px",
+    //top: DEMO ? "86.8vh" : "87.6vh",
+    //top: DEMO ? hTabl * 0.868 : hTabl * 0.876,
+    //top: hTabl + 50,
+    marginTop: '9px',
     fontSize: 12.5,
     color: "#797A7B", // тёмно-серый
     textShadow: "0px 0px 0px rgba(0,0,0,0.3)",
+    //border: 1,
   };
 
   return (
@@ -58,8 +67,7 @@ const GsFieldOfMiracles = (props: {
                 </Box>
                 {hint && (
                   <Box sx={styleField02}>
-                    Увеличить длительность фазы на перекрёстке #{props.idx + 1}{" "}
-                    на {intervalFazaDop}сек.
+                    Увеличить длительность фазы на {intervalFazaDop}сек.
                   </Box>
                 )}
               </>

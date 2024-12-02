@@ -31,9 +31,6 @@ let timerId: any[] = [];
 let massInt: any[][] = []; // null
 let counterId: any[] = []; // счётчик длительности фаз
 
-//let intervalFaza = 0; // Задаваемая длительность фазы ДУ (сек)
-//let intervalFazaDop = 0; // Увеличениение длительности фазы ДУ (сек)
-
 let oldFaz = -1;
 let needRend = false;
 let nomIllum = -1;
