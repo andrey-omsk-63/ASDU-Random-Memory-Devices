@@ -8,7 +8,6 @@ import CardMedia from "@mui/material/CardMedia";
 import TextField from "@mui/material/TextField";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
-//import { BiExpand } from "react-icons/bi";
 import { MdOpenWith } from "react-icons/md";
 
 import { Pointer } from "../App";

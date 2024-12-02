@@ -6,9 +6,8 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 
-import { AiTwotoneRightCircle } from "react-icons/ai";
-
 import GsErrorMessage from "./RgsErrorMessage";
+import GsFieldOfMiracles from "./GsFieldOfMiracles";
 
 import { Fazer } from "../../App";
 import { PressESC } from "../MainMapRgs";
@@ -30,14 +29,16 @@ let init = true;
 let lengthMassMem = 0;
 let timerId: any[] = [];
 let massInt: any[][] = []; // null
+let counterId: any[] = []; // счётчик длительности фаз
+
+//let intervalFaza = 0; // Задаваемая длительность фазы ДУ (сек)
+//let intervalFazaDop = 0; // Увеличениение длительности фазы ДУ (сек)
 
 let oldFaz = -1;
 let needRend = false;
 let nomIllum = -1;
 const tShadow = "2px 2px 3px rgba(0,0,0,0.3)";
 let soobError = "";
-let intervalFaza = 0; // Задаваемая длительность фазы ДУ (сек)
-let intervalFazaDop = 0; // Увеличениение длительности фазы ДУ (сек)
 
 const RgsToDoMode = (props: {
   massMem: Array<number>;
@@ -86,6 +87,8 @@ const RgsToDoMode = (props: {
   const [openSoobErr, setOpenSoobErr] = React.useState(false);
   const [trigger, setTrigger] = React.useState(true);
   const [flagPusk, setFlagPusk] = React.useState(false);
+  let intervalFaza = datestat.intervalFaza; // Задаваемая длительность фазы ДУ (сек)
+  let intervalFazaDop = datestat.intervalFazaDop; // Увеличениение длительности фазы ДУ (сек)
   let timer = debug || DEMO ? 20000 : 60000;
   let hTabl = DEMO ? "78vh" : "81vh";
 
@@ -275,14 +278,13 @@ const RgsToDoMode = (props: {
       timerId = [];
       massInt = [];
       nomIllum = -1;
-      intervalFaza = datestat.intervalFaza;
-      intervalFazaDop = datestat.intervalFazaDop;
       datestat.start = false; // первая точка маршрута
       datestat.massPath = []; // точки рабочего маршрута
       dispatch(statsaveCreate(datestat));
       for (let i = 0; i < props.massMem.length; i++) {
         massfaz.push(MakeMaskFaz(i));
         timerId.push(null);
+        counterId.push(intervalFaza);
       }
       for (let i = 0; i < props.massMem.length; i++)
         massInt.push(JSON.parse(JSON.stringify(timerId)));
@@ -296,9 +298,11 @@ const RgsToDoMode = (props: {
       ToDoMode(0); // в списке 3 светофора/объекта и нажато ESC
     } else {
       if (PressESC) {
-        // удаление светофора из списка
+        // удаление светофора из списка c хвоста
         massfaz.pop(); // удалим из массива последний элемент
         let idx = massfaz.length - 1;
+        counterId.pop();
+        counterId[idx] = intervalFaza;
         CloseVertex(idx, 1);
         massfaz[idx].runRec = massfaz[idx].faza = massfaz[idx].fazaBegin = 0;
         massfaz[idx].fazaSist = massfaz[idx].fazaSistOld = -1;
@@ -308,6 +312,7 @@ const RgsToDoMode = (props: {
         setTrigger(!trigger);
       } else if (lengthMassMem < props.massMem.length) {
         timerId.push(null); // появился новый перекрёсток
+        counterId.push(intervalFaza);
         massfaz.push(MakeMaskFaz(props.massMem.length - 1));
         let mass = Array(props.massMem.length).fill(null);
         massInt.push(mass);
@@ -393,31 +398,10 @@ const RgsToDoMode = (props: {
       }
     };
 
-    const FieldOfMiracles = (finish: boolean, idx: number) => {
-      const styleField01 = {
-        fontSize: 12,
-        color: "#7620A2",
-        padding: "12px 0 0 0",
-      };
-
-      return (
-        <Grid item xs={1.4} sx={styleField01}>
-          {finish && massfaz[idx].id <= 10000 && intervalFaza > 0 && (
-            <Grid container>
-              <Grid item xs={4} sx={{ textAlign: "right" }}>
-                {intervalFazaDop > 0 && (
-                  <Box sx={{fontSize: 15}}>
-                    <AiTwotoneRightCircle />
-                  </Box>
-                )}
-              </Grid>
-              <Grid item xs sx={{ textAlign: "center" }}>
-                {intervalFaza}
-              </Grid>
-            </Grid>
-          )}
-        </Grid>
-      );
+    const ClickAddition = (idx: number) => {
+      console.log("ClickAddition:", idx);
+      counterId[idx] += intervalFazaDop;
+      setTrigger(!trigger);
     };
 
     return massfaz.map((massf: any, idx: number) => {
@@ -460,7 +444,12 @@ const RgsToDoMode = (props: {
             </Button>
           </Grid>
 
-          {FieldOfMiracles(finish, idx)}
+          <GsFieldOfMiracles
+            finish={finish}
+            idx={idx}
+            count={counterId}
+            func={ClickAddition}
+          />
 
           <Grid item xs={1.0} sx={{}}>
             {!finish && massf.id <= 10000 && (
