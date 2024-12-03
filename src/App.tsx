@@ -45,6 +45,9 @@ export interface Stater {
   intervalFaza: number; // Задаваемая длительность фазы ДУ (сек)
   intervalFazaDop: number; // Увеличениение длительности фазы ДУ (сек)
   massPath: any; // точки рабочего маршрута
+  counterId: Array<any>; // счётчик длительности фаз
+  timerId: Array<any>; // массив времени отправки команд
+  massInt: any[][];
 }
 
 export let dateStat: Stater = {
@@ -65,6 +68,9 @@ export let dateStat: Stater = {
   intervalFaza: 0, // Задаваемая длительность фазы ДУ (сек)
   intervalFazaDop: 0, // Увеличениение длительности фазы ДУ (сек)
   massPath: null, // точки рабочего маршрута
+  counterId: [], // счётчик длительности фаз
+  timerId: [], // массив времени отправки команд
+  massInt: [],
 };
 
 export interface Pointer {

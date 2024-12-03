@@ -100,9 +100,9 @@ export const styleStrokaBoxlImg = {
   cursor: "pointer",
   maxWidth: "30.5px",
   minWidth: "30.5px",
-  maxHeight: "42px",
-  minHeight: "42px",
-  padding: "3px 0px 0px 1px",
+  maxHeight: "41px",
+  minHeight: "41px",
+  padding: "2px 0px 0px 1px",
 };
 
 export const styleStrokaTakt = {

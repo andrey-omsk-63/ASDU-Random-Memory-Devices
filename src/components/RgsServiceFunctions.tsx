@@ -2028,7 +2028,7 @@ export const InputDirect = (func: any) => {
         func(54);
         break;
       case 4: // Настройки
-        func(1);
+        func(56);
         setCurrency(0);
         break;
       case 5: // режим Demo

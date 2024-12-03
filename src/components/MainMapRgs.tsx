@@ -531,10 +531,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         SetHelper(1);
       };
       switch (mode) {
-        case 1: // настройки
-          setNeedSetup(true);
-          GoTo51();
-          break;
         case 51: // режим управления
           GoTo51();
           break;
@@ -564,6 +560,10 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           datestat.demo = inTarget = true;
           dispatch(statsaveCreate(datestat));
           SetHelper(1);
+          break;
+        case 56: // настройки
+          setNeedSetup(true);
+          GoTo51();
       }
     }
   };
