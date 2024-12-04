@@ -122,6 +122,8 @@ const RgsToDoMode = (props: {
   };
   //========================================================
   const ForcedClearInterval = () => {
+    console.log("ForcedClearInterval");
+
     for (let i = 0; i < timerId.length; i++) {
       if (timerId[i]) {
         for (let j = 0; j < massInt[i].length; j++) {
@@ -133,10 +135,22 @@ const RgsToDoMode = (props: {
         timerId[i] = null;
       }
     }
+    for (let i = 0; i < datestat.timerId.length; i++) {
+      if (datestat.timerId[i]) {
+        for (let j = 0; j < datestat.massInt[i].length; j++) {
+          if (datestat.massInt[i][j]) {
+            clearInterval(datestat.massInt[i][j]);
+            datestat.massInt[i][j] = null;
+          }
+        }
+        datestat.timerId[i] = null;
+      }
+    }
+    dispatch(statsaveCreate(datestat));
   };
 
   const handleCloseSetEnd = () => {
-    DEMO && ForcedClearInterval();
+    //DEMO && ForcedClearInterval();
     datestat.finish = false; // закончить исполнение
     datestat.massPath = null; // точки рабочего маршрута
     dispatch(statsaveCreate(datestat));
@@ -156,8 +170,7 @@ const RgsToDoMode = (props: {
       props.funcMode(mode); // сбросить PressESC
       setTrigger(!trigger);
     } else {
-      // принудительное закрытие
-      console.log("Принудительный Финиш:");
+      console.log("Принудительный Финиш:"); // принудительное закрытие
       ForcedClearInterval();
       for (let i = 0; i < massfaz.length; i++) {
         if (massfaz[i].runRec === 2) {
@@ -172,10 +185,52 @@ const RgsToDoMode = (props: {
     }
   };
 
+  const DoTimerCount = (mode: number) => {
+    //console.log("DoTimerCount:", mode);
+
+    if (datestat.counterId[mode]) {
+      for (let i = 0; i < datestat.massInt[mode].length - 1; i++) {
+        if (datestat.massInt[mode][i]) {
+          clearInterval(datestat.massInt[mode][i]);
+          datestat.massInt[mode][i] = null;
+        }
+      }
+      datestat.massInt[mode] = datestat.massInt[mode].filter(function (
+        el: any
+      ) {
+        return el !== null;
+      });
+
+      datestat.counterId[mode]--;
+      if (!datestat.counterId[mode]) {
+        console.log("Нужно послать КУ на", mode + 1);
+
+        for (let i = 0; i < datestat.massInt[mode].length; i++) {
+          if (datestat.massInt[mode][i]) {
+            clearInterval(datestat.massInt[mode][i]);
+            datestat.massInt[mode][i] = null;
+          }
+        }
+        datestat.timerId[mode] = null;
+        CloseVertex(mode); // закрыть светофор
+      }
+      dispatch(statsaveCreate(datestat));
+      needRend = true;
+      setFlagPusk(!flagPusk);
+    }
+  };
+
   const RunVertex = (mode: number) => {
     let fazer = massfaz[mode];
     timerId[mode] = setInterval(() => DoTimerId(mode), timer); // 60000
     massInt[mode].push(JSON.parse(JSON.stringify(timerId[mode])));
+
+    datestat.timerId[mode] = setInterval(() => DoTimerCount(mode), 1000);
+    datestat.massInt[mode].push(
+      JSON.parse(JSON.stringify(datestat.timerId[mode]))
+    );
+    dispatch(statsaveCreate(datestat));
+
     ToDoMode(mode);
     //=========================================================================
     console.log(mode + 1 + "-й светофор АКТИВИРОВАН", timerId[mode]);
@@ -241,7 +296,7 @@ const RgsToDoMode = (props: {
     !ch && handleCloseSetEnd();
   };
 
-  const CloseVertex = (idx: number, mode: number) => {
+  const CloseVertex = (idx: number) => {
     if (!DEMO) {
       SendSocketDispatch(debug, ws, massfaz[idx].idevice, 9, 9);
       let massIdevice: Array<number> = [];
@@ -260,12 +315,11 @@ const RgsToDoMode = (props: {
     }
     timerId[idx] = null;
     datestat.timerId[idx] = null;
-    if (!mode) {
-      massfaz[idx].runRec = DEMO ? 5 : 1;
-      dispatch(massfazCreate(massfaz));
-    }
+    massfaz[idx].runRec = DEMO ? 5 : 1;
+
     console.log(idx + 1 + "-й светофор закрыт!!!", timerId);
     dispatch(statsaveCreate(datestat));
+    dispatch(massfazCreate(massfaz));
     FindEnd();
   };
   //====== ИНИЦИАЛИЗАЦИЯ ====================================================================
@@ -278,6 +332,9 @@ const RgsToDoMode = (props: {
       nomIllum = -1;
       datestat.start = false; // первая точка маршрута
       datestat.massPath = []; // точки рабочего маршрута
+      datestat.counterId = []; // счётчик длительности фаз
+      datestat.timerId = []; // массив времени отправки команд на счётчики
+      datestat.massInt = []; // массив интервалов отправки команд на счётчики
 
       for (let i = 0; i < props.massMem.length; i++) {
         massfaz.push(MakeMaskFaz(i));
@@ -305,38 +362,44 @@ const RgsToDoMode = (props: {
         let idx = massfaz.length - 1;
         datestat.counterId.pop();
         datestat.counterId[idx] = intervalFaza;
-        //datestat.counterId
-        CloseVertex(idx, 1);
+
+        CloseVertex(idx);
         massfaz[idx].runRec = massfaz[idx].faza = massfaz[idx].fazaBegin = 0;
         massfaz[idx].fazaSist = massfaz[idx].fazaSistOld = -1;
         dispatch(massfazCreate(massfaz));
         props.funcMode(lengthMassMem - 2); // сбросить PressESC
         lengthMassMem--;
         setTrigger(!trigger);
-      } else if (lengthMassMem < props.massMem.length) {
-        timerId.push(null); // появился новый перекрёсток
-        massfaz.push(MakeMaskFaz(props.massMem.length - 1));
-        let mass = Array(props.massMem.length).fill(null);
-        massInt.push(mass);
+      } else {
+        if (lengthMassMem < props.massMem.length) {
+          timerId.push(null); // появился новый перекрёсток
+          massfaz.push(MakeMaskFaz(props.massMem.length - 1));
+          let mass = Array(props.massMem.length).fill(null);
+          massInt.push(mass);
 
-        datestat.counterId.push(intervalFaza); // длительность фазы ДУ
-        datestat.timerId.push(null); // массив времени отправки команд
-        let mas = Array(props.massMem.length).fill(null);
-        datestat.massInt.push(mas);
+          let leng = datestat.counterId.length;
+          let intFaza = JSON.parse(JSON.stringify(intervalFaza));
+          if (leng > 2 && intervalFaza < datestat.counterId[leng - 2]) {
+            intFaza = JSON.parse(JSON.stringify(datestat.counterId[leng - 2]));
+            datestat.counterId[leng - 1] = intFaza;
+          }
+          datestat.counterId.push(intervalFaza); // длительность фазы ДУ последнего объекта
 
-        lengthMassMem = props.massMem.length;
-        FindFaza();
-        props.pererisovka(true);
+          datestat.timerId.push(null); // массив времени отправки команд
+          let mas = Array(props.massMem.length).fill(null);
+          datestat.massInt.push(mas);
+
+          lengthMassMem = props.massMem.length;
+          FindFaza();
+          props.pererisovka(true);
+        }
+        if (props.changeFaz !== oldFaz) {
+          CloseVertex((oldFaz = props.changeFaz));
+          setTrigger(!trigger);
+        }
+        dispatch(massfazCreate(massfaz));
+        dispatch(statsaveCreate(datestat));
       }
-      if (props.changeFaz !== oldFaz) {
-        CloseVertex((oldFaz = props.changeFaz), 0);
-        setTrigger(!trigger);
-      }
-      dispatch(massfazCreate(massfaz));
-      dispatch(statsaveCreate(datestat));
-
-      console.log("111:", timerId, massInt);
-      console.log("222:", datestat.timerId, datestat.massInt);
     }
   }
   //=======================================================
@@ -394,7 +457,7 @@ const RgsToDoMode = (props: {
             }
           }
           props.pererisovka(true);
-          CloseVertex(mode, 0);
+          CloseVertex(mode);
           dispatch(massfazCreate(massfaz));
           setTrigger(!trigger);
         }
@@ -411,8 +474,23 @@ const RgsToDoMode = (props: {
     };
 
     const ClickAddition = (idx: number) => {
-      console.log("ClickAddition:", idx);
-      datestat.counterId[idx] += intervalFazaDop;
+      console.log(
+        "1ClickAddition:",
+        idx,
+        JSON.parse(JSON.stringify(datestat.counterId))
+      );
+
+      for (let i = 0; i < datestat.counterId.length - 1; i++)
+        if (i >= idx) {
+          datestat.counterId[i] += intervalFazaDop;
+        }
+
+      console.log(
+        "2ClickAddition:",
+        idx,
+        JSON.parse(JSON.stringify(datestat.counterId))
+      );
+
       dispatch(statsaveCreate(datestat));
       setTrigger(!trigger);
     };
@@ -491,26 +569,19 @@ const RgsToDoMode = (props: {
     });
   };
   //========================================================
-  const CheckRun =
-    //React.useCallback(
-    () => {
-      for (let i = 0; i < massfaz.length; i++) {
-        const TmOut = (mode: number) => {
-          //setTimeout(() => {
-          massfaz[i].runRec = mode;
-          dispatch(massfazCreate(massfaz));
-          setTrigger(!trigger);
-          //}, 5000);
-        };
-        if (massfaz[i].runRec === 4) TmOut(2);
-        if (massfaz[i].runRec === 5) TmOut(1);
-      }
-    };
-  //, [massfaz, dispatch, trigger]);
+  const CheckRun = () => {
+    for (let i = 0; i < massfaz.length; i++) {
+      const TmOut = (mode: number) => {
+        massfaz[i].runRec = mode;
+        dispatch(massfazCreate(massfaz));
+        setTrigger(!trigger);
+      };
+      if (massfaz[i].runRec === 4) TmOut(2);
+      if (massfaz[i].runRec === 5) TmOut(1);
+    }
+  };
 
-  //React.useEffect(() => {
   DEMO && CheckRun();
-  //}, [DEMO, CheckRun, datestat]);
 
   if (needRend) {
     needRend = false;

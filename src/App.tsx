@@ -46,8 +46,8 @@ export interface Stater {
   intervalFazaDop: number; // Увеличениение длительности фазы ДУ (сек)
   massPath: any; // точки рабочего маршрута
   counterId: Array<any>; // счётчик длительности фаз
-  timerId: Array<any>; // массив времени отправки команд
-  massInt: any[][];
+  timerId: Array<any>; // массив времени отправки команд на счётчики
+  massInt: any[][]; // массив интервалов отправки команд на счётчики
 }
 
 export let dateStat: Stater = {
@@ -64,13 +64,13 @@ export let dateStat: Stater = {
   phSvg: [null, null, null, null, null, null, null, null],
   pictSvg: null,
   typeRoute: true, // тип отображаемых связей true - mаршрутизированные  false - неформальные
-  typeVert: 0, //  тип отображаемых CO на карте 0 - значки СО 1 - номер фаз 2 - картинка фаз
+  typeVert: 0, // тип отображаемых CO на карте 0 - значки СО 1 - номер фаз 2 - картинка фаз
   intervalFaza: 0, // Задаваемая длительность фазы ДУ (сек)
   intervalFazaDop: 0, // Увеличениение длительности фазы ДУ (сек)
   massPath: null, // точки рабочего маршрута
   counterId: [], // счётчик длительности фаз
-  timerId: [], // массив времени отправки команд
-  massInt: [],
+  timerId: [], // массив времени отправки команд на счётчики
+  massInt: [], // массив интервалов отправки команд на счётчики
 };
 
 export interface Pointer {
