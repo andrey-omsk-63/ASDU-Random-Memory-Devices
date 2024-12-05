@@ -23,7 +23,7 @@ import { AppIconAsdu, OutputPict, SaveСhange } from "../RgsServiceFunctions";
 import { OutPutZZ, OutPutVV, AdditionalButton } from "../RgsServiceFunctions";
 import { ViewSvg, GetFaza } from "../RgsServiceFunctions";
 
-import { styleModalEnd, StyleAppSt06, styleAppSt07 } from "../MainMapStyle";
+import { styleModalEndBind, StyleAppSt06, styleAppSt07 } from "../MainMapStyle";
 import { styleSetAppoint, styleAppSt02 } from "../MainMapStyle";
 import { styleSetAV, styleBoxFormAV, styleAppSt04 } from "../MainMapStyle";
 import { styleSetFaza, styleBoxFormFaza } from "../MainMapStyle";
@@ -119,20 +119,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
       let kluchSV = bindings.tfLinks[bindIdx].tflink.add1.id;
       let kluchUV = bindings.tfLinks[bindIdx].tflink.add2.id;
       let kluchUZ = bindings.tfLinks[bindIdx].tflink.add3.id;
-
-      // console.log("1###:", mass);
-      // console.log(
-      //   "2###:",
-      //   kluchZ,
-      //   kluchS,
-      //   kluchV,
-      //   kluchU,
-      //   kluchSZ,
-      //   kluchSV,
-      //   kluchUV,
-      //   kluchUZ
-      // );
-
       //=== проверка наличия используюмых светофоров ===========
       let nety = true;
       const Checker = (kluch: string) => {
@@ -643,14 +629,21 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
     <>
       <Modal open={openSet} onClose={handleCloseEnd}>
         <Box sx={styleSetAppoint}>
-          <Button sx={styleModalEnd} onClick={handleCloseBad}>
+          <Button sx={styleModalEndBind} onClick={handleCloseBad}>
             &#10006;
           </Button>
-          <Box sx={styleAppSt04}>
-            {/* <b>Массив связности перекрёстка {kluchGl.slice(2)}</b> ( */}
-            <b>Массив связности перекрёстка №{map.tflight[props.idx].ID}</b> (
-            <b>{map.tflight[props.idx].description}</b>)
-          </Box>
+          <Grid container>
+            <Grid item xs={0.6}></Grid>
+            <Grid item xs>
+              <Box sx={styleAppSt04}>
+                {/* <b>Массив связности перекрёстка {kluchGl.slice(2)}</b> ( */}
+                <b>
+                  Массив связности перекрёстка №{map.tflight[props.idx].ID}
+                </b>{" "}
+                (<b>{map.tflight[props.idx].description}</b>)
+              </Box>
+            </Grid>
+          </Grid>
           <Grid container sx={{ marginTop: 2 }}>
             {/* вывод картиноки перекрёстка c направлениями */}
             {OutPutZZ(zz)}

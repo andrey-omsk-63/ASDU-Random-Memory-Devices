@@ -29,7 +29,6 @@ let init = true;
 let lengthMassMem = 0;
 let timerId: any[] = [];
 let massInt: any[][] = []; // null
-//let counterId: any[] = []; // счётчик длительности фаз
 
 let oldFaz = -1;
 let needRend = false;
@@ -120,10 +119,10 @@ const RgsToDoMode = (props: {
     }
     return maskFaz;
   };
-  //========================================================
+
   const ForcedClearInterval = () => {
     console.log("ForcedClearInterval");
-
+    // сброс таймеров отправки фаз
     for (let i = 0; i < timerId.length; i++) {
       if (timerId[i]) {
         for (let j = 0; j < massInt[i].length; j++) {
@@ -135,6 +134,7 @@ const RgsToDoMode = (props: {
         timerId[i] = null;
       }
     }
+    // сброс таймеров счётчиков длительности фаз
     for (let i = 0; i < datestat.timerId.length; i++) {
       if (datestat.timerId[i]) {
         for (let j = 0; j < datestat.massInt[i].length; j++) {
@@ -150,7 +150,7 @@ const RgsToDoMode = (props: {
   };
 
   const handleCloseSetEnd = () => {
-    //DEMO && ForcedClearInterval();
+    ForcedClearInterval(); // обнуление всех интервалов и остановка всех таймеров
     datestat.finish = false; // закончить исполнение
     datestat.massPath = null; // точки рабочего маршрута
     dispatch(statsaveCreate(datestat));
@@ -161,33 +161,18 @@ const RgsToDoMode = (props: {
     oldFaz = -1;
     lengthMassMem = 0;
   };
-  //========================================================
-  const ToDoMode = (mode: number) => {
-    let massIdevice: Array<number> = [];
-    if (mode) {
-      massIdevice.push(massfaz[mode].idevice);
-      !DEMO && SendSocketRoute(debug, ws, massIdevice, true); // выполнение режима
-      props.funcMode(mode); // сбросить PressESC
-      setTrigger(!trigger);
-    } else {
-      console.log("Принудительный Финиш:"); // принудительное закрытие
-      ForcedClearInterval();
-      for (let i = 0; i < massfaz.length; i++) {
-        if (massfaz[i].runRec === 2) {
-          !DEMO && SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
-          massfaz[i].runRec = 1;
-          massIdevice.push(massfaz[i].idevice);
-        }
+
+  const RemovalFromTheRoute = () => {
+    if (datestat.massPath) {
+      if (datestat.massPath.length) {
+        datestat.massPath.splice(0, 1); // удалить первый элемент
+        dispatch(statsaveCreate(datestat));
       }
-      !DEMO && SendSocketRoute(debug, ws, massIdevice, false);
-      dispatch(massfazCreate(massfaz));
-      handleCloseSetEnd();
     }
+    props.pererisovka(true);
   };
-
+  //====== Таймеры ========================================
   const DoTimerCount = (mode: number) => {
-    //console.log("DoTimerCount:", mode);
-
     if (datestat.counterId[mode]) {
       for (let i = 0; i < datestat.massInt[mode].length - 1; i++) {
         if (datestat.massInt[mode][i]) {
@@ -201,10 +186,11 @@ const RgsToDoMode = (props: {
         return el !== null;
       });
 
-      datestat.counterId[mode]--;
+      datestat.counterId[mode]--; // счётчик
+
       if (!datestat.counterId[mode]) {
         console.log("Нужно послать КУ на", mode + 1);
-
+        // остановка и очистка счётчика
         for (let i = 0; i < datestat.massInt[mode].length; i++) {
           if (datestat.massInt[mode][i]) {
             clearInterval(datestat.massInt[mode][i]);
@@ -212,37 +198,91 @@ const RgsToDoMode = (props: {
           }
         }
         datestat.timerId[mode] = null;
+        RemovalFromTheRoute();
         CloseVertex(mode); // закрыть светофор
       }
       dispatch(statsaveCreate(datestat));
-      needRend = true;
+      needRend = true; // нужен ререндеринг
       setFlagPusk(!flagPusk);
     }
   };
 
-  const RunVertex = (mode: number) => {
+  const DoTimerId = (mode: number) => {
     let fazer = massfaz[mode];
+    if (!DEMO) {
+      fazer.runRec === 2 &&
+        SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
+    } else {
+      if (!fazer.runRec || fazer.runRec === 5 || fazer.runRec === 1) {
+        fazer.fazaSist = fazer.faza; // начало или финиш
+      } else {
+        if (fazer.fazaSist < 0) {
+          massfaz[mode].fazaSist = 1;
+        } else fazer.fazaSist = fazer.fazaSist === 2 ? 1 : 2;
+      }
+      dispatch(massfazCreate(massfaz));
+      props.changeDemo(mode);
+      needRend = true; // нужен ререндеринг
+      setFlagPusk(!flagPusk);
+    }
+    for (let i = 0; i < massInt[mode].length - 1; i++) {
+      if (massInt[mode][i]) {
+        clearInterval(massInt[mode][i]);
+        massInt[mode][i] = null;
+      }
+    }
+    massInt[mode] = massInt[mode].filter(function (el: any) {
+      return el !== null;
+    });
+  };
+  //=======================================================
+  const ToDoMode = (mode: number) => {
+    let massIdevice: Array<number> = [];
+    if (mode) {
+      massIdevice.push(massfaz[mode].idevice);
+      !DEMO && SendSocketRoute(debug, ws, massIdevice, true); // выполнение режима
+      props.funcMode(mode); // сбросить PressESC
+      setTrigger(!trigger);
+    } else {
+      console.log("Принудительный Финиш:"); // принудительное закрытие
+      for (let i = 0; i < massfaz.length; i++) {
+        if (massfaz[i].runRec === 2) {
+          !DEMO && SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
+          massfaz[i].runRec = 1;
+          massIdevice.push(massfaz[i].idevice);
+        }
+      }
+      !DEMO && SendSocketRoute(debug, ws, massIdevice, false);
+      dispatch(massfazCreate(massfaz));
+      handleCloseSetEnd();
+    }
+  };
+
+  const RunVertex = (mode: number) => {
+    // запуск таймеров отправки фаз
     timerId[mode] = setInterval(() => DoTimerId(mode), timer); // 60000
     massInt[mode].push(JSON.parse(JSON.stringify(timerId[mode])));
-
-    datestat.timerId[mode] = setInterval(() => DoTimerCount(mode), 1000);
-    datestat.massInt[mode].push(
-      JSON.parse(JSON.stringify(datestat.timerId[mode]))
-    );
-    dispatch(statsaveCreate(datestat));
-
-    ToDoMode(mode);
+    // запуск таймеров счётчиков длительности фаз
+    if (intervalFaza) {
+      datestat.timerId[mode] = setInterval(() => DoTimerCount(mode), 1000);
+      datestat.massInt[mode].push(
+        JSON.parse(JSON.stringify(datestat.timerId[mode]))
+      );
+      dispatch(statsaveCreate(datestat));
+    }
     //=========================================================================
+    ToDoMode(mode);
     console.log(mode + 1 + "-й светофор АКТИВИРОВАН", timerId[mode]);
 
+    let fazer = massfaz[mode];
     if (DEMO) {
       massfaz[mode].fazaSist = fazer.faza;
     } else SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
     massfaz[mode].runRec = DEMO ? 4 : 2;
     dispatch(massfazCreate(massfaz));
-    //=========================================================================
-    console.log(mode + 1 + "-й светофор", DEMO, massfaz[mode].runRec);
 
+    console.log(mode + 1 + "-й светофор", DEMO, massfaz[mode].runRec);
+    //=========================================================================
     if (DEMO) massfaz[mode].faza = massfaz[mode].fazaBegin;
     setTrigger(!trigger);
   };
@@ -380,8 +420,9 @@ const RgsToDoMode = (props: {
           let leng = datestat.counterId.length;
           let intFaza = JSON.parse(JSON.stringify(intervalFaza));
           if (leng > 2 && intervalFaza < datestat.counterId[leng - 2]) {
-            intFaza = JSON.parse(JSON.stringify(datestat.counterId[leng - 2]));
-            datestat.counterId[leng - 1] = intFaza;
+            intFaza =
+              JSON.parse(JSON.stringify(datestat.counterId[leng - 2])) + 1;
+            datestat.counterId[leng - 1] = intFaza; // длительность фазы ДУ предпоследнего объекта
           }
           datestat.counterId.push(intervalFaza); // длительность фазы ДУ последнего объекта
 
@@ -402,36 +443,7 @@ const RgsToDoMode = (props: {
       }
     }
   }
-  //=======================================================
-  const DoTimerId = (mode: number) => {
-    let fazer = massfaz[mode];
-    if (!DEMO) {
-      fazer.runRec === 2 &&
-        SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
-    } else {
-      if (!fazer.runRec || fazer.runRec === 5 || fazer.runRec === 1) {
-        fazer.fazaSist = fazer.faza; // начало или финиш
-      } else {
-        if (fazer.fazaSist < 0) {
-          massfaz[mode].fazaSist = 1;
-        } else fazer.fazaSist = fazer.fazaSist === 2 ? 1 : 2;
-      }
-      dispatch(massfazCreate(massfaz));
-      props.changeDemo(mode);
-      needRend = true;
-      setFlagPusk(!flagPusk);
-    }
-    for (let i = 0; i < massInt[mode].length - 1; i++) {
-      if (massInt[mode][i]) {
-        clearInterval(massInt[mode][i]);
-        massInt[mode][i] = null;
-      }
-    }
-    massInt[mode] = massInt[mode].filter(function (el: any) {
-      return el !== null;
-    });
-  };
-
+  //====== Компоненты =====================================
   const StrokaTabl = () => {
     const ClickKnop = (mode: number) => {
       nomIllum = mode;
@@ -450,15 +462,8 @@ const RgsToDoMode = (props: {
           setOpenSoobErr(true);
         } else {
           // МОЖНО закрыть
-          if (datestat.massPath) {
-            if (datestat.massPath.length) {
-              datestat.massPath.splice(0, 1); // удалить первый элемент
-              dispatch(statsaveCreate(datestat));
-            }
-          }
-          props.pererisovka(true);
+          RemovalFromTheRoute();
           CloseVertex(mode);
-          dispatch(massfazCreate(massfaz));
           setTrigger(!trigger);
         }
       }
@@ -474,23 +479,11 @@ const RgsToDoMode = (props: {
     };
 
     const ClickAddition = (idx: number) => {
-      console.log(
-        "1ClickAddition:",
-        idx,
-        JSON.parse(JSON.stringify(datestat.counterId))
-      );
-
-      for (let i = 0; i < datestat.counterId.length - 1; i++)
-        if (i >= idx) {
-          datestat.counterId[i] += intervalFazaDop;
-        }
-
-      console.log(
-        "2ClickAddition:",
-        idx,
-        JSON.parse(JSON.stringify(datestat.counterId))
-      );
-
+      for (let i = 0; i < datestat.counterId.length - 1; i++) {
+        if (i === idx) datestat.counterId[i] += intervalFazaDop;
+        if (i > idx && datestat.counterId[i] < datestat.counterId[idx])
+          datestat.counterId[i] = datestat.counterId[i - 1] + 1;
+      }
       dispatch(statsaveCreate(datestat));
       setTrigger(!trigger);
     };
@@ -584,7 +577,7 @@ const RgsToDoMode = (props: {
   DEMO && CheckRun();
 
   if (needRend) {
-    needRend = false;
+    needRend = false; // задать ререндеринг
     setFlagPusk(!flagPusk);
   }
 

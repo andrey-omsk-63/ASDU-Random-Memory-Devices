@@ -24,6 +24,18 @@ export const styleModalEnd = {
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
 
+export const styleModalEndBind = {
+  position: "absolute",
+  top: "-0.1%",
+  left: "auto",
+  right: "-0.5%",
+  height: "21px",
+  maxWidth: "2%",
+  minWidth: "2%",
+  color: "#7620a2", // сиреневый
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+};
+
 export const styleSetInf = {
   position: "absolute",
   marginTop: "15vh",
