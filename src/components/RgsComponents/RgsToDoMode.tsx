@@ -75,11 +75,11 @@ const RgsToDoMode = (props: {
     return statsaveReducer.datestat;
   });
   const dispatch = useDispatch();
+  //========================================================
   const debug = datestat.debug;
   const ws = datestat.ws;
   const DEMO = datestat.demo;
   const styleToDoMode = StyleToDoMode(DEMO);
-  //========================================================
   const [openSoobErr, setOpenSoobErr] = React.useState(false);
   const [trigger, setTrigger] = React.useState(true);
   const [flagPusk, setFlagPusk] = React.useState(false);
@@ -121,7 +121,6 @@ const RgsToDoMode = (props: {
   };
 
   const ForcedClearInterval = () => {
-    console.log("ForcedClearInterval");
     // сброс таймеров отправки фаз
     for (let i = 0; i < timerId.length; i++) {
       if (timerId[i]) {
@@ -185,12 +184,9 @@ const RgsToDoMode = (props: {
       ) {
         return el !== null;
       });
-
       datestat.counterId[mode]--; // счётчик
-
       if (!datestat.counterId[mode]) {
-        console.log("Нужно послать КУ на", mode + 1);
-        // остановка и очистка счётчика
+        console.log("Нужно послать КУ на", mode + 1); // остановка и очистка счётчика
         for (let i = 0; i < datestat.massInt[mode].length; i++) {
           if (datestat.massInt[mode][i]) {
             clearInterval(datestat.massInt[mode][i]);
@@ -293,8 +289,8 @@ const RgsToDoMode = (props: {
     let klu = faz.id;
     let kluIn = massfaz[lengthMassMem - 3].id;
     let kluOn = massfaz[lengthMassMem - 1].id;
-
     let numRec = -1;
+
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       if (TakeAreaId(bindings.tfLinks[i].id)[1] === klu) {
         numRec = i;
@@ -303,7 +299,6 @@ const RgsToDoMode = (props: {
     }
     let mass = bindings.tfLinks[numRec].tflink;
     let inFaz = [];
-
     if (TakeAreaId(mass.west.id)[1] === kluIn) inFaz = mass.west.wayPointsArray;
     if (TakeAreaId(mass.north.id)[1] === kluIn)
       inFaz = mass.north.wayPointsArray;
@@ -314,7 +309,6 @@ const RgsToDoMode = (props: {
     if (TakeAreaId(mass.add2.id)[1] === kluIn) inFaz = mass.add2.wayPointsArray;
     if (TakeAreaId(mass.add3.id)[1] === kluIn) inFaz = mass.add3.wayPointsArray;
     if (TakeAreaId(mass.add4.id)[1] === kluIn) inFaz = mass.add4.wayPointsArray;
-
     for (let i = 0; i < inFaz.length; i++) {
       if (TakeAreaId(inFaz[i].id)[1] === kluOn) {
         faz.faza = Number(inFaz[i].phase);
@@ -356,7 +350,6 @@ const RgsToDoMode = (props: {
     timerId[idx] = null;
     datestat.timerId[idx] = null;
     massfaz[idx].runRec = DEMO ? 5 : 1;
-
     console.log(idx + 1 + "-й светофор закрыт!!!", timerId);
     dispatch(statsaveCreate(datestat));
     dispatch(massfazCreate(massfaz));
@@ -365,8 +358,7 @@ const RgsToDoMode = (props: {
   //====== ИНИЦИАЛИЗАЦИЯ ====================================================================
   if (init) {
     if (datestat.start) {
-      // первое вхождение
-      massfaz = [];
+      massfaz = []; // первое вхождение
       timerId = [];
       massInt = [];
       nomIllum = -1;
@@ -397,12 +389,10 @@ const RgsToDoMode = (props: {
       ToDoMode(0); // в списке 3 светофора/объекта и нажато ESC
     } else {
       if (PressESC) {
-        // удаление светофора из списка c хвоста
-        massfaz.pop(); // удалим из массива последний элемент
+        massfaz.pop(); // удалим из массива последний элемент - удаление светофора из списка c хвоста
         let idx = massfaz.length - 1;
         datestat.counterId.pop();
         datestat.counterId[idx] = intervalFaza;
-
         CloseVertex(idx);
         massfaz[idx].runRec = massfaz[idx].faza = massfaz[idx].fazaBegin = 0;
         massfaz[idx].fazaSist = massfaz[idx].fazaSistOld = -1;
@@ -425,11 +415,9 @@ const RgsToDoMode = (props: {
             datestat.counterId[leng - 1] = intFaza; // длительность фазы ДУ предпоследнего объекта
           }
           datestat.counterId.push(intervalFaza); // длительность фазы ДУ последнего объекта
-
           datestat.timerId.push(null); // массив времени отправки команд
           let mas = Array(props.massMem.length).fill(null);
           datestat.massInt.push(mas);
-
           lengthMassMem = props.massMem.length;
           FindFaza();
           props.pererisovka(true);
@@ -461,8 +449,7 @@ const RgsToDoMode = (props: {
           soobError = NoClose;
           setOpenSoobErr(true);
         } else {
-          // МОЖНО закрыть
-          RemovalFromTheRoute();
+          RemovalFromTheRoute(); // МОЖНО закрыть
           CloseVertex(mode);
           setTrigger(!trigger);
         }
@@ -527,18 +514,14 @@ const RgsToDoMode = (props: {
               {idx + 1}
             </Button>
           </Grid>
-
           <GsFieldOfMiracles finish={finish} idx={idx} func={ClickAddition} />
-
-          <Grid item xs={1.0} sx={{}}>
+          <Grid item xs={1.0}>
             {!finish && massf.id <= 10000 && (
               <Box sx={styleStrokaBoxlImg} onClick={() => ClickBox(idx)}>
                 {OutputVertexImg(host)}
               </Box>
             )}
-
             {massf.id > 10000 && <>{CircleObj()}</>}
-
             {finish && massf.id <= 10000 && (
               <Button sx={styleStrokaTablImg} onClick={() => ClickVertex(idx)}>
                 {OutputVertexImg(host)}
