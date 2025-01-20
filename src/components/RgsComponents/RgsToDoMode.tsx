@@ -75,6 +75,8 @@ const RgsToDoMode = (props: {
     return statsaveReducer.datestat;
   });
   const dispatch = useDispatch();
+
+  //console.log("Props:", props.massMem, props.trigger, props.changeFaz, massfaz);
   //========================================================
   const debug = datestat.debug;
   const ws = datestat.ws;
@@ -184,7 +186,9 @@ const RgsToDoMode = (props: {
       ) {
         return el !== null;
       });
-      datestat.counterId[mode]--; // счётчик
+
+      if (massfaz[mode].fazaSist > 0) datestat.counterId[mode]--; // счётчик
+
       if (!datestat.counterId[mode]) {
         console.log("Нужно послать КУ на", mode + 1); // остановка и очистка счётчика
         for (let i = 0; i < datestat.massInt[mode].length; i++) {
@@ -522,10 +526,16 @@ const RgsToDoMode = (props: {
               </Box>
             )}
             {massf.id > 10000 && <>{CircleObj()}</>}
-            {finish && massf.id <= 10000 && (
+            {finish && massf.id <= 10000 && massf.fazaSist > 0 && (
               <Button sx={styleStrokaTablImg} onClick={() => ClickVertex(idx)}>
                 {OutputVertexImg(host)}
               </Button>
+            )}
+
+            {finish && massf.id <= 10000 && massf.fazaSist < 0 && (
+              <Box sx={styleStrokaBoxlImg} onClick={() => ClickBox(idx)}>
+                {OutputVertexImg(host)}
+              </Box>
             )}
           </Grid>
           <Grid item xs={0.4} sx={styleToDo03}>

@@ -91,7 +91,7 @@ export const styleStrokaTablImg = {
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
-  boxShadow: 9,
+  boxShadow: 15,
 };
 
 export const styleStrokaBoxlImg = {

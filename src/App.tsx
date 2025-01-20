@@ -232,6 +232,8 @@ const App = () => {
       //console.log("Пришло:", allData.type);
       switch (allData.type) {
         case "phases":
+          console.log("phases:", data);
+
           let flagChange = false;
           for (let i = 0; i < data.phases.length; i++) {
             for (let j = 0; j < massfaz.length; j++) {
@@ -246,7 +248,13 @@ const App = () => {
             }
           }
           if (flagChange) dispatch(massfazCreate(massfaz));
-          //setTrigger(!trigger);
+          setTrigger(!trigger);
+          break;
+        case "tflight":
+          console.log('1tflight:',data)
+          for (let i = 0; i < data.tflight.length; i++) {
+            console.log('2tflight:',data.tflight[i].tlsost)
+          }
           break;
         case "mapInfo":
           dateMapGl = JSON.parse(JSON.stringify(data));
