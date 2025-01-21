@@ -163,22 +163,22 @@ const App = () => {
     setOpenMapInfo(true);
 
     // достать тип отображаемых связей из LocalStorage
-    if (window.localStorage.typeRoute === undefined)
+    if (window.localStorage.typeRoute === "undefined")
       window.localStorage.typeRoute = 0;
     dateStat.typeRoute = Number(window.localStorage.typeRoute) ? true : false;
 
     // достать тип отображаемых фаз на карте из LocalStorage
-    if (window.localStorage.typeVert === undefined)
+    if (window.localStorage.typeVert === "undefined")
       window.localStorage.typeVert = 0;
     dateStat.typeVert = Number(window.localStorage.typeVert);
 
     // достать длительность фазы ДУ из LocalStorage
-    if (window.localStorage.intervalFaza === undefined)
+    if (window.localStorage.intervalFaza === "undefined")
       window.localStorage.intervalFaza = 0;
     dateStat.intervalFaza = Number(window.localStorage.intervalFaza);
 
     // достать увеличениение длительности фазы ДУ из LocalStorage
-    if (window.localStorage.intervalFazaDop === undefined)
+    if (window.localStorage.intervalFazaDop === "undefined")
       window.localStorage.intervalFazaDop = 0;
     dateStat.intervalFazaDop = Number(window.localStorage.intervalFazaDop);
 
