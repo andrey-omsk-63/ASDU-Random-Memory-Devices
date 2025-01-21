@@ -354,6 +354,7 @@ const RgsToDoMode = (props: {
     timerId[idx] = null;
     datestat.timerId[idx] = null;
     massfaz[idx].runRec = DEMO ? 5 : 1;
+    massfaz[idx].fazaSist = -1;
     console.log(idx + 1 + "-й светофор закрыт!!!", timerId);
     dispatch(statsaveCreate(datestat));
     dispatch(massfazCreate(massfaz));

@@ -784,7 +784,6 @@ export const TakeAreaId = (kluch: string) => {
 };
 
 export const TakeAreaIdd = (kluch: string) => {
-  //console.log("1!!!:", kluch);
   let bb = "1";
   let bbb = kluch;
   let bbbb = "";

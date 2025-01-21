@@ -120,7 +120,11 @@ let flagBindings = false;
 let flagAddObjects = false;
 
 const App = () => {
-  // //== Piece of Redux ======================================
+  //== Piece of Redux ======================================
+  // const map = useSelector((state: any) => {
+  //   const { mapReducer } = state;
+  //   return mapReducer.map.dateMap;
+  // });
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
     return massdkReducer.massdk;
@@ -136,7 +140,6 @@ const App = () => {
   const dispatch = useDispatch();
   //========================================================
   const Initialisation = () => {
-    console.log("0dateBindingsGl:", JSON.parse(JSON.stringify(dateBindingsGl)));
     let deb = dateStat.debug;
     for (let i = 0; i < dateMapGl.tflight.length; i++) {
       let coord = [];
@@ -188,6 +191,61 @@ const App = () => {
     //console.log("massdk:", massdk);
   };
 
+  const ActionOnPhases = (data: any) => {
+    let flagChange = false;
+    for (let i = 0; i < data.phases.length; i++) {
+      for (let j = 0; j < massfaz.length; j++) {
+        if (data.phases[i].phase) {
+          if (massfaz[j].idevice === data.phases[i].device) {
+            if (massfaz[j].fazaSist !== data.phases[i].phase) {
+              massfaz[j].fazaSist = data.phases[i].phase;
+              flagChange = true;
+            }
+          }
+        }
+      }
+    }
+    if (flagChange) {
+      dispatch(massfazCreate(massfaz));
+      setTrigger(!trigger);
+    }
+  };
+
+  const ActionOnTflight = (data: any) => {
+    let flagCh = false;
+    for (let i = 0; i < data.tflight.length; i++) {
+      for (let j = 0; j < dateMapGl.tflight.length; j++) {
+        if (dateMapGl.tflight[j].idevice === data.tflight[i].idevice) {
+          dateMapGl.tflight[j].tlsost = data.tflight[i].tlsost;
+          flagCh = true;
+        }
+      }
+    }
+    if (flagCh) {
+      dispatch(mapCreate(dateMapGl));
+      setTrigger(!trigger);
+    }
+  };
+
+  const ActionOnGetPhases = (data: any) => {
+    for (let i = 0; i < massdk.length; i++) {
+      if (
+        massdk[i].region.toString() === data.pos.region &&
+        massdk[i].area.toString() === data.pos.area &&
+        massdk[i].ID === data.pos.id
+      ) {
+        if (data.phases) {
+          if (data.phases.length) {
+            for (let j = 0; j < data.phases.length; j++)
+              massdk[i].phSvg[j] = data.phases[j].phase;
+            dispatch(massdkCreate(massdk));
+          }
+          break;
+        }
+      }
+    }
+  };
+
   const host =
     "wss://" +
     window.location.host +
@@ -232,29 +290,10 @@ const App = () => {
       //console.log("Пришло:", allData.type);
       switch (allData.type) {
         case "phases":
-          console.log("phases:", data);
-
-          let flagChange = false;
-          for (let i = 0; i < data.phases.length; i++) {
-            for (let j = 0; j < massfaz.length; j++) {
-              if (data.phases[i].phase) {
-                if (massfaz[j].idevice === data.phases[i].device) {
-                  if (massfaz[j].fazaSist !== data.phases[i].phase) {
-                    massfaz[j].fazaSist = data.phases[i].phase;
-                    flagChange = true;
-                  }
-                }
-              }
-            }
-          }
-          if (flagChange) dispatch(massfazCreate(massfaz));
-          setTrigger(!trigger);
+          ActionOnPhases(data);
           break;
         case "tflight":
-          console.log('1tflight:',data)
-          for (let i = 0; i < data.tflight.length; i++) {
-            console.log('2tflight:',data.tflight[i].tlsost)
-          }
+          ActionOnTflight(data);
           break;
         case "mapInfo":
           dateMapGl = JSON.parse(JSON.stringify(data));
@@ -283,22 +322,7 @@ const App = () => {
           setTrigger(!trigger);
           break;
         case "getPhases":
-          for (let i = 0; i < massdk.length; i++) {
-            if (
-              massdk[i].region.toString() === data.pos.region &&
-              massdk[i].area.toString() === data.pos.area &&
-              massdk[i].ID === data.pos.id
-            ) {
-              if (data.phases) {
-                if (data.phases.length) {
-                  for (let j = 0; j < data.phases.length; j++)
-                    massdk[i].phSvg[j] = data.phases[j].phase;
-                  dispatch(massdkCreate(massdk));
-                }
-                break;
-              }
-            }
-          }
+          ActionOnGetPhases(data);
           break;
         case "getSvg":
           dateStat.pictSvg = data.svg;

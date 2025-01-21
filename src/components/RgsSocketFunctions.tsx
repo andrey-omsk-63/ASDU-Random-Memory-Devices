@@ -136,7 +136,6 @@ export const SendSocketDispatch = (
 };
 //=== App ==========================================
 export const SendSocketGetBindings = (debug: boolean, ws: WebSocket) => {
-  //console.log('GetBindings');
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
@@ -156,7 +155,6 @@ export const SendSocketGetBindings = (debug: boolean, ws: WebSocket) => {
 };
 
 export const SendSocketGetAddObjects = (debug: boolean, ws: WebSocket) => {
-  console.log("GetAddObjects");
   const handleSendOpen = () => {
     if (!debug) {
       if (ws.readyState === WebSocket.OPEN) {
