@@ -18,8 +18,8 @@ import GsSetup from "./RgsComponents/GsSetup";
 
 import { getMassMultiRouteOptions, Distance } from "./RgsServiceFunctions";
 import { getMassMultiRouteOptionsDemo } from "./RgsServiceFunctions";
-import { getMultiRouteOptions } from "./RgsServiceFunctions";
-import { getReferencePoints, CenterCoord } from "./RgsServiceFunctions";
+import { getMultiRouteOptions, SaveZoom } from "./RgsServiceFunctions";
+import { getReferencePoints, CenterCoordBegin } from "./RgsServiceFunctions";
 import { MakeMassRouteFirst, StrokaHelp } from "./RgsServiceFunctions";
 import { StrokaMenuGlob, MakingKey, Сrossroad } from "./RgsServiceFunctions";
 import { MakeSoobErr, MakeMassRoute } from "./RgsServiceFunctions";
@@ -63,10 +63,7 @@ let funcContex: any = null;
 let funcBound: any = null;
 let modeHelp = 0;
 let mayEsc = false; // можно воспользоваться Esc при построении маршрута
-
 let typeRoute = false; // тип отображаемых связей
-// let typeFaza = false; // тип отображаемых фаз на карте
-// let intervalFaza = 0; // интервал фазы ДУ (сек)
 
 const MainMapRgs = (props: { trigger: boolean }) => {
   //== Piece of Redux =======================================
@@ -472,10 +469,12 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         pointCenter = mapp.current.getCenter();
         zoom = mapp.current.getZoom(); // покрутили колёсико мыши
         ZOOM = zoom;
+        SaveZoom(zoom, pointCenter);
       };
       mapp.current.events.add("boundschange", funcBound);
       if (flagCenter) {
         pointCenter = newCenter;
+        SaveZoom(zoom, pointCenter);
         setFlagCenter(false);
       }
     }
@@ -586,12 +585,12 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     for (let i = 0; i < addobj.addObjects.length; i++)
       coordinates.push(addobj.addObjects[i].dgis);
     dispatch(coordinatesCreate(coordinates));
-    pointCenter = CenterCoord(
-      map.boxPoint.point0.Y,
-      map.boxPoint.point0.X,
-      map.boxPoint.point1.Y,
-      map.boxPoint.point1.X
-    );
+    let point0 = window.localStorage.PointCenterGs0;
+    let point1 = window.localStorage.PointCenterGs1;
+    if (!Number(point0) || !Number(point1)) {
+      pointCenter = CenterCoordBegin(map); // начальные координаты центра отоброжаемой карты
+    } else pointCenter = [Number(point0), Number(point1)];
+    zoom = Number(window.localStorage.ZoomGs); // начальный zoom Yandex-карты ДУ
     flagOpen = true;
   }
   //========================================================

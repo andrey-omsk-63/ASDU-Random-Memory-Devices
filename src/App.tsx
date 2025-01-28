@@ -23,6 +23,8 @@ import { imgFaza } from "./otladkaPicFaza";
 import { dataBindings } from "./otladkaBindings";
 import { dataAddObjects } from "./otladkaAddObjects";
 
+import { zoomStart } from "./components/MapConst";
+
 export let dateMapGl: any;
 export let dateBindingsGl: any;
 export let dateAddObjectsGl: any;
@@ -163,24 +165,36 @@ const App = () => {
     setOpenMapInfo(true);
 
     // достать тип отображаемых связей из LocalStorage
-    if (window.localStorage.typeRoute === "undefined")
+    if (window.localStorage.typeRoute === undefined)
       window.localStorage.typeRoute = 0;
     dateStat.typeRoute = Number(window.localStorage.typeRoute) ? true : false;
 
     // достать тип отображаемых фаз на карте из LocalStorage
-    if (window.localStorage.typeVert === "undefined")
+    if (window.localStorage.typeVert === undefined)
       window.localStorage.typeVert = 0;
     dateStat.typeVert = Number(window.localStorage.typeVert);
 
     // достать длительность фазы ДУ из LocalStorage
-    if (window.localStorage.intervalFaza === "undefined")
+    if (window.localStorage.intervalFaza === undefined)
       window.localStorage.intervalFaza = 0;
     dateStat.intervalFaza = Number(window.localStorage.intervalFaza);
 
     // достать увеличениение длительности фазы ДУ из LocalStorage
-    if (window.localStorage.intervalFazaDop === "undefined")
+    if (window.localStorage.intervalFazaDop === undefined)
       window.localStorage.intervalFazaDop = 0;
     dateStat.intervalFazaDop = Number(window.localStorage.intervalFazaDop);
+
+    // достать начальный zoom Yandex-карты ДУ из LocalStorage
+    if (window.localStorage.ZoomGs === undefined)
+      window.localStorage.ZoomGs = zoomStart;
+
+    // достать центр координат [0] Yandex-карты ДУ из LocalStorage
+    if (window.localStorage.PointCenterGs0 === undefined)
+      window.localStorage.PointCenterGs0 = 0;
+
+    // достать центр координат [1] Yandex-карты ДУ из LocalStorage
+    if (window.localStorage.PointCenterGs1 === undefined)
+      window.localStorage.PointCenterDU1 = 0;
 
     dispatch(statsaveCreate(dateStat));
 
@@ -189,61 +203,6 @@ const App = () => {
     console.log("dateBindingsGl:", JSON.parse(JSON.stringify(dateBindingsGl)));
     console.log("dateAddObjectsGl:", dateAddObjectsGl);
     //console.log("massdk:", massdk);
-  };
-
-  const ActionOnPhases = (data: any) => {
-    let flagChange = false;
-    for (let i = 0; i < data.phases.length; i++) {
-      for (let j = 0; j < massfaz.length; j++) {
-        if (data.phases[i].phase) {
-          if (massfaz[j].idevice === data.phases[i].device) {
-            if (massfaz[j].fazaSist !== data.phases[i].phase) {
-              massfaz[j].fazaSist = data.phases[i].phase;
-              flagChange = true;
-            }
-          }
-        }
-      }
-    }
-    if (flagChange) {
-      dispatch(massfazCreate(massfaz));
-      setTrigger(!trigger);
-    }
-  };
-
-  const ActionOnTflight = (data: any) => {
-    let flagCh = false;
-    for (let i = 0; i < data.tflight.length; i++) {
-      for (let j = 0; j < dateMapGl.tflight.length; j++) {
-        if (dateMapGl.tflight[j].idevice === data.tflight[i].idevice) {
-          dateMapGl.tflight[j].tlsost = data.tflight[i].tlsost;
-          flagCh = true;
-        }
-      }
-    }
-    if (flagCh) {
-      dispatch(mapCreate(dateMapGl));
-      setTrigger(!trigger);
-    }
-  };
-
-  const ActionOnGetPhases = (data: any) => {
-    for (let i = 0; i < massdk.length; i++) {
-      if (
-        massdk[i].region.toString() === data.pos.region &&
-        massdk[i].area.toString() === data.pos.area &&
-        massdk[i].ID === data.pos.id
-      ) {
-        if (data.phases) {
-          if (data.phases.length) {
-            for (let j = 0; j < data.phases.length; j++)
-              massdk[i].phSvg[j] = data.phases[j].phase;
-            dispatch(massdkCreate(massdk));
-          }
-          break;
-        }
-      }
-    }
   };
 
   const host =
@@ -282,6 +241,61 @@ const App = () => {
 
     WS.onerror = function (event: any) {
       console.log("WS.current.onerror:", event);
+    };
+
+    const ActionOnGetPhases = (data: any) => {
+      for (let i = 0; i < massdk.length; i++) {
+        if (
+          massdk[i].region.toString() === data.pos.region &&
+          massdk[i].area.toString() === data.pos.area &&
+          massdk[i].ID === data.pos.id
+        ) {
+          if (data.phases) {
+            if (data.phases.length) {
+              for (let j = 0; j < data.phases.length; j++)
+                massdk[i].phSvg[j] = data.phases[j].phase;
+              dispatch(massdkCreate(massdk));
+            }
+            break;
+          }
+        }
+      }
+    };
+
+    const ActionOnPhases = (data: any) => {
+      let flagChange = false;
+      for (let i = 0; i < data.phases.length; i++) {
+        for (let j = 0; j < massfaz.length; j++) {
+          if (data.phases[i].phase) {
+            if (massfaz[j].idevice === data.phases[i].device) {
+              if (massfaz[j].fazaSist !== data.phases[i].phase) {
+                massfaz[j].fazaSist = data.phases[i].phase;
+                flagChange = true;
+              }
+            }
+          }
+        }
+      }
+      if (flagChange) {
+        dispatch(massfazCreate(massfaz));
+        setTrigger(!trigger);
+      }
+    };
+
+    const ActionOnTflight = (data: any) => {
+      let flagCh = false;
+      for (let i = 0; i < data.tflight.length; i++) {
+        for (let j = 0; j < dateMapGl.tflight.length; j++) {
+          if (dateMapGl.tflight[j].idevice === data.tflight[i].idevice) {
+            dateMapGl.tflight[j].tlsost = data.tflight[i].tlsost;
+            flagCh = true;
+          }
+        }
+      }
+      if (flagCh) {
+        dispatch(mapCreate(dateMapGl));
+        setTrigger(!trigger);
+      }
     };
 
     WS.onmessage = function (event: any) {

@@ -129,6 +129,45 @@ export const CenterCoord = (aY: number, aX: number, bY: number, bX: number) => {
   return [coord0, coord1];
 };
 
+export const CenterCoordBegin = (map: any) => {
+  let mapp = map.tflight;
+  let min = 999;
+  let max = 0;
+  let nomMin = -1;
+  let nomMax = -1;
+  for (let i = 0; i < mapp.length; i++) {
+    if (mapp[i].points.X < min) {
+      nomMin = i;
+      min = mapp[i].points.X;
+    }
+    if (mapp[i].points.X > max) {
+      nomMax = i;
+      max = mapp[i].points.X;
+    }
+  }
+
+  return CenterCoord(
+    mapp[nomMin].points.Y,
+    mapp[nomMin].points.X,
+    mapp[nomMax].points.Y,
+    mapp[nomMax].points.X
+  );
+
+  // return CenterCoord(
+  //   map.dateMap.boxPoint.point0.Y,
+  //   map.dateMap.boxPoint.point0.X,
+  //   map.dateMap.boxPoint.point1.Y,
+  //   map.dateMap.boxPoint.point1.X
+  // );
+};
+
+export const SaveZoom = (zoom: number, pointCenter: Array<number>) => {
+  window.localStorage.ZoomGs = zoom;
+  window.localStorage.PointCenterGs0 = pointCenter[0];
+  window.localStorage.PointCenterGs1 = pointCenter[1];
+  //console.log('SaveZoom:',window.localStorage.ZoomGs)
+};
+
 export const Distance = (coord1: Array<number>, coord2: Array<number>) => {
   if (coord1[0] === coord2[0] && coord1[1] === coord2[1]) {
     return 0;
