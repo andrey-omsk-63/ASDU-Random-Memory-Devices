@@ -194,10 +194,9 @@ const App = () => {
 
     // достать центр координат [1] Yandex-карты ДУ из LocalStorage
     if (window.localStorage.PointCenterGs1 === undefined)
-      window.localStorage.PointCenterDU1 = 0;
+      window.localStorage.PointCenterGs1 = 0;
 
     dispatch(statsaveCreate(dateStat));
-
     console.log("dateStat:", dateStat);
     console.log("dateMapGl:", dateMapGl);
     console.log("dateBindingsGl:", JSON.parse(JSON.stringify(dateBindingsGl)));
