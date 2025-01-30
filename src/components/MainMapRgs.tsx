@@ -26,20 +26,20 @@ import { MakeSoobErr, MakeMassRoute } from "./RgsServiceFunctions";
 import { CheckHaveLink, MakeFazer } from "./RgsServiceFunctions";
 import { YandexServices, TakeAreaId, TakeAreaIdd } from "./RgsServiceFunctions";
 
-import { SendSocketGetSvg } from "./RgsSocketFunctions";
+import { SendSocketGetSvg, SendSocketDispatch } from "./RgsSocketFunctions";
 
 import { YMapsModul, MyYandexKey, NoClose } from "./MapConst";
 
 import { styleMenuGl } from "./MainMapStyle";
 
 export let BAN = false;
-export let ZOOM = 0; // величина текущего зума
+//export let ZOOM = 12; // величина текущего зума
 export let PressESC = false; // был нажат Esc при вводе маршрута
 let flagOpen = false;
 let needRend = false;
 
 const zoomStart = 10;
-let zoom = zoomStart;
+export let zoom = zoomStart;
 let pointCenter: any = 0;
 
 let massMem: Array<number> = [];
@@ -96,10 +96,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     return statsaveReducer.datestat;
   });
   typeRoute = datestat.typeRoute; // тип отображаемых связей
-  // typeFaza = datestat.typeFaza; // тип отображаемых фаз на карте
-  // intervalFaza = datestat.intervalFaza; // интервал фазы ДУ (сек)
   const debug = datestat.debug;
   const ws = datestat.ws;
+  const DEMO = datestat.demo;
   const homeRegion = datestat.region;
   const SL = homeRegion < 10 ? 2 : 3;
   const dispatch = useDispatch();
@@ -229,7 +228,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     massCoord = [];
     massKlu = [];
     massNomBind = []; // массив номеров светофоров в bindings
-    zoom = zoom - 0.01;
+    //zoom = zoom - 0.01;
     mayEsc = false;
     massRoute = [];
     datestat.start = false; // первая точка маршрута
@@ -468,7 +467,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       funcBound = function () {
         pointCenter = mapp.current.getCenter();
         zoom = mapp.current.getZoom(); // покрутили колёсико мыши
-        ZOOM = zoom;
+        //ZOOM = zoom;
         SaveZoom(zoom, pointCenter);
       };
       mapp.current.events.add("boundschange", funcBound);
@@ -676,6 +675,37 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     document.addEventListener("keydown", escFunction);
     return () => document.removeEventListener("keydown", escFunction);
   }, [escFunction]);
+  //=== Закрытие или перезапуск вкладки ====================
+  React.useEffect(() => {
+    window.addEventListener("beforeunload", alertUser);
+    window.addEventListener("unload", handleTabClosing);
+
+    return () => {
+      window.removeEventListener("beforeunload", alertUser);
+      window.removeEventListener("unload", handleTabClosing);
+    };
+  });
+
+  const handleTabClosing = () => {
+    //console.log("3пришло:");
+    removePlayerFromGame();
+  };
+
+  const alertUser = (event: any) => {
+    //console.log("2пришло:", event);
+    // ev = JSON.parse(JSON.stringify(event));
+    console.log("Принудительный Финиш:"); // принудительное закрытие
+    for (let i = 0; i < massfaz.length; i++) {
+      if (massfaz[i].runRec === 2)
+        !DEMO && SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
+    }
+    //  event.preventDefault();
+    //  event.returnValue = "";
+  };
+
+  function removePlayerFromGame() {
+    throw new Error("Function not implemented.");
+  }
   //========================================================
   return (
     <Grid container sx={{ height: "99.9vh" }}>

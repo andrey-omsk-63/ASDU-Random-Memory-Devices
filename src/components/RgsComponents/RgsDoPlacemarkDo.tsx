@@ -7,7 +7,8 @@ import { Placemark, YMapsApi } from "react-yandex-maps";
 
 import { GetPointData } from "../RgsServiceFunctions";
 
-import { ZOOM } from "../MainMapRgs";
+//import { ZOOM } from "../MainMapRgs";
+import { zoom } from "../MainMapRgs";
 
 let FAZASIST = -1;
 let nomInMassfaz = -1;
@@ -191,7 +192,7 @@ const RgsDoPlacemarkDo = (props: {
   };
 
   const CalcSize = () => {
-    switch (ZOOM) {
+    switch (zoom) {
       case 14:
         return 30;
       case 15:
