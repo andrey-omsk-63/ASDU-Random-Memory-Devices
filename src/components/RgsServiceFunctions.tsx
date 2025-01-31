@@ -152,13 +152,6 @@ export const CenterCoordBegin = (map: any) => {
     mapp[nomMax].points.Y,
     mapp[nomMax].points.X
   );
-
-  // return CenterCoord(
-  //   map.dateMap.boxPoint.point0.Y,
-  //   map.dateMap.boxPoint.point0.X,
-  //   map.dateMap.boxPoint.point1.Y,
-  //   map.dateMap.boxPoint.point1.X
-  // );
 };
 
 export const SaveZoom = (zoom: number, pointCenter: Array<number>) => {

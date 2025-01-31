@@ -33,7 +33,6 @@ import { YMapsModul, MyYandexKey, NoClose } from "./MapConst";
 import { styleMenuGl } from "./MainMapStyle";
 
 export let BAN = false;
-//export let ZOOM = 12; // величина текущего зума
 export let PressESC = false; // был нажат Esc при вводе маршрута
 let flagOpen = false;
 let needRend = false;
@@ -228,7 +227,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     massCoord = [];
     massKlu = [];
     massNomBind = []; // массив номеров светофоров в bindings
-    //zoom = zoom - 0.01;
     mayEsc = false;
     massRoute = [];
     datestat.start = false; // первая точка маршрута
@@ -676,6 +674,22 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     return () => document.removeEventListener("keydown", escFunction);
   }, [escFunction]);
   //=== Закрытие или перезапуск вкладки ====================
+  function removePlayerFromGame() {
+    throw new Error("Функция не реализована");
+  }
+
+  const handleTabClosing = () => {
+    removePlayerFromGame();
+  };
+
+  const alertUser = (event: any) => {
+    console.log("Принудительный Финиш:"); // принудительное закрытие
+    for (let i = 0; i < massfaz.length; i++) {
+      if (massfaz[i].runRec === 2)
+        !DEMO && SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
+    }
+  };
+
   React.useEffect(() => {
     window.addEventListener("beforeunload", alertUser);
     window.addEventListener("unload", handleTabClosing);
@@ -685,27 +699,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       window.removeEventListener("unload", handleTabClosing);
     };
   });
-
-  const handleTabClosing = () => {
-    //console.log("3пришло:");
-    removePlayerFromGame();
-  };
-
-  const alertUser = (event: any) => {
-    //console.log("2пришло:", event);
-    // ev = JSON.parse(JSON.stringify(event));
-    console.log("Принудительный Финиш:"); // принудительное закрытие
-    for (let i = 0; i < massfaz.length; i++) {
-      if (massfaz[i].runRec === 2)
-        !DEMO && SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
-    }
-    //  event.preventDefault();
-    //  event.returnValue = "";
-  };
-
-  function removePlayerFromGame() {
-    throw new Error("Function not implemented.");
-  }
   //========================================================
   return (
     <Grid container sx={{ height: "99.9vh" }}>

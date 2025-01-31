@@ -162,14 +162,6 @@ export const styleBoxFormArea = {
     width: "253px",
   },
 };
-
-// export const styleBoxFormID = {
-//   '& > :not(style)': {
-//     marginTop: '-9px',
-//     marginLeft: '-12px',
-//     width: '253px',
-//   },
-// };
 //=== ProcessObject ===================================================
 export const styleModalMenu = {
   fontSize: 15,
@@ -309,8 +301,6 @@ export const styleSetFazaNull = {
   width: "30px",
   maxHeight: "19px",
   minHeight: "19px",
-  //bgcolor: "background.paper",
-  //bgcolor: "#F1F5FB", // светло-серый
 };
 
 export const styleSetFaza = {
@@ -320,8 +310,6 @@ export const styleSetFaza = {
   width: "30px",
   maxHeight: "19px",
   minHeight: "19px",
-  //maxHeight: "17px",
-  //minHeight: "17x",
   bgcolor: "#FFFBE5", // молоко
   border: "1px solid #000",
   borderRadius: 1,
@@ -336,22 +324,6 @@ export const styleBoxFormFaza = {
     width: "32px",
   },
 };
-
-// export const styleZId = {
-//   fontSize: 19,
-//   transform: 'rotate(270deg)',
-//   position: 'relative',
-//   top: '50%',
-//   color: 'blue',
-// };
-
-// export const styleVId = {
-//   fontSize: 19,
-//   transform: 'rotate(90deg)',
-//   position: 'relative',
-//   top: '50%',
-//   color: 'blue',
-// };
 //=====================================================================
 export const styleSetPK01 = (wdth: number, hdth: number) => {
   const styleSetPK01 = {

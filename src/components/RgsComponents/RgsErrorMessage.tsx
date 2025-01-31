@@ -16,8 +16,9 @@ const GsErrorMessage = (props: { sErr: string; setOpen: any }) => {
     marginTop: "15vh",
     marginLeft: "24vh",
     width: 380,
-    bgcolor: 'background.paper',
-    border: '1px solid #fff',
+    //bgcolor: 'background.paper', // белый
+    bgcolor: '#FFDB4D', // жёлтый
+    border: '1px solid #FFEDA6',
     borderRadius: 1,
     boxShadow: 24,
     p: 1.5,
@@ -31,7 +32,7 @@ const GsErrorMessage = (props: { sErr: string; setOpen: any }) => {
     height: "21px",
     maxWidth: "2%",
     minWidth: "2%",
-    color: "red",
+    color: "black",
     textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
   };
 
@@ -50,7 +51,8 @@ const GsErrorMessage = (props: { sErr: string; setOpen: any }) => {
           variant="h6"
           sx={{
             textAlign: "center",
-            color: "red",
+            //color: "red",
+            color: "black",
             textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
           }}
         >
