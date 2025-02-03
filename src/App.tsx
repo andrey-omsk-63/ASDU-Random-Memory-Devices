@@ -110,6 +110,11 @@ export interface NameMode {
 }
 export let massMode: NameMode[] = [];
 
+export interface Fragments {
+  name: string;
+  bounds: Array<Array<number>>;
+}
+
 export let Coordinates: Array<Array<number>> = []; // массив координат
 
 let flagOpenDebug = true;

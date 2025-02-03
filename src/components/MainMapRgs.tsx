@@ -15,6 +15,7 @@ import RgsProcessObject from "./RgsComponents/RgsProcessObject";
 import RgsAppointVertex from "./RgsComponents/RgsAppointVertex";
 import RgsToDoMode from "./RgsComponents/RgsToDoMode";
 import GsSetup from "./RgsComponents/GsSetup";
+import GsFragments from "./RgsComponents/GsFragments";
 
 import { getMassMultiRouteOptions, Distance } from "./RgsServiceFunctions";
 import { getMassMultiRouteOptionsDemo } from "./RgsServiceFunctions";
@@ -28,6 +29,8 @@ import { YandexServices, TakeAreaId, TakeAreaIdd } from "./RgsServiceFunctions";
 
 import { SendSocketGetSvg, SendSocketDispatch } from "./RgsSocketFunctions";
 
+//import { Fragments } from "./../App";
+
 import { YMapsModul, MyYandexKey, NoClose } from "./MapConst";
 
 import { styleMenuGl } from "./MainMapStyle";
@@ -37,8 +40,7 @@ export let PressESC = false; // был нажат Esc при вводе марш
 let flagOpen = false;
 let needRend = false;
 
-const zoomStart = 10;
-export let zoom = zoomStart;
+export let zoom = 10;
 let pointCenter: any = 0;
 
 let massMem: Array<number> = [];
@@ -100,10 +102,12 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const DEMO = datestat.demo;
   const homeRegion = datestat.region;
   const SL = homeRegion < 10 ? 2 : 3;
+  //const Fragments: Fragments | null = map.fragments;
   const dispatch = useDispatch();
   //===========================================================
   const [flagPusk, setFlagPusk] = React.useState(false);
   const [needSetup, setNeedSetup] = React.useState(false);
+  const [fragments, setFragments] = React.useState(false);
   const [createObject, setCreateObject] = React.useState(false);
   const [processObject, setProcessObject] = React.useState(false);
   const [appoint, setAppoint] = React.useState(false);
@@ -465,7 +469,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       funcBound = function () {
         pointCenter = mapp.current.getCenter();
         zoom = mapp.current.getZoom(); // покрутили колёсико мыши
-        //ZOOM = zoom;
         SaveZoom(zoom, pointCenter);
       };
       mapp.current.events.add("boundschange", funcBound);
@@ -559,6 +562,15 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           break;
         case 56: // настройки
           setNeedSetup(true);
+          GoTo51();
+          break;
+        case 57: // настройки
+          console.log("FRAGMENTS:", map.fragments);
+          soobErr =
+            "Нет фрагментов Яндекс-карты для вашего аккаунта, создайте их на главной странице системы";
+          if (!map.fragments) {
+            setOpenSoobErr(true);
+          } else setFragments(true);
           GoTo51();
       }
     }
@@ -700,6 +712,12 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     };
   });
   //========================================================
+
+  const SetFragments = (mode: boolean) => {
+    console.log("0MODE:", mode);
+    setFragments(mode);
+  };
+
   return (
     <Grid container sx={{ height: "99.9vh" }}>
       <Grid item xs={12}>
@@ -734,6 +752,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                   {appoint && datestat.readyPict && (
                     <RgsAppointVertex setOpen={setAppoint} idx={idxObj} />
                   )}
+                  {fragments && <GsFragments close={SetFragments} />}
                   {openSoobErr && (
                     <GsErrorMessage setOpen={setOpenSoobErr} sErr={soobErr} />
                   )}

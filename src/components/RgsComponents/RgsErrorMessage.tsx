@@ -5,8 +5,6 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 
-//import { styleModalEnd } from '../MainMapStyle';
-
 const GsErrorMessage = (props: { sErr: string; setOpen: any }) => {
   const [openSet, setOpenSet] = React.useState(true);
 
@@ -17,9 +15,11 @@ const GsErrorMessage = (props: { sErr: string; setOpen: any }) => {
     marginLeft: "24vh",
     width: 380,
     //bgcolor: 'background.paper', // белый
-    bgcolor: '#FFDB4D', // жёлтый
-    border: '1px solid #FFEDA6',
+    bgcolor: "#FFDB4D", // жёлтый
+    border: "1px solid #FFEDA6", // блендно-жёлтый
     borderRadius: 1,
+    color: "black",
+    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
     boxShadow: 24,
     p: 1.5,
   };
@@ -33,7 +33,6 @@ const GsErrorMessage = (props: { sErr: string; setOpen: any }) => {
     maxWidth: "2%",
     minWidth: "2%",
     color: "black",
-    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
   };
 
   const handleClose = () => {
@@ -47,15 +46,7 @@ const GsErrorMessage = (props: { sErr: string; setOpen: any }) => {
         <Button sx={styleModalEnd} onClick={handleClose}>
           &#10006;
         </Button>
-        <Typography
-          variant="h6"
-          sx={{
-            textAlign: "center",
-            //color: "red",
-            color: "black",
-            textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
-          }}
-        >
+        <Typography variant="h6" sx={{ textAlign: "center" }}>
           {props.sErr}
         </Typography>
       </Box>

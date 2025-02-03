@@ -637,8 +637,9 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     top: "50%",
     transform: "translate(-50%, -50%)",
     width: 400,
-    bgcolor: "background.paper",
-    border: "1px solid #fff", // белый
+    //bgcolor: "background.paper",
+    bgcolor: "#fff6d2", // светло-жёлтый
+    border: "1px solid #fff6d2", // светло-жёлтый
     borderRadius: 1,
     textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
     boxShadow: 24,
@@ -655,6 +656,7 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     borderRadius: 1,
     boxShadow: 6,
     textTransform: "unset !important",
+    lineHeight: 2.0,
     color: "black",
   };
 
@@ -671,7 +673,7 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
         </Typography>
         <Box sx={{ marginTop: 0.5 }}>
           <Box sx={{ marginBottom: 1.2 }}>
-            <b>Будет произведён выход без сохранения. Продолжать?</b>
+            Будет произведён выход без сохранения. Продолжать?
           </Box>
           <Button sx={styleModalMenu} onClick={() => handleClose(true)}>
             Да
@@ -1728,6 +1730,7 @@ const StrokaMenuFooter = (soob: string, handleClose: Function) => {
     color: "black",
     textTransform: "unset !important",
     //padding: "3px 0px 0px 0px",
+    lineHeight: 2.5,
     boxShadow: 6,
   };
 
@@ -2043,6 +2046,7 @@ export const InputDirect = (func: any) => {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //let curr = currency
     !BAN && setCurrency(Number(event.target.value));
     switch (Number(event.target.value)) {
       case 0: // заголовок
@@ -2060,10 +2064,14 @@ export const InputDirect = (func: any) => {
         break;
       case 4: // Настройки
         func(56);
-        setCurrency(0);
+        setCurrency(1);
         break;
       case 5: // режим Demo
         func(55);
+        break;
+      case 6: // Фрагменты
+        func(57);
+        setCurrency(1);
     }
   };
 
@@ -2074,6 +2082,7 @@ export const InputDirect = (func: any) => {
     "● Показать связи",
     "● Настройки",
     "● Режим Демо",
+    "● Фрагменты",
   ];
   let massKey = [];
   let massDat: any[] = [];
