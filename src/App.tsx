@@ -110,10 +110,14 @@ export interface NameMode {
 }
 export let massMode: NameMode[] = [];
 
-export interface Fragments {
-  name: string;
-  bounds: Array<Array<number>>;
-}
+// export interface Fragments {
+//   fragments: frag[];
+// }
+
+// export interface frag {
+//   name: string;
+//   bounds: Array<Array<number>>;
+// }
 
 export let Coordinates: Array<Array<number>> = []; // массив координат
 
@@ -206,7 +210,6 @@ const App = () => {
     console.log("dateMapGl:", dateMapGl);
     console.log("dateBindingsGl:", JSON.parse(JSON.stringify(dateBindingsGl)));
     console.log("dateAddObjectsGl:", dateAddObjectsGl);
-    //console.log("massdk:", massdk);
   };
 
   const host =

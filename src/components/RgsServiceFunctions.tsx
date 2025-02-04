@@ -405,18 +405,18 @@ export const GetPointData = (
   };
 };
 
-export const GetPointOptions1 = (Hoster: any) => {
-  return {
-    // данный тип макета
-    iconLayout: "default#image",
-    // изображение иконки метки
-    iconImageHref: Hoster(),
-    // размеры метки
-    iconImageSize: [30, 38],
-    // её "ножки" (точки привязки)
-    iconImageOffset: [-15, -38],
-  };
-};
+// export const GetPointOptions1 = (Hoster: any) => {
+//   return {
+//     // данный тип макета
+//     iconLayout: "default#image",
+//     // изображение иконки метки
+//     iconImageHref: Hoster(),
+//     // размеры метки
+//     iconImageSize: [30, 38],
+//     // её "ножки" (точки привязки)
+//     iconImageOffset: [-15, -38],
+//   };
+// };
 
 export const MakeSoobErr = (mode: number, Klu: string, Klu2: string) => {
   let soobErr = "";

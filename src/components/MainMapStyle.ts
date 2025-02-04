@@ -341,7 +341,22 @@ export const styleSetPK01 = (wdth: number, hdth: number) => {
     textAlign: "center",
     padding: "1px 10px 10px 10px",
   };
-  return styleSetPK01;
+
+  const styleSetPK02 = {
+    outline: "none",
+    position: "absolute",
+    left: "50%",
+    top: "45%",
+    transform: "translate(-50%, -50%)",
+    width: wdth,
+    bgcolor: "background.paper",
+    border: "1px solid #FFFFFF",
+    borderRadius: 1,
+    boxShadow: 24,
+    textAlign: "center",
+    padding: "1px 10px 10px 10px",
+  };
+  return hdth ? styleSetPK01 : styleSetPK02;
 };
 
 export const styleSetPK02 = {
@@ -369,4 +384,34 @@ export const styleSetPK04 = {
   marginTop: 1.2,
   display: "flex",
   justifyContent: "center",
+};
+
+export const styleSetPK05 = {
+  overflowX: "auto",
+  minHeight: "1vh",
+  maxHeight: "69vh",
+  width: 321,
+  textAlign: "left",
+  background: "linear-gradient(180deg, #F1F5FB 59%, #DEE8F5 )",
+  border: "1px solid #d4d4d4",
+  borderRadius: 1,
+  color: "black",
+  boxShadow: 3,
+  margin: "3px 0 1px 0",
+  padding: "4px 5px 14px 5px",
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+};
+
+export const styleSetPK06 = {
+  fontSize: 15.0,
+  marginTop: 1,
+  bgcolor: "#E6F5D6",
+  width: 315,
+  maxHeight: "24px",
+  minHeight: "24px",
+  border: "1px solid #d4d4d4", // серый
+  borderRadius: 1,
+  color: "black",
+  textTransform: "unset !important",
+  boxShadow: 4,
 };

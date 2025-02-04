@@ -713,9 +713,22 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   });
   //========================================================
 
-  const SetFragments = (mode: boolean) => {
-    console.log("0MODE:", mode);
-    setFragments(mode);
+  const SetFragments = (idx: number) => {
+    if (idx >= 0 && ymaps) {
+      mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
+      let multiRoute: any = [];
+      multiRoute = new ymaps.multiRouter.MultiRoute(
+        { referencePoints: map.fragments[idx].bounds },
+        {
+          boundsAutoApply: true, // вписать в границы
+          routeActiveStrokeWidth: 0, // толщина линии
+          routeStrokeWidth: 0, // толщина линии альтернативного маршрута
+          wayPointVisible: false,
+        }
+      );
+      mapp.current.geoObjects.add(multiRoute);
+    }
+    setFragments(false);
   };
 
   return (
