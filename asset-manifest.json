@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/ASDU-Random-Memory-Devices/static/css/main.3ca7eb09.css",
-    "main.js": "/ASDU-Random-Memory-Devices/static/js/main.06959b54.js",
+    "main.js": "/ASDU-Random-Memory-Devices/static/js/main.c460e42e.js",
     "static/js/453.7dda4018.chunk.js": "/ASDU-Random-Memory-Devices/static/js/453.7dda4018.chunk.js",
     "index.html": "/ASDU-Random-Memory-Devices/index.html",
     "main.3ca7eb09.css.map": "/ASDU-Random-Memory-Devices/static/css/main.3ca7eb09.css.map",
-    "main.06959b54.js.map": "/ASDU-Random-Memory-Devices/static/js/main.06959b54.js.map",
+    "main.c460e42e.js.map": "/ASDU-Random-Memory-Devices/static/js/main.c460e42e.js.map",
     "453.7dda4018.chunk.js.map": "/ASDU-Random-Memory-Devices/static/js/453.7dda4018.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.3ca7eb09.css",
-    "static/js/main.06959b54.js"
+    "static/js/main.c460e42e.js"
   ]
 }
