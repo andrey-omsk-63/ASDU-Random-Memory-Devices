@@ -665,9 +665,7 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
   return (
     <Modal open={badExit} onClose={() => handleClose(false)}>
       <Box sx={styleSetPoint}>
-        <Button sx={styleModalEndAttent} onClick={() => handleClose(false)}>
-          <b>&#10006;</b>
-        </Button>
+        {ExitCross(() => handleClose(false))}
         <Typography variant="h6" sx={{ color: "red" }}>
           ⚠️Предупреждение
         </Typography>
