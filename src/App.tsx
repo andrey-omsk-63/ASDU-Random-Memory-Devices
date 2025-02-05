@@ -110,15 +110,6 @@ export interface NameMode {
 }
 export let massMode: NameMode[] = [];
 
-// export interface Fragments {
-//   fragments: frag[];
-// }
-
-// export interface frag {
-//   name: string;
-//   bounds: Array<Array<number>>;
-// }
-
 export let Coordinates: Array<Array<number>> = []; // массив координат
 
 let flagOpenDebug = true;
@@ -132,10 +123,6 @@ let flagAddObjects = false;
 
 const App = () => {
   //== Piece of Redux ======================================
-  // const map = useSelector((state: any) => {
-  //   const { mapReducer } = state;
-  //   return mapReducer.map.dateMap;
-  // });
   let massdk = useSelector((state: any) => {
     const { massdkReducer } = state;
     return massdkReducer.massdk;

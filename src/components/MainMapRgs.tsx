@@ -29,8 +29,6 @@ import { YandexServices, TakeAreaId, TakeAreaIdd } from "./RgsServiceFunctions";
 
 import { SendSocketGetSvg, SendSocketDispatch } from "./RgsSocketFunctions";
 
-//import { Fragments } from "./../App";
-
 import { YMapsModul, MyYandexKey, NoClose } from "./MapConst";
 
 import { styleMenuGl } from "./MainMapStyle";
@@ -102,7 +100,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const DEMO = datestat.demo;
   const homeRegion = datestat.region;
   const SL = homeRegion < 10 ? 2 : 3;
-  //const Fragments: Fragments | null = map.fragments;
   const dispatch = useDispatch();
   //===========================================================
   const [flagPusk, setFlagPusk] = React.useState(false);
@@ -167,6 +164,24 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     },
     [datestat.massPath]
   );
+
+  const SetFragments = (idx: number) => {
+    if (idx >= 0 && ymaps) {
+      mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
+      let multiRoute: any = [];
+      multiRoute = new ymaps.multiRouter.MultiRoute(
+        { referencePoints: map.fragments[idx].bounds },
+        {
+          boundsAutoApply: true, // вписать в границы
+          routeActiveStrokeWidth: 0, // толщина линии
+          routeStrokeWidth: 0, // толщина линии альтернативного маршрута
+          wayPointVisible: false,
+        }
+      );
+      mapp.current.geoObjects.add(multiRoute);
+    }
+    setFragments(false);
+  };
 
   const DoDemo = (ymaps: any, mode: number) => {
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
@@ -564,13 +579,16 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           setNeedSetup(true);
           GoTo51();
           break;
-        case 57: // настройки
-          console.log("FRAGMENTS:", map.fragments);
+        case 57: // фрагменты
           soobErr =
             "Нет фрагментов Яндекс-карты для вашего аккаунта, создайте их на главной странице системы";
           if (!map.fragments) {
             setOpenSoobErr(true);
-          } else setFragments(true);
+          } else {
+            if (!map.fragments.length) {
+              setOpenSoobErr(true);
+            } else setFragments(true);
+          }
           GoTo51();
       }
     }
@@ -712,25 +730,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     };
   });
   //========================================================
-
-  const SetFragments = (idx: number) => {
-    if (idx >= 0 && ymaps) {
-      mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
-      let multiRoute: any = [];
-      multiRoute = new ymaps.multiRouter.MultiRoute(
-        { referencePoints: map.fragments[idx].bounds },
-        {
-          boundsAutoApply: true, // вписать в границы
-          routeActiveStrokeWidth: 0, // толщина линии
-          routeStrokeWidth: 0, // толщина линии альтернативного маршрута
-          wayPointVisible: false,
-        }
-      );
-      mapp.current.geoObjects.add(multiRoute);
-    }
-    setFragments(false);
-  };
-
   return (
     <Grid container sx={{ height: "99.9vh" }}>
       <Grid item xs={12}>
