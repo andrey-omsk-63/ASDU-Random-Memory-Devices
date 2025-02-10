@@ -106,8 +106,9 @@ const GsSetup = (props: { close: Function }) => {
   };
 
   const SetIntervalDop = (valueInp: number) => {
-    massForm.intervalFazaDop = intervalFazaDop = valueInp; // увеличениение длительности фазы ДУ (сек)
-    Haver();
+    if(massForm.intervalFaza)
+    {massForm.intervalFazaDop = intervalFazaDop = valueInp; // увеличениение длительности фазы ДУ (сек)
+    Haver();}
   };
   //========================================================
   const SetupContent = () => {
