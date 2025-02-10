@@ -38,7 +38,7 @@ const GsSetup = (props: { close: Function }) => {
   if (flagInput) {
     HAVE = 0;
     massForm = JSON.parse(JSON.stringify(datestat));
-    massForm.ws = datestat.ws;
+    //massForm.ws = datestat.ws;
     intervalFaza = datestat.intervalFaza;
     intervalFazaDop = datestat.intervalFazaDop;
     typeVert = datestat.typeVert;
@@ -101,14 +101,15 @@ const GsSetup = (props: { close: Function }) => {
 
   const SetInterval = (valueInp: number) => {
     massForm.intervalFaza = intervalFaza = valueInp; // задаваемая длительность фазы ДУ (сек)
-    if(!intervalFaza) massForm.intervalFazaDop = intervalFazaDop = 0; // увеличениение длительности фазы ДУ (сек)
+    if (!intervalFaza) massForm.intervalFazaDop = intervalFazaDop = 0; // увеличениение длительности фазы ДУ (сек)
     Haver();
   };
 
   const SetIntervalDop = (valueInp: number) => {
-    if(massForm.intervalFaza)
-    {massForm.intervalFazaDop = intervalFazaDop = valueInp; // увеличениение длительности фазы ДУ (сек)
-    Haver();}
+    if (massForm.intervalFaza) {
+      massForm.intervalFazaDop = intervalFazaDop = valueInp; // увеличениение длительности фазы ДУ (сек)
+      Haver();
+    }
   };
   //========================================================
   const SetupContent = () => {
