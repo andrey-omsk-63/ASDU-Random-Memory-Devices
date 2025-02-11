@@ -158,9 +158,9 @@ export const SaveZoom = (zoom: number, pointCenter: Array<number>) => {
   window.localStorage.ZoomGs = zoom;
   window.localStorage.PointCenterGs0 = pointCenter[0];
   window.localStorage.PointCenterGs1 = pointCenter[1];
-  //console.log('SaveZoom:',window.localStorage.ZoomGs)
+  //console.log('SaveZoom:',zoom, window.localStorage.ZoomGs)
 };
-
+ 
 export const Distance = (coord1: Array<number>, coord2: Array<number>) => {
   if (coord1[0] === coord2[0] && coord1[1] === coord2[1]) {
     return 0;
