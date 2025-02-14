@@ -160,6 +160,8 @@ const App = () => {
     flagAddObjects = false;
     setOpenMapInfo(true);
 
+    console.log('window.localStorage.counterFazaD:',window.localStorage.counterFazaD)
+
     // достать тип отображаемых связей из LocalStorage
     if (window.localStorage.typeRoute === undefined)
       window.localStorage.typeRoute = 0;
