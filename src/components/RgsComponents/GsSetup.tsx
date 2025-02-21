@@ -17,6 +17,7 @@ let massForm: any = null;
 let flagInput = true;
 let HAVE = 0;
 
+let counterFaza = true; // наличие счётчика длительность фазы ДУ
 let typeRoute = 0; // тип отображаемых связей 1 - mаршрутизированные  0 - неформальные
 let typeVert = 0; // тип отображаемых CO на карте 0 - значки СО 1 - номер фаз 2 - картинка фаз
 let intervalFaza = 0; // Задаваемая длительность фазы ДУ (сек)
@@ -38,10 +39,10 @@ const GsSetup = (props: { close: Function }) => {
   if (flagInput) {
     HAVE = 0;
     massForm = JSON.parse(JSON.stringify(datestat));
-    //massForm.ws = datestat.ws;
+    typeVert = datestat.typeVert;
+    counterFaza = datestat.counterFaza;
     intervalFaza = datestat.intervalFaza;
     intervalFazaDop = datestat.intervalFazaDop;
-    typeVert = datestat.typeVert;
     currenciesDV = PreparCurrenciesDispVert();
     flagInput = false;
   }
@@ -73,9 +74,17 @@ const GsSetup = (props: { close: Function }) => {
       //записать в LocalStorage
       typeRoute = massForm.typeRoute ? 1 : 0;
       window.localStorage.typeRoute = typeRoute; // тип отображаемых связей
-      window.localStorage.typeVert = typeVert; // тип отображаемых CO на карте
-      window.localStorage.intervalFaza = intervalFaza; // задаваемая длительность фазы ДУ (сек)
-      window.localStorage.intervalFazaDop = intervalFazaDop; // увеличениение длительности фазы ДУ (сек)
+
+      // window.localStorage.typeVert = typeVert; // тип отображаемых CO на карте
+      // window.localStorage.intervalFaza = intervalFaza; // задаваемая длительность фазы ДУ (сек)
+      // window.localStorage.intervalFazaDop = intervalFazaDop; // увеличениение длительности фазы ДУ (сек)
+      window.localStorage.typeVert = datestat.typeVert = typeVert;
+      window.localStorage.counterFazaD = counterFaza ? 1 : 0; // наличие счётчика длительность фазы ДУ
+      datestat.counterFaza = counterFaza;
+      window.localStorage.intervalFazaD = datestat.intervalFaza = intervalFaza; // задаваемая длительность фазы ДУ (сек)
+      window.localStorage.intervalFazaDopD = datestat.intervalFazaDop =
+        intervalFazaDop; // увеличениение длительности фазы ДУ (сек)
+
       //записать в datestat
       datestat = massForm;
       dispatch(statsaveCreate(datestat));
@@ -86,6 +95,11 @@ const GsSetup = (props: { close: Function }) => {
   const Haver = () => {
     HAVE++;
     setTrigger(!trigger); // ререндер
+  };
+
+  const ChangeCounter = () => {
+    counterFaza = !counterFaza;
+    Haver();
   };
 
   const ChangeTypeRoute = () => {
@@ -112,6 +126,17 @@ const GsSetup = (props: { close: Function }) => {
     }
   };
   //========================================================
+  const styleSetID = {
+    fontSize: 14,
+    width: "53px",
+    maxHeight: "22px",
+    minHeight: "22px",
+    border: "1px solid #d4d4d4", // серый
+    borderRadius: 1,
+    color: "#A8A8A8", // серый
+    padding: "3px 0px 0px 3px",
+  };
+
   const SetupContent = () => {
     return (
       <>
@@ -119,30 +144,49 @@ const GsSetup = (props: { close: Function }) => {
           Тип отображаемых связей
         </Box>
         {StrTablVert(
+          true,
           7.7,
           "Маршрутизированные (неформальные) связи",
           ShiftOptimal(massForm.typeRoute, ChangeTypeRoute, -0.1)
         )}
         <Box sx={{ fontSize: 12, marginTop: 0.5, color: "#5B1080" }}>
-          Отображение светофорных объектов на маршруте
+          Отображение светофорных объектов на карте
         </Box>
         {StrTablVert(
+          true,
           7.7,
-          "Светофоры отображаются",
+          "Запущенные светофоры отображаются",
           InputFromList(handleChangeDV, currencyDV, currenciesDV)
         )}
         <Box sx={{ fontSize: 12, marginTop: 0.5, color: "#5B1080" }}>
           Параметры перекрёстков
         </Box>
+
         {StrTablVert(
+          true,
           7.7,
-          "Задаваемая длительность фазы ДУ (сек)",
-          WaysInput(0, massForm.intervalFaza, SetInterval, 0, 1000)
+          "Задавать счётчик длительность фазы ДУ",
+          ShiftOptimal(counterFaza, ChangeCounter, -0.1)
         )}
         {StrTablVert(
+          counterFaza,
+          7.7,
+          "Задаваемая длительность фазы ДУ (сек)",
+          counterFaza ? (
+            WaysInput(0, intervalFaza, SetInterval, 0, 1000)
+          ) : (
+            <Box sx={styleSetID}>{intervalFaza}</Box>
+          )
+        )}
+        {StrTablVert(
+          counterFaza,
           7.7,
           "Увеличениение длительности фазы ДУ (сек)",
-          WaysInput(0, massForm.intervalFazaDop, SetIntervalDop, 0, 1000)
+          counterFaza ? (
+            WaysInput(0, intervalFazaDop, SetIntervalDop, 0, 1000)
+          ) : (
+            <Box sx={styleSetID}>{intervalFazaDop}</Box>
+          )
         )}
       </>
     );
@@ -151,7 +195,7 @@ const GsSetup = (props: { close: Function }) => {
   return (
     <>
       <Modal open={open} onClose={CloseEnd} hideBackdrop={false}>
-        <Box sx={styleSetPK01(580, 319)}>
+        <Box sx={styleSetPK01(580, 353)}>
           {ExitCross(handleCloseBad)}
           <Box sx={styleSetPK02}>
             <b>Системные параметры по умолчанию</b>

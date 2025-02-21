@@ -43,7 +43,8 @@ export interface Stater {
   phSvg: Array<any>;
   pictSvg: string | null;
   typeRoute: boolean; // тип отображаемых связей
-  typeVert: number; //  тип отображаемых CO на карте 0 - значки СО 1 - номер фаз 2 - картинка фаз
+  typeVert: number; // тип отображаемых CO на карте: 0 - значки СО 1 - картинка фаз 2 - номер фаз(счётчик)
+  counterFaza: boolean; // наличие счётчика длительность фазы ДУ
   intervalFaza: number; // Задаваемая длительность фазы ДУ (сек)
   intervalFazaDop: number; // Увеличениение длительности фазы ДУ (сек)
   massPath: any; // точки рабочего маршрута
@@ -66,7 +67,8 @@ export let dateStat: Stater = {
   phSvg: [null, null, null, null, null, null, null, null],
   pictSvg: null,
   typeRoute: true, // тип отображаемых связей true - mаршрутизированные  false - неформальные
-  typeVert: 0, // тип отображаемых CO на карте 0 - значки СО 1 - номер фаз 2 - картинка фаз
+  typeVert: 0, // тип отображаемых CO на карте: 0 - значки СО 1 - картинка фаз 2 - номер фаз(счётчик)
+  counterFaza: true, // наличие счётчика длительность фазы ДУ
   intervalFaza: 0, // Задаваемая длительность фазы ДУ (сек)
   intervalFazaDop: 0, // Увеличениение длительности фазы ДУ (сек)
   massPath: null, // точки рабочего маршрута
@@ -172,16 +174,25 @@ const App = () => {
       window.localStorage.typeVert = 0;
     dateStat.typeVert = Number(window.localStorage.typeVert);
 
+    // достать наличие счётчика длительность фазы ДУ из LocalStorage
+    if (window.localStorage.counterFazaD === undefined)
+      window.localStorage.counterFazaD = "0";
+    dateStat.counterFaza = Number(window.localStorage.counterFazaD)
+      ? true
+      : false;
+
     // достать длительность фазы ДУ из LocalStorage
-    if (window.localStorage.intervalFaza === undefined)
-      window.localStorage.intervalFaza = 0;
-    dateStat.intervalFaza = Number(window.localStorage.intervalFaza);
+    if (window.localStorage.intervalFazaD === undefined)
+      window.localStorage.intervalFazaD = "0";
+    dateStat.intervalFaza = Number(window.localStorage.intervalFazaD);
 
     // достать увеличениение длительности фазы ДУ из LocalStorage
-    if (window.localStorage.intervalFazaDop === undefined)
-      window.localStorage.intervalFazaDop = 0;
-    dateStat.intervalFazaDop = Number(window.localStorage.intervalFazaDop);
-
+    if (window.localStorage.intervalFazaDopD === undefined)
+      window.localStorage.intervalFazaDopD = "0";
+    dateStat.intervalFazaDop = !dateStat.intervalFaza
+      ? 0
+      : Number(window.localStorage.intervalFazaDopD);
+      
     // достать начальный zoom Yandex-карты ДУ из LocalStorage
     if (window.localStorage.ZoomGs === undefined)
       window.localStorage.ZoomGs = zoomStart;

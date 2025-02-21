@@ -20,7 +20,7 @@ import { TrafficControl, TypeSelector, ZoomControl } from "react-yandex-maps";
 import { BAN } from "./MainMapRgs";
 
 import { styleAppSt02, styleAppSt03, styleModalEnd } from "./MainMapStyle";
-import { styleModalEndAttent, searchControl } from "./MainMapStyle";
+import { searchControl } from "./MainMapStyle";
 import { styleSetPK04 } from "./MainMapStyle";
 import { styleToDo02 } from "./RgsComponents/GsComponentsStyle";
 
@@ -1828,20 +1828,28 @@ export const ViewSvg = (setOpenSvg: Function, pictSvg: any) => {
   );
 };
 //=== GsSetup ======================================
-export const StrTablVert = (xss: number, recLeft: string, recRight: any) => {
+export const StrTablVert = (
+  mode: boolean,
+  xss: number,
+  recLeft: string,
+  recRight: any
+) => {
+  let coler = mode ? "black" : "#A8A8A8";
   return (
     <>
       <Grid container sx={{ marginTop: 1 }}>
         <Grid item xs={0.25}></Grid>
-        <Grid item xs={xss} sx={{ border: 0 }}>
+
+        <Grid item xs={xss} sx={{ color: coler }}>
           <b>{recLeft}</b>
         </Grid>
+
         {typeof recRight === "object" ? (
           <Grid item xs>
             {recRight}
           </Grid>
         ) : (
-          <Grid item xs sx={{ fontSize: 15, color: "#5B1080", border: 0 }}>
+          <Grid item xs sx={{ fontSize: 15, color: "#5B1080", border: 8 }}>
             <b>{recRight}</b>
           </Grid>
         )}
@@ -1897,7 +1905,7 @@ export const ShiftOptimal = (
 
 export const PreparCurrenciesDispVert = () => {
   const currencies: any = [];
-  let dat = ["значками светофоров", "номерами фаз", "картинками фаз"];
+  let dat = ["значками светофоров", "картинками фаз", "номерами фаз"];
   let massKey: any = [];
   let massDat: any = [];
   for (let key in dat) {
