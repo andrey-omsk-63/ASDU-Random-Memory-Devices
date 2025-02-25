@@ -225,6 +225,7 @@ const RgsDoPlacemarkDo = (props: {
       let iconOffset = Hoster ? -25 : -12.5;
       //  typeVert - тип отображаемых CO на карте 0 - значки СО 1 - номер фаз 2 - картинка фаз
       if (typeVert) {
+        //console.log('GetPointOptions0')
         // номер фазы или картнка фазы
         if (Hoster) imger = "data:image/png;base64," + Hoster;
         if (!Hoster) {
