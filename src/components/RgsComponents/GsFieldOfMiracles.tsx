@@ -31,7 +31,7 @@ const GsFieldOfMiracles = (props: {
   const styleField01 = {
     fontSize: 12,
     color: "#7620A2",
-    padding: "12px 0 0 0",
+    padding: "6px 0 0 0",
   };
 
   const styleField02 = {
@@ -46,27 +46,26 @@ const GsFieldOfMiracles = (props: {
   return (
     <Grid item xs={1.4} sx={styleField01}>
       {props.finish && massfaz[props.idx].id <= 10000 && intervalfaza > 0 && (
-        <Grid container>
+        <Grid
+          container
+          sx={{ cursor: "pointer" }}
+          onClick={() => props.func(props.idx)}
+          onMouseEnter={() => setHint(true)}
+          onMouseLeave={() => setHint(false)}
+        >
           <Grid item xs={5} sx={{ textAlign: "right" }}>
             {intervalFazaDop > 0 && (
               <>
-                <Box
-                  sx={{ fontSize: 16, cursor: "pointer" }}
-                  onClick={() => props.func(props.idx)}
-                  onMouseEnter={() => setHint(true)}
-                  onMouseLeave={() => setHint(false)}
-                >
+                <Box sx={{ fontSize: 21 }}>
                   <AiTwotoneRightCircle />
                 </Box>
                 {hint && (
-                  <Box sx={styleField02}>
-                    Увеличить длительность фазы ДУ на {intervalFazaDop}сек.
-                  </Box>
+                  <Box sx={styleField02}>Увеличить на {intervalFazaDop}сек</Box>
                 )}
               </>
             )}
           </Grid>
-          <Grid item xs sx={{ textAlign: "center", cursor: "default" }}>
+          <Grid item xs sx={{ padding: "4px 0 0 0", textAlign: "center" }}>
             {intervalfaza}
           </Grid>
         </Grid>

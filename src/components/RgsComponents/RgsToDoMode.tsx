@@ -76,7 +76,7 @@ const RgsToDoMode = (props: {
   });
   const dispatch = useDispatch();
 
-  //console.log("Props:", props.massMem, props.trigger, props.changeFaz, massfaz);
+  //console.log("datestat:", datestat);
   //========================================================
   const debug = datestat.debug;
   const ws = datestat.ws;
@@ -87,8 +87,10 @@ const RgsToDoMode = (props: {
   const [flagPusk, setFlagPusk] = React.useState(false);
   let intervalFaza = datestat.intervalFaza; // Задаваемая длительность фазы ДУ (сек)
   let intervalFazaDop = datestat.intervalFazaDop; // Увеличениение длительности фазы ДУ (сек)
+  if (!datestat.counterFaza) intervalFaza = intervalFazaDop = 0; // наличие счётчика длительность фазы ДУ
   let timer = debug || DEMO ? 20000 : 60000;
   let hTabl = DEMO ? "78vh" : "81vh";
+  //let hTabl = "80vh";
 
   const MakeMaskFaz = (i: number) => {
     let maskFaz: Fazer = JSON.parse(JSON.stringify(MaskFaz));
@@ -281,7 +283,7 @@ const RgsToDoMode = (props: {
     massfaz[mode].runRec = DEMO ? 4 : 2;
     dispatch(massfazCreate(massfaz));
 
-    console.log(mode + 1 + "-й светофор", DEMO, massfaz[mode].runRec);
+    //console.log(mode + 1 + "-й светофор", DEMO, massfaz[mode].runRec);
     //=========================================================================
     if (DEMO) massfaz[mode].faza = massfaz[mode].fazaBegin;
     setTrigger(!trigger);
@@ -516,7 +518,7 @@ const RgsToDoMode = (props: {
         <Grid key={idx} container sx={{ marginTop: "12px" }}>
           <Grid item xs={0.8} sx={{ paddingTop: 0.7, textAlign: "center" }}>
             <Button sx={illum} onClick={() => ClickKnop(idx)}>
-              {idx + 1}
+              {massf.id}
             </Button>
           </Grid>
           <GsFieldOfMiracles finish={finish} idx={idx} func={ClickAddition} />

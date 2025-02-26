@@ -52,8 +52,9 @@ export const styleToDoMode = {
 };
 
 export const styleStrokaTabl01 = {
-  maxWidth: "24px",
-  minWidth: "24px",
+  fontSize: 13.5,
+  maxWidth: "44px",
+  minWidth: "44px",
   maxHeight: "24px",
   minHeight: "24px",
   bgcolor: "#BAE186", // тёмно-салатовый
@@ -66,10 +67,11 @@ export const styleStrokaTabl01 = {
 };
 
 export const styleStrokaTabl02 = {
+  fontSize: 14,
   border: "1px solid #000",
   bgcolor: "#E6F5D6",
-  maxWidth: "24px",
-  minWidth: "24px",
+  maxWidth: "44px",
+  minWidth: "44px",
   maxHeight: "24px",
   minHeight: "24px",
   borderColor: "#d4d4d4", // серый
@@ -107,7 +109,7 @@ export const styleStrokaBoxlImg = {
 
 export const styleStrokaTakt = {
   fontSize: 12,
-  paddingTop: 2.0,
+  paddingTop: 1.7,
   textAlign: "right",
 };
 
@@ -140,13 +142,14 @@ export const styleToDo02 = {
   textAlign: "center",
   color: "#7620a2", // сиреневый
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  display: "inline-block",
 };
 
 export const styleToDo03 = {
   fontSize: 30,
-  //color: "#B51EFF", // светло-сереневый
   color: "#7620A2", // тёмно-сереневый
   marginLeft: 1,
+  marginTop: "-2px",
 };
 //========================================================
 //⬆⬆ ↗⬈ ➡⮕  ↘⬊ ⬇⬇ ↙⬋ ⬅⬅ ↖⬉

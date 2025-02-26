@@ -90,7 +90,6 @@ export const MasskPoint = (debug: boolean, rec: any, imgFaza: string) => {
     phases: [],
     phSvg: [],
   };
-  let img = null;
   masskPoint.ID = rec.ID;
   masskPoint.coordinates[0] = rec.points.Y;
   masskPoint.coordinates[1] = rec.points.X;
@@ -98,7 +97,11 @@ export const MasskPoint = (debug: boolean, rec: any, imgFaza: string) => {
   masskPoint.region = Number(rec.region.num);
   masskPoint.area = Number(rec.area.num);
   masskPoint.phases = rec.phases;
-  for (let i = 0; i < 8; i++) masskPoint.phSvg.push(img);
+  for (let i = 0; i < 8; i++) {
+    let img: any = debug ? imgFaza : null;
+    if (i % 2) img = null; // на localhost картинка - число через одну
+    masskPoint.phSvg.push(img);
+  }
   return masskPoint;
 };
 
@@ -160,7 +163,7 @@ export const SaveZoom = (zoom: number, pointCenter: Array<number>) => {
   window.localStorage.PointCenterGs1 = pointCenter[1];
   //console.log('SaveZoom:',zoom, window.localStorage.ZoomGs)
 };
- 
+
 export const Distance = (coord1: Array<number>, coord2: Array<number>) => {
   if (coord1[0] === coord2[0] && coord1[1] === coord2[1]) {
     return 0;
@@ -571,7 +574,7 @@ export const OutputVertexImg = (host: string) => {
 
 export const HeadingTabl = (DEMO: boolean) => {
   return (
-    <Grid container>
+    <Grid container sx={{}}>
       <Grid item xs sx={styleToDo02}>
         <em>
           Режим:{" "}
@@ -580,27 +583,40 @@ export const HeadingTabl = (DEMO: boolean) => {
           </b>
         </em>
         {DEMO && (
-          <Box sx={{ fontSize: 15, color: "red" }}>
-            {"( "}демонстрационный{" )"}
-          </Box>
+          <>
+            <Box sx={{ color: "background.paper", display: "inline-block" }}>
+              {"."}
+            </Box>
+            <Box sx={{ fontSize: 15, color: "red", display: "inline-block" }}>
+              {" ( "}демонстрационный{" )"}
+            </Box>
+          </>
         )}
       </Grid>
     </Grid>
   );
 };
 
-export const StrokaHeader = (xss: number, soob: string) => {
+const StrokaHeader = (xss: number, soob: string) => {
   return (
-    <Grid item xs={xss} sx={{ fontSize: 14, textAlign: "center" }}>
-      <b>{soob}</b>
-    </Grid>
+    <>
+      {soob !== "id" ? (
+        <Grid item xs={xss} sx={{ fontWeight: 500, textAlign: "center" }}>
+          {soob}
+        </Grid>
+      ) : (
+        <Grid item xs={xss} sx={{ textAlign: "center" }}>
+          <em>[{soob}]</em>
+        </Grid>
+      )}
+    </>
   );
 };
 
 export const HeaderTabl = () => {
   return (
     <Grid container sx={{ bgcolor: "#B8CBB9" }}>
-      {StrokaHeader(1, "Номер")}
+      {StrokaHeader(1, "id")}
       {StrokaHeader(3.6, "Состояние")}
       {StrokaHeader(1.9, "Фаза")}
       {StrokaHeader(5.5, "ДК")}

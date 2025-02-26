@@ -11,6 +11,7 @@ import { GetPointData } from "../RgsServiceFunctions";
 import { zoom } from "../MainMapRgs";
 
 let FAZASIST = -1;
+let FAZASISTold = -1;
 let nomInMassfaz = -1;
 
 const RgsDoPlacemarkDo = (props: {
@@ -56,14 +57,19 @@ const RgsDoPlacemarkDo = (props: {
     mapp = map.tflight[idx].tlsost.num.toString();
     mappp = map.tflight[idx];
   }
-  if (props.massMem.length >= 1) pC = props.massMem.indexOf(props.idx);
+
+  let lengMem = props.massMem.length;
+
+  if (lengMem >= 1) pC = props.massMem.indexOf(props.idx);
   let fazaImg: null | string = null;
   FAZASIST = -1;
+  FAZASISTold = -1;
   nomInMassfaz = -1;
   if (pC >= 0) {
     for (let i = 0; i < massfaz.length; i++) {
       if (mappp.idevice === massfaz[i].idevice) {
         FAZASIST = massfaz[i].fazaSist;
+        FAZASISTold = massfaz[i].fazaSistOld;
         nomInMassfaz = i;
         if (massfaz[i].fazaSist === 11 || massfaz[i].fazaSist === 15) {
           nomSvg = 12; // ОС
@@ -90,6 +96,9 @@ const RgsDoPlacemarkDo = (props: {
   }
 
   const Hoster = React.useCallback(() => {
+    //if (lengMem >= 2 && typeVert)
+    //console.log("Hoster:", idx, pC, props.massMem);
+
     let hostt =
       window.location.origin.slice(0, 22) === "https://localhost:3000"
         ? "https://localhost:3000/"
@@ -108,8 +117,19 @@ const RgsDoPlacemarkDo = (props: {
       host = window.location.origin + "/free/img/trafficLights/" + mpp + ".svg";
     } else if (DEMO) host = hostt + "1.svg";
 
+    if (lengMem >= 2 && typeVert && pC >= 0 && FAZASIST > 0 && FAZASIST !== 9) {
+      // картинка с номером фазы
+      let hostt =
+        window.location.origin.slice(0, 22) === "https://localhost:3000"
+          ? "https://localhost:3000/phases/"
+          : "./phases/";
+      host = debug
+        ? hostt + FAZASIST + ".svg"
+        : "/file/static/img/buttons/" + FAZASIST + ".svg";
+    }
+
     return host;
-  }, [mapp, nomSvg, idx, props.vert, debug, DEMO]);
+  }, [mapp, nomSvg, idx, props.vert, debug, DEMO, pC, lengMem, typeVert]);
 
   const createChipsLayout = React.useCallback(
     (calcFunc: Function, currnum: number, rotateDeg?: number) => {
@@ -271,7 +291,9 @@ const RgsDoPlacemarkDo = (props: {
 
     return pC < 0 ||
       FAZASIST < 0 ||
-      (FAZASIST === 9 && massfaz[nomInMassfaz].fazaSistOld < 0)
+      (FAZASIST === 9 && FAZASISTold < 0) ||
+      (lengMem > 2 && typeVert === 2) ||
+      (lengMem > 2 && typeVert === 1 && !fazaImg)
       ? {
           iconLayout: createChipsLayout(calculate, numSost),
         }
@@ -280,10 +302,11 @@ const RgsDoPlacemarkDo = (props: {
     createChipsLayout,
     GetPointOptions0,
     mappp.tlsost.num,
-    massfaz,
     fazaImg,
     pC,
     DEMO,
+    lengMem,
+    typeVert,
   ]);
 
   const getPointOptions2 = () => {
@@ -313,15 +336,7 @@ const RgsDoPlacemarkDo = (props: {
         onClick={() => props.OnPlacemarkClickPoint(idx)}
       />
     ),
-    [
-      idx,
-      map,
-      addobj,
-      getPointOptions1,
-      //getPointOptions2,
-      bindings,
-      props,
-    ]
+    [idx, map, addobj, getPointOptions1, bindings, props]
   );
   return MemoPlacemarkDo;
 };

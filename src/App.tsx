@@ -141,16 +141,20 @@ const App = () => {
   //========================================================
   const Initialisation = () => {
     let deb = dateStat.debug;
+    let img: any = deb ? imgFaza : null;
     for (let i = 0; i < dateMapGl.tflight.length; i++) {
       let coord = [];
       coord[0] = dateMapGl.tflight[i].points.Y;
       coord[1] = dateMapGl.tflight[i].points.X;
       coordinates.push(coord);
-      let masskPoint = MasskPoint(deb, dateMapGl.tflight[i], imgFaza);
+      let masskPoint = MasskPoint(deb, dateMapGl.tflight[i], img);
       massdk.push(masskPoint);
     }
     dispatch(coordinatesCreate(coordinates));
     dispatch(massdkCreate(massdk));
+
+    console.log("massdk:", massdk);
+
     // запросы на получение изображения фаз
     for (let i = 0; i < massdk.length; i++) {
       let reg = massdk[i].region.toString();
@@ -162,7 +166,10 @@ const App = () => {
     flagAddObjects = false;
     setOpenMapInfo(true);
 
-    console.log('window.localStorage.counterFazaD:',window.localStorage.counterFazaD)
+    console.log(
+      "window.localStorage.counterFazaD:",
+      window.localStorage.counterFazaD
+    );
 
     // достать тип отображаемых связей из LocalStorage
     if (window.localStorage.typeRoute === undefined)
@@ -192,7 +199,7 @@ const App = () => {
     dateStat.intervalFazaDop = !dateStat.intervalFaza
       ? 0
       : Number(window.localStorage.intervalFazaDopD);
-      
+
     // достать начальный zoom Yandex-карты ДУ из LocalStorage
     if (window.localStorage.ZoomGs === undefined)
       window.localStorage.ZoomGs = zoomStart;
@@ -252,11 +259,7 @@ const App = () => {
 
     const ActionOnGetPhases = (data: any) => {
       for (let i = 0; i < massdk.length; i++) {
-        if (
-          massdk[i].region.toString() === data.pos.region &&
-          massdk[i].area.toString() === data.pos.area &&
-          massdk[i].ID === data.pos.id
-        ) {
+        if (massdk[i].ID === data.pos.id) {
           if (data.phases) {
             if (data.phases.length) {
               for (let j = 0; j < data.phases.length; j++)
@@ -264,12 +267,19 @@ const App = () => {
               dispatch(massdkCreate(massdk));
             }
             break;
+          } else {
+            massdk[i].phSvg[0] = imgFaza; // костыль
+            massdk[i].phSvg[1] = null;
+            massdk[i].phSvg[2] = imgFaza;
+            massdk[i].phSvg[3] = null;
+            massdk[i].phSvg[4] = imgFaza;
           }
         }
       }
     };
 
     const ActionOnPhases = (data: any) => {
+      //console.log("Phases:", data);
       let flagChange = false;
       for (let i = 0; i < data.phases.length; i++) {
         for (let j = 0; j < massfaz.length; j++) {
