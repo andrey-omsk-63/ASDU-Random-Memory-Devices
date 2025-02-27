@@ -708,8 +708,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   }
 
   const handleTabClosing = () => {
-    console.log("2Принудительный Финиш:", massfaz); // принудительное закрытие
-    alert("финиш2");
     for (let i = 0; i < massfaz.length; i++) {
       if (massfaz[i].runRec === 2)
         !DEMO && SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
@@ -718,8 +716,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const alertUser = (event: any) => {
-    console.log("1Принудительный Финиш:", massfaz); // принудительное закрытие
-    alert("финиш1");
     for (let i = 0; i < massfaz.length; i++) {
       if (massfaz[i].runRec === 2)
         !DEMO && SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
