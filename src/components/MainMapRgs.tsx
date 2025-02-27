@@ -48,7 +48,6 @@ let massKlu: Array<string> = []; // массив ключей
 let massNomBind: Array<number> = []; // массив номеров светофоров в bindings
 let soobErr = "";
 let xsMap = 11.99;
-let xsTab = 0.01;
 let widthMap = "99.9%";
 
 let modeToDo = 0;
@@ -557,7 +556,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           break;
         case 53: // выполнить режим
           xsMap = 7.7;
-          xsTab = 4.3;
+          //xsTab = 4.3;
           widthMap = "99.9%";
           setToDoMode(true);
           setRestartBan((BAN = true));
@@ -597,7 +596,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const OldSizeWind = (size: number) => {
     console.log("КОНЕЦ!!!");
     xsMap = size;
-    xsTab = 0.01;
+    //xsTab = 0.01;
     widthMap = "99.9%";
     modeToDo = 0;
     setToDoMode(false);
@@ -709,11 +708,18 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   }
 
   const handleTabClosing = () => {
+    console.log("2Принудительный Финиш:", massfaz); // принудительное закрытие
+    alert("финиш2");
+    for (let i = 0; i < massfaz.length; i++) {
+      if (massfaz[i].runRec === 2)
+        !DEMO && SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
+    }
     removePlayerFromGame();
   };
 
   const alertUser = (event: any) => {
-    console.log("Принудительный Финиш:"); // принудительное закрытие
+    console.log("1Принудительный Финиш:", massfaz); // принудительное закрытие
+    alert("финиш1");
     for (let i = 0; i < massfaz.length; i++) {
       if (massfaz[i].runRec === 2)
         !DEMO && SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
@@ -773,8 +779,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
             )}
           </Grid>
         </Grid>
-
-        {/* <Grid item xs={xsTab} sx={{ height: "97.0vh" }}> */}
         {toDoMode && (
           <Box sx={styleServisTable}>
             <RgsToDoMode
@@ -793,7 +797,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           </Box>
         )}
       </Grid>
-      {/* </Grid> */}
       {needSetup && <GsSetup close={setNeedSetup} />}
     </Grid>
   );
