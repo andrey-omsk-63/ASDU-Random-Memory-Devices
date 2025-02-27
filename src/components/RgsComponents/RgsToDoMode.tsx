@@ -357,7 +357,9 @@ const RgsToDoMode = (props: {
     datestat.timerId[idx] = null;
     massfaz[idx].runRec = DEMO ? 5 : 1;
     massfaz[idx].fazaSist = -1;
-    console.log(idx + 1 + "-й светофор закрыт!!!", timerId);
+
+    console.log(idx + 1 + "-й светофор закрыт!!!");
+
     dispatch(statsaveCreate(datestat));
     dispatch(massfazCreate(massfaz));
     FindEnd();
@@ -541,16 +543,16 @@ const RgsToDoMode = (props: {
               </Box>
             )}
           </Grid>
-          <Grid item xs={0.4} sx={styleToDo03}>
+          <Grid item xs={0.2} sx={styleToDo03}>
             {bull}
           </Grid>
-          <Grid item xs={1.1} sx={styleStrokaTakt}>
+          <Grid item xs={1.0} sx={styleStrokaTakt}>
             {takt}
           </Grid>
           <Grid item xs={2} sx={{ textAlign: "center" }}>
             {pictImg}
           </Grid>
-          <Grid item xs sx={{ fontSize: 14, padding: "6px 0px 0px 0px" }}>
+          <Grid item xs sx={{ fontSize: 14, padding: "6px 0 0 0" }}>
             {massf.name}
           </Grid>
         </Grid>

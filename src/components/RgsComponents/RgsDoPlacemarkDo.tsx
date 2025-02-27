@@ -96,9 +96,6 @@ const RgsDoPlacemarkDo = (props: {
   }
 
   const Hoster = React.useCallback(() => {
-    //if (lengMem >= 2 && typeVert)
-    //console.log("Hoster:", idx, pC, props.massMem);
-
     let hostt =
       window.location.origin.slice(0, 22) === "https://localhost:3000"
         ? "https://localhost:3000/"
@@ -245,7 +242,6 @@ const RgsDoPlacemarkDo = (props: {
       let iconOffset = Hoster ? -25 : -12.5;
       //  typeVert - тип отображаемых CO на карте 0 - значки СО 1 - номер фаз 2 - картинка фаз
       if (typeVert) {
-        //console.log('GetPointOptions0')
         // номер фазы или картнка фазы
         if (Hoster) imger = "data:image/png;base64," + Hoster;
         if (!Hoster) {

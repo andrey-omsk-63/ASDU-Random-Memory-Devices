@@ -1,4 +1,4 @@
-//=== GsSetPhase =========================================
+//=== GsToDoMode =========================================
 export const styleModalMenu = {
   marginTop: 0.5,
   marginRight: 1,
@@ -12,49 +12,28 @@ export const styleModalMenu = {
   //textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
 
-export const styleBoxFormFaza = {
-  "& > :not(style)": {
-    marginTop: "-10px",
-    marginLeft: "-12px",
-    width: "36px",
-  },
-};
-
-export const styleSet = {
-  width: "512px",
-  maxHeight: "4px",
-  minHeight: "4px",
-  bgcolor: "#FFFBE5",
-  boxShadow: 3,
-  textAlign: "center",
-  p: 1,
-};
-
-export const styleBoxFormName = {
-  "& > :not(style)": {
-    marginTop: "-9px",
-    marginLeft: "-8px",
-    width: "530px",
-  },
-};
-//=== GsToDoMode =========================================
 export const styleToDoMode = {
-  position: "relative",
-  marginTop: 0.1,
-  marginLeft: "auto",
-  marginRight: 1,
-  width: "96%",
+  // position: "relative",
+  // marginTop: 0.1,
+  // marginLeft: "auto",
+  // marginRight: 1,
+  // width: "96%",
+  // bgcolor: "background.paper",
+  // border: "3px solid #fff",
+  // borderRadius: 1,
+  // boxShadow: 24,
+  // p: 1.0,
   bgcolor: "background.paper",
-  border: "3px solid #fff",
+  border: "1px solid #fff",
   borderRadius: 1,
   boxShadow: 24,
-  p: 1.0,
+  padding: "2px 10px 10px 10px",
 };
 
 export const styleStrokaTabl01 = {
   fontSize: 13.5,
   maxWidth: "44px",
-  minWidth: "44px",
+  minWidth: "1px",
   maxHeight: "24px",
   minHeight: "24px",
   bgcolor: "#BAE186", // тёмно-салатовый
@@ -71,7 +50,7 @@ export const styleStrokaTabl02 = {
   border: "1px solid #000",
   bgcolor: "#E6F5D6",
   maxWidth: "44px",
-  minWidth: "44px",
+  minWidth: "1px",
   maxHeight: "24px",
   minHeight: "24px",
   borderColor: "#d4d4d4", // серый
@@ -115,16 +94,23 @@ export const styleStrokaTakt = {
 
 export const StyleToDoMode = (DEMO: boolean) => {
   const styleToDoMode = {
-    position: "relative",
-    marginTop: 0.1,
-    marginLeft: "auto",
-    marginRight: 1,
-    width: "96%",
+    // position: "relative",
+    // marginTop: 0.1,
+    // marginLeft: "auto",
+    // marginRight: 1,
+    // width: "95.1%",
+    // width: "340px",
+    // bgcolor: "background.paper",
+    // border: "1px solid #fff",
+    // borderRadius: 1,
+    // boxShadow: 24,
+    // p: 1.0,
+    // padding: "3px 10px 10px 10px",
     bgcolor: "background.paper",
     border: "1px solid #fff",
     borderRadius: 1,
     boxShadow: 24,
-    p: 1.0,
+    padding: "2px 9px 10px 10px",
   };
   return styleToDoMode;
 };
@@ -138,7 +124,7 @@ export const styleToDo01 = {
 };
 
 export const styleToDo02 = {
-  fontSize: 18,
+  fontSize: 16,
   textAlign: "center",
   color: "#7620a2", // сиреневый
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",

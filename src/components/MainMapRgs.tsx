@@ -31,7 +31,7 @@ import { SendSocketGetSvg, SendSocketDispatch } from "./RgsSocketFunctions";
 
 import { YMapsModul, MyYandexKey, NoClose } from "./MapConst";
 
-import { styleMenuGl } from "./MainMapStyle";
+import { styleMenuGl, styleServisTable } from "./MainMapStyle";
 
 export let BAN = false;
 export let PressESC = false; // был нажат Esc при вводе маршрута
@@ -772,26 +772,29 @@ const MainMapRgs = (props: { trigger: boolean }) => {
               </YMaps>
             )}
           </Grid>
-          <Grid item xs={xsTab} sx={{ height: "97.0vh" }}>
-            {toDoMode && (
-              <RgsToDoMode
-                massMem={massMem}
-                massCoord={massCoord}
-                funcMode={ModeToDo}
-                funcSize={OldSizeWind}
-                funcCenter={NewPointCenter}
-                funcHelper={SetHelper}
-                trigger={props.trigger}
-                changeFaz={changeFaz}
-                ban={SetRestartBan}
-                changeDemo={ChangeDemoSost}
-                pererisovka={setRisovka}
-              />
-            )}
-          </Grid>
         </Grid>
-        {needSetup && <GsSetup close={setNeedSetup} />}
+
+        {/* <Grid item xs={xsTab} sx={{ height: "97.0vh" }}> */}
+        {toDoMode && (
+          <Box sx={styleServisTable}>
+            <RgsToDoMode
+              massMem={massMem}
+              massCoord={massCoord}
+              funcMode={ModeToDo}
+              funcSize={OldSizeWind}
+              funcCenter={NewPointCenter}
+              funcHelper={SetHelper}
+              trigger={props.trigger}
+              changeFaz={changeFaz}
+              ban={SetRestartBan}
+              changeDemo={ChangeDemoSost}
+              pererisovka={setRisovka}
+            />
+          </Box>
+        )}
       </Grid>
+      {/* </Grid> */}
+      {needSetup && <GsSetup close={setNeedSetup} />}
     </Grid>
   );
 };

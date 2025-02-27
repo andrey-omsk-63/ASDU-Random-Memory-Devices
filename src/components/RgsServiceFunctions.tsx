@@ -588,7 +588,7 @@ export const HeadingTabl = (DEMO: boolean) => {
               {"."}
             </Box>
             <Box sx={{ fontSize: 15, color: "red", display: "inline-block" }}>
-              {" ( "}демонстрационный{" )"}
+              {" ("}демонстрационный{")"}
             </Box>
           </>
         )}
@@ -618,8 +618,8 @@ export const HeaderTabl = () => {
     <Grid container sx={{ bgcolor: "#B8CBB9" }}>
       {StrokaHeader(1, "id")}
       {StrokaHeader(3.6, "Состояние")}
-      {StrokaHeader(1.9, "Фаза")}
-      {StrokaHeader(5.5, "ДК")}
+      {StrokaHeader(2.1, "Фаза")}
+      {StrokaHeader(4.5, "ДК")}
     </Grid>
   );
 };

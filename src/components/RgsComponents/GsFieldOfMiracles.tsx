@@ -44,7 +44,7 @@ const GsFieldOfMiracles = (props: {
   };
 
   return (
-    <Grid item xs={1.4} sx={styleField01}>
+    <Grid item xs={1.8} sx={styleField01}>
       {props.finish && massfaz[props.idx].id <= 10000 && intervalfaza > 0 && (
         <Grid
           container
@@ -53,7 +53,7 @@ const GsFieldOfMiracles = (props: {
           onMouseEnter={() => setHint(true)}
           onMouseLeave={() => setHint(false)}
         >
-          <Grid item xs={5} sx={{ textAlign: "right" }}>
+          <Grid item xs={7} sx={{ textAlign: "right" }}>
             {intervalFazaDop > 0 && (
               <>
                 <Box sx={{ fontSize: 21 }}>
