@@ -707,19 +707,20 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     throw new Error("Функция не реализована");
   }
 
-  const handleTabClosing = () => {
+  const Closing = () => {
     for (let i = 0; i < massfaz.length; i++) {
       if (massfaz[i].runRec === 2)
         !DEMO && SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
     }
+  }
+
+  const handleTabClosing = () => {
+    Closing()
     removePlayerFromGame();
   };
 
   const alertUser = (event: any) => {
-    for (let i = 0; i < massfaz.length; i++) {
-      if (massfaz[i].runRec === 2)
-        !DEMO && SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
-    }
+    Closing()
   };
 
   React.useEffect(() => {

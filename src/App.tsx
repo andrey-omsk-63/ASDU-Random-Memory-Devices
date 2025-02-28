@@ -267,13 +267,14 @@ const App = () => {
               dispatch(massdkCreate(massdk));
             }
             break;
-          } else {
-            massdk[i].phSvg[0] = imgFaza; // костыль
-            massdk[i].phSvg[1] = null;
-            massdk[i].phSvg[2] = imgFaza;
-            massdk[i].phSvg[3] = null;
-            massdk[i].phSvg[4] = imgFaza;
-          }
+          } 
+          // else {
+          //   massdk[i].phSvg[0] = imgFaza; // костыль
+          //   massdk[i].phSvg[1] = null;
+          //   massdk[i].phSvg[2] = imgFaza;
+          //   massdk[i].phSvg[3] = null;
+          //   massdk[i].phSvg[4] = imgFaza;
+          // }
         }
       }
     };
