@@ -201,16 +201,16 @@ const App = () => {
       : Number(window.localStorage.intervalFazaDopD);
 
     // достать начальный zoom Yandex-карты ДУ из LocalStorage
-    if (window.localStorage.ZoomGs === undefined)
-      window.localStorage.ZoomGs = zoomStart;
+  if (window.localStorage.ZoomDU === undefined)
+    window.localStorage.ZoomDU = zoomStart;
 
-    // достать центр координат [0] Yandex-карты ДУ из LocalStorage
-    if (window.localStorage.PointCenterGs0 === undefined)
-      window.localStorage.PointCenterGs0 = 0;
+  // достать центр координат [0] Yandex-карты ДУ из LocalStorage
+  if (window.localStorage.PointCenterDU0 === undefined)
+    window.localStorage.PointCenterDU0 = 0;
 
-    // достать центр координат [1] Yandex-карты ДУ из LocalStorage
-    if (window.localStorage.PointCenterGs1 === undefined)
-      window.localStorage.PointCenterGs1 = 0;
+  // достать центр координат [1] Yandex-карты ДУ из LocalStorage
+  if (window.localStorage.PointCenterDU1 === undefined)
+    window.localStorage.PointCenterDU1 = 0;
 
     dispatch(statsaveCreate(dateStat));
     console.log("dateStat:", dateStat);

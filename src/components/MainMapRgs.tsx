@@ -611,12 +611,12 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     for (let i = 0; i < addobj.addObjects.length; i++)
       coordinates.push(addobj.addObjects[i].dgis);
     dispatch(coordinatesCreate(coordinates));
-    let point0 = window.localStorage.PointCenterGs0;
-    let point1 = window.localStorage.PointCenterGs1;
+    let point0 = window.localStorage.PointCenterDU0;
+    let point1 = window.localStorage.PointCenterDU1;
     if (!Number(point0) || !Number(point1)) {
       pointCenter = CenterCoordBegin(map); // начальные координаты центра отоброжаемой карты
     } else pointCenter = [Number(point0), Number(point1)];
-    zoom = Number(window.localStorage.ZoomGs); // начальный zoom Yandex-карты ДУ
+    zoom = Number(window.localStorage.ZoomDU); // начальный zoom Yandex-карты ДУ
     flagOpen = true;
   }
   //========================================================

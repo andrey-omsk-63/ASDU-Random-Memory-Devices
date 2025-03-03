@@ -158,9 +158,9 @@ export const CenterCoordBegin = (map: any) => {
 };
 
 export const SaveZoom = (zoom: number, pointCenter: Array<number>) => {
-  window.localStorage.ZoomGs = zoom;
-  window.localStorage.PointCenterGs0 = pointCenter[0];
-  window.localStorage.PointCenterGs1 = pointCenter[1];
+  window.localStorage.ZoomDU = zoom;
+  window.localStorage.PointCenterDU0 = pointCenter[0];
+  window.localStorage.PointCenterDU1 = pointCenter[1];
   //console.log('SaveZoom:',zoom, window.localStorage.ZoomGs)
 };
 
