@@ -150,6 +150,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                 getMultiRouteOptions()
               );
             } else {
+              //console.log('MassPath',i,MassPath[i], MassPath[i + 1])
+
               massMultiPath[i] = new ymaps.Polyline( // формальные связи
                 [MassPath[i], MassPath[i + 1]],
                 {},
