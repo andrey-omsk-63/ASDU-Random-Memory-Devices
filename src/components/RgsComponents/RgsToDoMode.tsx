@@ -20,7 +20,7 @@ import { HeadingTabl } from "../RgsServiceFunctions";
 import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 
 import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
-import { styleStrokaBoxlImg } from "./GsComponentsStyle";
+import { styleStrokaBoxlImg, styleStrokaTabl03 } from "./GsComponentsStyle";
 import { styleStrokaTabl01, styleStrokaTakt } from "./GsComponentsStyle";
 import { styleStrokaTabl02, StyleToDoMode } from "./GsComponentsStyle";
 import { styleToDo01, styleToDo03 } from "./GsComponentsStyle";
@@ -517,7 +517,7 @@ const RgsToDoMode = (props: {
       let finish = runREC !== 1 && runREC !== 5 && runREC > 0 ? true : false;
 
       return (
-        <Grid key={idx} container sx={{ marginTop: "12px" }}>
+        <Grid key={idx} container sx={styleStrokaTabl03}>
           <Grid item xs={0.8} sx={{ paddingTop: 0.7, textAlign: "center" }}>
             <Button sx={illum} onClick={() => ClickKnop(idx)}>
               {massf.id}

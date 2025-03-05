@@ -61,6 +61,11 @@ export const styleStrokaTabl02 = {
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
 
+export const styleStrokaTabl03 = {
+  marginTop: 1,
+  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+};
+
 export const styleStrokaTablImg = {
   border: "1px solid #000",
   bgcolor: "#EFF9E6",
