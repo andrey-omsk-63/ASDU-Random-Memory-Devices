@@ -1921,7 +1921,7 @@ export const ShiftOptimal = (
 
 export const PreparCurrenciesDispVert = () => {
   const currencies: any = [];
-  let dat = ["значками светофоров", "картинками фаз", "номерами фаз"];
+  let dat = ["значками светофоров", "изображениями фаз", "номерами фаз"];
   let massKey: any = [];
   let massDat: any = [];
   for (let key in dat) {
