@@ -85,18 +85,18 @@ export const MasskPoint = (debug: boolean, rec: any, imgFaza: string) => {
     ID: -1,
     coordinates: [],
     nameCoordinates: "",
-    region: 0,
-    area: 0,
-    phases: [],
-    phSvg: [],
+    region: Number(rec.region.num),
+    area: Number(rec.area.num),
+    phases: rec.phases, // фазы светофора
+    phSvg: [], // картинки фаз
+    readIt: false, // флаг прочтения картинок фаз
+    imgVert: null, // картинка перекрёстка
+    readVert: false, // флаг прочтения картинки перекрёстка
   };
   masskPoint.ID = rec.ID;
   masskPoint.coordinates[0] = rec.points.Y;
   masskPoint.coordinates[1] = rec.points.X;
   masskPoint.nameCoordinates = rec.description;
-  masskPoint.region = Number(rec.region.num);
-  masskPoint.area = Number(rec.area.num);
-  masskPoint.phases = rec.phases;
   for (let i = 0; i < 8; i++) {
     let img: any = debug ? imgFaza : null;
     if (i % 2) img = null; // на localhost картинка - число через одну
@@ -331,6 +331,44 @@ export const Сrossroad = (datestatFinish: boolean) => {
     </>
   );
 };
+
+export const StrokaHelp = (soobInfo: string, mode: number) => {
+  let dlSoob = (soobInfo.length + 9) * 8;
+  let moder = mode ? "left" : "right";
+
+  const styleInfoSoob = {
+    width: dlSoob,
+    color: "#E6761B", // оранж
+    textAlign: moder,
+    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+    fontWeight: 500,
+  };
+
+  return (
+    <Box sx={styleInfoSoob}>
+      <em>{soobInfo}</em>
+    </Box>
+  );
+};
+
+export const Duplet = (finish: boolean, leng: number) => {
+  //console.log('Duplet:',finish)
+
+  let soobHelpFiest1 = "Маршрут сформирован\xa0";
+  let soobHelpFiest2 = "";
+  if (!finish) {
+    soobHelpFiest1 = "Добавьте перекрёстки в маршруте [" + leng;
+    soobHelpFiest2 =
+      "]\xa0\xa0\xa0\xa0\xa0\xa0Конец работы - ввод точки выхода";
+  }
+  return (
+    <>
+      {StrokaHelp(soobHelpFiest1, 0)}
+      {Сrossroad(finish)}
+      {StrokaHelp(soobHelpFiest2, 1)}
+    </>
+  );
+};
 //=== Placemark =====================================
 export const GetPointData = (
   index: number,
@@ -408,19 +446,6 @@ export const GetPointData = (
   };
 };
 
-// export const GetPointOptions1 = (Hoster: any) => {
-//   return {
-//     // данный тип макета
-//     iconLayout: "default#image",
-//     // изображение иконки метки
-//     iconImageHref: Hoster(),
-//     // размеры метки
-//     iconImageSize: [30, 38],
-//     // её "ножки" (точки привязки)
-//     iconImageOffset: [-15, -38],
-//   };
-// };
-
 export const MakeSoobErr = (mode: number, Klu: string, Klu2: string) => {
   let soobErr = "";
   let vert = ";";
@@ -482,11 +507,11 @@ export const getReferenceLine = (massCoord: any, between: any) => {
 
 export const getMultiRouteOptions = () => {
   return {
-    routeActiveStrokeWidth: 5, // толщина линии
+    routeActiveStrokeWidth: 3, // толщина линии
     //routeActiveStrokeColor: "#224E1F",
     routeStrokeWidth: 0, // толщина линии альтернативного маршрута
     wayPointVisible: false, // отметки "начало - конец"
-    strokeWidth: 5, // толщина линии Polyline
+    strokeWidth: 3, // толщина линии Polyline
     strokeColor: "#9B59DA", // цвет линии Polyline - сиреневый
   };
 };
@@ -2172,23 +2197,4 @@ export const StrokaMenuGlob = (func: any) => {
   };
 
   return <Box sx={styleApp01}>{InputDirect(func)}</Box>;
-};
-
-export const StrokaHelp = (soobInfo: string, mode: number) => {
-  let dlSoob = (soobInfo.length + 9) * 8;
-  let moder = mode ? "left" : "right";
-
-  const styleInfoSoob = {
-    width: dlSoob,
-    color: "#E6761B", // оранж
-    textAlign: moder,
-    textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
-    fontWeight: 500,
-  };
-
-  return (
-    <Box sx={styleInfoSoob}>
-      <em>{soobInfo}</em>
-    </Box>
-  );
 };

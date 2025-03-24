@@ -79,7 +79,7 @@ const RgsToDoMode = (props: {
   //console.log("datestat:", datestat);
   //========================================================
   const debug = datestat.debug;
-  const ws = datestat.ws;
+  //const ws = datestat.ws;
   const DEMO = datestat.demo;
   const styleToDoMode = StyleToDoMode(DEMO);
   const [openSoobErr, setOpenSoobErr] = React.useState(false);
@@ -212,8 +212,7 @@ const RgsToDoMode = (props: {
   const DoTimerId = (mode: number) => {
     let fazer = massfaz[mode];
     if (!DEMO) {
-      fazer.runRec === 2 &&
-        SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
+      fazer.runRec === 2 && SendSocketDispatch(fazer.idevice, 9, fazer.faza);
     } else {
       if (!fazer.runRec || fazer.runRec === 5 || fazer.runRec === 1) {
         fazer.fazaSist = fazer.faza; // начало или финиш
@@ -242,19 +241,19 @@ const RgsToDoMode = (props: {
     let massIdevice: Array<number> = [];
     if (mode) {
       massIdevice.push(massfaz[mode].idevice);
-      !DEMO && SendSocketRoute(debug, ws, massIdevice, true); // выполнение режима
+      !DEMO && SendSocketRoute(massIdevice, true); // выполнение режима
       props.funcMode(mode); // сбросить PressESC
       setTrigger(!trigger);
     } else {
       console.log("Принудительный Финиш:"); // принудительное закрытие
       for (let i = 0; i < massfaz.length; i++) {
         if (massfaz[i].runRec === 2) {
-          !DEMO && SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
+          !DEMO && SendSocketDispatch(massfaz[i].idevice, 9, 9);
           massfaz[i].runRec = 1;
           massIdevice.push(massfaz[i].idevice);
         }
       }
-      !DEMO && SendSocketRoute(debug, ws, massIdevice, false);
+      !DEMO && SendSocketRoute(massIdevice, false);
       dispatch(massfazCreate(massfaz));
       handleCloseSetEnd();
     }
@@ -279,7 +278,7 @@ const RgsToDoMode = (props: {
     let fazer = massfaz[mode];
     if (DEMO) {
       massfaz[mode].fazaSist = fazer.faza;
-    } else SendSocketDispatch(debug, ws, fazer.idevice, 9, fazer.faza);
+    } else SendSocketDispatch(fazer.idevice, 9, fazer.faza);
     massfaz[mode].runRec = DEMO ? 4 : 2;
     dispatch(massfazCreate(massfaz));
 
@@ -338,10 +337,10 @@ const RgsToDoMode = (props: {
 
   const CloseVertex = (idx: number) => {
     if (!DEMO) {
-      SendSocketDispatch(debug, ws, massfaz[idx].idevice, 9, 9);
+      SendSocketDispatch(massfaz[idx].idevice, 9, 9);
       let massIdevice: Array<number> = [];
       massIdevice.push(massfaz[idx].idevice);
-      SendSocketRoute(debug, ws, massIdevice, false); // завершенение режима
+      SendSocketRoute(massIdevice, false); // завершенение режима
     }
     for (let i = 0; i < massInt[idx].length; i++) {
       if (massInt[idx][i]) {

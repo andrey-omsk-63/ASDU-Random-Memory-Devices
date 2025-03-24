@@ -19,10 +19,10 @@ const RgsProcessObject = (props: { setOpen: Function; idx: number }) => {
     const { mapReducer } = state;
     return mapReducer.map.dateMap;
   });
-  let datestat = useSelector((state: any) => {
-    const { statsaveReducer } = state;
-    return statsaveReducer.datestat;
-  });
+  // let datestat = useSelector((state: any) => {
+  //   const { statsaveReducer } = state;
+  //   return statsaveReducer.datestat;
+  // });
   let addobj = useSelector((state: any) => {
     const { addobjReducer } = state;
     return addobjReducer.addobj.dateAdd;
@@ -31,8 +31,8 @@ const RgsProcessObject = (props: { setOpen: Function; idx: number }) => {
     const { coordinatesReducer } = state;
     return coordinatesReducer.coordinates;
   });
-  const debug = datestat.debug;
-  const ws = datestat.ws;
+  //const debug = datestat.debug;
+  //const ws = datestat.ws;
   const dispatch = useDispatch();
   //========================================================
   const [openSet, setOpenSet] = React.useState(true);
@@ -51,7 +51,7 @@ const RgsProcessObject = (props: { setOpen: Function; idx: number }) => {
       coordinates.splice(props.idx, 1);
       dispatch(coordinatesCreate(coordinates));
       dispatch(addobjCreate(addobj));
-      SendSocketDeleteAddObj(debug, ws, dater);
+      SendSocketDeleteAddObj(dater);
       handleCloseSet();
     } else setOpenProcess(true); // редактирование имени
   };

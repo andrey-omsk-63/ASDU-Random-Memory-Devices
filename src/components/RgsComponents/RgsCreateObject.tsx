@@ -46,8 +46,8 @@ const RgsCreateObject = (props: {
     const { coordinatesReducer } = state;
     return coordinatesReducer.coordinates;
   });
-  const debug = datestat.debug;
-  const ws = datestat.ws;
+  //const debug = datestat.debug;
+  //onst ws = datestat.ws;
   const dispatch = useDispatch();
   //=== инициализация ======================================
   let homeRegion = map.regionInfo[datestat.region]; // подготовка ввода района
@@ -228,7 +228,7 @@ const RgsCreateObject = (props: {
       coordinates.push(props.coord);
       dispatch(coordinatesCreate(coordinates));
       dispatch(addobjCreate(addobj));
-      SendSocketСreateAddObj(debug, ws, dater);
+      SendSocketСreateAddObj(dater);
       handleCloseSet();
     }
   };

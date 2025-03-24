@@ -22,12 +22,13 @@ import { getMassMultiRouteOptionsDemo } from "./RgsServiceFunctions";
 import { getMultiRouteOptions, SaveZoom } from "./RgsServiceFunctions";
 import { getReferencePoints, CenterCoordBegin } from "./RgsServiceFunctions";
 import { MakeMassRouteFirst, StrokaHelp } from "./RgsServiceFunctions";
-import { StrokaMenuGlob, MakingKey, Сrossroad } from "./RgsServiceFunctions";
+import { StrokaMenuGlob, MakingKey, Duplet } from "./RgsServiceFunctions";
 import { MakeSoobErr, MakeMassRoute } from "./RgsServiceFunctions";
 import { CheckHaveLink, MakeFazer } from "./RgsServiceFunctions";
 import { YandexServices, TakeAreaId, TakeAreaIdd } from "./RgsServiceFunctions";
 
 import { SendSocketGetSvg, SendSocketDispatch } from "./RgsSocketFunctions";
+import { SendSocketGetPhases } from "./RgsSocketFunctions";
 
 import { YMapsModul, MyYandexKey, NoClose } from "./MapConst";
 
@@ -95,7 +96,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   });
   typeRoute = datestat.typeRoute; // тип отображаемых связей
   const debug = datestat.debug;
-  const ws = datestat.ws;
   const DEMO = datestat.demo;
   const homeRegion = datestat.region;
   const SL = homeRegion < 10 ? 2 : 3;
@@ -150,8 +150,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                 getMultiRouteOptions()
               );
             } else {
-              //console.log('MassPath',i,MassPath[i], MassPath[i + 1])
-
               massMultiPath[i] = new ymaps.Polyline( // формальные связи
                 [MassPath[i], MassPath[i + 1]],
                 {},
@@ -256,6 +254,16 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     ymaps && addRoute(ymaps); // перерисовка связей
   }, [ymaps, addRoute, datestat, dispatch]);
 
+  const SendImgPhases = (index: number) => {
+    if (index < massdk.length) {
+      if (!massdk[index].readIt) {
+        let region = massdk[index].region.toString();
+        let area = massdk[index].area.toString();
+        SendSocketGetPhases(region, area, massdk[index].ID);
+      }
+    }
+  };
+
   const ClickPointInTarget = (index: number) => {
     setIdxObj(index);
     if (index >= map.tflight.length) {
@@ -271,7 +279,13 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         datestat.readyPict = false;
         datestat.readyFaza = false;
       }
-      SendSocketGetSvg(debug, ws, homeRegion, area, id);
+      SendImgPhases(index); // запрос на получение изображений фаз
+      if (!massdk[index].readVert) {
+        SendSocketGetSvg(homeRegion, area, id); // запрос на получение изображения перекрёстка
+      } else {
+        datestat.pictSvg = massdk[index].imgVert;
+        datestat.readyPict = true;
+      }
       datestat.phSvg = massdk[index].phSvg;
       dispatch(statsaveCreate(datestat));
       setAppoint(true);
@@ -289,6 +303,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       masscoord = addobj.addObjects[idxObj].dgis;
     }
     massMem.push(index);
+    SendImgPhases(index); // запрос на получение изображения фазы
     massCoord.push(masscoord);
     massKlu.push(klu); // массив ключей
     massNomBind.push(nom); // массив номеров светофоров в bindings
@@ -299,9 +314,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       massRoute = MakeMassRoute(bindings, nom, map, addobj)[0];
     ymaps && addRoute(ymaps); // перерисовка связей
     mayEsc = true;
-    if (massMem.length === 3) {
-      PressButton(53);
-    } else setFlagPusk(!flagPusk);
+    if (massMem.length === 3) PressButton(53);
+    if (massMem.length !== 3) setFlagPusk(!flagPusk);
   };
 
   const SoobErr = (soob: string) => {
@@ -314,15 +328,15 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       SoobErr(MakeSoobErr(2, klu.slice(SL), "")); // перекрёсток уже используется
     } else {
       if (!massMem.length) {
-        Added(klu, index, nom); // первая точка
         datestat.start = true;
         dispatch(statsaveCreate(datestat));
+        Added(klu, index, nom); // первая точка
       } else {
         if (nom < 0) {
           if (massMem.length > 1) {
-            Added(klu, index, nom); // последняя точка - объект
             datestat.finish = true;
             dispatch(statsaveCreate(datestat));
+            Added(klu, index, nom); // последняя точка - объект
             needRend = true;
             setFlagPusk(!flagPusk);
           } else SoobErr("Ошибочка вышла!!!");
@@ -434,7 +448,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
             break;
           }
         }
-        //console.log("++++++++++++  Нажали в поле  ++++++++++++", nomInMass);
+        //++++++++++++  Нажали в поле  ++++++++++++
         if (nomInMass > 0) TakeOffVertex(nomInMass);
       } else {
         if (nomInMass > 0) {
@@ -558,7 +572,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           break;
         case 53: // выполнить режим
           xsMap = 7.7;
-          //xsTab = 4.3;
           widthMap = "99.9%";
           setToDoMode(true);
           setRestartBan((BAN = true));
@@ -598,7 +611,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const OldSizeWind = (size: number) => {
     console.log("КОНЕЦ!!!");
     xsMap = size;
-    //xsTab = 0.01;
     widthMap = "99.9%";
     modeToDo = 0;
     setToDoMode(false);
@@ -628,23 +640,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const CommentGl = () => {
-    let soobHelpFiest1 = "Маршрут сформирован\xa0";
-    let soobHelpFiest2 = "";
-    if (!datestat.finish) {
-      soobHelpFiest1 = "Добавьте перекрёстки в маршруте [" + massMem.length;
-      soobHelpFiest2 =
-        "]\xa0\xa0\xa0\xa0\xa0\xa0Конец работы - ввод точки выхода";
-    }
-    const Duplet = () => {
-      return (
-        <>
-          {StrokaHelp(soobHelpFiest1, 0)}
-          {Сrossroad(datestat.finish)}
-          {StrokaHelp(soobHelpFiest2, 1)}
-        </>
-      );
-    };
-
+    let leng = massMem.length;
     return (
       <Box sx={styleMenuGl}>
         {StrokaMenuGlob(PressButton)}
@@ -658,11 +654,11 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           <>
             {!inTarget && !inDemo && (
               <>
-                {massMem.length === 0 && (
+                {leng === 0 && (
                   <>{StrokaHelp("Начала работы - выбор точки вхождения", 0)}</>
                 )}
-                {massMem.length > 0 && helper && <>{Duplet()}</>}
-                {massMem.length > 0 && !helper && <>{Duplet()}</>}
+                {leng > 0 && helper && <>{Duplet(datestat.finish, leng)}</>}
+                {leng > 0 && !helper && <>{Duplet(datestat.finish, leng)}</>}
               </>
             )}
             {inTarget && !inDemo && modeToDo !== 1 && (
@@ -676,10 +672,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   const ChangeDemoSost = (mode: number) => setDemoSost(mode + demoSost); // костыль
 
-  if (needRend) {
-    needRend = false;
-    setFlagPusk(!flagPusk);
-  }
   //=== обработка Esc ======================================
   const RemoveTail = React.useCallback(() => {
     massMem.pop(); // удалим из массива последний элемент
@@ -712,17 +704,17 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const Closing = () => {
     for (let i = 0; i < massfaz.length; i++) {
       if (massfaz[i].runRec === 2)
-        !DEMO && SendSocketDispatch(debug, ws, massfaz[i].idevice, 9, 9);
+        !DEMO && SendSocketDispatch(massfaz[i].idevice, 9, 9);
     }
-  }
+  };
 
   const handleTabClosing = () => {
-    Closing()
+    Closing();
     removePlayerFromGame();
   };
 
   const alertUser = (event: any) => {
-    Closing()
+    Closing();
   };
 
   React.useEffect(() => {
@@ -735,6 +727,11 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     };
   });
   //========================================================
+  if (needRend) {
+    needRend = false;
+    setFlagPusk(!flagPusk);
+  }
+
   return (
     <Grid container sx={{ height: "99.9vh" }}>
       <Grid item xs={12}>

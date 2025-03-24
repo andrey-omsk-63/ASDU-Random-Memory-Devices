@@ -16,7 +16,7 @@ import { MasskPoint } from "./components/RgsServiceFunctions";
 
 import { SendSocketGetBindings } from "./components/RgsSocketFunctions";
 import { SendSocketGetAddObjects } from "./components/RgsSocketFunctions";
-import { SendSocketGetPhases } from "./components/RgsSocketFunctions";
+//import { SendSocketGetPhases } from "./components/RgsSocketFunctions";
 
 import { dataMap } from "./otladkaMaps";
 import { imgFaza } from "./otladkaPicFaza";
@@ -83,8 +83,11 @@ export interface Pointer {
   nameCoordinates: string;
   region: number;
   area: number;
-  phases: Array<number>;
-  phSvg: Array<string | null>;
+  phases: Array<number>; // фазы светофора
+  phSvg: Array<string | null>; // картинки фаз
+  readIt: boolean; // флаг прочтения картинок фаз
+  imgVert: string | null; // картинка перекрёстка
+  readVert: boolean; // флаг прочтения картинки перекрёстка
 }
 export let massDk: Pointer[] = [];
 
@@ -116,12 +119,14 @@ export let Coordinates: Array<Array<number>> = []; // массив коорди�
 
 let flagOpenDebug = true;
 let flagOpenWS = true;
-let WS: any = null;
 let homeRegion: string = "0";
 let soob = "";
 let flagMap = false;
 let flagBindings = false;
 let flagAddObjects = false;
+
+export let debug = false;
+export let WS: any = null;
 
 const App = () => {
   //== Piece of Redux ======================================
@@ -155,21 +160,10 @@ const App = () => {
 
     console.log("massdk:", massdk);
 
-    // запросы на получение изображения фаз
-    for (let i = 0; i < massdk.length; i++) {
-      let reg = massdk[i].region.toString();
-      let area = massdk[i].area.toString();
-      SendSocketGetPhases(dateStat.debug, WS, reg, area, massdk[i].ID);
-    }
     flagMap = false;
     flagBindings = false;
     flagAddObjects = false;
     setOpenMapInfo(true);
-
-    console.log(
-      "window.localStorage.counterFazaD:",
-      window.localStorage.counterFazaD
-    );
 
     // достать тип отображаемых связей из LocalStorage
     if (window.localStorage.typeRoute === undefined)
@@ -201,16 +195,16 @@ const App = () => {
       : Number(window.localStorage.intervalFazaDopD);
 
     // достать начальный zoom Yandex-карты ДУ из LocalStorage
-  if (window.localStorage.ZoomDU === undefined)
-    window.localStorage.ZoomDU = zoomStart;
+    if (window.localStorage.ZoomDU === undefined)
+      window.localStorage.ZoomDU = zoomStart;
 
-  // достать центр координат [0] Yandex-карты ДУ из LocalStorage
-  if (window.localStorage.PointCenterDU0 === undefined)
-    window.localStorage.PointCenterDU0 = 0;
+    // достать центр координат [0] Yandex-карты ДУ из LocalStorage
+    if (window.localStorage.PointCenterDU0 === undefined)
+      window.localStorage.PointCenterDU0 = 0;
 
-  // достать центр координат [1] Yandex-карты ДУ из LocalStorage
-  if (window.localStorage.PointCenterDU1 === undefined)
-    window.localStorage.PointCenterDU1 = 0;
+    // достать центр координат [1] Yandex-карты ДУ из LocalStorage
+    if (window.localStorage.PointCenterDU1 === undefined)
+      window.localStorage.PointCenterDU1 = 0;
 
     dispatch(statsaveCreate(dateStat));
     console.log("dateStat:", dateStat);
@@ -237,11 +231,11 @@ const App = () => {
       WS.url.slice(0, 20) === "wss://localhost:3000" ||
       WS.url.slice(0, 27) === "wss://andrey-omsk-63.github"
     )
-      dateStat.debug = true;
+      dateStat.debug = debug = true;
     dispatch(statsaveCreate(dateStat));
     flagOpenWS = false;
-    SendSocketGetBindings(dateStat.debug, WS);
-    SendSocketGetAddObjects(dateStat.debug, WS);
+    SendSocketGetBindings();
+    SendSocketGetAddObjects();
   }
 
   React.useEffect(() => {
@@ -260,14 +254,20 @@ const App = () => {
     const ActionOnGetPhases = (data: any) => {
       for (let i = 0; i < massdk.length; i++) {
         if (massdk[i].ID === data.pos.id) {
+          massdk[i].readIt = true; // флаг прочтения картинок фаз
           if (data.phases) {
             if (data.phases.length) {
-              for (let j = 0; j < data.phases.length; j++)
-                massdk[i].phSvg[j] = data.phases[j].phase;
+              // for (let j = 0; j < data.phases.length; j++)
+              //   massdk[i].phSvg[j] = data.phases[j].phase;
+              for (let j = 0; j < data.phases.length; j++) {
+                let k = Number(data.phases[j].num);
+                if (k <= massdk[i].phSvg.length)
+                  massdk[i].phSvg[k - 1] = data.phases[j].phase;
+              }
               dispatch(massdkCreate(massdk));
             }
             break;
-          } 
+          }
           // else {
           //   massdk[i].phSvg[0] = imgFaza; // костыль
           //   massdk[i].phSvg[1] = null;
@@ -357,8 +357,15 @@ const App = () => {
           ActionOnGetPhases(data);
           break;
         case "getSvg":
+          //console.log("Get_getSvg:", data);
           dateStat.pictSvg = data.svg;
           dateStat.readyPict = true;
+          for (let i = 0; i < massdk.length; i++) {
+            if (massdk[i].ID === data.pos.id) {
+              massdk[i].readVert = true; // флаг прочтения картиноки перекрёстка
+              massdk[i].imgVert = data.svg;
+            }
+          }
           dispatch(statsaveCreate(dateStat));
           setTrigger(!trigger);
           break;

@@ -73,8 +73,8 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   });
   const dispatch = useDispatch();
   //========================================================
-  const debug = datestat.debug;
-  const ws = datestat.ws;
+  //const debug = datestat.debug;
+  //const ws = datestat.ws;
   const homeRegion = datestat.region;
   const SL = homeRegion < 10 ? 4 : 5;
   let imgFaza = datestat.phSvg;
@@ -307,13 +307,13 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             for (let i = 0; i < bindings.tfLinks.length; i++)
               if (i !== bindIdx) massRab.push(bindings.tfLinks[i]);
             bindings.tfLinks = massRab;
-            SendSocketDeleteBindings(debug, ws, maskTfLinks);
+            SendSocketDeleteBindings(maskTfLinks);
           }
         } else {
           if (bindIdx >= 0) {
             bindings.tfLinks[bindIdx] = maskTfLinks; // редактирование
           } else bindings.tfLinks.push(maskTfLinks); // добавление новой записи
-          SendSocketUpdateBindings(debug, ws, maskTfLinks);
+          SendSocketUpdateBindings(maskTfLinks);
         }
         dispatch(bindingsCreate(bindings));
         handleCloseAll();
