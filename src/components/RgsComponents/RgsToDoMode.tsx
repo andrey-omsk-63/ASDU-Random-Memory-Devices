@@ -163,6 +163,8 @@ const RgsToDoMode = (props: {
     init = true;
     oldFaz = -1;
     lengthMassMem = 0;
+    massfaz = [];
+    dispatch(massfazCreate(massfaz));
   };
 
   const RemovalFromTheRoute = () => {
@@ -273,7 +275,7 @@ const RgsToDoMode = (props: {
     }
     //=========================================================================
     ToDoMode(mode);
-    console.log(mode + 1 + "-й светофор АКТИВИРОВАН", timerId[mode]);
+    console.log(mode + 1 + "-й светофор АКТИВИРОВАН", timerId[mode], massfaz);
 
     let fazer = massfaz[mode];
     if (DEMO) {
@@ -282,9 +284,12 @@ const RgsToDoMode = (props: {
     massfaz[mode].runRec = DEMO ? 4 : 2;
     dispatch(massfazCreate(massfaz));
 
-    //console.log(mode + 1 + "-й светофор", DEMO, massfaz[mode].runRec);
+   
     //=========================================================================
     if (DEMO) massfaz[mode].faza = massfaz[mode].fazaBegin;
+
+    console.log(mode + 1 + "-й светофор", DEMO,mode, massfaz[mode].runRec);
+
     setTrigger(!trigger);
   };
 
@@ -391,7 +396,9 @@ const RgsToDoMode = (props: {
       lengthMassMem = props.massMem.length;
       FindFaza();
       oldFaz = props.changeFaz;
+      //console.log("0ToDo:", JSON.parse(JSON.stringify(datestat.massPath)));
     }
+    //console.log("1ToDo:", JSON.parse(JSON.stringify(datestat.massPath)));
   } else {
     if (lengthMassMem && !props.massMem.length) {
       ToDoMode(0); // в списке 3 светофора/объекта и нажато ESC
@@ -410,6 +417,8 @@ const RgsToDoMode = (props: {
         setTrigger(!trigger);
       } else {
         if (lengthMassMem < props.massMem.length) {
+          console.log("появился новый перекрёсток");
+
           timerId.push(null); // появился новый перекрёсток
           massfaz.push(MakeMaskFaz(props.massMem.length - 1));
           let mass = Array(props.massMem.length).fill(null);
@@ -438,6 +447,7 @@ const RgsToDoMode = (props: {
         dispatch(statsaveCreate(datestat));
       }
     }
+    //console.log("2ToDo:", JSON.parse(JSON.stringify(datestat.massPath)));
   }
   //====== Компоненты =====================================
   const StrokaTabl = () => {
@@ -561,14 +571,11 @@ const RgsToDoMode = (props: {
   //========================================================
   const CheckRun = () => {
     for (let i = 0; i < massfaz.length; i++) {
-      const TmOut = (mode: number) => {
-        massfaz[i].runRec = mode;
-        dispatch(massfazCreate(massfaz));
-        setTrigger(!trigger);
-      };
-      if (massfaz[i].runRec === 4) TmOut(2);
-      if (massfaz[i].runRec === 5) TmOut(1);
+      if (massfaz[i].runRec === 4) massfaz[i].runRec = 2;
+      if (massfaz[i].runRec === 5) massfaz[i].runRec = 1;
     }
+    dispatch(massfazCreate(massfaz));
+    //setTrigger(!trigger);
   };
 
   DEMO && CheckRun();

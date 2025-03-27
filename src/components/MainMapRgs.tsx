@@ -24,7 +24,7 @@ import { getReferencePoints, CenterCoordBegin } from "./RgsServiceFunctions";
 import { MakeMassRouteFirst, StrokaHelp } from "./RgsServiceFunctions";
 import { StrokaMenuGlob, MakingKey, Duplet } from "./RgsServiceFunctions";
 import { MakeSoobErr, MakeMassRoute } from "./RgsServiceFunctions";
-import { CheckHaveLink, MakeFazer } from "./RgsServiceFunctions";
+import { CheckHaveLink, MakeFazer, DrawCircle } from "./RgsServiceFunctions";
 import { YandexServices, TakeAreaId, TakeAreaIdd } from "./RgsServiceFunctions";
 
 import { SendSocketGetSvg, SendSocketDispatch } from "./RgsSocketFunctions";
@@ -63,6 +63,7 @@ let funcBound: any = null;
 let modeHelp = 0;
 let mayEsc = false; // можно воспользоваться Esc при построении маршрута
 let typeRoute = false; // тип отображаемых связей
+let needDrawCircle = false; // нужно перерисовать окружности вокруг светофора
 
 const MainMapRgs = (props: { trigger: boolean }) => {
   //== Piece of Redux =======================================
@@ -140,28 +141,35 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       }
       // отрисовка рабочего маршрута
       if (datestat.massPath) {
-        if (datestat.massPath.length > 2) {
-          let MassPath = datestat.massPath; // рабочий маршрут
+        if (datestat.massPath.length > 1) {
+          let MassPath = JSON.parse(JSON.stringify(datestat.massPath)); // рабочий маршрут
+          let mfl = massfaz.length;
+          if (MassPath.length + 1 === mfl)
+            MassPath.unshift(massfaz[0].coordinates); // добавить в начало
           let massMultiPath: any = []; // исходящие связи
-          for (let i = 0; i < MassPath.length - 2; i++) {
+          let mpl = MassPath.length;
+          for (let i = 0; i < MassPath.length - 1; i++) {
+            let beginEnd = (!i && mpl === mfl) || i === mpl - 2 ? true : false; // связь начало/конец маршрута
             if (typeRoute) {
               massMultiPath[i] = new ymaps.multiRouter.MultiRoute( // маршрутизированные связи
                 getReferencePoints(MassPath[i], MassPath[i + 1]),
-                getMultiRouteOptions()
+                getMultiRouteOptions(beginEnd)
               );
             } else {
               massMultiPath[i] = new ymaps.Polyline( // формальные связи
                 [MassPath[i], MassPath[i + 1]],
                 {},
-                getMultiRouteOptions()
+                getMultiRouteOptions(beginEnd)
               );
             }
             mapp.current.geoObjects.add(massMultiPath[i]);
           }
         }
       }
+      //console.log("addRoute:", datestat.massPath, massfaz);
+      DrawCircle(ymaps, mapp, massfaz); // нарисовать окружности в начале/конце маршрута
     },
-    [datestat.massPath]
+    [datestat.massPath, massfaz]
   );
 
   const SetFragments = (idx: number) => {
@@ -212,6 +220,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       }
       if (mode) {
         let massMultiRoute: any = []; // исходящие связи
+
+        //console.log("@@@:", massMem, massCoord);
+
         for (let j = 0; j < massRoute.length; j++) {
           let have = 0;
           let KLU = TakeAreaId(massKlu[j])[1] + "-" + TakeAreaId(KLUCH)[1];
@@ -252,6 +263,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     datestat.massPath = null; // точки рабочего маршрута
     dispatch(statsaveCreate(datestat));
     ymaps && addRoute(ymaps); // перерисовка связей
+
+    mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
+    console.log("Всё стёрли!!!");
   }, [ymaps, addRoute, datestat, dispatch]);
 
   const SendImgPhases = (index: number) => {
@@ -499,6 +513,11 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       funcBound = function () {
         pointCenter = mapp.current.getCenter();
         zoom = mapp.current.getZoom(); // покрутили колёсико мыши
+        if (massfaz.length > 1) {
+          //console.log("InstanceRefDo", zoom);
+          needDrawCircle = true;
+          setFlagPusk(!flagPusk);
+        }
         SaveZoom(zoom, pointCenter);
       };
       mapp.current.events.add("boundschange", funcBound);
@@ -730,6 +749,11 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   if (needRend) {
     needRend = false;
     setFlagPusk(!flagPusk);
+  }
+
+  if (massfaz.length === 3 || needDrawCircle) {
+    needDrawCircle = false;
+    addRoute(ymaps);
   }
 
   return (

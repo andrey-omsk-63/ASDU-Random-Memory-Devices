@@ -157,6 +157,58 @@ export const CenterCoordBegin = (map: any) => {
   );
 };
 
+export const Zoomer = (zoom: number) => {
+  switch (zoom) {
+    case 11:
+      return 1200;
+    case 12:
+      return 600;
+    case 13:
+      return 300;
+    case 14:
+      return 180;
+    case 15:
+      return 120;
+    case 16:
+      return 60;
+    case 17:
+      return 40;
+    case 18:
+      return 30;
+    case 19:
+      return 25;
+    default:
+      return 1800;
+  }
+};
+
+export const DrawCircle = (ymaps: any, mapp: any, massfaz: any) => {
+  const CircleDrawer = (massCoord: any) => {
+    //console.log("1CircleDrawer:", massCoord);
+
+    let myCircle = new ymaps.Circle(
+      [
+        massCoord, // Координаты центра круга
+        Zoomer(mapp.current.getZoom()), // Радиус круга в метрах
+      ],
+      {},
+      {
+        fillColor: "#9B59DA33", // Цвет заливки  Последний байт (77) определяет прозрачность.
+        strokeColor: "#9B59DA", // Цвет обводки
+        strokeOpacity: 0.5, // Ширина обводки в пикселях
+        strokeWidth: 1, // Ширина обводки в пикселях
+      }
+    );
+    mapp.current.geoObjects.add(myCircle);
+  };
+
+  for (let i = 0; i < massfaz.length; i++)
+    if (!i || i === massfaz.length - 1) {
+      //console.log("0CircleDrawer:",i,massfaz.length, massfaz[i]);
+      CircleDrawer(massfaz[i].coordinates);
+    }
+};
+
 export const SaveZoom = (zoom: number, pointCenter: Array<number>) => {
   window.localStorage.ZoomDU = zoom;
   window.localStorage.PointCenterDU0 = pointCenter[0];
@@ -505,14 +557,14 @@ export const getReferenceLine = (massCoord: any, between: any) => {
   };
 };
 
-export const getMultiRouteOptions = () => {
+export const getMultiRouteOptions = (beginEnd: boolean) => {
   return {
     routeActiveStrokeWidth: 3, // толщина линии
-    //routeActiveStrokeColor: "#224E1F",
+    routeActiveStrokeColor: "#224E1F",
     routeStrokeWidth: 0, // толщина линии альтернативного маршрута
     wayPointVisible: false, // отметки "начало - конец"
     strokeWidth: 3, // толщина линии Polyline
-    strokeColor: "#9B59DA", // цвет линии Polyline - сиреневый
+    strokeColor: beginEnd ? "#FF423F" : "#9B59DA", // цвет линии Polyline - красный/сиреневый
   };
 };
 
