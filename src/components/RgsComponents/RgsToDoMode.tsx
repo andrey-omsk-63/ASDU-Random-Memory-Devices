@@ -13,17 +13,19 @@ import { Fazer } from "../../App";
 import { PressESC } from "../MainMapRgs";
 import { NoClose, MaskFaz } from "../MapConst";
 
-import { OutputFazaImg, OutputVertexImg } from "../RgsServiceFunctions";
-import { HeaderTabl, CircleObj, TakeAreaId } from "../RgsServiceFunctions";
+//import { CircleObj, OutputVertexImg } from "../RgsServiceFunctions";
+import { HeaderTabl, OutputFazaImg, TakeAreaId } from "../RgsServiceFunctions";
 import { HeadingTabl } from "../RgsServiceFunctions";
 
 import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 
-import { styleModalMenu, styleStrokaTablImg } from "./GsComponentsStyle";
-import { styleStrokaBoxlImg, styleStrokaTabl03 } from "./GsComponentsStyle";
+import { styleModalMenu, styleStrokaTabl03 } from "./GsComponentsStyle";
+//import { styleStrokaBoxlImg, styleStrokaTablImg } from "./GsComponentsStyle";
 import { styleStrokaTabl01, styleStrokaTakt } from "./GsComponentsStyle";
 import { styleStrokaTabl02, StyleToDoMode } from "./GsComponentsStyle";
 import { styleToDo01, styleToDo03 } from "./GsComponentsStyle";
+
+//export let host: string = "";
 
 let init = true;
 let lengthMassMem = 0;
@@ -75,11 +77,8 @@ const RgsToDoMode = (props: {
     return statsaveReducer.datestat;
   });
   const dispatch = useDispatch();
-
-  //console.log("datestat:", datestat);
   //========================================================
   const debug = datestat.debug;
-  //const ws = datestat.ws;
   const DEMO = datestat.demo;
   const styleToDoMode = StyleToDoMode(DEMO);
   const [openSoobErr, setOpenSoobErr] = React.useState(false);
@@ -90,7 +89,6 @@ const RgsToDoMode = (props: {
   if (!datestat.counterFaza) intervalFaza = intervalFazaDop = 0; // наличие счётчика длительность фазы ДУ
   let timer = debug || DEMO ? 20000 : 60000;
   let hTabl = DEMO ? "78vh" : "81vh";
-  //let hTabl = "80vh";
 
   const MakeMaskFaz = (i: number) => {
     let maskFaz: Fazer = JSON.parse(JSON.stringify(MaskFaz));
@@ -284,11 +282,10 @@ const RgsToDoMode = (props: {
     massfaz[mode].runRec = DEMO ? 4 : 2;
     dispatch(massfazCreate(massfaz));
 
-   
     //=========================================================================
     if (DEMO) massfaz[mode].faza = massfaz[mode].fazaBegin;
 
-    console.log(mode + 1 + "-й светофор", DEMO,mode, massfaz[mode].runRec);
+    console.log(mode + 1 + "-й светофор", DEMO, mode, massfaz[mode].runRec);
 
     setTrigger(!trigger);
   };
@@ -398,7 +395,6 @@ const RgsToDoMode = (props: {
       oldFaz = props.changeFaz;
       //console.log("0ToDo:", JSON.parse(JSON.stringify(datestat.massPath)));
     }
-    //console.log("1ToDo:", JSON.parse(JSON.stringify(datestat.massPath)));
   } else {
     if (lengthMassMem && !props.massMem.length) {
       ToDoMode(0); // в списке 3 светофора/объекта и нажато ESC
@@ -409,9 +405,11 @@ const RgsToDoMode = (props: {
         datestat.counterId.pop();
         datestat.counterId[idx] = intervalFaza;
         CloseVertex(idx);
-        massfaz[idx].runRec = massfaz[idx].faza = massfaz[idx].fazaBegin = 0;
-        massfaz[idx].fazaSist = massfaz[idx].fazaSistOld = -1;
-        dispatch(massfazCreate(massfaz));
+        if (massfaz.length) {
+          massfaz[idx].runRec = massfaz[idx].faza = massfaz[idx].fazaBegin = 0;
+          massfaz[idx].fazaSist = massfaz[idx].fazaSistOld = -1;
+          dispatch(massfazCreate(massfaz));
+        }
         props.funcMode(lengthMassMem - 2); // сбросить PressESC
         lengthMassMem--;
         setTrigger(!trigger);
@@ -447,7 +445,6 @@ const RgsToDoMode = (props: {
         dispatch(statsaveCreate(datestat));
       }
     }
-    //console.log("2ToDo:", JSON.parse(JSON.stringify(datestat.massPath)));
   }
   //====== Компоненты =====================================
   const StrokaTabl = () => {
@@ -496,26 +493,6 @@ const RgsToDoMode = (props: {
     return massfaz.map((massf: any, idx: number) => {
       let runREC = JSON.parse(JSON.stringify(massf.runRec));
       let bull = runREC === 2 || runREC === 4 ? " •" : " ";
-      let hostt =
-        window.location.origin.slice(0, 22) === "https://localhost:3000"
-          ? "https://localhost:3000/"
-          : "./";
-      let host = hostt + "18.svg";
-      if (DEMO && debug) {
-        host = hostt + "1.svg";
-        if (bull === " •" && runREC === 2) host = hostt + "2.svg";
-        if (bull !== " •" && runREC === 5) host = hostt + "2.svg";
-      }
-      if (!debug && massf.id <= 10000) {
-        let num = map.tflight[massf.idx].tlsost.num.toString();
-        if (DEMO) {
-          num = "1";
-          if (bull === " •" && runREC === 2) num = "2";
-          if (bull !== " •" && runREC === 5) num = "2";
-        }
-        host =
-          window.location.origin + "/free/img/trafficLights/" + num + ".svg";
-      }
       let takt: any = massf.faza;
       if (!massf.faza) takt = "";
       let fazaImg: null | string = null;
@@ -523,7 +500,6 @@ const RgsToDoMode = (props: {
       let pictImg: any = "";
       if (massf.faza) pictImg = OutputFazaImg(fazaImg, massf.faza);
       let illum = nomIllum === idx ? styleStrokaTabl01 : styleStrokaTabl02;
-      let finish = runREC !== 1 && runREC !== 5 && runREC > 0 ? true : false;
 
       return (
         <Grid key={idx} container sx={styleStrokaTabl03}>
@@ -532,26 +508,12 @@ const RgsToDoMode = (props: {
               {massf.id}
             </Button>
           </Grid>
-          <GsFieldOfMiracles finish={finish} idx={idx} func={ClickAddition} />
-          <Grid item xs={1.0}>
-            {!finish && massf.id <= 10000 && (
-              <Box sx={styleStrokaBoxlImg} onClick={() => ClickBox(idx)}>
-                {OutputVertexImg(host)}
-              </Box>
-            )}
-            {massf.id > 10000 && <>{CircleObj()}</>}
-            {finish && massf.id <= 10000 && massf.fazaSist > 0 && (
-              <Button sx={styleStrokaTablImg} onClick={() => ClickVertex(idx)}>
-                {OutputVertexImg(host)}
-              </Button>
-            )}
-
-            {finish && massf.id <= 10000 && massf.fazaSist < 0 && (
-              <Box sx={styleStrokaBoxlImg} onClick={() => ClickBox(idx)}>
-                {OutputVertexImg(host)}
-              </Box>
-            )}
-          </Grid>
+          <GsFieldOfMiracles
+            idx={idx}
+            func={ClickAddition}
+            ClVert={ClickVertex}
+            ClBox={ClickBox}
+          />
           <Grid item xs={0.2} sx={styleToDo03}>
             {bull}
           </Grid>

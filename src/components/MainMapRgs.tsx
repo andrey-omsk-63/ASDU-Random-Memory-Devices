@@ -263,7 +263,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     datestat.massPath = null; // точки рабочего маршрута
     dispatch(statsaveCreate(datestat));
     ymaps && addRoute(ymaps); // перерисовка связей
-
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
     console.log("Всё стёрли!!!");
   }, [ymaps, addRoute, datestat, dispatch]);
@@ -632,8 +631,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     xsMap = size;
     widthMap = "99.9%";
     modeToDo = 0;
-    setToDoMode(false);
     StatusQuo();
+    setToDoMode(false);
     setFlagPusk(!flagPusk);
   };
 

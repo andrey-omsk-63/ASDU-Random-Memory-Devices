@@ -193,9 +193,9 @@ export const DrawCircle = (ymaps: any, mapp: any, massfaz: any) => {
       ],
       {},
       {
-        fillColor: "#9B59DA33", // Цвет заливки  Последний байт (77) определяет прозрачность.
+        fillColor: "#9B59DA33", // Цвет заливки  Последний байт (33) определяет прозрачность.
         strokeColor: "#9B59DA", // Цвет обводки
-        strokeOpacity: 0.5, // Ширина обводки в пикселях
+        strokeOpacity: 0.5, // Прозрачность обводки
         strokeWidth: 1, // Ширина обводки в пикселях
       }
     );
@@ -203,10 +203,7 @@ export const DrawCircle = (ymaps: any, mapp: any, massfaz: any) => {
   };
 
   for (let i = 0; i < massfaz.length; i++)
-    if (!i || i === massfaz.length - 1) {
-      //console.log("0CircleDrawer:",i,massfaz.length, massfaz[i]);
-      CircleDrawer(massfaz[i].coordinates);
-    }
+    if (!i || i === massfaz.length - 1) CircleDrawer(massfaz[i].coordinates);
 };
 
 export const SaveZoom = (zoom: number, pointCenter: Array<number>) => {
@@ -619,8 +616,18 @@ export const NameMode = () => {
 export const OutputFazaImg = (img: any, i: number) => {
   let widthHeight = 60;
   if (!img) widthHeight = 30;
+
+  const styleFazaImg = {
+    fontSize: 33,
+    marginTop: -0.5,
+    marginLeft: 2,
+    height: "75px",
+    color: "#5B1080", // сиреневый
+    textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  };
+
   return (
-    <>
+    <Box sx={{height: "77px",}}>
       {img && (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -634,8 +641,8 @@ export const OutputFazaImg = (img: any, i: number) => {
           />
         </svg>
       )}
-      {!img && <Box sx={{ color: "#7620a2", fontSize: 33 }}>{i}</Box>}
-    </>
+      {!img && <Box sx={styleFazaImg}>{i}</Box>}
+    </Box>
   );
 };
 
@@ -716,7 +723,7 @@ export const CircleObj = () => {
   };
 
   return (
-    <Box sx={{ height: 36 }}>
+    <Box sx={{ border: 1, height: 36 }}>
       <Box sx={circle}></Box>
     </Box>
   );

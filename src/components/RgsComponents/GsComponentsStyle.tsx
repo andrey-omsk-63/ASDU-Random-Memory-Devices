@@ -66,14 +66,38 @@ export const styleStrokaTabl03 = {
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
 };
 
+export const styleStrokaTabl04 = {
+  marginLeft: "-89px",
+  marginTop: "-1px",
+  width: "120px",
+  fontSize: 12.0,
+  color: "#8D9194", // серый
+  textShadow: "0px 0px 0px rgba(0,0,0,0.3)",
+};
+
+export const styleStrokaTabl05 = {
+  marginTop: "10px",
+  marginLeft: "-36px",
+  width: "120px",
+  fontSize: 12.5,
+  color: "#E67641", // оранж
+  textShadow: "0px 0px 0px rgba(0,0,0,0.3)",
+};
+
+export const styleStrokaTabl06 = {
+  fontSize: 12,
+  color: "#7620A2",
+  padding: "6px 0 0 0",
+};
+
 export const styleStrokaTablImg = {
-  border: "1px solid #000",
-  bgcolor: "#EFF9E6",
+  //bgcolor: "#EFF9E6",// светло-салатовый
+  bgcolor: "#D0F0C0", // салатовый
   maxWidth: "33px",
   minWidth: "33px",
   maxHeight: "45px",
   minHeight: "45px",
-  borderColor: "#E6F5D6", // светло-салатовый
+  border: "1px solid #E6F5D6", // светло-салатовый
   borderRadius: 1,
   color: "black",
   textTransform: "unset !important",
@@ -86,8 +110,8 @@ export const styleStrokaBoxlImg = {
   cursor: "pointer",
   maxWidth: "30.5px",
   minWidth: "30.5px",
-  maxHeight: "41px",
-  minHeight: "41px",
+  maxHeight: "45px",
+  minHeight: "45px",
   padding: "2px 0px 0px 1px",
 };
 
