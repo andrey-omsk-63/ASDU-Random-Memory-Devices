@@ -40,6 +40,7 @@ let flagOpen = false;
 let needRend = false;
 
 export let zoom = 10;
+let zoomOld = 0;
 let pointCenter: any = 0;
 
 let massMem: Array<number> = [];
@@ -64,6 +65,7 @@ let modeHelp = 0;
 let mayEsc = false; // можно воспользоваться Esc при построении маршрута
 let typeRoute = false; // тип отображаемых связей
 let needDrawCircle = false; // нужно перерисовать окружности вокруг светофора
+let circls: any = [null, null];
 
 const MainMapRgs = (props: { trigger: boolean }) => {
   //== Piece of Redux =======================================
@@ -166,10 +168,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           }
         }
       }
-      //console.log("addRoute:", datestat.massPath, massfaz);
-      DrawCircle(ymaps, mapp, massfaz); // нарисовать окружности в начале/конце маршрута
+      circls = DrawCircle(ymaps, mapp, massMem, massdk, addobj); // нарисовать окружности в начале/конце маршрута
     },
-    [datestat.massPath, massfaz]
+    [datestat.massPath, addobj, massdk, massfaz]
   );
 
   const SetFragments = (idx: number) => {
@@ -220,9 +221,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       }
       if (mode) {
         let massMultiRoute: any = []; // исходящие связи
-
-        //console.log("@@@:", massMem, massCoord);
-
         for (let j = 0; j < massRoute.length; j++) {
           let have = 0;
           let KLU = TakeAreaId(massKlu[j])[1] + "-" + TakeAreaId(KLUCH)[1];
@@ -512,10 +510,13 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       funcBound = function () {
         pointCenter = mapp.current.getCenter();
         zoom = mapp.current.getZoom(); // покрутили колёсико мыши
-        if (massfaz.length > 1) {
-          //console.log("InstanceRefDo", zoom);
-          needDrawCircle = true;
-          setFlagPusk(!flagPusk);
+        if (massMem.length) {
+          if (zoomOld !== zoom) {
+            //console.log("InstanceRefDo", zoom);
+            needDrawCircle = true;
+            zoomOld = zoom;
+            setFlagPusk(!flagPusk);
+          }
         }
         SaveZoom(zoom, pointCenter);
       };
@@ -750,9 +751,11 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     setFlagPusk(!flagPusk);
   }
 
-  if (massfaz.length === 3 || needDrawCircle) {
+  if (massMem.length && needDrawCircle) {
     needDrawCircle = false;
-    addRoute(ymaps);
+    circls[0] && mapp.current.geoObjects.remove(circls[0]); // стереть первую окружность
+    circls[1] && mapp.current.geoObjects.remove(circls[1]); // стереть вторую окружность
+    circls = DrawCircle(ymaps, mapp, massMem, massdk, addobj); // нарисовать окружности в начале/конце маршрута
   }
 
   return (

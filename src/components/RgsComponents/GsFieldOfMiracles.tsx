@@ -102,7 +102,7 @@ const GsFieldOfMiracles = (props: {
           </Grid>
         )}
       </Grid>
-      <Grid item xs={1.0} sx={{ cursor: "pointer" }}>
+      <Grid item xs={1.0} sx={{ marginTop: 0.5, cursor: "pointer" }}>
         <Grid
           container
           onMouseEnter={() => setHintVertex(true)}

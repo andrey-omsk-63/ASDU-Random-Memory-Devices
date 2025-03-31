@@ -158,7 +158,10 @@ export const CenterCoordBegin = (map: any) => {
 };
 
 export const Zoomer = (zoom: number) => {
+  //console.log("Zoomer:", zoom);
   switch (zoom) {
+    case 10:
+      return 2000;
     case 11:
       return 1200;
     case 12:
@@ -168,24 +171,30 @@ export const Zoomer = (zoom: number) => {
     case 14:
       return 180;
     case 15:
-      return 120;
+      return 90;
     case 16:
       return 60;
     case 17:
-      return 40;
+      return 35;
     case 18:
-      return 30;
+      return 20;
     case 19:
-      return 25;
+      return 10;
     default:
-      return 1800;
+      return 3000;
   }
 };
 
-export const DrawCircle = (ymaps: any, mapp: any, massfaz: any) => {
-  const CircleDrawer = (massCoord: any) => {
-    //console.log("1CircleDrawer:", massCoord);
-
+export const DrawCircle = (
+  ymaps: any,
+  mapp: any,
+  massMem: any,
+  massdk: any,
+  addobj: any
+) => {
+  let circles: any = [null, null];
+  //console.log("1CircleDrawer:", massMem,massdk.length-massMem[0],addobj.addObjects[0].dgis);
+  const CircleDrawer = (massCoord: any, i: number) => {
     let myCircle = new ymaps.Circle(
       [
         massCoord, // Координаты центра круга
@@ -200,10 +209,19 @@ export const DrawCircle = (ymaps: any, mapp: any, massfaz: any) => {
       }
     );
     mapp.current.geoObjects.add(myCircle);
+    circles[!i ? 0 : 1] = myCircle;
   };
 
-  for (let i = 0; i < massfaz.length; i++)
-    if (!i || i === massfaz.length - 1) CircleDrawer(massfaz[i].coordinates);
+  for (let i = 0; i < massMem.length; i++) {
+    if (!i || i === massMem.length - 1) {
+      let massCoord: any = [];
+      if (massMem[i] < massdk.length) {
+        massCoord = massdk[massMem[i]].coordinates;
+      } else massCoord = addobj.addObjects[massMem[i] - massdk.length].dgis;
+      CircleDrawer(massCoord, i);
+    }
+  }
+  return circles;
 };
 
 export const SaveZoom = (zoom: number, pointCenter: Array<number>) => {
@@ -405,10 +423,11 @@ export const Duplet = (finish: boolean, leng: number) => {
 
   let soobHelpFiest1 = "Маршрут сформирован\xa0";
   let soobHelpFiest2 = "";
+  let soobHelpFiest3 =
+    leng > 2 ? "удаление последнего перекрёстка" : "прерывание ввода";
   if (!finish) {
     soobHelpFiest1 = "Добавьте перекрёстки в маршруте [" + leng;
-    soobHelpFiest2 =
-      "]\xa0\xa0\xa0\xa0\xa0\xa0Конец работы - ввод точки выхода";
+    soobHelpFiest2 = "]\xa0\xa0\xa0\xa0\xa0\xa0<Esc> - " + soobHelpFiest3;
   }
   return (
     <>
@@ -624,10 +643,11 @@ export const OutputFazaImg = (img: any, i: number) => {
     height: "75px",
     color: "#5B1080", // сиреневый
     textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+    border: 0,
   };
 
   return (
-    <Box sx={{height: "77px",}}>
+    <Box sx={{ border: 0, height: "88px" }}>
       {img && (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -723,7 +743,7 @@ export const CircleObj = () => {
   };
 
   return (
-    <Box sx={{ border: 1, height: 36 }}>
+    <Box sx={{ height: 36 }}>
       <Box sx={circle}></Box>
     </Box>
   );

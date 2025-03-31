@@ -520,7 +520,7 @@ const RgsToDoMode = (props: {
           <Grid item xs={1.0} sx={styleStrokaTakt}>
             {takt}
           </Grid>
-          <Grid item xs={2} sx={{ textAlign: "center" }}>
+          <Grid item xs={2} sx={{ height: "78px", textAlign: "center" }}>
             {pictImg}
           </Grid>
           <Grid item xs sx={{ fontSize: 14, padding: "6px 0 0 0" }}>
