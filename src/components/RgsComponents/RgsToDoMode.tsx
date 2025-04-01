@@ -338,12 +338,6 @@ const RgsToDoMode = (props: {
   };
 
   const CloseVertex = (idx: number) => {
-    if (!DEMO) {
-      SendSocketDispatch(massfaz[idx].idevice, 9, 9);
-      let massIdevice: Array<number> = [];
-      massIdevice.push(massfaz[idx].idevice);
-      SendSocketRoute(massIdevice, false); // завершенение режима
-    }
     for (let i = 0; i < massInt[idx].length; i++) {
       if (massInt[idx][i]) {
         clearInterval(massInt[idx][i]);
@@ -356,6 +350,12 @@ const RgsToDoMode = (props: {
     }
     timerId[idx] = null;
     datestat.timerId[idx] = null;
+    if (!DEMO) {
+      SendSocketDispatch(massfaz[idx].idevice, 9, 9);
+      let massIdevice: Array<number> = [];
+      massIdevice.push(massfaz[idx].idevice);
+      SendSocketRoute(massIdevice, false); // завершенение режима
+    }
     massfaz[idx].runRec = DEMO ? 5 : 1;
     massfaz[idx].fazaSist = -1;
 
