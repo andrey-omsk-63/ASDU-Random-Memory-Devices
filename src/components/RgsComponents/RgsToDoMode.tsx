@@ -13,14 +13,12 @@ import { Fazer } from "../../App";
 import { PressESC } from "../MainMapRgs";
 import { NoClose, MaskFaz } from "../MapConst";
 
-//import { CircleObj, OutputVertexImg } from "../RgsServiceFunctions";
 import { HeaderTabl, OutputFazaImg, TakeAreaId } from "../RgsServiceFunctions";
 import { HeadingTabl } from "../RgsServiceFunctions";
 
 import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 
 import { styleModalMenu, styleStrokaTabl03 } from "./GsComponentsStyle";
-//import { styleStrokaBoxlImg, styleStrokaTablImg } from "./GsComponentsStyle";
 import { styleStrokaTabl01, styleStrokaTakt } from "./GsComponentsStyle";
 import { styleStrokaTabl02, StyleToDoMode } from "./GsComponentsStyle";
 import { styleToDo01, styleToDo03 } from "./GsComponentsStyle";
@@ -84,6 +82,7 @@ const RgsToDoMode = (props: {
   const [openSoobErr, setOpenSoobErr] = React.useState(false);
   const [trigger, setTrigger] = React.useState(true);
   const [flagPusk, setFlagPusk] = React.useState(false);
+  const scRef: any = React.useRef(null);
   let intervalFaza = datestat.intervalFaza; // Задаваемая длительность фазы ДУ (сек)
   let intervalFazaDop = datestat.intervalFazaDop; // Увеличениение длительности фазы ДУ (сек)
   if (!datestat.counterFaza) intervalFaza = intervalFazaDop = 0; // наличие счётчика длительность фазы ДУ
@@ -338,6 +337,7 @@ const RgsToDoMode = (props: {
   };
 
   const CloseVertex = (idx: number) => {
+    nomIllum = idx;
     for (let i = 0; i < massInt[idx].length; i++) {
       if (massInt[idx][i]) {
         clearInterval(massInt[idx][i]);
@@ -393,6 +393,7 @@ const RgsToDoMode = (props: {
       lengthMassMem = props.massMem.length;
       FindFaza();
       oldFaz = props.changeFaz;
+      nomIllum = massfaz.length - 1;
       //console.log("0ToDo:", JSON.parse(JSON.stringify(datestat.massPath)));
     }
   } else {
@@ -419,6 +420,14 @@ const RgsToDoMode = (props: {
 
           timerId.push(null); // появился новый перекрёсток
           massfaz.push(MakeMaskFaz(props.massMem.length - 1));
+
+          nomIllum = massfaz.length - 1;
+          if (nomIllum > 5) {
+            scRef.current && scRef.current.scrollTo(0, nomIllum * 256);
+          }
+
+          console.log("nomIllum:", nomIllum, nomIllum * 36, scRef.current);
+
           let mass = Array(props.massMem.length).fill(null);
           massInt.push(mass);
 
@@ -439,10 +448,12 @@ const RgsToDoMode = (props: {
         }
         if (props.changeFaz !== oldFaz) {
           CloseVertex((oldFaz = props.changeFaz));
+          scRef.current && scRef.current.scrollTo(0, nomIllum * 56);
           setTrigger(!trigger);
         }
         dispatch(massfazCreate(massfaz));
         dispatch(statsaveCreate(datestat));
+        //setTrigger(!trigger);
       }
     }
   }
@@ -553,7 +564,10 @@ const RgsToDoMode = (props: {
         {HeadingTabl(DEMO)}
         <Box sx={styleToDo01}>
           {HeaderTabl()}
-          <Box sx={{ overflowX: "auto", height: hTabl, textShadow: tShadow }}>
+          <Box
+            ref={scRef}
+            sx={{ overflowX: "auto", height: hTabl, textShadow: tShadow }}
+          >
             {StrokaTabl()}
           </Box>
         </Box>
