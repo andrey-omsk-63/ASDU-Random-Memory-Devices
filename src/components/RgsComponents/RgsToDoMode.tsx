@@ -23,8 +23,6 @@ import { styleStrokaTabl01, styleStrokaTakt } from "./GsComponentsStyle";
 import { styleStrokaTabl02, StyleToDoMode } from "./GsComponentsStyle";
 import { styleToDo01, styleToDo03 } from "./GsComponentsStyle";
 
-//export let host: string = "";
-
 let init = true;
 let lengthMassMem = 0;
 let timerId: any[] = [];
@@ -33,7 +31,6 @@ let massInt: any[][] = []; // null
 let oldFaz = -1;
 let needRend = false;
 let nomIllum = -1;
-const tShadow = "2px 2px 3px rgba(0,0,0,0.3)";
 let soobError = "";
 
 const RgsToDoMode = (props: {
@@ -83,6 +80,7 @@ const RgsToDoMode = (props: {
   const [trigger, setTrigger] = React.useState(true);
   const [flagPusk, setFlagPusk] = React.useState(false);
   const scRef: any = React.useRef(null);
+  const LastEntryRef: any = React.useRef(null);
   let intervalFaza = datestat.intervalFaza; // Задаваемая длительность фазы ДУ (сек)
   let intervalFazaDop = datestat.intervalFazaDop; // Увеличениение длительности фазы ДУ (сек)
   if (!datestat.counterFaza) intervalFaza = intervalFazaDop = 0; // наличие счётчика длительность фазы ДУ
@@ -187,9 +185,7 @@ const RgsToDoMode = (props: {
       ) {
         return el !== null;
       });
-
       if (massfaz[mode].fazaSist > 0) datestat.counterId[mode]--; // счётчик
-
       if (!datestat.counterId[mode]) {
         console.log("Нужно послать КУ на", mode + 1); // остановка и очистка счётчика
         for (let i = 0; i < datestat.massInt[mode].length; i++) {
@@ -280,10 +276,9 @@ const RgsToDoMode = (props: {
     } else SendSocketDispatch(fazer.idevice, 9, fazer.faza);
     massfaz[mode].runRec = DEMO ? 4 : 2;
     dispatch(massfazCreate(massfaz));
-
     //=========================================================================
     if (DEMO) massfaz[mode].faza = massfaz[mode].fazaBegin;
-
+    
     console.log(mode + 1 + "-й светофор", DEMO, mode, massfaz[mode].runRec);
 
     setTrigger(!trigger);
@@ -394,7 +389,6 @@ const RgsToDoMode = (props: {
       FindFaza();
       oldFaz = props.changeFaz;
       nomIllum = massfaz.length - 1;
-      //console.log("0ToDo:", JSON.parse(JSON.stringify(datestat.massPath)));
     }
   } else {
     if (lengthMassMem && !props.massMem.length) {
@@ -417,20 +411,15 @@ const RgsToDoMode = (props: {
       } else {
         if (lengthMassMem < props.massMem.length) {
           console.log("появился новый перекрёсток");
-
+          setTimeout(() => {
+            // 👇️ scroll to bottom
+            LastEntryRef.current && LastEntryRef.current.scrollIntoView();
+          }, 150);
           timerId.push(null); // появился новый перекрёсток
           massfaz.push(MakeMaskFaz(props.massMem.length - 1));
-
           nomIllum = massfaz.length - 1;
-          if (nomIllum > 5) {
-            scRef.current && scRef.current.scrollTo(0, nomIllum * 256);
-          }
-
-          console.log("nomIllum:", nomIllum, nomIllum * 36, scRef.current);
-
           let mass = Array(props.massMem.length).fill(null);
           massInt.push(mass);
-
           let leng = datestat.counterId.length;
           let intFaza = JSON.parse(JSON.stringify(intervalFaza));
           if (leng > 2 && intervalFaza < datestat.counterId[leng - 2]) {
@@ -448,12 +437,13 @@ const RgsToDoMode = (props: {
         }
         if (props.changeFaz !== oldFaz) {
           CloseVertex((oldFaz = props.changeFaz));
-          scRef.current && scRef.current.scrollTo(0, nomIllum * 56);
-          setTrigger(!trigger);
+          setTimeout(() => {
+            scRef.current && scRef.current.scrollTo(0, nomIllum * 56);
+          }, 150);
+          //setTrigger(!trigger);
         }
         dispatch(massfazCreate(massfaz));
         dispatch(statsaveCreate(datestat));
-        //setTrigger(!trigger);
       }
     }
   }
@@ -542,17 +532,13 @@ const RgsToDoMode = (props: {
     });
   };
   //========================================================
-  const CheckRun = () => {
+  if (DEMO) {
     for (let i = 0; i < massfaz.length; i++) {
       if (massfaz[i].runRec === 4) massfaz[i].runRec = 2;
       if (massfaz[i].runRec === 5) massfaz[i].runRec = 1;
     }
     dispatch(massfazCreate(massfaz));
-    //setTrigger(!trigger);
-  };
-
-  DEMO && CheckRun();
-
+  }
   if (needRend) {
     needRend = false; // задать ререндеринг
     setFlagPusk(!flagPusk);
@@ -564,11 +550,9 @@ const RgsToDoMode = (props: {
         {HeadingTabl(DEMO)}
         <Box sx={styleToDo01}>
           {HeaderTabl()}
-          <Box
-            ref={scRef}
-            sx={{ overflowX: "auto", height: hTabl, textShadow: tShadow }}
-          >
+          <Box ref={scRef} sx={{ overflowX: "auto", height: hTabl }}>
             {StrokaTabl()}
+            <div ref={LastEntryRef} />
           </Box>
         </Box>
         <Box sx={{ marginTop: 0.5, textAlign: "center" }}>

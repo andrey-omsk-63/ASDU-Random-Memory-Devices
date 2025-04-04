@@ -228,7 +228,6 @@ export const SaveZoom = (zoom: number, pointCenter: Array<number>) => {
   window.localStorage.ZoomDU = zoom;
   window.localStorage.PointCenterDU0 = pointCenter[0];
   window.localStorage.PointCenterDU1 = pointCenter[1];
-  //console.log('SaveZoom:',zoom, window.localStorage.ZoomGs)
 };
 
 export const Distance = (coord1: Array<number>, coord2: Array<number>) => {

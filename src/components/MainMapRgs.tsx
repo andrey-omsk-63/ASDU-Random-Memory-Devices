@@ -49,7 +49,7 @@ let massCoord: any = []; // массив координат светофоров
 let massKlu: Array<string> = []; // массив ключей
 let massNomBind: Array<number> = []; // массив номеров светофоров в bindings
 let soobErr = "";
-let xsMap = 11.99;
+//let xsMap = 11.99;
 let widthMap = "99.9%";
 
 let modeToDo = 0;
@@ -590,7 +590,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           ymaps && DoDemo(ymaps, 0);
           break;
         case 53: // выполнить режим
-          xsMap = 7.7;
+          //xsMap = 7.7;
           widthMap = "99.9%";
           setToDoMode(true);
           setRestartBan((BAN = true));
@@ -629,7 +629,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   const OldSizeWind = (size: number) => {
     console.log("КОНЕЦ!!!");
-    xsMap = size;
+    //xsMap = size;
     widthMap = "99.9%";
     modeToDo = 0;
     StatusQuo();
@@ -732,9 +732,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     removePlayerFromGame();
   };
 
-  const alertUser = (event: any) => {
-    Closing();
-  };
+  const alertUser = (event: any) => Closing();
 
   React.useEffect(() => {
     window.addEventListener("beforeunload", alertUser);
@@ -762,44 +760,42 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     <Grid container sx={{ height: "99.9vh" }}>
       <Grid item xs={12}>
         {CommentGl()}
-        <Grid container>
-          <Grid item xs={xsMap} sx={{ height: "96.9vh" }}>
-            {Object.keys(map.tflight).length && flagOpen && (
-              <YMaps query={{ apikey: MyYandexKey, lang: "ru_RU" }}>
-                <Map
-                  modules={YMapsModul}
-                  state={mapState}
-                  instanceRef={(ref) => InstanceRefDo(ref)}
-                  onLoad={(ref) => {
-                    ref && setYmaps(ref);
-                  }}
-                  width={widthMap}
-                  height={"99.9%"}
-                >
-                  {YandexServices()}
-                  {Pererisovka()}
-                  <PlacemarkDo />
-                  {createObject && (
-                    <RgsCreateObject
-                      setOpen={setCreateObject}
-                      coord={leftCoord}
-                      funcMode={ModeToDo}
-                    />
-                  )}
-                  {processObject && (
-                    <RgsProcessObject setOpen={setProcessObject} idx={idxObj} />
-                  )}
-                  {appoint && datestat.readyPict && (
-                    <RgsAppointVertex setOpen={setAppoint} idx={idxObj} />
-                  )}
-                  {fragments && <GsFragments close={SetFragments} />}
-                  {openSoobErr && (
-                    <GsErrorMessage setOpen={setOpenSoobErr} sErr={soobErr} />
-                  )}
-                </Map>
-              </YMaps>
-            )}
-          </Grid>
+        <Grid container sx={{ height: "96.9vh" }}>
+          {Object.keys(map.tflight).length && flagOpen && (
+            <YMaps query={{ apikey: MyYandexKey, lang: "ru_RU" }}>
+              <Map
+                modules={YMapsModul}
+                state={mapState}
+                instanceRef={(ref) => InstanceRefDo(ref)}
+                onLoad={(ref) => {
+                  ref && setYmaps(ref);
+                }}
+                width={widthMap}
+                height={"99.9%"}
+              >
+                {YandexServices()}
+                {Pererisovka()}
+                <PlacemarkDo />
+                {createObject && (
+                  <RgsCreateObject
+                    setOpen={setCreateObject}
+                    coord={leftCoord}
+                    funcMode={ModeToDo}
+                  />
+                )}
+                {processObject && (
+                  <RgsProcessObject setOpen={setProcessObject} idx={idxObj} />
+                )}
+                {appoint && datestat.readyPict && (
+                  <RgsAppointVertex setOpen={setAppoint} idx={idxObj} />
+                )}
+                {fragments && <GsFragments close={SetFragments} />}
+                {openSoobErr && (
+                  <GsErrorMessage setOpen={setOpenSoobErr} sErr={soobErr} />
+                )}
+              </Map>
+            </YMaps>
+          )}
         </Grid>
         {toDoMode && (
           <Box sx={styleServisTable}>

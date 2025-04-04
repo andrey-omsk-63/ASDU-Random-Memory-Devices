@@ -63,7 +63,8 @@ export const styleStrokaTabl02 = {
 
 export const styleStrokaTabl03 = {
   marginTop: 0,
-  textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  //textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 
 export const styleStrokaTabl04 = {
