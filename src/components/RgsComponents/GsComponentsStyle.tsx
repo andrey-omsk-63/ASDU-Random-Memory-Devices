@@ -13,16 +13,6 @@ export const styleModalMenu = {
 };
 
 export const styleToDoMode = {
-  // position: "relative",
-  // marginTop: 0.1,
-  // marginLeft: "auto",
-  // marginRight: 1,
-  // width: "96%",
-  // bgcolor: "background.paper",
-  // border: "3px solid #fff",
-  // borderRadius: 1,
-  // boxShadow: 24,
-  // p: 1.0,
   bgcolor: "background.paper",
   border: "1px solid #fff",
   borderRadius: 1,
@@ -34,9 +24,10 @@ export const styleStrokaTabl01 = {
   fontSize: 13.5,
   maxWidth: "44px",
   minWidth: "1px",
-  maxHeight: "24px",
-  minHeight: "24px",
-  bgcolor: "#BAE186", // тёмно-салатовый
+  maxHeight: "21px",
+  minHeight: "21px",
+  padding: "2px 8px 0px 8px",
+  bgcolor: "#82E94A", // ярко-салатовый
   border: "1px solid #93D145", // ярко-салатовый
   borderRadius: 1,
   color: "black",
@@ -51,8 +42,9 @@ export const styleStrokaTabl02 = {
   bgcolor: "#E6F5D6",
   maxWidth: "44px",
   minWidth: "1px",
-  maxHeight: "24px",
-  minHeight: "24px",
+  maxHeight: "21px",
+  minHeight: "21px",
+  padding: "2px 8px 0px 8px",
   borderColor: "#d4d4d4", // серый
   borderRadius: 1,
   color: "black",
@@ -63,7 +55,6 @@ export const styleStrokaTabl02 = {
 
 export const styleStrokaTabl03 = {
   marginTop: 0,
-  //textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
 

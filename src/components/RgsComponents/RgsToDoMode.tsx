@@ -278,7 +278,6 @@ const RgsToDoMode = (props: {
     dispatch(massfazCreate(massfaz));
     //=========================================================================
     if (DEMO) massfaz[mode].faza = massfaz[mode].fazaBegin;
-    
     console.log(mode + 1 + "-й светофор", DEMO, mode, massfaz[mode].runRec);
 
     setTrigger(!trigger);
@@ -412,8 +411,7 @@ const RgsToDoMode = (props: {
         if (lengthMassMem < props.massMem.length) {
           console.log("появился новый перекрёсток");
           setTimeout(() => {
-            // 👇️ scroll to bottom
-            LastEntryRef.current && LastEntryRef.current.scrollIntoView();
+            LastEntryRef.current && LastEntryRef.current.scrollIntoView(); // 👇️ scroll to bottom
           }, 150);
           timerId.push(null); // появился новый перекрёсток
           massfaz.push(MakeMaskFaz(props.massMem.length - 1));
@@ -440,7 +438,6 @@ const RgsToDoMode = (props: {
           setTimeout(() => {
             scRef.current && scRef.current.scrollTo(0, nomIllum * 56);
           }, 150);
-          //setTrigger(!trigger);
         }
         dispatch(massfazCreate(massfaz));
         dispatch(statsaveCreate(datestat));

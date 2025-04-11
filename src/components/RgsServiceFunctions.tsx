@@ -10,6 +10,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import { MdOpenWith } from "react-icons/md";
 
+import { YMapsApi } from "react-yandex-maps";
+
 import { Pointer } from "../App";
 import { Tflink, WayPointsArray } from "../interfaceBindings";
 
@@ -621,6 +623,25 @@ export const getMassMultiRouteOptionsDemo = (i: number, coler: string) => {
   };
 };
 
+export const PutItInAFrame = (
+  ymaps: YMapsApi | null,
+  mapp: any,
+  massCoord: Array<Array<number>>
+) => {
+  mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
+  if (ymaps) {
+    let multiRout = new ymaps.multiRouter.MultiRoute(
+      { referencePoints: massCoord },
+      {
+        boundsAutoApply: true, // вписать в границы
+        routeActiveStrokeWidth: 0, // толщина линии
+        routeStrokeWidth: 0, // толщина линии альтернативного маршрута
+        wayPointVisible: false,
+      }
+    );
+    mapp.current.geoObjects.add(multiRout);
+  }
+};
 //=== GsSetPhase ===================================
 export const NameMode = () => {
   let nameMode =

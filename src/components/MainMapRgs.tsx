@@ -26,6 +26,7 @@ import { StrokaMenuGlob, MakingKey, Duplet } from "./RgsServiceFunctions";
 import { MakeSoobErr, MakeMassRoute } from "./RgsServiceFunctions";
 import { CheckHaveLink, MakeFazer, DrawCircle } from "./RgsServiceFunctions";
 import { YandexServices, TakeAreaId, TakeAreaIdd } from "./RgsServiceFunctions";
+import { PutItInAFrame } from "./RgsServiceFunctions";
 
 import { SendSocketGetSvg, SendSocketDispatch } from "./RgsSocketFunctions";
 import { SendSocketGetPhases } from "./RgsSocketFunctions";
@@ -36,12 +37,12 @@ import { styleMenuGl, styleServisTable } from "./MainMapStyle";
 
 export let BAN = false;
 export let PressESC = false; // был нажат Esc при вводе маршрута
-let flagOpen = false;
-let needRend = false;
-
 export let zoom = 10;
 let zoomOld = 0;
 let pointCenter: any = 0;
+
+let flagOpen: boolean, needRend: boolean, inTarget: boolean, inDemo: boolean;
+flagOpen = needRend = inTarget = inDemo = false;
 
 let massMem: Array<number> = [];
 let massVert: Array<number> = [];
@@ -49,12 +50,7 @@ let massCoord: any = []; // массив координат светофоров
 let massKlu: Array<string> = []; // массив ключей
 let massNomBind: Array<number> = []; // массив номеров светофоров в bindings
 let soobErr = "";
-//let xsMap = 11.99;
-let widthMap = "99.9%";
-
 let modeToDo = 0;
-let inTarget = false;
-let inDemo = false;
 let newCenter: any = [];
 let leftCoord: Array<number> = [0, 0];
 let massRoute: any = []; // массив предлагаемых связей
@@ -174,20 +170,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   );
 
   const SetFragments = (idx: number) => {
-    if (idx >= 0 && ymaps) {
-      mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
-      let multiRoute: any = [];
-      multiRoute = new ymaps.multiRouter.MultiRoute(
-        { referencePoints: map.fragments[idx].bounds },
-        {
-          boundsAutoApply: true, // вписать в границы
-          routeActiveStrokeWidth: 0, // толщина линии
-          routeStrokeWidth: 0, // толщина линии альтернативного маршрута
-          wayPointVisible: false,
-        }
-      );
-      mapp.current.geoObjects.add(multiRoute);
-    }
+    idx >= 0 && ymaps && PutItInAFrame(ymaps, mapp, map.fragments[idx].bounds); // расположить фрагмент в границах экрана
     setFragments(false);
   };
 
@@ -254,10 +237,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     massCoord = [];
     massKlu = [];
     massNomBind = []; // массив номеров светофоров в bindings
-    mayEsc = false;
     massRoute = [];
-    datestat.start = false; // первая точка маршрута
-    datestat.finish = false; // закончить исполнение
+    mayEsc = datestat.start = datestat.finish = false; // первая точка маршрута/закончить исполнение
     datestat.massPath = null; // точки рабочего маршрута
     dispatch(statsaveCreate(datestat));
     ymaps && addRoute(ymaps); // перерисовка связей
@@ -287,8 +268,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       if (!debug) {
         datestat.phSvg = Array(8).fill(null);
         datestat.pictSvg = null;
-        datestat.readyPict = false;
-        datestat.readyFaza = false;
+        datestat.readyPict = datestat.readyFaza = false;
       }
       SendImgPhases(index); // запрос на получение изображений фаз
       if (!massdk[index].readVert) {
@@ -345,10 +325,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
       } else {
         if (nom < 0) {
           if (massMem.length > 1) {
-            datestat.finish = true;
+            datestat.finish = needRend = true;
             dispatch(statsaveCreate(datestat));
             Added(klu, index, nom); // последняя точка - объект
-            needRend = true;
             setFlagPusk(!flagPusk);
           } else SoobErr("Ошибочка вышла!!!");
         } else {
@@ -459,8 +438,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
             break;
           }
         }
-        //++++++++++++  Нажали в поле  ++++++++++++
-        if (nomInMass > 0) TakeOffVertex(nomInMass);
+        if (nomInMass > 0) TakeOffVertex(nomInMass); //++++++++++++  Нажали в поле  ++++++++++++
       } else {
         if (nomInMass > 0) {
           if (massMem.length - 1 === nomInMass) {
@@ -512,7 +490,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
         zoom = mapp.current.getZoom(); // покрутили колёсико мыши
         if (massMem.length) {
           if (zoomOld !== zoom) {
-            //console.log("InstanceRefDo", zoom);
             needDrawCircle = true;
             zoomOld = zoom;
             setFlagPusk(!flagPusk);
@@ -590,8 +567,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
           ymaps && DoDemo(ymaps, 0);
           break;
         case 53: // выполнить режим
-          //xsMap = 7.7;
-          widthMap = "99.9%";
           setToDoMode(true);
           setRestartBan((BAN = true));
           setFlagPusk(!flagPusk);
@@ -629,8 +604,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
 
   const OldSizeWind = (size: number) => {
     console.log("КОНЕЦ!!!");
-    //xsMap = size;
-    widthMap = "99.9%";
     modeToDo = 0;
     StatusQuo();
     setToDoMode(false);
@@ -721,10 +694,9 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   }
 
   const Closing = () => {
-    for (let i = 0; i < massfaz.length; i++) {
+    for (let i = 0; i < massfaz.length; i++)
       if (massfaz[i].runRec === 2)
         !DEMO && SendSocketDispatch(massfaz[i].idevice, 9, 9);
-    }
   };
 
   const handleTabClosing = () => {
@@ -737,7 +709,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   React.useEffect(() => {
     window.addEventListener("beforeunload", alertUser);
     window.addEventListener("unload", handleTabClosing);
-
     return () => {
       window.removeEventListener("beforeunload", alertUser);
       window.removeEventListener("unload", handleTabClosing);
@@ -770,7 +741,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                 onLoad={(ref) => {
                   ref && setYmaps(ref);
                 }}
-                width={widthMap}
+                width={"99.9%"}
                 height={"99.9%"}
               >
                 {YandexServices()}
