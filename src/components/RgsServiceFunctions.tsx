@@ -19,6 +19,7 @@ import { FullscreenControl, GeolocationControl } from "react-yandex-maps";
 import { RulerControl, SearchControl } from "react-yandex-maps";
 import { TrafficControl, TypeSelector, ZoomControl } from "react-yandex-maps";
 
+import { debug } from "./../App";
 import { BAN } from "./MainMapRgs";
 
 import { styleAppSt02, styleAppSt03, styleModalEnd } from "./MainMapStyle";
@@ -82,7 +83,7 @@ export const FooterContent = (SaveForm: Function) => {
   );
 };
 
-export const MasskPoint = (debug: boolean, rec: any, imgFaza: string) => {
+export const MasskPoint = (rec: any, imgFaza: string) => {
   let masskPoint: Pointer = {
     ID: -1,
     coordinates: [],

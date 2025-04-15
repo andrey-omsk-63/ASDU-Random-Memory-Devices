@@ -12,8 +12,6 @@ import { styleStrokaBoxlImg, styleStrokaTablImg } from "./GsComponentsStyle";
 import { styleStrokaTabl04, styleStrokaTabl05 } from "./GsComponentsStyle";
 import { styleStrokaTabl06 } from "./GsComponentsStyle";
 
-//import { host } from "./RgsToDoMode";
-
 const GsFieldOfMiracles = (props: {
   idx: number;
   func: Function;

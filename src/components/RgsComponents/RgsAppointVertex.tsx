@@ -95,7 +95,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   //=== инициализация ======================================
   if (oldIdx !== props.idx) {
     HAVE = haveDop = position = heightImg = 0;
-    //comment = false;
     massFlDir = [0, 0, 0, 0];
     massAreaId = new Array(16).fill(0);
     kluchGl = homeRegion + "-" + map.tflight[props.idx].area.num + "-";
@@ -439,7 +438,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
           return;
         }
         let kluch = homeRegion + "-" + area + "-" + id;
-        //let kluchOutput = area + "-" + id;
         let kluchOutput = id;
         if (kluch === kluchGl) {
           soobErr = "Вы пытаетесь связать перекрёсток с самим собой";
@@ -636,10 +634,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
             <Grid item xs={0.6}></Grid>
             <Grid item xs>
               <Box sx={styleAppSt04}>
-                {/* <b>Массив связности перекрёстка {kluchGl.slice(2)}</b> ( */}
-                <b>
-                  Массив связности перекрёстка №{map.tflight[props.idx].ID}
-                </b>{" "}
+                <b>Массив связности перекрёстка №{map.tflight[props.idx].ID}</b>{" "}
                 (<b>{map.tflight[props.idx].description}</b>)
               </Box>
             </Grid>

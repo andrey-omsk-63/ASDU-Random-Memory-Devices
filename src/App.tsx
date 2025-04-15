@@ -16,14 +16,13 @@ import { MasskPoint } from "./components/RgsServiceFunctions";
 
 import { SendSocketGetBindings } from "./components/RgsSocketFunctions";
 import { SendSocketGetAddObjects } from "./components/RgsSocketFunctions";
-//import { SendSocketGetPhases } from "./components/RgsSocketFunctions";
 
 import { dataMap } from "./otladkaMaps";
 import { imgFaza } from "./otladkaPicFaza";
 import { dataBindings } from "./otladkaBindings";
 import { dataAddObjects } from "./otladkaAddObjects";
 
-import { zoomStart } from "./components/MapConst";
+import { zoomStart, CLINCH, BadCODE } from "./components/MapConst";
 
 export let dateMapGl: any;
 export let dateBindingsGl: any;
@@ -145,14 +144,13 @@ const App = () => {
   const dispatch = useDispatch();
   //========================================================
   const Initialisation = () => {
-    let deb = dateStat.debug;
-    let img: any = deb ? imgFaza : null;
+    let img: any = debug ? imgFaza : null;
     for (let i = 0; i < dateMapGl.tflight.length; i++) {
       let coord = [];
       coord[0] = dateMapGl.tflight[i].points.Y;
       coord[1] = dateMapGl.tflight[i].points.X;
       coordinates.push(coord);
-      let masskPoint = MasskPoint(deb, dateMapGl.tflight[i], img);
+      let masskPoint = MasskPoint(dateMapGl.tflight[i], img);
       massdk.push(masskPoint);
     }
     dispatch(coordinatesCreate(coordinates));
@@ -257,8 +255,6 @@ const App = () => {
           massdk[i].readIt = true; // флаг прочтения картинок фаз
           if (data.phases) {
             if (data.phases.length) {
-              // for (let j = 0; j < data.phases.length; j++)
-              //   massdk[i].phSvg[j] = data.phases[j].phase;
               for (let j = 0; j < data.phases.length; j++) {
                 let k = Number(data.phases[j].num);
                 if (k <= massdk[i].phSvg.length)
@@ -287,8 +283,17 @@ const App = () => {
           if (data.phases[i].phase) {
             if (massfaz[j].idevice === data.phases[i].device) {
               if (massfaz[j].fazaSist !== data.phases[i].phase) {
-                massfaz[j].fazaSist = data.phases[i].phase;
-                flagChange = true;
+                let statusVertex = 18;
+                for (let jj = 0; jj < dateMapGl.tflight.length; jj++) {
+                  if (dateMapGl.tflight[jj].idevice === massfaz[j].idevice)
+                    statusVertex = dateMapGl.tflight[jj].tlsost.num;
+                }
+                let clinch = CLINCH.indexOf(statusVertex) < 0 ? false : true;
+                let badCode = BadCODE.indexOf(statusVertex) < 0 ? false : true;
+                if (!clinch && !badCode) {
+                  massfaz[j].fazaSist = data.phases[i].phase;
+                  flagChange = true;
+                }
               }
             }
           }
@@ -301,16 +306,16 @@ const App = () => {
     };
 
     const ActionOnTflight = (data: any) => {
-      let flagCh = false;
+      let flagChange = false;
       for (let i = 0; i < data.tflight.length; i++) {
         for (let j = 0; j < dateMapGl.tflight.length; j++) {
           if (dateMapGl.tflight[j].idevice === data.tflight[i].idevice) {
             dateMapGl.tflight[j].tlsost = data.tflight[i].tlsost;
-            flagCh = true;
+            flagChange = true;
           }
         }
       }
-      if (flagCh) {
+      if (flagChange) {
         dispatch(mapCreate(dateMapGl));
         setTrigger(!trigger);
       }

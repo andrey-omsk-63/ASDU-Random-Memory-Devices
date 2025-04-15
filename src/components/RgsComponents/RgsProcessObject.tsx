@@ -19,10 +19,6 @@ const RgsProcessObject = (props: { setOpen: Function; idx: number }) => {
     const { mapReducer } = state;
     return mapReducer.map.dateMap;
   });
-  // let datestat = useSelector((state: any) => {
-  //   const { statsaveReducer } = state;
-  //   return statsaveReducer.datestat;
-  // });
   let addobj = useSelector((state: any) => {
     const { addobjReducer } = state;
     return addobjReducer.addobj.dateAdd;
@@ -31,8 +27,6 @@ const RgsProcessObject = (props: { setOpen: Function; idx: number }) => {
     const { coordinatesReducer } = state;
     return coordinatesReducer.coordinates;
   });
-  //const debug = datestat.debug;
-  //const ws = datestat.ws;
   const dispatch = useDispatch();
   //========================================================
   const [openSet, setOpenSet] = React.useState(true);

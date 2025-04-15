@@ -45,31 +45,6 @@ export const styleModalEndBind = {
   color: "#7620a2", // сиреневый
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
 };
-
-// export const styleSetInf = {
-//   position: "absolute",
-//   marginTop: "15vh",
-//   marginLeft: "24vh",
-//   width: 380,
-//   bgcolor: "background.paper",
-//   border: "3px solid #000",
-//   borderColor: "primary.main",
-//   borderRadius: 2,
-//   boxShadow: 24,
-//   p: 1.5,
-// };
-
-// export const styleModalEndAttent = {
-//   position: "absolute",
-//   top: "0%",
-//   left: "auto",
-//   right: "-0%",
-//   maxHeight: "21px",
-//   minHeight: "21px",
-//   maxWidth: "2%",
-//   minWidth: "2%",
-//   color: "red",
-// };
 //=== InputObject =====================================================
 export const styleSetAdress = {
   outline: "none",
@@ -77,12 +52,6 @@ export const styleSetAdress = {
   height: "160px",
   marginTop: "9vh",
   marginLeft: "48px",
-  //===
-  // position: 'absolute',
-  // left: '206px',
-  // top: '157px',
-  // transform: 'translate(-50%, -50%)',
-  //===
   border: "3px solid #000",
   borderColor: "#FFFEF7",
   borderRadius: 1,
@@ -92,7 +61,6 @@ export const styleSetAdress = {
 };
 
 export const styleSet = {
-  //marginTop: '2vh',
   width: "230px",
   maxHeight: "4px",
   minHeight: "4px",
@@ -141,7 +109,6 @@ export const styleSetAdrArea = {
 export const styleSetAdrID = {
   width: "319px",
   height: "30px",
-  //marginTop: '-1vh',
 };
 
 export const styleSetArea = {
@@ -215,15 +182,9 @@ export const styleEditName = {
 export const styleSetAppoint = {
   outline: "none",
   position: "relative",
-  // marginTop: "12vh",
-  // marginLeft: 1,
-  // marginRight: "auto",
-  //===
-  // position: 'absolute',
   left: "50%",
   top: "50%",
   transform: "translate(-50%, -50%)",
-  //===
   width: "98.5%",
   bgcolor: "background.paper",
   border: "1px solid #fff",

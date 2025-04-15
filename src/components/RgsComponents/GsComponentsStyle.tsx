@@ -83,7 +83,6 @@ export const styleStrokaTabl06 = {
 };
 
 export const styleStrokaTablImg = {
-  //bgcolor: "#EFF9E6",// светло-салатовый
   bgcolor: "#D0F0C0", // салатовый
   maxWidth: "33px",
   minWidth: "33px",
@@ -117,18 +116,6 @@ export const styleStrokaTakt = {
 
 export const StyleToDoMode = (DEMO: boolean) => {
   const styleToDoMode = {
-    // position: "relative",
-    // marginTop: 0.1,
-    // marginLeft: "auto",
-    // marginRight: 1,
-    // width: "95.1%",
-    // width: "340px",
-    // bgcolor: "background.paper",
-    // border: "1px solid #fff",
-    // borderRadius: 1,
-    // boxShadow: 24,
-    // p: 1.0,
-    // padding: "3px 10px 10px 10px",
     bgcolor: "background.paper",
     border: "1px solid #fff",
     borderRadius: 1,

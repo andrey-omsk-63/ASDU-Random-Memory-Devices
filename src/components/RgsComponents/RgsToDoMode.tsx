@@ -290,7 +290,6 @@ const RgsToDoMode = (props: {
     let kluIn = massfaz[lengthMassMem - 3].id;
     let kluOn = massfaz[lengthMassMem - 1].id;
     let numRec = -1;
-
     for (let i = 0; i < bindings.tfLinks.length; i++) {
       if (TakeAreaId(bindings.tfLinks[i].id)[1] === klu) {
         numRec = i;
@@ -322,10 +321,9 @@ const RgsToDoMode = (props: {
   const FindEnd = () => {
     let ch = 0;
     if (massfaz.length > 2) {
-      for (let i = 0; i < massfaz.length; i++) {
+      for (let i = 0; i < massfaz.length; i++)
         if (i && massfaz[i].id <= 10000)
           if (massfaz[i].runRec === 2 || massfaz[i].runRec === 4) ch++;
-      }
     }
     !ch && handleCloseSetEnd();
   };
@@ -371,7 +369,6 @@ const RgsToDoMode = (props: {
       datestat.counterId = []; // счётчик длительности фаз
       datestat.timerId = []; // массив времени отправки команд на счётчики
       datestat.massInt = []; // массив интервалов отправки команд на счётчики
-
       for (let i = 0; i < props.massMem.length; i++) {
         massfaz.push(MakeMaskFaz(i));
         timerId.push(null);

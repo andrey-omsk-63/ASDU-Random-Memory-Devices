@@ -76,9 +76,6 @@ const GsSetup = (props: { close: Function }) => {
       datestat.typeRoute = massForm.typeRoute;
       window.localStorage.typeRoute = typeRoute; // тип отображаемых связей
 
-      // window.localStorage.typeVert = typeVert; // тип отображаемых CO на карте
-      // window.localStorage.intervalFaza = intervalFaza; // задаваемая длительность фазы ДУ (сек)
-      // window.localStorage.intervalFazaDop = intervalFazaDop; // увеличениение длительности фазы ДУ (сек)
       window.localStorage.typeVert = datestat.typeVert = typeVert; // тип отображаемых CO на карте
       window.localStorage.counterFazaD = counterFaza ? 1 : 0; // наличие счётчика длительность фазы ДУ
       datestat.counterFaza = counterFaza;
@@ -161,7 +158,6 @@ const GsSetup = (props: { close: Function }) => {
         <Box sx={{ fontSize: 12, marginTop: 0.5, color: "#5B1080" }}>
           Параметры перекрёстков
         </Box>
-
         {StrTablVert(
           true,
           7.7,

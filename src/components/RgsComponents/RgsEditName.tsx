@@ -22,16 +22,10 @@ const RgsEditName = (props: { setOpen: Function; idx: number }) => {
     const { mapReducer } = state;
     return mapReducer.map.dateMap;
   });
-  // let datestat = useSelector((state: any) => {
-  //   const { statsaveReducer } = state;
-  //   return statsaveReducer.datestat;
-  // });
   let addobj = useSelector((state: any) => {
     const { addobjReducer } = state;
     return addobjReducer.addobj.dateAdd;
   });
-  //const debug = datestat.debug;
-  //const ws = datestat.ws;
   const dispatch = useDispatch();
   //========================================================
   const [openSetAdress, setOpenSetAdress] = React.useState(true);
@@ -54,7 +48,6 @@ const RgsEditName = (props: { setOpen: Function; idx: number }) => {
     dater = addobj.addObjects[idxObj];
     SendSocketСreateAddObj(dater);
     handleCloseSet();
-    //props.trigger()
   };
 
   const InputName = () => {
