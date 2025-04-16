@@ -73,8 +73,6 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
   });
   const dispatch = useDispatch();
   //========================================================
-  //const debug = datestat.debug;
-  //const ws = datestat.ws;
   const homeRegion = datestat.region;
   const SL = homeRegion < 10 ? 4 : 5;
   let imgFaza = datestat.phSvg;

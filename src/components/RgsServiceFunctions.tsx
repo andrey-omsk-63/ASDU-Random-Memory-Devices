@@ -102,7 +102,7 @@ export const MasskPoint = (rec: any, imgFaza: string) => {
   masskPoint.nameCoordinates = rec.description;
   for (let i = 0; i < 8; i++) {
     let img: any = debug ? imgFaza : null;
-    if (i % 2) img = null; // на localhost картинка - число через одну
+    if (i % 2) img = null; // для localhost картинка - число через одну
     masskPoint.phSvg.push(img);
   }
   return masskPoint;
@@ -161,7 +161,6 @@ export const CenterCoordBegin = (map: any) => {
 };
 
 export const Zoomer = (zoom: number) => {
-  //console.log("Zoomer:", zoom);
   switch (zoom) {
     case 10:
       return 2000;
@@ -196,7 +195,6 @@ export const DrawCircle = (
   addobj: any
 ) => {
   let circles: any = [null, null];
-  //console.log("1CircleDrawer:", massMem,massdk.length-massMem[0],addobj.addObjects[0].dgis);
   const CircleDrawer = (massCoord: any, i: number) => {
     let myCircle = new ymaps.Circle(
       [
@@ -421,8 +419,6 @@ export const StrokaHelp = (soobInfo: string, mode: number) => {
 };
 
 export const Duplet = (finish: boolean, leng: number) => {
-  //console.log('Duplet:',finish)
-
   let soobHelpFiest1 = "Маршрут сформирован\xa0";
   let soobHelpFiest2 = "";
   let soobHelpFiest3 =
@@ -779,7 +775,6 @@ export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
     top: "50%",
     transform: "translate(-50%, -50%)",
     width: 400,
-    //bgcolor: "background.paper",
     bgcolor: "#fff6d2", // светло-жёлтый
     border: "1px solid #fff6d2", // светло-жёлтый
     borderRadius: 1,
@@ -982,14 +977,12 @@ export const MakingKey = (homeRegion: any, valueAr: any, valueId: any) => {
 
 export const CheckKey = (kluch: string, map: any, addobj: any) => {
   let klArea = TakeAreaId(kluch)[0];
-  // ====
   let klId = TakeAreaId(kluch)[1];
-  // ====
   let have = false;
   if (klId < 10000) {
     for (let i = 0; i < map.tflight.length; i++) {
       if (
-        klArea === Number(map.tflight[i].area.num) &&
+        //klArea === Number(map.tflight[i].area.num) &&
         klId === map.tflight[i].ID
       )
         have = true;
@@ -997,7 +990,7 @@ export const CheckKey = (kluch: string, map: any, addobj: any) => {
   } else {
     for (let i = 0; i < addobj.addObjects.length; i++) {
       if (
-        klArea === addobj.addObjects[i].area &&
+        //klArea === addobj.addObjects[i].area &&
         klId === addobj.addObjects[i].id
       )
         have = true;

@@ -10,7 +10,7 @@ import Grid from "@mui/material/Grid";
 import axios from "axios";
 
 import MainMapRgs from "./components/MainMapRgs";
-import AppSocketError from "./AppSocketError";
+//import GsErrorMessage from "./components/RgsComponents/RgsErrorMessage";
 
 import { MasskPoint } from "./components/RgsServiceFunctions";
 
@@ -119,7 +119,6 @@ export let Coordinates: Array<Array<number>> = []; // массив коорди�
 let flagOpenDebug = true;
 let flagOpenWS = true;
 let homeRegion: string = "0";
-let soob = "";
 let flagMap = false;
 let flagBindings = false;
 let flagAddObjects = false;
@@ -218,7 +217,7 @@ const App = () => {
     "W" +
     window.location.search;
 
-  const [openSetErr, setOpenSetErr] = React.useState(false);
+  // const [openSetErr, setOpenSetErr] = React.useState(false);
   const [openMapInfo, setOpenMapInfo] = React.useState(false);
   const [trigger, setTrigger] = React.useState(false);
   //=== инициализация ======================================
@@ -418,7 +417,7 @@ const App = () => {
   return (
     <Grid container sx={{ height: "100vh", width: "100%", bgcolor: "#E9F5D8" }}>
       <Grid item xs>
-        {openSetErr && <AppSocketError sErr={soob} setOpen={setOpenSetErr} />}
+        {/* {openSetErr && <GsErrorMessage sErr={soob} setOpen={setOpenSetErr} />} */}
         {openMapInfo && <MainMapRgs trigger={trigger} />}
       </Grid>
     </Grid>

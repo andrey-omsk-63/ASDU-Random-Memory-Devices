@@ -243,7 +243,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     dispatch(statsaveCreate(datestat));
     ymaps && addRoute(ymaps); // перерисовка связей
     mapp.current.geoObjects.removeAll(); // удаление старой коллекции связей
-    console.log("Всё стёрли!!!");
   }, [ymaps, addRoute, datestat, dispatch]);
 
   const SendImgPhases = (index: number) => {
