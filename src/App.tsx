@@ -276,6 +276,7 @@ const App = () => {
 
     const ActionOnPhases = (data: any) => {
       //console.log("Phases:", data);
+      let soob = "Пришла фаза на мёртвый светофор";
       let flagChange = false;
       for (let i = 0; i < data.phases.length; i++) {
         for (let j = 0; j < massfaz.length; j++) {
@@ -292,7 +293,7 @@ const App = () => {
                 if (!clinch && !badCode) {
                   massfaz[j].fazaSist = data.phases[i].phase;
                   flagChange = true;
-                }
+                } else console.log(soob, massfaz[j].id);
               }
             }
           }

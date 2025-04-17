@@ -14,14 +14,13 @@ import { PressESC } from "../MainMapRgs";
 import { NoClose, MaskFaz } from "../MapConst";
 
 import { HeaderTabl, OutputFazaImg, TakeAreaId } from "../RgsServiceFunctions";
-import { HeadingTabl } from "../RgsServiceFunctions";
+import { HeadingTabl, ModulStrokaTabl } from "../RgsServiceFunctions";
 
 import { SendSocketRoute, SendSocketDispatch } from "../RgsSocketFunctions";
 
 import { styleModalMenu, styleStrokaTabl03 } from "./GsComponentsStyle";
-import { styleStrokaTabl01, styleStrokaTakt } from "./GsComponentsStyle";
+import { styleStrokaTabl01, styleToDo01 } from "./GsComponentsStyle";
 import { styleStrokaTabl02, StyleToDoMode } from "./GsComponentsStyle";
-import { styleToDo01, styleToDo03 } from "./GsComponentsStyle";
 
 let init = true;
 let lengthMassMem = 0;
@@ -255,8 +254,7 @@ const RgsToDoMode = (props: {
   };
 
   const RunVertex = (mode: number) => {
-    // запуск таймеров отправки фаз
-    timerId[mode] = setInterval(() => DoTimerId(mode), timer); // 60000
+    timerId[mode] = setInterval(() => DoTimerId(mode), timer); // запуск таймеров отправки фаз
     massInt[mode].push(JSON.parse(JSON.stringify(timerId[mode])));
     // запуск таймеров счётчиков длительности фаз
     if (intervalFaza) {
@@ -266,20 +264,15 @@ const RgsToDoMode = (props: {
       );
       dispatch(statsaveCreate(datestat));
     }
-    //=========================================================================
     ToDoMode(mode);
     console.log(mode + 1 + "-й светофор АКТИВИРОВАН", timerId[mode], massfaz);
-
     let fazer = massfaz[mode];
     if (DEMO) {
       massfaz[mode].fazaSist = fazer.faza;
     } else SendSocketDispatch(fazer.idevice, 9, fazer.faza);
     massfaz[mode].runRec = DEMO ? 4 : 2;
     dispatch(massfazCreate(massfaz));
-    //=========================================================================
     if (DEMO) massfaz[mode].faza = massfaz[mode].fazaBegin;
-    console.log(mode + 1 + "-й светофор", DEMO, mode, massfaz[mode].runRec);
-
     setTrigger(!trigger);
   };
 
@@ -350,9 +343,7 @@ const RgsToDoMode = (props: {
     }
     massfaz[idx].runRec = DEMO ? 5 : 1;
     massfaz[idx].fazaSist = -1;
-
     console.log(idx + 1 + "-й светофор закрыт!!!");
-
     dispatch(statsaveCreate(datestat));
     dispatch(massfazCreate(massfaz));
     FindEnd();
@@ -406,7 +397,7 @@ const RgsToDoMode = (props: {
         setTrigger(!trigger);
       } else {
         if (lengthMassMem < props.massMem.length) {
-          console.log("появился новый перекрёсток");
+          // появился новый перекрёсток
           setTimeout(() => {
             LastEntryRef.current && LastEntryRef.current.scrollIntoView(); // 👇️ scroll to bottom
           }, 150);
@@ -488,12 +479,9 @@ const RgsToDoMode = (props: {
     return massfaz.map((massf: any, idx: number) => {
       let runREC = JSON.parse(JSON.stringify(massf.runRec));
       let bull = runREC === 2 || runREC === 4 ? " •" : " ";
-      let takt: any = massf.faza;
-      if (!massf.faza) takt = "";
-      let fazaImg: null | string = null;
-      fazaImg = massf.img[takt - 1];
-      let pictImg: any = "";
-      if (massf.faza) pictImg = OutputFazaImg(fazaImg, massf.faza);
+      let takt: any = massf.faza ? massf.faza : "";
+      let fazaImg: null | string = massf.img[takt - 1];
+      let pictImg: any = massf.faza ? OutputFazaImg(fazaImg, massf.faza) : "";
       let illum = nomIllum === idx ? styleStrokaTabl01 : styleStrokaTabl02;
 
       return (
@@ -509,18 +497,7 @@ const RgsToDoMode = (props: {
             ClVert={ClickVertex}
             ClBox={ClickBox}
           />
-          <Grid item xs={0.2} sx={styleToDo03}>
-            {bull}
-          </Grid>
-          <Grid item xs={1.0} sx={styleStrokaTakt}>
-            {takt}
-          </Grid>
-          <Grid item xs={2} sx={{ height: "78px", textAlign: "center" }}>
-            {pictImg}
-          </Grid>
-          <Grid item xs sx={{ fontSize: 14, padding: "6px 0 0 0" }}>
-            {massf.name}
-          </Grid>
+          {ModulStrokaTabl(bull, takt, pictImg, massf.name)}
         </Grid>
       );
     });

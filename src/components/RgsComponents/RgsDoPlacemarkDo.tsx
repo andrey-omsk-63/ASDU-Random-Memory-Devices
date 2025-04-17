@@ -112,17 +112,28 @@ const RgsDoPlacemarkDo = (props: {
         if (linked >= 0) mpp = "4";
       }
       host = window.location.origin + "/free/img/trafficLights/" + mpp + ".svg";
-    } else if (DEMO) host = hostt + "1.svg";
+    } else {
+      if (DEMO) host = hostt + "1.svg";
+    }
 
-    if (lengMem >= 2 && typeVert && pC >= 0 && FAZASIST > 0 && FAZASIST !== 9) {
-      // картинка с номером фазы
-      let hostt =
-        window.location.origin.slice(0, 22) === "https://localhost:3000"
-          ? "https://localhost:3000/phases/"
-          : "./phases/";
-      host = debug
-        ? hostt + FAZASIST + ".svg"
-        : "/file/static/img/buttons/" + FAZASIST + ".svg";
+    if (lengMem >= 2) {
+      if (!typeVert && pC >= 0 && FAZASIST > 0 && FAZASIST !== 9 && DEMO) {
+        // DEMO картинка со значком светофора
+        host = debug
+          ? hostt + "2.svg"
+          : window.location.origin + "/free/img/trafficLights/2.svg";
+      }
+
+      if (typeVert && pC >= 0 && FAZASIST > 0 && FAZASIST !== 9) {
+        // картинка с номером фазы
+        let hostt =
+          window.location.origin.slice(0, 22) === "https://localhost:3000"
+            ? "https://localhost:3000/phases/"
+            : "./phases/";
+        host = debug
+          ? hostt + FAZASIST + ".svg"
+          : "/file/static/img/buttons/" + FAZASIST + ".svg";
+      }
     }
 
     return host;
@@ -288,6 +299,7 @@ const RgsDoPlacemarkDo = (props: {
     return pC < 0 ||
       FAZASIST < 0 ||
       (FAZASIST === 9 && FAZASISTold < 0) ||
+      (lengMem > 2 && typeVert === 0) ||
       (lengMem > 2 && typeVert === 2) ||
       (lengMem > 2 && typeVert === 1 && !fazaImg)
       ? {

@@ -23,9 +23,9 @@ import { debug } from "./../App";
 import { BAN } from "./MainMapRgs";
 
 import { styleAppSt02, styleAppSt03, styleModalEnd } from "./MainMapStyle";
-import { searchControl } from "./MainMapStyle";
-import { styleSetPK04 } from "./MainMapStyle";
-import { styleToDo02 } from "./RgsComponents/GsComponentsStyle";
+import { searchControl, styleSetPK04 } from "./MainMapStyle";
+import { styleToDo02, styleToDo03 } from "./RgsComponents/GsComponentsStyle";
+import { styleStrokaTakt } from "./RgsComponents/GsComponentsStyle";
 
 const handleKey = (event: any) => {
   if (event.key === "Enter") event.preventDefault();
@@ -766,6 +766,30 @@ export const CircleObj = () => {
     </Box>
   );
 };
+
+export const ModulStrokaTabl = (
+  bull: string,
+  takt: number,
+  pictImg: any,
+  name: string
+) => {
+  return (
+    <>
+      <Grid item xs={0.2} sx={styleToDo03}>
+        {bull}
+      </Grid>
+      <Grid item xs={1.0} sx={styleStrokaTakt}>
+        {takt}
+      </Grid>
+      <Grid item xs={2} sx={{ height: "78px", textAlign: "center" }}>
+        {pictImg}
+      </Grid>
+      <Grid item xs sx={{ fontSize: 14, padding: "6px 0 0 0" }}>
+        {name}
+      </Grid>
+    </>
+  );
+};
 //=== AppointVertex ================================
 export const BadExit = (badExit: boolean, handleCloseEnd: Function) => {
   const styleSetPoint = {
@@ -976,7 +1000,7 @@ export const MakingKey = (homeRegion: any, valueAr: any, valueId: any) => {
 };
 
 export const CheckKey = (kluch: string, map: any, addobj: any) => {
-  let klArea = TakeAreaId(kluch)[0];
+  //let klArea = TakeAreaId(kluch)[0];
   let klId = TakeAreaId(kluch)[1];
   let have = false;
   if (klId < 10000) {
