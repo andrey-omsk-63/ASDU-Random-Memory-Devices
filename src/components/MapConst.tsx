@@ -9,7 +9,8 @@ export const YMapsModul = [
 
 export const MyYandexKey = "65162f5f-2d15-41d1-a881-6c1acf34cfa1"; // ключ
 
-export const NoClose = "Этот светофор без предварительного закрытия предыдущего светофора закрывать нельзя"
+export const NoClose =
+  "Этот светофор без предварительного закрытия предыдущего светофора закрывать нельзя";
 
 export const zoomStart = 12; // начальный zoom Yandex-карты
 
@@ -29,6 +30,13 @@ export const MaskFaz: Fazer = {
   runRec: 0, // 0-начало 1-финиш 2-актив 3-хз 4-активДемо 5-финишДемо
   img: [],
 };
+
+export const GoodCODE: Array<number> = [
+  // список "хороших" кодов
+  2, // Диспетчерское управление
+  7, // ДУ ЖМ - жёлтое мигание ро расписанию
+  12, // ДУ ОС - отключение светофора заданное из центра (АРМа)
+];
 
 export const CLINCH: Array<number> = [
   // список аварийных кодов

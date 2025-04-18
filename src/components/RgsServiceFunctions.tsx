@@ -555,6 +555,12 @@ export const MakeSoobErr = (mode: number, Klu: string, Klu2: string) => {
       soobErr =
         "Нет связи с " + vert + klu + " в массиве связности перекрёстка #";
       soobErr += klu2;
+      break;
+    case 6:
+      soobErr =
+        "⚠️Предупреждение\xa0\xa0\xa0\Перекрёсток ID" +
+        Klu +
+        " уже управляется другим пользователем";
   }
   return soobErr;
 };

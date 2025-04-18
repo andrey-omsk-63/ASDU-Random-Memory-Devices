@@ -281,20 +281,23 @@ const App = () => {
       for (let i = 0; i < data.phases.length; i++) {
         for (let j = 0; j < massfaz.length; j++) {
           if (data.phases[i].phase) {
-            if (massfaz[j].idevice === data.phases[i].device) {
-              if (massfaz[j].fazaSist !== data.phases[i].phase) {
-                let statusVertex = 18;
-                for (let jj = 0; jj < dateMapGl.tflight.length; jj++) {
-                  if (dateMapGl.tflight[jj].idevice === massfaz[j].idevice)
-                    statusVertex = dateMapGl.tflight[jj].tlsost.num;
-                }
-                let clinch = CLINCH.indexOf(statusVertex) < 0 ? false : true;
-                let badCode = BadCODE.indexOf(statusVertex) < 0 ? false : true;
-                if (!clinch && !badCode) {
-                  massfaz[j].fazaSist = data.phases[i].phase;
-                  flagChange = true;
-                } else console.log(soob, massfaz[j].id);
-              }
+            if (
+              massfaz[j].idevice === data.phases[i].device &&
+              massfaz[j].fazaSist !== data.phases[i].phase
+            ) {
+              let statusVertex = dateMapGl.tflight[massfaz[j].idx].tlsost.num;
+              // for (let jj = 0; jj < dateMapGl.tflight.length; jj++) {
+              //   if (dateMapGl.tflight[jj].idevice === massfaz[j].idevice)
+              //     statusVertex = dateMapGl.tflight[jj].tlsost.num;
+              // }
+              let clinch = CLINCH.indexOf(statusVertex) < 0 ? false : true;
+              let badCode = BadCODE.indexOf(statusVertex) < 0 ? false : true;
+              if (!clinch && !badCode) {
+                console.log("ID", massfaz[j].id, statusVertex);
+
+                massfaz[j].fazaSist = data.phases[i].phase;
+                flagChange = true;
+              } else console.log(soob, massfaz[j].id);
             }
           }
         }

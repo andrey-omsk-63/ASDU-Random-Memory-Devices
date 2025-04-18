@@ -31,7 +31,7 @@ import { PutItInAFrame } from "./RgsServiceFunctions";
 import { SendSocketGetSvg, SendSocketDispatch } from "./RgsSocketFunctions";
 import { SendSocketGetPhases } from "./RgsSocketFunctions";
 
-import { YMapsModul, MyYandexKey, NoClose } from "./MapConst";
+import { YMapsModul, MyYandexKey, NoClose, GoodCODE } from "./MapConst";
 
 import { styleMenuGl, styleServisTable } from "./MainMapStyle";
 
@@ -282,6 +282,11 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     }
   };
 
+  const SoobErr = (soob: string) => {
+    soobErr = soob;
+    setOpenSoobErr(true);
+  };
+
   const Added = (klu: string, index: number, nom: number) => {
     helper = !helper;
     let masscoord: any = [];
@@ -306,11 +311,14 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     mayEsc = true;
     if (massMem.length === 3) PressButton(53);
     if (massMem.length !== 3) setFlagPusk(!flagPusk);
-  };
+    if (!DEMO && index < map.tflight.length) {
+      let statusVertex = map.tflight[index].tlsost.num;
+      let goodCode = GoodCODE.indexOf(statusVertex) < 0 ? false : true;
 
-  const SoobErr = (soob: string) => {
-    soobErr = soob;
-    setOpenSoobErr(true);
+      console.log("2AddVertex:", goodCode, statusVertex);
+      
+      goodCode && SoobErr(MakeSoobErr(6, map.tflight[index].ID.toString(), "")); // перекрёсток занят
+    }
   };
 
   const AddVertex = (klu: string, index: number, nom: number) => {

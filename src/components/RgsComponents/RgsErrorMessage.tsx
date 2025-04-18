@@ -8,13 +8,15 @@ import Typography from "@mui/material/Typography";
 const GsErrorMessage = (props: { sErr: string; setOpen: any }) => {
   const [openSet, setOpenSet] = React.useState(true);
 
+  let coler = props.sErr.slice(0, 3) === "⚠️П" ? "#fff6d2" : "#ffe16e"; // светло-жёлтый/жёлтый
+
   const styleSetInf = {
     outline: "none",
     position: "absolute",
     marginTop: "15vh",
     marginLeft: "24vh",
     width: 380,
-    bgcolor: "#ffe16e", // жёлтый
+    bgcolor: coler,
     border: "1px solid #FFEDA6", // блендно-жёлтый
     borderRadius: 1,
     color: "black",
