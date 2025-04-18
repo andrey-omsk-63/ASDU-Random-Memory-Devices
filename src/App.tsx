@@ -286,14 +286,10 @@ const App = () => {
               massfaz[j].fazaSist !== data.phases[i].phase
             ) {
               let statusVertex = dateMapGl.tflight[massfaz[j].idx].tlsost.num;
-              // for (let jj = 0; jj < dateMapGl.tflight.length; jj++) {
-              //   if (dateMapGl.tflight[jj].idevice === massfaz[j].idevice)
-              //     statusVertex = dateMapGl.tflight[jj].tlsost.num;
-              // }
               let clinch = CLINCH.indexOf(statusVertex) < 0 ? false : true;
               let badCode = BadCODE.indexOf(statusVertex) < 0 ? false : true;
               if (!clinch && !badCode) {
-                console.log("ID", massfaz[j].id, statusVertex);
+                // console.log("ID", massfaz[j].id, statusVertex);
 
                 massfaz[j].fazaSist = data.phases[i].phase;
                 flagChange = true;
