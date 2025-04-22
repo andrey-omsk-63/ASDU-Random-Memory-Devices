@@ -11,7 +11,7 @@ import GsFieldOfMiracles from "./GsFieldOfMiracles";
 
 import { Fazer } from "../../App";
 import { PressESC } from "../MainMapRgs";
-import { NoClose, MaskFaz } from "../MapConst";
+import { NoClose, MaskFaz, GoodCODE } from "../MapConst";
 
 import { HeaderTabl, OutputFazaImg, TakeAreaId } from "../RgsServiceFunctions";
 import { HeadingTabl, ModulStrokaTabl } from "../RgsServiceFunctions";
@@ -102,6 +102,12 @@ const RgsToDoMode = (props: {
       maskFaz.idevice = map.tflight[maskFaz.idx].idevice;
       maskFaz.coordinates[0] = map.tflight[maskFaz.idx].points.Y;
       maskFaz.coordinates[1] = map.tflight[maskFaz.idx].points.X;
+      if (!DEMO) {
+        let statusVertex = map.tflight[maskFaz.idx].tlsost.num;
+        maskFaz.busy = GoodCODE.indexOf(statusVertex) < 0 ? false : true; // светофор занят другим пользователем?
+
+        maskFaz.busy && console.log("ID занят:", maskFaz.id);
+      }
     }
     if (i) {
       datestat.massPath.push(maskFaz.coordinates); // не начало маршрута
@@ -265,12 +271,22 @@ const RgsToDoMode = (props: {
       dispatch(statsaveCreate(datestat));
     }
     ToDoMode(mode);
-    console.log(mode + 1 + "-й светофор АКТИВИРОВАН", timerId[mode], massfaz);
+    console.log(
+      mode + 1 + "-й светофор АКТИВИРОВАН",
+      timerId[mode],
+      massfaz[mode]
+    );
     let fazer = massfaz[mode];
     if (DEMO) {
       massfaz[mode].fazaSist = fazer.faza;
-    } else SendSocketDispatch(fazer.idevice, 9, fazer.faza);
-    massfaz[mode].runRec = DEMO ? 4 : 2;
+      massfaz[mode].runRec = 4;
+    } else {
+      if (!fazer.busy) {
+        SendSocketDispatch(fazer.idevice, 9, fazer.faza); // послать фазу на не занятый светофор
+        massfaz[mode].runRec = 2
+      }
+    }
+    //massfaz[mode].runRec = DEMO ? 4 : 2;
     dispatch(massfazCreate(massfaz));
     if (DEMO) massfaz[mode].faza = massfaz[mode].fazaBegin;
     setTrigger(!trigger);

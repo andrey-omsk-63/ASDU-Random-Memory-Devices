@@ -16,13 +16,14 @@ import { MasskPoint } from "./components/RgsServiceFunctions";
 
 import { SendSocketGetBindings } from "./components/RgsSocketFunctions";
 import { SendSocketGetAddObjects } from "./components/RgsSocketFunctions";
+import { SendSocketDispatch } from "./components/RgsSocketFunctions";
 
 import { dataMap } from "./otladkaMaps";
 import { imgFaza } from "./otladkaPicFaza";
 import { dataBindings } from "./otladkaBindings";
 import { dataAddObjects } from "./otladkaAddObjects";
 
-import { zoomStart, CLINCH, BadCODE } from "./components/MapConst";
+import { zoomStart, CLINCH, BadCODE, GoodCODE } from "./components/MapConst";
 
 export let dateMapGl: any;
 export let dateBindingsGl: any;
@@ -105,6 +106,7 @@ export interface Fazer {
   starRec: boolean;
   runRec: number; // 0-начало 1-финиш 2-актив 3-хз 4-активДемо 5-финишДемо
   img: Array<string | null>;
+  busy: boolean; // светофор занят другим пользователем
 }
 export let massFaz: Fazer[] = [];
 
@@ -311,6 +313,26 @@ const App = () => {
           if (dateMapGl.tflight[j].idevice === data.tflight[i].idevice) {
             dateMapGl.tflight[j].tlsost = data.tflight[i].tlsost;
             flagChange = true;
+            // проверка на то, что занятый другим пользователем светофор освободился
+            let statusVertex = dateMapGl.tflight[j].tlsost.num;
+            let clinch = CLINCH.indexOf(statusVertex) < 0 ? false : true;
+            let badCode = BadCODE.indexOf(statusVertex) < 0 ? false : true;
+            let goodCode = GoodCODE.indexOf(statusVertex) < 0 ? false : true;
+            if (!clinch && !badCode && !goodCode && !dateStat.demo) {
+              console.log("0СВЕТОФОР ОСВОБОДИЛСЯ:", dateMapGl.tflight[j].ID);
+              for (let jj = 0; jj < massfaz.length; jj++) {
+                let fz = massfaz[jj];
+                if (dateMapGl.tflight[j].idevice === fz.idevice) {
+                  if (fz.busy) {
+                    SendSocketDispatch(fz.idevice, 9, fz.faza); // послать фазу на не занятый светофор
+                    massfaz[jj].runRec = 2;
+                    massfaz[jj].busy = false;
+                    dispatch(massfazCreate(massfaz));
+                    console.log("1СВЕТОФОР ОСВОБОДИЛСЯ:", fz.id);
+                  }
+                }
+              }
+            }
           }
         }
       }

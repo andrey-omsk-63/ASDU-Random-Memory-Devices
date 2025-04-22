@@ -29,6 +29,7 @@ export const MaskFaz: Fazer = {
   starRec: false,
   runRec: 0, // 0-начало 1-финиш 2-актив 3-хз 4-активДемо 5-финишДемо
   img: [],
+  busy: false, // светофор занят другим пользователем
 };
 
 export const GoodCODE: Array<number> = [

@@ -560,7 +560,7 @@ export const MakeSoobErr = (mode: number, Klu: string, Klu2: string) => {
       soobErr =
         "⚠️Предупреждение\xa0\xa0\xa0\Перекрёсток ID" +
         Klu +
-        " уже управляется другим пользователем";
+        " управляется другим пользователем и начнёт работать как только освободится";
   }
   return soobErr;
 };

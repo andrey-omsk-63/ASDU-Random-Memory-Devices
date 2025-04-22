@@ -314,9 +314,6 @@ const MainMapRgs = (props: { trigger: boolean }) => {
     if (!DEMO && index < map.tflight.length) {
       let statusVertex = map.tflight[index].tlsost.num;
       let goodCode = GoodCODE.indexOf(statusVertex) < 0 ? false : true;
-
-      console.log("2AddVertex:", goodCode, statusVertex);
-      
       goodCode && SoobErr(MakeSoobErr(6, map.tflight[index].ID.toString(), "")); // перекрёсток занят
     }
   };
