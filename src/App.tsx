@@ -291,8 +291,6 @@ const App = () => {
               let clinch = CLINCH.indexOf(statusVertex) < 0 ? false : true;
               let badCode = BadCODE.indexOf(statusVertex) < 0 ? false : true;
               if (!clinch && !badCode) {
-                // console.log("ID", massfaz[j].id, statusVertex);
-
                 massfaz[j].fazaSist = data.phases[i].phase;
                 flagChange = true;
               } else console.log(soob, massfaz[j].id);
@@ -319,16 +317,15 @@ const App = () => {
             let badCode = BadCODE.indexOf(statusVertex) < 0 ? false : true;
             let goodCode = GoodCODE.indexOf(statusVertex) < 0 ? false : true;
             if (!clinch && !badCode && !goodCode && !dateStat.demo) {
-              console.log("0СВЕТОФОР ОСВОБОДИЛСЯ:", dateMapGl.tflight[j].ID);
               for (let jj = 0; jj < massfaz.length; jj++) {
                 let fz = massfaz[jj];
                 if (dateMapGl.tflight[j].idevice === fz.idevice) {
-                  if (fz.busy) {
+                  if (fz.busy || !massfaz[jj].runRec) {
                     SendSocketDispatch(fz.idevice, 9, fz.faza); // послать фазу на не занятый светофор
-                    massfaz[jj].runRec = 2;
-                    massfaz[jj].busy = false;
+                    massfaz[jj].runRec = 2; // светофор активирован
+                    massfaz[jj].busy = false; // светофор освободился
                     dispatch(massfazCreate(massfaz));
-                    console.log("1СВЕТОФОР ОСВОБОДИЛСЯ:", fz.id);
+                    console.log("ID", fz.id, " светофор АКТИВИРОВАН", fz);
                   }
                 }
               }

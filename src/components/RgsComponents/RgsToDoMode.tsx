@@ -11,7 +11,7 @@ import GsFieldOfMiracles from "./GsFieldOfMiracles";
 
 import { Fazer } from "../../App";
 import { PressESC } from "../MainMapRgs";
-import { NoClose, MaskFaz, GoodCODE } from "../MapConst";
+import { NoClose, MaskFaz, GoodCODE, CLINCH, BadCODE } from "../MapConst";
 
 import { HeaderTabl, OutputFazaImg, TakeAreaId } from "../RgsServiceFunctions";
 import { HeadingTabl, ModulStrokaTabl } from "../RgsServiceFunctions";
@@ -271,24 +271,23 @@ const RgsToDoMode = (props: {
       dispatch(statsaveCreate(datestat));
     }
     ToDoMode(mode);
-    console.log(
-      mode + 1 + "-й светофор АКТИВИРОВАН",
-      timerId[mode],
-      massfaz[mode]
-    );
     let fazer = massfaz[mode];
     if (DEMO) {
-      massfaz[mode].fazaSist = fazer.faza;
-      massfaz[mode].runRec = 4;
+      fazer.fazaSist = fazer.faza;
+      fazer.runRec = 4;
+      fazer.faza = massfaz[mode].fazaBegin;
+      console.log(mode + 1 + "-й светофор АКТИВИРОВАН", massfaz[mode]);
     } else {
-      if (!fazer.busy) {
-        SendSocketDispatch(fazer.idevice, 9, fazer.faza); // послать фазу на не занятый светофор
-        massfaz[mode].runRec = 2
+      let statusVertex = map.tflight[fazer.idx].tlsost.num;
+      let clinch = CLINCH.indexOf(statusVertex) < 0 ? false : true;
+      let badCode = BadCODE.indexOf(statusVertex) < 0 ? false : true;
+      if (!fazer.busy && !clinch && !badCode) {
+        SendSocketDispatch(fazer.idevice, 9, fazer.faza); // послать фазу на исправный, не занятый светофор
+        fazer.runRec = 2;
+        console.log(mode + 1 + "-й светофор АКТИВИРОВАН", massfaz[mode]);
       }
     }
-    //massfaz[mode].runRec = DEMO ? 4 : 2;
     dispatch(massfazCreate(massfaz));
-    if (DEMO) massfaz[mode].faza = massfaz[mode].fazaBegin;
     setTrigger(!trigger);
   };
 

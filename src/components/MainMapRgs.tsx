@@ -700,7 +700,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   const Closing = () => {
     for (let i = 0; i < massfaz.length; i++)
       if (massfaz[i].runRec === 2)
-        !DEMO && SendSocketDispatch(massfaz[i].idevice, 9, 9);
+        !DEMO && SendSocketDispatch(massfaz[i].idevice, 9, 9); // закрытие запущенных светофоров
   };
 
   const handleTabClosing = () => {
