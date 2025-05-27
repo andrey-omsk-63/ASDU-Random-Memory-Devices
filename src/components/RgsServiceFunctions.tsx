@@ -558,7 +558,7 @@ export const MakeSoobErr = (mode: number, Klu: string, Klu2: string) => {
       break;
     case 6:
       soobErr =
-        "⚠️Предупреждение\xa0\xa0\xa0\Перекрёсток ID" +
+        "⚠️Предупреждение\xa0\xa0\xa0 Перекрёсток ID" +
         Klu +
         " управляется другим пользователем и начнёт работать как только освободится";
   }

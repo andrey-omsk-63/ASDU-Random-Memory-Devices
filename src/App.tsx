@@ -406,10 +406,11 @@ const App = () => {
     dispatch(addobjCreate(dateAddObjectsGl));
     dateBindingsGl = JSON.parse(JSON.stringify(dataBindings.data));
     dispatch(bindingsCreate(dateBindingsGl));
-    let massRegion = [];
-    for (let key in dateMapGl.regionInfo)
-      if (!isNaN(Number(key))) massRegion.push(Number(key));
-    homeRegion = massRegion[0].toString();
+    // let massRegion = [];
+    // for (let key in dateMapGl.regionInfo)
+    //   if (!isNaN(Number(key))) massRegion.push(Number(key));
+    // homeRegion = massRegion[0].toString();
+    homeRegion = dateMapGl.tflight[0].region.num;
     dateStat.region = homeRegion;
     dateStat.phSvg[0] = imgFaza;
     dateStat.phSvg[1] = null;

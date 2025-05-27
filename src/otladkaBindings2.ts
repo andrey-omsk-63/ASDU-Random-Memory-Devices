@@ -9,7 +9,7 @@ export const dataBindings = {
             wayPointsArray: [],
           },
           north: {
-            id: "1-1-10005",
+            id: "1-1-10003",
             wayPointsArray: [
               {
                 id: "1-1-37",
@@ -25,7 +25,7 @@ export const dataBindings = {
             id: "1-1-37",
             wayPointsArray: [
               {
-                id: "1-1-10005",
+                id: "1-1-10003",
                 phase: "1",
               },
             ],
@@ -52,10 +52,10 @@ export const dataBindings = {
         id: "1-1-38",
         tflink: {
           west: {
-            id: "1-3-39",
+            id: "1-1-39",
             wayPointsArray: [
               {
-                id: "1-3-37",
+                id: "1-1-37",
                 phase: "1",
               },
             ],
@@ -65,10 +65,10 @@ export const dataBindings = {
             wayPointsArray: [],
           },
           east: {
-            id: "1-3-37",
+            id: "1-1-37",
             wayPointsArray: [
               {
-                id: "1-3-39",
+                id: "1-1-39",
                 phase: "1",
               },
             ],
@@ -762,11 +762,19 @@ export const dataBindings = {
               },
               {
                 id: "1-1-10003",
-                phase: "3",
+                phase: "1",
               },
             ],
           },
           south: {
+            id: "",
+            wayPointsArray: [],
+          },
+          add1: {
+            id: "",
+            wayPointsArray: [],
+          },
+          add2: {
             id: "1-1-10003",
             wayPointsArray: [
               {
@@ -779,21 +787,13 @@ export const dataBindings = {
               },
             ],
           },
-          add1: {
-            id: "",
-            wayPointsArray: [],
-          },
-          add2: {
-            id: "",
-            wayPointsArray: [],
-          },
           add3: {
             id: "",
-            wayPointsArray: null,
+            wayPointsArray: [],
           },
           add4: {
             id: "",
-            wayPointsArray: null,
+            wayPointsArray: [],
           },
         },
       },
@@ -1026,73 +1026,31 @@ export const dataBindings = {
             id: "1-1-38",
             wayPointsArray: [
               {
-                id: "1-1-10003",
-                phase: "1",
-              },
-              {
                 id: "1-1-36",
-                phase: "3",
-              },
-              {
-                id: "1-1-57",
                 phase: "1",
               },
             ],
           },
           north: {
-            id: "1-1-57",
-            wayPointsArray: [
-              {
-                id: "1-1-38",
-                phase: "1",
-              },
-              {
-                id: "1-1-10003",
-                phase: "1",
-              },
-              {
-                id: "1-1-36",
-                phase: "1",
-              },
-            ],
+            id: "",
+            wayPointsArray: [],
           },
           east: {
+            id: "",
+            wayPointsArray: [],
+          },
+          south: {
+            id: "",
+            wayPointsArray: [],
+          },
+          add1: {
             id: "1-1-36",
             wayPointsArray: [
               {
-                id: "1-1-57",
-                phase: "1",
-              },
-              {
-                id: "1-1-38",
-                phase: "3",
-              },
-              {
-                id: "1-1-10003",
-                phase: "1",
-              },
-            ],
-          },
-          south: {
-            id: "1-1-10003",
-            wayPointsArray: [
-              {
-                id: "1-1-36",
-                phase: "1",
-              },
-              {
-                id: "1-1-57",
-                phase: "1",
-              },
-              {
                 id: "1-1-38",
                 phase: "1",
               },
             ],
-          },
-          add1: {
-            id: "",
-            wayPointsArray: [],
           },
           add2: {
             id: "",
@@ -1100,11 +1058,11 @@ export const dataBindings = {
           },
           add3: {
             id: "",
-            wayPointsArray: null,
+            wayPointsArray: [],
           },
           add4: {
             id: "",
-            wayPointsArray: null,
+            wayPointsArray: [],
           },
         },
       },
