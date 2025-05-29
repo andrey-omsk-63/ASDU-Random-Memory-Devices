@@ -377,8 +377,8 @@ const MainMapRgs = (props: { trigger: boolean }) => {
   };
 
   const OnPlacemarkClickPoint = (index: number) => {
-    if (inTarget && !inDemo) ClickPointInTarget(index); //реж.назначения
-    if (!inTarget && !inDemo) ClickPointNotTarget(index); //реж.управления
+    inTarget && !inDemo && ClickPointInTarget(index); //реж.назначения
+    !inTarget && !inDemo && ClickPointNotTarget(index); //реж.управления
   };
   //=== вывод светофоров ===================================
   const PlacemarkDo = () => {
