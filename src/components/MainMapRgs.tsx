@@ -454,7 +454,7 @@ const MainMapRgs = (props: { trigger: boolean }) => {
                 massfaz[nomInMass - 1].runRec > 1 && // 1 - финиш
                 massfaz[nomInMass - 1].runRec !== 5 // финиш Демо
               ) {
-                // не первый в списке незакрытых  massfaz[nomInMass - 1] - предыдущий светофор
+                // не первый в списке незакрытых светофоров (massfaz[nomInMass - 1] - предыдущий светофор)
                 soobErr = NoClose; // НЕЛЬЗЯ
                 setOpenSoobErr(true);
               } else TakeOffVertex(nomInMass); // первый в списке незакрытых
