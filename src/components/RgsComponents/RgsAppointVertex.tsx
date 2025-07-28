@@ -637,7 +637,7 @@ const RgsAppointVertex = (props: { setOpen: Function; idx: number }) => {
               </Box>
             </Grid>
           </Grid>
-          <Grid container sx={{ marginTop: 2 }}>
+          <Grid container sx={{ marginTop: 2, cursor: "default" }}>
             {/* вывод картиноки перекрёстка c направлениями */}
             {OutPutZZ(zz)}
             <Grid item xs={4}>

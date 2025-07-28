@@ -68,6 +68,7 @@ export const styleSet = {
   boxShadow: 3,
   textAlign: "center",
   p: 1.5,
+  cursor: "default",
 };
 
 export const styleInpKnop = {
@@ -119,6 +120,7 @@ export const styleSetArea = {
   boxShadow: 3,
   textAlign: "center",
   p: 1.5,
+  cursor: "default"
 };
 
 export const styleSetID = {
@@ -130,6 +132,7 @@ export const styleSetID = {
   boxShadow: 3,
   textAlign: "center",
   p: 1.5,
+  cursor: "default"
 };
 
 export const styleBoxFormArea = {
@@ -214,6 +217,7 @@ export const styleAppSt04 = {
   textAlign: "center",
   color: "#7620a2", // сиреневый
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  cursor: "default",
 };
 
 export const styleAppSt05 = {
@@ -336,6 +340,7 @@ export const styleSetPK02 = {
   color: "#5B1080", // сиреневый
   margin: "15px 0 10px 0",
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  cursor: "default",
 };
 
 export const styleSetPK03 = {
@@ -349,6 +354,7 @@ export const styleSetPK03 = {
   margin: "3px 0 1px 0",
   padding: "12px 5px 20px 5px",
   textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
+  cursor: "default",
 };
 
 export const styleSetPK04 = {

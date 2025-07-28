@@ -56,6 +56,7 @@ export const styleStrokaTabl02 = {
 export const styleStrokaTabl03 = {
   marginTop: 0,
   textShadow: "2px 2px 3px rgba(0,0,0,0.3)",
+  cursor: "default",
 };
 
 export const styleStrokaTabl04 = {

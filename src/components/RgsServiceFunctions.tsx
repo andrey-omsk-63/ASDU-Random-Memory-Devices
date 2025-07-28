@@ -409,6 +409,7 @@ export const StrokaHelp = (soobInfo: string, mode: number) => {
     textAlign: moder,
     textShadow: "1px 1px 2px rgba(0,0,0,0.3)",
     fontWeight: 500,
+    cursor: "default",
   };
 
   return (
@@ -702,7 +703,7 @@ export const OutputVertexImg = (host: string) => {
 
 export const HeadingTabl = (DEMO: boolean) => {
   return (
-    <Grid container sx={{}}>
+    <Grid container sx={{ cursor: "default" }}>
       <Grid item xs sx={styleToDo02}>
         <em>
           Режим:{" "}
@@ -743,7 +744,7 @@ const StrokaHeader = (xss: number, soob: string) => {
 
 export const HeaderTabl = () => {
   return (
-    <Grid container sx={{ bgcolor: "#B8CBB9" }}>
+    <Grid container sx={{ cursor: "default", bgcolor: "#B8CBB9" }}>
       {StrokaHeader(1, "id")}
       {StrokaHeader(3.6, "Состояние")}
       {StrokaHeader(2.1, "Фаза")}
@@ -878,7 +879,7 @@ export const AppointHeader = (hBlock: number) => {
     );
   };
   return (
-    <Grid container sx={{ bgcolor: "#B8CBB9" }}>
+    <Grid container sx={{ cursor: "default", bgcolor: "#B8CBB9" }}>
       <Grid item xs={1}></Grid>
       {RecHeader(5.5, "Откуда")}
       {RecHeader(4.0, "Куда")}
@@ -1814,7 +1815,7 @@ export const OutPutSV = (sv: string) => {
 
 export const OutTopRow = (sz: string, ss: string, sv: string) => {
   return (
-    <Grid container sx={{ color: "blue", marginTop: -2.5 }}>
+    <Grid container sx={{ color: "blue", marginTop: -2.5, cursor: "default" }}>
       {OutPutSZ(sz)}
       {OutPutSS(ss)}
       {OutPutSV(sv)}
