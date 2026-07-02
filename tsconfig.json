@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2016", // изменить
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
+    "ignoreDeprecations": "6.0",  // добавить
+    "noUncheckedSideEffectImports": false,  // добавить
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -19,8 +21,5 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx"
-  },
-  "include": [
-    "src"
-, "basket/GsSelectMD.tsx", "basket/GsSetPhase.tsx", "basket/RgsAppointVertexOld.tsx"  ]
+  }
 }
