@@ -10,9 +10,11 @@ import Grid from "@mui/material/Grid";
 import axios from "axios";
 
 import MainMapRgs from "./components/MainMapRgs";
-//import GsErrorMessage from "./components/RgsComponents/RgsErrorMessage";
 
 import { MasskPoint } from "./components/RgsServiceFunctions";
+import ServerError from "./AppServerError";
+
+import { styleMainScreen } from "./components/MainMapStyle";
 
 import { SendSocketGetBindings } from "./components/RgsSocketFunctions";
 import { SendSocketGetAddObjects } from "./components/RgsSocketFunctions";
@@ -128,6 +130,8 @@ let flagAddObjects = false;
 export let debug = false;
 export let WS: any = null;
 
+let notServerError = true; // не было ошибки сервера
+
 const App = () => {
   //== Piece of Redux ======================================
   let massdk = useSelector((state: any) => {
@@ -239,15 +243,17 @@ const App = () => {
 
   React.useEffect(() => {
     WS.onopen = function (event: any) {
-      console.log("WS.current.onopen:", event);
+      console.log("WS.current.onopen:", notServerError, event);
     };
 
     WS.onclose = function (event: any) {
-      console.log("WS.current.onclose:", event);
+      if (!debug) notServerError = false;
+      console.log("WS.current.onclose:", notServerError, event);
     };
 
     WS.onerror = function (event: any) {
-      console.log("WS.current.onerror:", event);
+      console.log("WS.current.onerror:", notServerError, event);
+      if (!debug) notServerError = false;
     };
 
     const ActionOnGetPhases = (data: any) => {
@@ -435,12 +441,17 @@ const App = () => {
     Initialisation();
 
   return (
-    <Grid container sx={{ height: "100vh", width: "100%", bgcolor: "#E9F5D8" }}>
-      <Grid item xs>
-        {/* {openSetErr && <GsErrorMessage sErr={soob} setOpen={setOpenSetErr} />} */}
-        {openMapInfo && <MainMapRgs trigger={trigger} />}
-      </Grid>
-    </Grid>
+    <>
+      {!notServerError ? (
+        <ServerError />
+      ) : (
+        <Grid container sx={styleMainScreen}>
+          <Grid item xs>
+            {openMapInfo && <MainMapRgs trigger={trigger} />}
+          </Grid>
+        </Grid>
+      )}
+    </>
   );
 };
 

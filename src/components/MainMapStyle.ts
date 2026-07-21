@@ -1,3 +1,9 @@
+export const styleMainScreen = {
+  height: "100vh",
+  width: "100%",
+  bgcolor: "#E9F5D8",
+};
+
 //=== MainMapRgs && RgsServiceFunctions ===============================
 export const styleServisTable = {
   outline: "none",
