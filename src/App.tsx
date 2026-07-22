@@ -252,8 +252,8 @@ const App = () => {
     };
 
     WS.onerror = function (event: any) {
-      console.log("WS.current.onerror:", notServerError, event);
       if (!debug) notServerError = false;
+      console.log("WS.current.onerror:", notServerError, event);
     };
 
     const ActionOnGetPhases = (data: any) => {
@@ -271,13 +271,6 @@ const App = () => {
             }
             break;
           }
-          // else {
-          //   massdk[i].phSvg[0] = imgFaza; // костыль
-          //   massdk[i].phSvg[1] = null;
-          //   massdk[i].phSvg[2] = imgFaza;
-          //   massdk[i].phSvg[3] = null;
-          //   massdk[i].phSvg[4] = imgFaza;
-          // }
         }
       }
     };
@@ -412,10 +405,6 @@ const App = () => {
     dispatch(addobjCreate(dateAddObjectsGl));
     dateBindingsGl = JSON.parse(JSON.stringify(dataBindings.data));
     dispatch(bindingsCreate(dateBindingsGl));
-    // let massRegion = [];
-    // for (let key in dateMapGl.regionInfo)
-    //   if (!isNaN(Number(key))) massRegion.push(Number(key));
-    // homeRegion = massRegion[0].toString();
     homeRegion = dateMapGl.tflight[0].region.num;
     dateStat.region = homeRegion;
     dateStat.phSvg[0] = imgFaza;
